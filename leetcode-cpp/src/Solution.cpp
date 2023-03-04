@@ -80,7 +80,7 @@ public:
                 qu.push_back(temp.front());
                 temp.pop_front();
             }
-            if(need_reverse){
+            if (need_reverse) {
                 reverse(layer.begin(), layer.end());
             }
             if (!layer.empty())
@@ -88,40 +88,42 @@ public:
         }
         return res;
     }
-    int searchInsert(vector<int>& nums, int target) {
+
+    int searchInsert(vector<int> &nums, int target) {
         int i = 0;
         int j = nums.size();
         int mid;
-        if(target>nums[j-1]){
+        if (target > nums[j - 1]) {
             return j;
         }
-        while(i<=j){
-            mid = (i + j)/2;
-            if(nums[mid] == target) {
+        while (i <= j) {
+            mid = (i + j) / 2;
+            if (nums[mid] == target) {
                 return mid;
-            }else if(nums[mid] > target){
-                j = mid -1;
-            }else {
-                i = mid+1;
+            } else if (nums[mid] > target) {
+                j = mid - 1;
+            } else {
+                i = mid + 1;
             }
         }
         return i;
     }
-    string bestHand(vector<int>& ranks, vector<char>& suits) {
-        unordered_map<int,int>s1;
-        unordered_set<char>s2;
-        for(int i=0;i<ranks.size();i++){
+
+    string bestHand(vector<int> &ranks, vector<char> &suits) {
+        unordered_map<int, int> s1;
+        unordered_set<char> s2;
+        for (int i = 0; i < ranks.size(); i++) {
             s1[ranks[i]]++;
             s2.insert(suits[i]);
         }
-        if(s2.size()==1)
+        if (s2.size() == 1)
             return "Flush";
-        int c=0;
-        for(auto x:s1){
-            if(c < x.second)
-                c=x.second;
+        int c = 0;
+        for (auto x: s1) {
+            if (c < x.second)
+                c = x.second;
         }
-        switch (c){
+        switch (c) {
             case 1:
                 return "High Card";
             case 2:
@@ -133,25 +135,60 @@ public:
         }
         return "";
     }
+
     int strStr(string haystack, string needle) {
-        vector<vector<int>> dfa (256,vector<int>(needle.size()));
+        vector<vector<int>> dfa(256, vector<int>(needle.size()));
         dfa[needle[0]][0] = 1;
-        for(int x = 0,j =1;j<needle.size();++j){
-            for(int c = 0 ;c <256;++c){
+        for (int x = 0, j = 1; j < needle.size(); ++j) {
+            for (int c = 0; c < 256; ++c) {
                 dfa[c][j] = dfa[c][x];
             }
-            dfa[needle[j]][j] = j+1;
+            dfa[needle[j]][j] = j + 1;
             x = dfa[needle[j]][x];
         }
-        int i=0,j=0;
-        for(;i<haystack.size()&&j<needle.size();++i){
+        int i = 0, j = 0;
+        for (; i < haystack.size() && j < needle.size(); ++i) {
             j = dfa[haystack[i]][j];
         }
-        if(j==needle.size())
-            return i-needle.size();
+        if (j == needle.size())
+            return i - needle.size();
         else return -1;
     }
+
     int strStr2(string haystack, string needle) {
         return haystack.find(needle);
     }
+
+    long long countSubarrays(vector<int>& nums, int minK, int maxK) {
+        long res = 0;
+        bool minFound = false, maxFound = false;
+        int start = 0, minStart = 0, maxStart = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            int num = nums[i];
+            if (num < minK || num > maxK) {
+                minFound = false;
+                maxFound = false;
+                start = i+1;
+            }
+            if (num == minK) {
+                minFound = true;
+                minStart = i;
+            }
+            if (num == maxK) {
+                maxFound = true;
+                maxStart = i;
+            }
+            if (minFound && maxFound) {
+                res += (min(minStart, maxStart) - start + 1);
+            }
+        }
+        return res;
+    }
+
 };
+
+int main(){
+    Solution s;
+    vector<int> a = {1,3,5,2,7,5};
+    cout<<s.countSubarrays(a,1,1);
+}
