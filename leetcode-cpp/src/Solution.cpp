@@ -241,6 +241,27 @@ public:
         return res;
     }
 
+    int minOperationsMaxProfit(vector<int> &customers, int boardingCost, int runningCost) {
+        int max_profit = 0;
+        int res = -1;
+        int waiting = 0;
+        int cur_profit = 0;
+        int i = 0;
+        while (i < customers.size() || waiting > 0) {
+            if (i < customers.size())
+                waiting += customers[i];
+            int boarding = min(waiting, 4);
+            waiting -= boarding;
+            ++i;
+            cur_profit += boarding * boardingCost - runningCost;
+            if (cur_profit > max_profit) {
+                max_profit = cur_profit;
+                res = i;
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
