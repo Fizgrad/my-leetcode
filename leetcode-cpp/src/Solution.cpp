@@ -159,7 +159,7 @@ public:
         return haystack.find(needle);
     }
 
-    long long countSubarrays(vector<int>& nums, int minK, int maxK) {
+    long long countSubarrays(vector<int> &nums, int minK, int maxK) {
         long res = 0;
         bool minFound = false, maxFound = false;
         int start = 0, minStart = 0, maxStart = 0;
@@ -168,7 +168,7 @@ public:
             if (num < minK || num > maxK) {
                 minFound = false;
                 maxFound = false;
-                start = i+1;
+                start = i + 1;
             }
             if (num == minK) {
                 minFound = true;
@@ -184,21 +184,67 @@ public:
         }
         return res;
     }
-    int countTriplets(vector<int>& nums) {
+
+    int countTriplets(vector<int> &nums) {
         int cnt = 0;
         int tuples[1 << 16] = {};
-        for (auto a : nums)
-            for (auto b : nums) ++tuples[a & b];
-        for (auto a : nums)
+        for (auto a: nums)
+            for (auto b: nums) ++tuples[a & b];
+        for (auto a: nums)
             for (auto i = 0; i < (1 << 16); ++i)
                 if ((i & a) == 0) cnt += tuples[i];
         return cnt;
     }
 
+    int minJumps(vector<int> &arr) {
+        unordered_map<int, vector<int>> hm;
+        for (int i = 0; i < arr.size(); ++i) {
+            hm[arr[i]].push_back(i);
+        }
+        queue<int> q;
+        q.push(0);
+        int res = 0;
+        vector<int> visited(arr.size(), 0);
+        visited[0] = 1;
+        while (!q.empty()) {
+            queue<int> temp;
+            while (!q.empty()) {
+                int front = q.front();
+                if (front == arr.size() - 1) {
+                    return res;
+                }
+                if (front - 1 >= 0 && !visited[front - 1]) {
+                    temp.push(front - 1);
+                    visited[front - 1] = 1;
+                }
+                if (front + 1 < arr.size() && !visited[front + 1]) {
+                    temp.push(front + 1);
+                    visited[front + 1] = 1;
+                }
+                for (auto i: hm[arr[front]]) {
+                    if (!visited[i]) {
+                        temp.push(i);
+                        visited[i] = 1;
+                    }
+                }
+                // clear() is very important, since after once you iterate over this vector, its content is meaningless
+                // but it still use a quantity of time to check it, so we must clear it to get better performance.
+                hm[arr[front]].clear();
+                q.pop();
+            }
+            ++res;
+            while (!temp.empty()) {
+                q.push(temp.front());
+                temp.pop();
+            }
+        }
+        return res;
+    }
+
 };
 
-int main(){
+int main() {
     Solution s;
-    vector<int> a = {1,3,5,2,7,5};
-    cout<<s.countSubarrays(a,1,1);
+    vector<int> a = {1, 3, 5, 2, 7, 5};
+    cout << s.countSubarrays(a, 1, 1);
 }
