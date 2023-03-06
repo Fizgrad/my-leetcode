@@ -261,46 +261,78 @@ public:
         }
         return res;
     }
-    int findKthPositive(vector<int>& arr, int k) {
+
+    int findKthPositive(vector<int> &arr, int k) {
         int index = 0;
-        int i ;
-        for(i = 1;i<=arr[arr.size()-1];++i){
-            if(i == arr[index]){
+        int i;
+        for (i = 1; i <= arr[arr.size() - 1]; ++i) {
+            if (i == arr[index]) {
                 ++index;
-            }else {
+            } else {
                 --k;
-                if (k == 0){
+                if (k == 0) {
                     return i;
                 }
             }
         }
-        while(--k){
+        while (--k) {
             ++i;
         }
         return i;
     }
+
     int minimumDeletions(string s) {
         int cur_del = 0;
         int b = 0;
         int a = 0;
-        for(auto i : s){
-            if(i == 'a'){
-                if(b==0){
+        for (auto i: s) {
+            if (i == 'a') {
+                if (b == 0) {
                     continue;
-                }else {
+                } else {
                     a++;
                 }
-            }else {
+            } else {
                 ++b;
             }
-            if(a>=b){
-                cur_del+=b;
-                b=0;
-                a=0;
+            if (a >= b) {
+                cur_del += b;
+                b = 0;
+                a = 0;
             }
         }
-        return cur_del+a;
+        return cur_del + a;
     }
+
+    long long kthLargestLevelSum(TreeNode *root, int k) {
+        queue<TreeNode *> q;
+        q.push(root);
+        priority_queue<long long > res;
+        while (!q.empty()) {
+            queue<TreeNode *> temp;
+            long long  sum_val = 0;
+            while (!q.empty()) {
+                TreeNode *top = q.front();
+                q.pop();
+                if (top != nullptr) {
+                    sum_val += top->val;
+                    if (top->left)
+                        temp.push(top->left);
+                    if (top->right)
+                        temp.push(top->right);
+                }
+            }
+
+            res.push(-sum_val);
+            if (res.size()>k){
+                res.pop();
+            }
+            q= temp;
+
+        }
+        return res.size() == k? -res.top() : -1 ;
+    }
+
 };
 
 int main() {
