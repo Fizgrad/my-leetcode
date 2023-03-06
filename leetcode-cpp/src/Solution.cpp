@@ -261,7 +261,24 @@ public:
         }
         return res;
     }
-
+    int findKthPositive(vector<int>& arr, int k) {
+        int index = 0;
+        int i ;
+        for(i = 1;i<=arr[arr.size()-1];++i){
+            if(i == arr[index]){
+                ++index;
+            }else {
+                --k;
+                if (k == 0){
+                    return i;
+                }
+            }
+        }
+        while(--k){
+            ++i;
+        }
+        return i;
+    }
 };
 
 int main() {
