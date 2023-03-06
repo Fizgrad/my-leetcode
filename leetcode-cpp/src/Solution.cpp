@@ -279,6 +279,28 @@ public:
         }
         return i;
     }
+    int minimumDeletions(string s) {
+        int cur_del = 0;
+        int b = 0;
+        int a = 0;
+        for(auto i : s){
+            if(i == 'a'){
+                if(b==0){
+                    continue;
+                }else {
+                    a++;
+                }
+            }else {
+                ++b;
+            }
+            if(a>=b){
+                cur_del+=b;
+                b=0;
+                a=0;
+            }
+        }
+        return cur_del+a;
+    }
 };
 
 int main() {
