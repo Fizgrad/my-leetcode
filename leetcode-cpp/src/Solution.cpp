@@ -364,62 +364,57 @@ public:
         return max_num;
     }
 
-    vector<string> fullJoin(vector<string>&a,vector<string>&b){
+    vector<string> multiply(vector<string> &a, vector<string> &b) {
         vector<string> res;
-        if(a.empty()){
+        if (a.empty()) {
             return b;
         }
-        if (b.empty()){
+        if (b.empty()) {
             return a;
         }
-        for(auto& i : a){
-            for(auto& j : b){
-                res.push_back(i+j);
+        for (auto &i: a) {
+            for (auto &j: b) {
+                res.push_back(i + j);
             }
         }
         return res;
     }
 
-    vector<string> parseBrace(string::iterator begin,string::iterator end){
-        vector<string> res_raw;
+    vector<string> parseBrace(string::iterator begin, string::iterator end) {
+        vector<string> res;
         vector<string> temp;
-        for(auto i = begin;i!= end;++i){
-            if(isalpha(*i)){
-                string a(i,i+1);
+        for (auto i = begin; i != end; ++i) {
+            if (isalpha(*i)) {
+                string a(i, i + 1);
                 vector<string> b{a};
-                temp = fullJoin(temp,b);
-            }else if(*i == ','){
-                res_raw.insert(res_raw.end(), temp.begin(), temp.end());
+                temp = multiply(temp, b);
+            } else if (*i == ',') {
+                res.insert(res.end(), temp.begin(), temp.end());
                 temp.clear();
-            }else if(*i == '{'){
+            } else if (*i == '{') {
                 int num = 1;
-                auto j = i+1;
-                while(j!= end&&num>0){
-                    if (*j == '{'){
+                auto j = i + 1;
+                while (j != end && num > 0) {
+                    if (*j == '{') {
                         ++num;
-                    }else if(*j == '}') {
+                    } else if (*j == '}') {
                         --num;
                     }
                     ++j;
                 }
-                auto brace = parseBrace(i+1,j-1);
-                temp = fullJoin(temp,brace);
-                i = j-1;
+                auto brace = parseBrace(i + 1, j - 1);
+                temp = multiply(temp, brace);
+                i = j - 1;
             }
         }
-        res_raw.insert(res_raw.end(), temp.begin(), temp.end());
-        sort(res_raw.begin(), res_raw.end());
-        auto back = unique(res_raw.begin(), res_raw.end());
-        vector<string> res(res_raw.begin(),back);
-
-        return res;
+        res.insert(res.end(), temp.begin(), temp.end());
+        sort(res.begin(), res.end());
+        return {res.begin(), unique(res.begin(), res.end())};
     }
 
-    vector<string> braceExpansionII(string& expression) {
+    vector<string> braceExpansionII(string &expression) {
         return parseBrace(expression.begin(), expression.end());
     }
-
-
 };
 
 int main() {
