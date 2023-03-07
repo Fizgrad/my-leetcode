@@ -9,6 +9,7 @@
 #include <deque>
 #include <algorithm>
 #include <cmath>
+#include <cctype>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -362,10 +363,68 @@ public:
         }
         return max_num;
     }
+
+    vector<string> fullJoin(vector<string>&a,vector<string>&b){
+        vector<string> res;
+        if(a.empty()){
+            return b;
+        }
+        if (b.empty()){
+            return a;
+        }
+        for(auto& i : a){
+            for(auto& j : b){
+                res.push_back(i+j);
+            }
+        }
+        return res;
+    }
+
+    vector<string> parseBrace(string::iterator begin,string::iterator end){
+        vector<string> res_raw;
+        vector<string> temp;
+        for(auto i = begin;i!= end;++i){
+            if(isalpha(*i)){
+                string a(i,i+1);
+                vector<string> b{a};
+                temp = fullJoin(temp,b);
+            }else if(*i == ','){
+                res_raw.insert(res_raw.end(), temp.begin(), temp.end());
+                temp.clear();
+            }else if(*i == '{'){
+                int num = 1;
+                auto j = i+1;
+                while(j!= end&&num>0){
+                    if (*j == '{'){
+                        ++num;
+                    }else if(*j == '}') {
+                        --num;
+                    }
+                    ++j;
+                }
+                auto brace = parseBrace(i+1,j-1);
+                temp = fullJoin(temp,brace);
+                i = j-1;
+            }
+        }
+        res_raw.insert(res_raw.end(), temp.begin(), temp.end());
+        sort(res_raw.begin(), res_raw.end());
+        auto back = unique(res_raw.begin(), res_raw.end());
+        vector<string> res(res_raw.begin(),back);
+
+        return res;
+    }
+
+    vector<string> braceExpansionII(string& expression) {
+        return parseBrace(expression.begin(), expression.end());
+    }
+
+
 };
 
 int main() {
     Solution s;
-    vector<int> a = {1, 3, 5, 2, 7, 5};
-    cout << s.countSubarrays(a, 1, 1);
+    string b = "{a,b}{c,{d,e}}";
+
+
 }
