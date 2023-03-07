@@ -7,6 +7,7 @@
 #include <queue>
 #include <array>
 #include <deque>
+#include <algorithm>
 #include <cmath>
 #include <unordered_map>
 #include <unordered_set>
@@ -307,10 +308,10 @@ public:
     long long kthLargestLevelSum(TreeNode *root, int k) {
         queue<TreeNode *> q;
         q.push(root);
-        priority_queue<long long > res;
+        priority_queue<long long> res;
         while (!q.empty()) {
             queue<TreeNode *> temp;
-            long long  sum_val = 0;
+            long long sum_val = 0;
             while (!q.empty()) {
                 TreeNode *top = q.front();
                 q.pop();
@@ -324,15 +325,43 @@ public:
             }
 
             res.push(-sum_val);
-            if (res.size()>k){
+            if (res.size() > k) {
                 res.pop();
             }
-            q= temp;
+            q = temp;
 
         }
-        return res.size() == k? -res.top() : -1 ;
+        return res.size() == k ? -res.top() : -1;
     }
 
+    bool minimumTimeTest(vector<int> &times, long long totalTrips, long long curTimes) {
+        long long curTrips = 0;
+        for (auto i: times) {
+            curTrips += curTimes / i;
+        }
+        return curTrips >= totalTrips;
+    }
+
+    long long minimumTime(vector<int> &times, int totalTrips) {
+        int n = times.size();
+        if (n == 1) {
+            return (long long) totalTrips * times[0];
+        }
+        sort(begin(times), end(times));
+        long long max_num = (long long) totalTrips * (*(times.begin() + n - 1));
+        long long min_num = (long long) totalTrips * (*times.begin()) / n;
+        long long mid = (max_num + min_num) / 2;
+        while (min_num < max_num) {
+            bool flag = minimumTimeTest(times, totalTrips, mid);
+            if (flag) {
+                max_num = mid;
+            } else {
+                min_num = mid + 1;
+            }
+            mid = (max_num + min_num) / 2;
+        }
+        return max_num;
+    }
 };
 
 int main() {
