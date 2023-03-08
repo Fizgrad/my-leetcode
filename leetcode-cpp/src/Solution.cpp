@@ -12,6 +12,7 @@
 #include <cctype>
 #include <unordered_map>
 #include <unordered_set>
+#include <numeric>
 
 using namespace std;
 
@@ -414,6 +415,32 @@ public:
 
     vector<string> braceExpansionII(string &expression) {
         return parseBrace(expression.begin(), expression.end());
+    }
+
+    bool minEatingSpeedTest(vector<int> &piles, int h, long long k) {
+        int all_hour = 0;
+        for (auto i: piles) {
+            all_hour += (i + k - 1) / k;
+        }
+        return all_hour <= h;
+    }
+
+    int minEatingSpeed(vector<int> &piles, int h) {
+        if(piles.size() ==1){
+            return (piles[0]+h-1)/h;
+        }
+        long long min_k = accumulate(begin(piles), end(piles), (long long) 0) / h;
+        long long max_k = 1000000000;
+        long long mid = (min_k + max_k) / 2;
+        while (min_k < max_k) {
+            if (minEatingSpeedTest(piles, h, mid)) {
+                max_k = mid;
+            } else {
+                min_k = mid + 1;
+            }
+            mid = (min_k + max_k) / 2;
+        }
+        return max_k;
     }
 };
 
