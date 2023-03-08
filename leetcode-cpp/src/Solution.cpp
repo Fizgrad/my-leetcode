@@ -336,7 +336,7 @@ public:
         return res.size() == k ? -res.top() : -1;
     }
 
-    bool minimumTimeTest(vector<int> &times, long long totalTrips, long long curTimes) {
+    bool minimumTimeHelper(vector<int> &times, long long totalTrips, long long curTimes) {
         long long curTrips = 0;
         for (auto i: times) {
             curTrips += curTimes / i;
@@ -354,7 +354,7 @@ public:
         long long min_num = (long long) totalTrips * (*times.begin()) / n;
         long long mid = (max_num + min_num) / 2;
         while (min_num < max_num) {
-            bool flag = minimumTimeTest(times, totalTrips, mid);
+            bool flag = minimumTimeHelper(times, totalTrips, mid);
             if (flag) {
                 max_num = mid;
             } else {
@@ -417,7 +417,7 @@ public:
         return parseBrace(expression.begin(), expression.end());
     }
 
-    bool minEatingSpeedTest(vector<int> &piles, int h, long long k) {
+    bool minEatingSpeedHelper(vector<int> &piles, int h, long long k) {
         int all_hour = 0;
         for (auto i: piles) {
             all_hour += (i + k - 1) / k;
@@ -433,7 +433,7 @@ public:
         long long max_k = 1000000000;
         long long mid = (min_k + max_k) / 2;
         while (min_k < max_k) {
-            if (minEatingSpeedTest(piles, h, mid)) {
+            if (minEatingSpeedHelper(piles, h, mid)) {
                 max_k = mid;
             } else {
                 min_k = mid + 1;
