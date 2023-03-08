@@ -5,11 +5,13 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <map>
 #include <array>
 #include <deque>
 #include <algorithm>
 #include <cmath>
 #include <cctype>
+#include <sstream>
 #include <unordered_map>
 #include <unordered_set>
 #include <numeric>
@@ -158,7 +160,7 @@ public:
         else return -1;
     }
 
-    int strStr2(string haystack, string needle) {
+    int strStr2(string &haystack, const string &needle) {
         return haystack.find(needle);
     }
 
@@ -284,7 +286,7 @@ public:
         return i;
     }
 
-    int minimumDeletions(string s) {
+    int minimumDeletions(const string &s) {
         int cur_del = 0;
         int b = 0;
         int a = 0;
@@ -426,8 +428,8 @@ public:
     }
 
     int minEatingSpeed(vector<int> &piles, int h) {
-        if(piles.size() ==1){
-            return (piles[0]+h-1)/h;
+        if (piles.size() == 1) {
+            return (piles[0] + h - 1) / h;
         }
         long long min_k = accumulate(begin(piles), end(piles), (long long) 0) / h;
         long long max_k = 1000000000;
@@ -442,11 +444,63 @@ public:
         }
         return max_k;
     }
+
+    int mostWordsFound(vector<string> &sentences) {
+        int res = 0;
+        int num;
+        for (auto &i: sentences) {
+            num = 1;
+            for (auto &j: i) {
+                if (j == ' ') {
+                    ++num;
+                }
+            }
+            if (num > res) {
+                res = num;
+            }
+        }
+        return res;
+    }
+
+    vector<string> findItinerary(vector<vector<string>> &tickets) {
+        vector<string> res;
+        vector<int> path;
+        unordered_map<int, priority_queue<int, vector<int>, greater<>>> adj;
+
+        function<int(string)> stringToInt = [](string input) -> int {
+            return (((input[0] << 8) + input[1]) << 8) + input[2];
+        };
+
+        function<string(int)> intToString = [](int input) -> string {
+            return {(char) (input >> 16), (char) ((input >> 8) % (1 << 8)), (char) (input % (1 << 8))};
+        };
+
+        function<void(int)> dfs = [&](int curr) {
+            auto &adj_nodes = adj[curr];
+            while (!adj_nodes.empty()) {
+                auto temp = adj_nodes.top();
+                adj_nodes.pop();
+                dfs(temp);
+            }
+            path.emplace_back(curr);
+        };
+
+        for (auto &i: tickets)
+            adj[stringToInt(i[0])].emplace(stringToInt(i[1]));
+
+        dfs(stringToInt("JFK"));
+
+        std::for_each(path.rbegin(), path.rend(), [&](const auto &item) {
+            res.push_back(intToString(item));
+        });
+        return res;
+    }
 };
 
 int main() {
     Solution s;
-    string b = "{a,b}{c,{d,e}}";
+    string b = "AKA";
+    cout << s.findItineraryIntToString(s.findItineraryStringToInt(b)) << endl;
 
 
 }
