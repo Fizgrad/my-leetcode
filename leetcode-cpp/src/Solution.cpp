@@ -30,6 +30,14 @@ struct TreeNode {
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+
+struct ListNode {
+    int val;
+    ListNode *next;
+
+    ListNode(int x) : val(x), next(NULL) {}
+};
+
 class Solution {
 public:
     TreeNode *invertTree(TreeNode *root) {
@@ -463,6 +471,7 @@ public:
     }
 
     vector<string> findItinerary(vector<vector<string>> &tickets) {
+        // Hierholzer's algorithm
         vector<string> res;
         vector<int> path;
         unordered_map<int, priority_queue<int, vector<int>, greater<>>> adj;
@@ -494,6 +503,24 @@ public:
             res.push_back(intToString(item));
         });
         return res;
+    }
+
+    ListNode *detectCycle(ListNode *head) {
+        //Floyd's Tortoise and Hare
+        ListNode *fast = head;
+        ListNode *slow = head;
+        while (slow != nullptr && fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (fast == slow) {
+                while (head != fast) {
+                    fast = fast->next;
+                    head = head->next;
+                }
+                return fast;
+            }
+        }
+        return nullptr;
     }
 };
 
