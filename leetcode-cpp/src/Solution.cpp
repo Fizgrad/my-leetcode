@@ -522,12 +522,43 @@ public:
         }
         return nullptr;
     }
+
+    void sortedListToBSTDFS(TreeNode *root, vector<int> &nums, int begin, int end) {
+        if (begin <= end) {
+            int mid = (begin + end) / 2;
+            root->val = nums[mid];
+            if (begin <= mid - 1) {
+                if (root->left == nullptr) {
+                    root->left = new TreeNode();
+                }
+                sortedListToBSTDFS(root->left, nums, begin, mid - 1);
+            }
+            if (mid + 1 <= end) {
+                if (root->right == nullptr) {
+                    root->right = new TreeNode();
+                }
+                sortedListToBSTDFS(root->right, nums, mid + 1, end);
+            }
+        }
+    }
+
+    TreeNode *sortedListToBST(ListNode *head) {
+        vector<int> nums;
+        while (head != nullptr) {
+            nums.push_back(head->val);
+            head = head->next;
+        }
+        int n = nums.size();
+        if(!n){
+            return nullptr;
+        }
+        TreeNode *res = new TreeNode();
+        sortedListToBSTDFS(res,nums,0,n-1);
+        return res;
+    }
 };
 
 int main() {
     Solution s;
     string b = "AKA";
-    cout << s.findItineraryIntToString(s.findItineraryStringToInt(b)) << endl;
-
-
 }

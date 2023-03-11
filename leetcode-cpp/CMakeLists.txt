@@ -7,4 +7,4 @@ include_directories(src)
 
 add_executable(leetcode
         src/Solution.cpp
-        src/construct.cpp src/getFolderNames.cpp)
+        src/construct.cpp src/getFolderNames.cpp src/LinkedListRandomNode.cpp)
