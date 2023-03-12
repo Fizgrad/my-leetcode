@@ -7,6 +7,7 @@
 #include <queue>
 #include <map>
 #include <array>
+#include <set>
 #include <deque>
 #include <algorithm>
 #include <cmath>
@@ -585,7 +586,143 @@ public:
         }
         return res;
     }
+    void subsetsHelper(int i,vector<int> & nums,vector<vector<int>> & ans,vector<int> & temp){
+        if(i==nums.size()){
+            return ;
+        }
+        if(i==0){
+            ans.push_back(temp);
+        }
+        for(int j=i;j<nums.size();j++){
+            temp.push_back(nums[j]);
+            ans.push_back(temp);
+            subsetsHelper(j+1,nums,ans,temp);
+            temp.pop_back();
+        }
+    }
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int>temp;
+        subsetsHelper(0,nums,ans,temp);
+        return ans;
+    }
+
+
+
+//  the best solution
+//    vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>>& edges) {
+//        using B = bitset<16>;
+//        vector<B> adj(n + 1);
+//        for (auto& edge: edges) {
+//            int u = edge[0], v = edge[1];
+//            adj[u].set(v);
+//            adj[v].set(u);
+//        }
+//        int dis[16][16];
+//        auto dfs = [&](auto&& dfs, int root, int u, int p, int d) -> void {
+//            dis[root][u] = d;
+//            for (int v = 1; v <= n; v++) {
+//                if (!adj[u].test(v)) continue;
+//                if (v == p) continue;
+//                dfs(dfs, root, v, u, d + 1);
+//            }
+//        };
+//        for (int v = 1; v <= n; v++) dfs(dfs, v, v, v, 0);
+//
+//        vector<int> ans(n - 1);
+//
+//        using T = pair<B, int>;
+//        vector<T> V;
+//        queue<int> Q;
+//        vector<bool> vis(16);
+//        Q.push(1);
+//        vis[1] = true;
+//
+//        while (!Q.empty()) {
+//            auto i = Q.front();
+//            Q.pop();
+//            auto conn = adj[i];
+//            int sz = V.size();
+//            for (int j = 0; j < sz; j++) {
+//                auto [bs, d] = V[j];
+//                if (!(conn & bs).any()) continue;
+//                for (int k = 1; k <= n; k++) {
+//                    if (!bs.test(k)) continue;
+//                    d = max(d, dis[k][i]);
+//                }
+//                ans[d - 1] += 1;
+//                bs.set(i);
+//                V.emplace_back(bs, d);
+//            }
+//            V.emplace_back(B(1 << i), 0);
+//            for (int v = 1; v <= n; v++) {
+//                if (!adj[i].test(v)) continue;
+//                if (vis[v]) continue;
+//                vis[v] = true;
+//                Q.push(v);
+//            }
+//        }
+//        return ans;
+//    }
+
+    int countSubgraphsForEachDiameterDFS(int& maxDis,  unordered_map<int,unordered_set<int>>& graph,set<int>& vertices,int node,int prev){
+        unordered_set<int>& next = graph[node];
+        int top1 = 0;
+        int top2 = 0;
+        for(auto i : next){
+            if(i == prev|| vertices.count(i)==0) {
+                continue;
+            }
+            int len = countSubgraphsForEachDiameterDFS(maxDis,graph,vertices,i,node);
+            if(len>top1){
+                top2 = top1;
+                top1 = len;
+            }else if(len>top2){
+                top2 = len;
+            }
+        }
+        maxDis = max(maxDis,top2+top1);
+        return top1+1;
+    }
+
+    vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>>& edges) {
+        vector<int> res(n-1,0);
+        unordered_map<int,unordered_set<int>> graph;
+        for(auto& i : edges){
+            graph[i[0]].insert(i[1]);
+            graph[i[1]].insert(i[0]);
+        }
+        for(int i = 0 ;i< (1<<n);++i){
+            set<int> vertices;
+            for(int j = 0;j<n; ++j){
+                if(i&(1<<j)){
+                    vertices.insert(j+1);
+                }
+            }
+            int numOfEdges=0;
+            for(auto i= vertices.begin();i!=vertices.end();++i){
+                for(auto j = i;j!= vertices.end();++j){
+                    if(*i==*j)
+                        continue;
+                    if(graph[*i].count(*j))
+                        ++numOfEdges;
+                }
+            }
+            if (numOfEdges==0||numOfEdges != vertices.size()-1){
+                continue;
+            }else {
+                int maxDis = 0;
+                countSubgraphsForEachDiameterDFS(maxDis,graph,vertices,*vertices.begin(),0);
+                if(maxDis <= vertices.size())
+                    ++res[maxDis-1];
+            }
+        }
+        return res;
+    }
 };
+
+
+
 
 int main() {
     Solution s;
