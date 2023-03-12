@@ -549,11 +549,40 @@ public:
             head = head->next;
         }
         int n = nums.size();
-        if(!n){
+        if (!n) {
             return nullptr;
         }
         TreeNode *res = new TreeNode();
-        sortedListToBSTDFS(res,nums,0,n-1);
+        sortedListToBSTDFS(res, nums, 0, n - 1);
+        return res;
+    }
+
+    ListNode *mergeKLists(vector<ListNode *> &lists) {
+        auto cmp = [](ListNode *a, ListNode *b) -> bool {
+            return a->val > b->val;
+        };
+        priority_queue<ListNode *, vector<ListNode *>, decltype(cmp)> heap(cmp);
+        ListNode *res = nullptr;
+        ListNode *cur = res;
+        for (auto &i: lists) {
+            if (i != nullptr) {
+                heap.push(i);
+            }
+        }
+        while (!heap.empty()) {
+            auto top = heap.top();
+            heap.pop();
+            if (top->next) {
+                heap.push(top->next);
+            }
+            if (res == nullptr) {
+                res = new ListNode(top->val);
+                cur = res;
+            } else {
+                cur->next = new ListNode(top->val);
+                cur = cur->next;
+            }
+        }
         return res;
     }
 };
