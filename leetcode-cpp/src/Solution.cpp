@@ -586,24 +586,26 @@ public:
         }
         return res;
     }
-    void subsetsHelper(int i,vector<int> & nums,vector<vector<int>> & ans,vector<int> & temp){
-        if(i==nums.size()){
-            return ;
+
+    void subsetsHelper(int i, vector<int> &nums, vector<vector<int>> &ans, vector<int> &temp) {
+        if (i == nums.size()) {
+            return;
         }
-        if(i==0){
+        if (i == 0) {
             ans.push_back(temp);
         }
-        for(int j=i;j<nums.size();j++){
+        for (int j = i; j < nums.size(); j++) {
             temp.push_back(nums[j]);
             ans.push_back(temp);
-            subsetsHelper(j+1,nums,ans,temp);
+            subsetsHelper(j + 1, nums, ans, temp);
             temp.pop_back();
         }
     }
-    vector<vector<int>> subsets(vector<int>& nums) {
+
+    vector<vector<int>> subsets(vector<int> &nums) {
         vector<vector<int>> ans;
-        vector<int>temp;
-        subsetsHelper(0,nums,ans,temp);
+        vector<int> temp;
+        subsetsHelper(0, nums, ans, temp);
         return ans;
     }
 
@@ -665,63 +667,77 @@ public:
 //        return ans;
 //    }
 
-    int countSubgraphsForEachDiameterDFS(int& maxDis,  unordered_map<int,unordered_set<int>>& graph,set<int>& vertices,int node,int prev){
-        unordered_set<int>& next = graph[node];
+    int countSubgraphsForEachDiameterDFS(int &maxDis, unordered_map<int, unordered_set<int>> &graph, set<int> &vertices,
+                                         int node, int prev) {
+        unordered_set<int> &next = graph[node];
         int top1 = 0;
         int top2 = 0;
-        for(auto i : next){
-            if(i == prev|| vertices.count(i)==0) {
+        for (auto i: next) {
+            if (i == prev || vertices.count(i) == 0) {
                 continue;
             }
-            int len = countSubgraphsForEachDiameterDFS(maxDis,graph,vertices,i,node);
-            if(len>top1){
+            int len = countSubgraphsForEachDiameterDFS(maxDis, graph, vertices, i, node);
+            if (len > top1) {
                 top2 = top1;
                 top1 = len;
-            }else if(len>top2){
+            } else if (len > top2) {
                 top2 = len;
             }
         }
-        maxDis = max(maxDis,top2+top1);
-        return top1+1;
+        maxDis = max(maxDis, top2 + top1);
+        return top1 + 1;
     }
 
-    vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>>& edges) {
-        vector<int> res(n-1,0);
-        unordered_map<int,unordered_set<int>> graph;
-        for(auto& i : edges){
+    vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>> &edges) {
+        vector<int> res(n - 1, 0);
+        unordered_map<int, unordered_set<int>> graph;
+        for (auto &i: edges) {
             graph[i[0]].insert(i[1]);
             graph[i[1]].insert(i[0]);
         }
-        for(int i = 0 ;i< (1<<n);++i){
+        for (int i = 0; i < (1 << n); ++i) {
             set<int> vertices;
-            for(int j = 0;j<n; ++j){
-                if(i&(1<<j)){
-                    vertices.insert(j+1);
+            for (int j = 0; j < n; ++j) {
+                if (i & (1 << j)) {
+                    vertices.insert(j + 1);
                 }
             }
-            int numOfEdges=0;
-            for(auto i= vertices.begin();i!=vertices.end();++i){
-                for(auto j = i;j!= vertices.end();++j){
-                    if(*i==*j)
+            int numOfEdges = 0;
+            for (auto i = vertices.begin(); i != vertices.end(); ++i) {
+                for (auto j = i; j != vertices.end(); ++j) {
+                    if (*i == *j)
                         continue;
-                    if(graph[*i].count(*j))
+                    if (graph[*i].count(*j))
                         ++numOfEdges;
                 }
             }
-            if (numOfEdges==0||numOfEdges != vertices.size()-1){
+            if (numOfEdges == 0 || numOfEdges != vertices.size() - 1) {
                 continue;
-            }else {
+            } else {
                 int maxDis = 0;
-                countSubgraphsForEachDiameterDFS(maxDis,graph,vertices,*vertices.begin(),0);
-                if(maxDis <= vertices.size())
-                    ++res[maxDis-1];
+                countSubgraphsForEachDiameterDFS(maxDis, graph, vertices, *vertices.begin(), 0);
+                if (maxDis <= vertices.size())
+                    ++res[maxDis - 1];
             }
         }
         return res;
     }
+
+    bool isSymmetric(TreeNode *root) {
+        if (root) {
+            return isSymmetric(root->left, root->right);
+        } else return true;
+    }
+
+    bool isSymmetric(TreeNode *root1, TreeNode *root2) {
+        if ((!root2 && root1) || (root2 && !root1))
+            return false;
+        return (root1 == nullptr && root2 == nullptr) ||
+               (root1->val == root2->val && isSymmetric(root1->left, root2->right) &&
+                isSymmetric(root1->right, root2->left));
+    }
+
 };
-
-
 
 
 int main() {
