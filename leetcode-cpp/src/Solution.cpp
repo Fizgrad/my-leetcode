@@ -737,6 +737,18 @@ public:
                 isSymmetric(root1->right, root2->left));
     }
 
+    int minNumberOfHours(int initialEnergy, int initialExperience, vector<int>& energy, vector<int>& experience) {
+        int res = max(accumulate(energy.begin(),energy.end(),-initialEnergy+1) , 0);
+        int curExperience = initialExperience;
+        for(auto i : experience){
+            if(curExperience <= i){
+                res += (i+1-curExperience);
+                curExperience = 1+i;
+            }
+            curExperience +=i;
+        }
+        return res;
+    }
 };
 
 
