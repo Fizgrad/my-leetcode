@@ -787,6 +787,39 @@ public:
         }
         return res;
     }
+
+//    We make good use of the condition "n is odd" as follow
+//    a1,(a2,a3),(a4,a5).....,
+//    making the decoded into pairs.
+//    a2^a3 = A[1]
+//    a4^a5 = A[3]
+//    a6^a7 = A[5]
+//    ...
+//    so we can have the result of a2^a3^a4...^an.
+//    And a1,a2,a3... is a permutation of 1,2,3,4...n
+//
+//    so we can have
+//    a1 = 1^2^3...^n^a2^a2^a3...^an
+//
+//    Then we can deduct the whole decoded array.
+    vector<int> decode(vector<int> &encoded) {
+        int n = encoded.size() + 1;
+        int temp = 0;
+        int last = n;
+        while (n--) {
+            last ^= n;
+        }
+        for (int i = 0; i < encoded.size(); i += 2) {
+            last ^= encoded[i];
+        }
+        for (auto i = encoded.rbegin(); i != encoded.rend(); ++i) {
+            *i ^= temp;
+            temp = *i;
+            *i ^= last;
+        }
+        encoded.push_back(last);
+        return encoded;
+    }
 };
 
 
