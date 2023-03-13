@@ -761,10 +761,27 @@ public:
         }
         return flag[0] && flag[1] && flag[2];
     }
+
+    double champagneTower(int poured, int query_row, int query_glass) {
+        int depth = 0;
+        vector<double> glass(query_glass+1);
+        glass[0] = poured;
+        double prev;
+        double half;
+        while(depth++<query_row){
+            glass[0]= prev = max(0.0,(glass[0] -1)/2);
+            for(int i = 1 ;i<=query_glass;++i){
+                half = max(0.0,(glass[i] -1)/2);
+                glass[i] = half + prev;
+                prev = half;
+            }
+        }
+        return min(1.0,glass[query_glass]);
+    }
 };
 
 
 int main() {
     Solution s;
-    string b = "AKA";
+    s.champagneTower(200, 23, 2);
 }
