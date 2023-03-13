@@ -737,17 +737,29 @@ public:
                 isSymmetric(root1->right, root2->left));
     }
 
-    int minNumberOfHours(int initialEnergy, int initialExperience, vector<int>& energy, vector<int>& experience) {
-        int res = max(accumulate(energy.begin(),energy.end(),-initialEnergy+1) , 0);
+    int minNumberOfHours(int initialEnergy, int initialExperience, vector<int> &energy, vector<int> &experience) {
+        int res = max(accumulate(energy.begin(), energy.end(), -initialEnergy + 1), 0);
         int curExperience = initialExperience;
-        for(auto i : experience){
-            if(curExperience <= i){
-                res += (i+1-curExperience);
-                curExperience = 1+i;
+        for (auto i: experience) {
+            if (curExperience <= i) {
+                res += (i + 1 - curExperience);
+                curExperience = 1 + i;
             }
-            curExperience +=i;
+            curExperience += i;
         }
         return res;
+    }
+
+    bool mergeTriplets(vector<vector<int>> &triplets, vector<int> &target) {
+        bool flag[3] = {false, false, false};
+        for (auto &i: triplets) {
+            if (i[0] > target[0] || i[1] > target[1] || i[2] > target[2]) {
+                continue;
+            }
+            for (auto j = 0; j < 3; ++j)
+                flag[j] = flag[j] || (i[j] == target[j]);
+        }
+        return flag[0] && flag[1] && flag[2];
     }
 };
 
