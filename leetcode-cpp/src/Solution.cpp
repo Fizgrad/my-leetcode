@@ -863,6 +863,27 @@ public:
         return res;
     }
 
+    vector<string> buildArray(vector<int> &target, int n) {
+        string push = "Push";
+        string pop = "Pop";
+        vector<string> res;
+        auto cur = target.begin();
+        for (int i = 1; i <= n; ++i) {
+            if (cur == target.end()) {
+                return res;
+            } else {
+                res.push_back(push);
+                if (*cur != i) {
+                    res.push_back(pop);
+                } else {
+                    ++cur;
+                }
+            }
+        }
+        return res;
+    }
+
+
 };
 
 
