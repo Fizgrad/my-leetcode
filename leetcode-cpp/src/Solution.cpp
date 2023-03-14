@@ -995,6 +995,17 @@ public:
         return res;
     }
 
+    string customSortString(string order, string s) {
+        unordered_map<char, int> hm;
+        for (auto i = 0; i < order.size(); ++i) {
+            hm[order[i]] = i;
+        }
+        auto f = [&](const char &a, const char &b) {
+            return hm[a] < hm[b];
+        };
+        sort(s.begin(), s.end(), f);
+        return s;
+    }
 
 };
 
