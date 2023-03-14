@@ -1007,6 +1007,13 @@ public:
         return s;
     }
 
+    vector<int> getMaximumXor(vector<int> &nums, int maximumBit) {
+        int maxNum = (1 << (maximumBit)) - 1;
+        for (auto i = nums.begin(); i != nums.end(); ++i) {
+            *i ^= (i == begin(nums) ? maxNum : *(i - 1));
+        }
+        return std::move(vector<int>(nums.rbegin(), nums.rend()));
+    }
 };
 
 
