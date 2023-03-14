@@ -935,7 +935,25 @@ public:
         return res;
     }
 
-
+    int minOperations(vector<int> &nums) {
+        int maxNum = 0;
+        int res = 0;
+        int cur, temp;
+        int plus = 0;
+        for (auto &i: nums) {
+            plus = 0;
+            cur = -1;
+            temp = i;
+            while (temp >= 1) {
+                plus += temp & 1;
+                temp >>= 1;
+                ++cur;
+            }
+            res += plus;
+            maxNum = max(maxNum, cur);
+        }
+        return res + maxNum;
+    }
 };
 
 
