@@ -968,6 +968,33 @@ public:
         return {time, memory1, memory2};
     }
 
+    vector<int> avoidFlood(vector<int> &rains) {
+        vector<int> res(rains.size(), -1);
+        unordered_map<int, int> fulls;
+        set<int> s;
+        for (auto i = 0; i < rains.size(); ++i) {
+            if (rains[i] == 0) {
+                s.insert(i);
+                res[i] = 1;
+            } else {
+                auto pair = fulls.find(rains[i]);
+                if (pair == fulls.end()) {
+                    fulls[rains[i]] = i;
+                } else {
+                    auto dry = s.upper_bound(pair->second);
+                    if (dry == s.end()) {
+                        return {};
+                    } else {
+                        res[*dry] = rains[i];
+                        s.erase(dry);
+                        fulls[rains[i]] = i;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
 
 };
 
