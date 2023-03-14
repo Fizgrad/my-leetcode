@@ -903,6 +903,39 @@ public:
         dfs(dfs, root, res, cur);
         return res;
     }
+
+    vector<int> findMode(TreeNode *root) {
+        vector<int> res;
+        vector<int> tree;
+        int times = 1;
+        int most = 0;
+        auto dfs = [](auto &&dfs, vector<int> &tree, TreeNode *root) -> void {
+            if (root) {
+                dfs(dfs, tree, root->left);
+                tree.push_back(root->val);
+                dfs(dfs, tree, root->right);
+            }
+        };
+        dfs(dfs, tree, root);
+        int prev = tree[0] - 1;
+        for (auto i: tree) {
+            if (prev == i) {
+                ++times;
+            } else {
+                times = 1;
+            }
+            if (times > most) {
+                most = times;
+                res = {i};
+            } else if (times == most) {
+                res.push_back(i);
+            }
+            prev = i;
+        }
+        return res;
+    }
+
+
 };
 
 
