@@ -843,6 +843,26 @@ public:
         dfs(dfs, s, res, root);
         return res;
     }
+
+//    The greedy pick won't break anything, so just take as much as possible.
+//    For each result value at A[i][j],
+//            we greedily take the min(row[i], col[j]).
+//    Then we update the row sum and col sum:
+//            row[i] -= A[i][j]
+//    col[j] -= A[i][j]
+    vector<vector<int>> restoreMatrix(vector<int> &rowSum, vector<int> &colSum) {
+        vector<vector<int>> res(rowSum.size(), vector<int>(colSum.size(), 0));
+        for (auto i = 0; i < rowSum.size(); ++i) {
+            for (auto j = 0; j < colSum.size(); ++j) {
+                int num = min(rowSum[i], colSum[j]);
+                res[i][j] = num;
+                rowSum[i] -= num;
+                colSum[j] -= num;
+            }
+        }
+        return res;
+    }
+
 };
 
 
