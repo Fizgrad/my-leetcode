@@ -883,7 +883,26 @@ public:
         return res;
     }
 
-
+    string smallestFromLeaf(TreeNode *root) {
+        string res, cur;
+        auto dfs = [](auto &&dfs, TreeNode *root, string &res, string &cur) -> void {
+            if (root != nullptr) {
+                cur.push_back('a' + root->val);
+                if (root->left || root->right) {
+                    dfs(dfs, root->left, res, cur);
+                    dfs(dfs, root->right, res, cur);
+                } else {
+                    string reverse(cur.rbegin(), cur.rend());
+                    if (res.empty() || res > reverse) {
+                        res = reverse;
+                    }
+                }
+                cur.pop_back();
+            }
+        };
+        dfs(dfs, root, res, cur);
+        return res;
+    }
 };
 
 
