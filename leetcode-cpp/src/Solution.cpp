@@ -820,6 +820,29 @@ public:
         encoded.push_back(last);
         return encoded;
     }
+
+    int sumNumbers(TreeNode *root) {
+        auto dfs = [](auto &&dfs, string &s, int &res, TreeNode *root) -> void {
+            if (root != nullptr) {
+                s.push_back(root->val + '0');
+                if (root->left == nullptr && root->right == nullptr) {
+                    res += stoi(s);
+                } else {
+                    if (root->left != nullptr) {
+                        dfs(dfs, s, res, root->left);
+                    }
+                    if (root->right != nullptr) {
+                        dfs(dfs, s, res, root->right);
+                    }
+                }
+                s.pop_back();
+            }
+        };
+        int res = 0;
+        string s;
+        dfs(dfs, s, res, root);
+        return res;
+    }
 };
 
 
