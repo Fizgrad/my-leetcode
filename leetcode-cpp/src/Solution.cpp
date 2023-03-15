@@ -1064,6 +1064,21 @@ public:
         }
     }
 
+    vector<int> rearrangeArray(vector<int> &nums) {
+        int pos = 0, neg = 1;
+        vector<int> res = nums;
+        for (auto i = 0; i < nums.size(); i++) {
+            if (nums[i] > 0) {
+                res[pos] = nums[i];
+                pos += 2;
+            }
+            if (nums[i] < 0) {
+                res[neg] = nums[i];
+                neg += 2;
+            }
+        }
+        return std::move(res);
+    }
 
 };
 
