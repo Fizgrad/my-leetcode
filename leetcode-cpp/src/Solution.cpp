@@ -1081,9 +1081,44 @@ public:
     }
 
     long long smallestNumber(long long num) {
-
-
+        vector<int> hm(10);
+        string res;
+        if (num == 0) {
+            return 0;
+        }
+        bool flag = false;
+        if (num < 0) {
+            flag = true;
+            num = -num;
+        }
+        do {
+            hm[num % 10]++;
+        } while ((num = num / 10) >= 1);
+        if (flag) {
+            int i = 9;
+            while (!hm[i]) {
+                --i;
+            }
+            --hm[i];
+            res.push_back('-');
+            res.push_back(i + '0');
+            for (int i = 9; i >= 0; --i) {
+                res.append(hm[i], i + '0');
+            }
+        } else {
+            int i = 1;
+            while (!hm[i]) {
+                ++i;
+            }
+            --hm[i];
+            res.push_back(i + '0');
+            for (int i = 0; i <= 9; ++i) {
+                res.append(hm[i], i + '0');
+            }
+        }
+        return stoll(res);
     }
+
 };
 
 
