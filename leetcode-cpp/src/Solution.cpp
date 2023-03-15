@@ -1038,6 +1038,21 @@ public:
         }
         return true;
     }
+
+    int maximalNetworkRank(int n, vector<vector<int>> &roads) {
+        vector<unordered_set<int>> nexts(n);
+        for (auto &i: roads) {
+            nexts[i[0]].insert(i[1]);
+            nexts[i[1]].insert(i[0]);
+        }
+        int res = 0;
+        for (auto i = nexts.begin(); i != nexts.end(); ++i) {
+            for (auto j = i + 1; j != nexts.end(); ++j) {
+                res = max(res, (int) (i->size() + j->size() - j->count(i - begin(nexts))));
+            }
+        }
+        return res;
+    }
 };
 
 
