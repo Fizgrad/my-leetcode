@@ -1014,6 +1014,30 @@ public:
         }
         return std::move(vector<int>(nums.rbegin(), nums.rend()));
     }
+
+    bool isCompleteTree(TreeNode *root) {
+        queue<TreeNode *> q;
+        queue<TreeNode *> temp;
+        q.push(root);
+        bool flag = true;
+        while (!q.empty()) {
+            temp = queue<TreeNode *>();
+            while (!q.empty()) {
+                auto front = q.front();
+                if (front == nullptr) {
+                    flag = false;
+                } else {
+                    if (!flag)
+                        return false;
+                    temp.push(front->left);
+                    temp.push(front->right);
+                }
+                q.pop();
+            }
+            swap(temp, q);
+        }
+        return true;
+    }
 };
 
 
