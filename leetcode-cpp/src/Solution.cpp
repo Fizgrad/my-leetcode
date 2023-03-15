@@ -1080,6 +1080,10 @@ public:
         return std::move(res);
     }
 
+    long long smallestNumber(long long num) {
+
+
+    }
 };
 
 
