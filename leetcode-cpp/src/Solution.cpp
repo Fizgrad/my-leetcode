@@ -1172,8 +1172,37 @@ public:
         };
         return f(f, inorder.begin(), inorder.end(), postorder.begin(), postorder.end());
     }
-};
 
+    int countSubarrays(vector<int> &nums, int k) {
+        int res = 0;
+        unordered_map<int, int> hm;
+        int prefixSum = 0;
+        hm[0] = 1;
+        bool checked = false;
+        for (auto &i: nums) {
+            if (i > k) {
+                i = 1;
+            } else if (i < k) {
+                i = -1;
+            } else {
+                i = 0;
+            }
+        }
+        for (auto i: nums) {
+            if (i == 0) {
+                checked = true;
+            }
+            prefixSum += i;
+            if (checked) {
+                res += hm[prefixSum] + hm[prefixSum - 1];
+            } else {
+                ++hm[prefixSum];
+            }
+        }
+        return res;
+    }
+
+};
 
 int main() {
     Solution s;
