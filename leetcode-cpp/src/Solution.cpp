@@ -609,9 +609,29 @@ public:
         return ans;
     }
 
-
-
-//  the best solution
+//    The best solution
+//    This code is a C++ function designed to solve a graph theory problem: given a tree with n nodes (represented by edges), find the diameter of all subtrees and count the occurrences of each diameter. The code employs techniques such as lambda expressions, recursion, bitwise operations, and breadth-first search (BFS).
+//    Here is a detailed explanation of the code:
+//
+//            Define a function called countSubgraphsForEachDiameter, which takes two arguments: an integer n (number of nodes) and a 2D integer vector edges (the tree's edges).
+//    Define a vector of type bitset<16> called adj, which represents the tree's adjacency matrix. The tree's node labels range from 1 to n, so the size of adj is n + 1.
+//    Iterate through edges, updating adj to populate the adjacency matrix.
+//    Define a 16x16 integer array called dis, which stores the distances between any two nodes in the tree.
+//    Define a lambda expression called dfs, which calculates the distances between any two nodes in the tree using depth-first search (DFS). dfs takes four arguments: root, u, p, and d. root is the root node of the subtree rooted at u, p is the parent node of u, and d is the distance between root and u.
+//    Use dfs to calculate the distances between any two nodes in the tree and store the results in the dis array.
+//    Define an integer vector called ans, which stores the number of occurrences of each diameter. Initially, set all elements to 0.
+//    Define a type alias called T, of type pair<B, int>. Objects of type T store a subtree (represented as a bitset) and its diameter.
+//    Define a vector of type T called V, which stores all visited subtrees and their diameters.
+//    Define an integer queue called Q for breadth-first search (BFS). Initially, enqueue node 1.
+//    Define a boolean vector called vis, which records whether each node has been visited. Initially, set all elements to false, and mark node 1 as visited.
+//    Traverse all nodes of the tree using BFS. For the currently visited node i, perform the following actions:
+//            a. Calculate the diameter of all visited subtrees, and update the ans vector.
+//    b. Add node i to the current subtree, and append the new subtree and its diameter to the V vector.
+//    c. Enqueue all unvisited neighbor nodes of node i into the queue Q, and mark them as visited.
+//    Once BFS is complete, return the ans vector, which represents the number of occurrences of each diameter.
+//    The primary goal of the code is to find the diameter of all subtrees in a given tree and count their occurrences. The code employs depth-first search (DFS) and breadth-first search (BFS) techniques, as well as bitwise operations to optimize storage and computation.
+//
+//
 //    vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>>& edges) {
 //        using B = bitset<16>;
 //        vector<B> adj(n + 1);
@@ -1119,6 +1139,39 @@ public:
         return stoll(res);
     }
 
+    int minImpossibleOR(vector<int> &v) {
+        int res;
+        unordered_set<int> s(v.begin(), v.end());
+        while (s.find(res) != s.end())res <<= 1;
+        return res;
+    }
+
+//    In this example, using auto&& has a reason. auto&& is a universal reference, which can bind to any type of value, including lvalues and rvalues. This is very useful for generic programming and perfect forwarding.
+//
+//    In the Y-combinator example, we need to pass the lambda function f as the first argument to itself. Using auto&& here ensures that, during the recursive call, f is passed to itself with the correct reference type.
+//
+//    By using auto&&, we can ensure that the reference to f is correct in the recursive call, whether f is an lvalue or an rvalue. This can reduce unnecessary copying and ensure the efficiency of the code.
+//
+//    If we use auto& or auto instead of auto&&, it might lead to copying or reference errors during the recursive call. This is because auto& can only bind to lvalues, while auto creates a new object, resulting in unnecessary copying in the recursive call. Therefore, using auto&& is a more suitable choice in this example.
+
+    TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
+        using iter = vector<int>::iterator;
+        auto f = [](auto &&f, iter inorderBegin, iter inorderEnd, iter postorderBegin,
+                    iter postorderEnd) -> TreeNode * {
+            if (inorderEnd == inorderBegin || postorderBegin == postorderEnd) {
+                return nullptr;
+            } else {
+                auto *root = new TreeNode(*(postorderEnd - 1));
+                iter pos = find(inorderBegin, inorderEnd, root->val);
+                auto len = (pos - inorderBegin);
+                root->left = f(f, inorderBegin, pos, postorderBegin, postorderBegin + len);
+                root->right =
+                        f(f, pos + 1, inorderEnd, postorderBegin + len, postorderEnd - 1);
+                return root;
+            }
+        };
+        return f(f, inorder.begin(), inorder.end(), postorder.begin(), postorder.end());
+    }
 };
 
 
