@@ -1202,6 +1202,33 @@ public:
         return res;
     }
 
+    int minSubarray(vector<int> &nums, int p) {
+        int sum = 0;
+        int res = -1;
+        unordered_map<int, int> hm;
+        int remainder = static_cast<int>(accumulate(nums.begin(), nums.end(), (long long) 0) % p);
+        if (remainder == 0) {
+            return 0;
+        }
+        hm[0] = -1;
+        for (auto i = 0; i < nums.size(); ++i) {
+            sum += nums[i];
+            sum %= p;
+            auto iter = hm.find((sum + p - remainder) % p);
+            if (iter != hm.end()) {
+                auto len = i - iter->second;
+                if ((res == -1 || res > len) && (len != nums.size())) {
+                    res = len;
+                }
+            }
+            hm[sum] = i;
+        }
+        return res;
+    }
+
+    int makeStringSorted(string s) {
+
+    }
 };
 
 int main() {
