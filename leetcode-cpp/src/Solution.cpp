@@ -1227,8 +1227,51 @@ public:
     }
 
     int makeStringSorted(string &s) {
-        
+        using ll = long long;
+        ll res = 0;
+        const ll mod = 1e9 + 7;
+        vector<int> nums(26, 0);
+        vector<long long> fact(s.size() + 1, 1ll);
+        for (auto i: s) {
+            ++nums[i - 'a'];
+        }
+
+        // b^p = (b^(p/2))^2 + b*(p%2==1)
+        //     = (b^2)^(p>>1) + b*(p%2==1)
+        auto modpow = [&](ll b, ll p) -> ll {
+            ll ans = 1;
+            do {
+                if (p & 1) {
+                    ans = (ans * b) % mod;
+                }
+                b = b * b % mod;
+            } while (p >>= 1);
+            return ans;
+        };
+        // to boost factorial
+        for (auto i = 1; i <= s.size(); i++) {
+            fact[i] = (fact[i - 1] * i) % mod;
+        }
+        auto l = s.size();
+        for (char c: s) {
+            l--;
+            long long t = 0, rev = 1;
+            for (int i = 0; i < 26; i++) {
+                if (i < c - 'a')
+                    t += nums[i];
+                rev = (rev * fact[nums[i]]) % mod;
+            }
+//            According to Fermat's Little Theorem, for a prime modulus p and an integer a that is not divisible by p,
+//            the following holds: a^(p-1) ≡ 1 (mod p).
+//            Therefore, the modular multiplicative inverse a^(-1) is a^(p-2),
+//            and the modular division a / b is equivalent to a * (b^(-1)), or a * modpow(b, p-2).
+            res += (t * fact[l] % mod) * modpow(rev, mod - 2);
+            res %= mod;
+            nums[c - 'a']--;
+        }
+        return res;
     }
+
 };
 
 int main() {
