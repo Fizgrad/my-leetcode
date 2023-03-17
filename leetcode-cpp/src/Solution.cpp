@@ -1226,8 +1226,8 @@ public:
         return res;
     }
 
-    int makeStringSorted(string s) {
-
+    int makeStringSorted(string &s) {
+        
     }
 };
 
