@@ -1263,8 +1263,9 @@ public:
             }
 //            According to Fermat's Little Theorem, for a prime modulus p and an integer a that is not divisible by p,
 //            the following holds: a^(p-1) ≡ 1 (mod p).
-//            Therefore, the modular multiplicative inverse a^(-1) is a^(p-2),
-//            and the modular division a / b is equivalent to a * (b^(-1)), or a * modpow(b, p-2).
+//            Therefore, the modular multiplicative inverse a^(-1) is a^(p-2)
+//            a/b mod m == a*b’mod m b' is b's modular multiplicative inverse
+//            the modular division a / b is equivalent to a * (b^(-1)), or a * modpow(b, p-2).
             res += (t * fact[l] % mod) * modpow(rev, mod - 2);
             res %= mod;
             nums[c - 'a']--;
