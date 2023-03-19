@@ -1273,9 +1273,27 @@ public:
         return res;
     }
 
+    bool checkPalindromeFormation(const string &a, const string &b) {
+        auto checkInclusive = [](const string &s) -> bool {
+            if (s.empty()) { return false; }
+            if (s.size() == 1) { return true; }
+            auto i = s.begin();
+            auto j = s.end() - 1;
+            while (i < j) {
+                if (*i++ != *j--) { return false; }
+            }
+            return true;
+        };
+
+        cout<<checkInclusive("av");
+        cout<<checkInclusive("abba");
+
+        return false;
+    }
+
 };
 
 int main() {
     Solution s;
-    s.champagneTower(200, 23, 2);
+    s.checkPalindromeFormation("","");
 }
