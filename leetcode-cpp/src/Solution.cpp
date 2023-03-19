@@ -1285,15 +1285,24 @@ public:
             return true;
         };
 
-        cout<<checkInclusive("av");
-        cout<<checkInclusive("abba");
+        auto f = [&](const string &a, const string &b) -> bool {
+            auto i = 0;
+            auto j = b.size() - 1;
+            while (i < j && i < b.size() && j >= 0 && a[i] == b[j]) {
+                ++i, --j;
+            }
+            if (i > j) {
+                return true;
+            } else {
+                return checkInclusive(a.substr(i, j - i + 1)) || checkInclusive(b.substr(i, j - i + 1));
+            }
+        };
 
-        return false;
+        return f(a, b) || f(b, a);
     }
 
 };
 
 int main() {
-    Solution s;
-    s.checkPalindromeFormation("","");
+    return 0;
 }
