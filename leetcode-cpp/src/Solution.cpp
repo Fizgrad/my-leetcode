@@ -1379,6 +1379,24 @@ public:
         }
         return static_cast<int>(res - unique + prev_ans[len - 1]);
     }
+
+    int majorityElement(vector<int> &nums) {
+        //Boyer-Moore
+        int m = nums[0];
+        int num = 0;
+        for (auto i: nums) {
+            if (i == m) {
+                ++num;
+            } else {
+                --num;
+                if (num < 0) {
+                    m = i;
+                    num = 1;
+                }
+            }
+        }
+        return m;
+    }
 };
 
 int main() {
