@@ -1315,8 +1315,74 @@ public:
         return false;
     }
 
+    int numDupDigitsAtMostN(int n) {
+        vector<int> prev_ans = {0, 0, 9, 261, 4725, 67509, 831429, 9287109, 97654149, 994388229};
+        using ll = long long;
+        auto pow = [&](ll b, ll p) -> ll {
+            ll ans = 1;
+            do {
+                if (p & 1) {
+                    ans = (ans * b);
+                }
+                b = b * b;
+            } while (p >>= 1);
+            return ans;
+        };
+
+        vector<ll> fact(10 + 1, 1ll);
+        for (auto i = 1; i < fact.size(); i++) {
+            fact[i] = (fact[i - 1] * i);
+        }
+
+        string num = to_string(n);
+        unordered_set<char> set(num.begin(), num.end());
+        auto len = num.size();
+        ll res = (len - set.size() > 0 ? 1 : 0);
+        int l = 1;
+        bitset<10> flag(0);
+        ll unique = 0;
+        bool has_smaller_unique = true;
+        for (auto i = 0; i < len; ++i, ++l) {
+            char c = num[i];
+            int number = (c - '0');
+            if (i == 0) {
+                flag.set(number);
+                res += (number - 1) * pow(10, len - l);
+                unique += (number - 1) * fact[9] / fact[9 - len + l];
+            } else {
+                res += (number) * pow(10, len - l);
+                if (has_smaller_unique) {
+                    int cur_num = number - 1;
+                    while (cur_num >= 0 && flag[cur_num]) {
+                        --cur_num;
+                    }
+                    if (cur_num >= 0 && !flag[cur_num]) {
+                        int choice = 0;
+                        for (int k = 0; k <= cur_num; ++k) {
+                            if (!flag[k]) {
+                                ++choice;
+                            }
+                        }
+                        int remains = 10 - flag.count() - 1;
+                        unique += (choice) * fact[remains] / fact[remains - len + l];
+                    }
+                    if (flag[number]) {
+                        has_smaller_unique = false;
+                    }
+                    if (!flag[number]) {
+                        flag.set(number);
+                    } else if (cur_num >= 0 && !flag[cur_num]) {
+                        flag.set(cur_num);
+                    }
+                }
+            }
+        }
+        return static_cast<int>(res - unique + prev_ans[len - 1]);
+    }
 };
 
 int main() {
+    Solution s;
+    s.numDupDigitsAtMostN(121);
     return 0;
 }
