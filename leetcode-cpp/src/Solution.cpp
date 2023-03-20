@@ -1301,6 +1301,20 @@ public:
         return f(a, b) || f(b, a);
     }
 
+    bool canPlaceFlowers(vector<int> &flowerbed, int n) {
+        for (auto i = 0; i < flowerbed.size(); ++i) {
+            if (flowerbed[i] == 0 && (i == 0 || flowerbed[i - 1] == 0) &&
+                (i == flowerbed.size() - 1 || flowerbed[i + 1] == 0)) {
+                --n;
+                flowerbed[i] = 1;
+            }
+            if (n <= 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 };
 
 int main() {
