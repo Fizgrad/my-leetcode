@@ -8,6 +8,7 @@
 #include <map>
 #include <array>
 #include <set>
+#include <stack>
 #include <deque>
 #include <algorithm>
 #include <cmath>
@@ -32,12 +33,49 @@ struct TreeNode {
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+class Node {
+public:
+    bool val;
+    bool isLeaf;
+    Node *topLeft;
+    Node *topRight;
+    Node *bottomLeft;
+    Node *bottomRight;
+
+    Node() {
+        val = false;
+        isLeaf = false;
+        topLeft = nullptr;
+        topRight = nullptr;
+        bottomLeft = nullptr;
+        bottomRight = nullptr;
+    }
+
+    Node(bool _val, bool _isLeaf) {
+        val = _val;
+        isLeaf = _isLeaf;
+        topLeft = nullptr;
+        topRight = nullptr;
+        bottomLeft = nullptr;
+        bottomRight = nullptr;
+    }
+
+    Node(bool _val, bool _isLeaf, Node *_topLeft, Node *_topRight, Node *_bottomLeft, Node *_bottomRight) {
+        val = _val;
+        isLeaf = _isLeaf;
+        topLeft = _topLeft;
+        topRight = _topRight;
+        bottomLeft = _bottomLeft;
+        bottomRight = _bottomRight;
+    }
+};
+
 
 struct ListNode {
     int val;
     ListNode *next;
 
-    ListNode(int x) : val(x), next(NULL) {}
+    ListNode(int x) : val(x), next(nullptr) {}
 };
 
 class Solution {
@@ -1434,6 +1472,333 @@ public:
         } else {
             return "Neither";
         }
+    }
+
+    int calculate(string s) {
+        stack<char> ops;
+        string r;
+        bool flag_p_d = false;
+        long long int temp;
+        for (auto i: s) {
+            if (isdigit(i)) {
+                if (!flag_p_d) {
+                    flag_p_d = true;
+                    temp = i - '0';
+                } else {
+                    temp *= 10;
+                    temp += i - '0';
+                }
+            } else {
+                if (flag_p_d) {
+                    flag_p_d = false;
+                    r.append(to_string(temp));
+                    r.push_back(',');
+                    temp = 0;
+                }
+            }
+
+            if (i == '(') {
+                ops.push(i);
+            } else if (i == '+' || i == '-') {
+                if (ops.empty()) {
+                    ops.push(i);
+                } else {
+                    while (!ops.empty() && ops.top() != '(') {
+                        char op = ops.top();
+                        ops.pop();
+                        r.push_back(op);
+                    }
+                    ops.push(i);
+                }
+            } else if (i == ')') {
+                while (!ops.empty() && ops.top() != '(') {
+                    char op = ops.top();
+                    ops.pop();
+                    r.push_back(op);
+                }
+                if (ops.top() == '(')
+                    ops.pop();
+            }
+        }
+        if (flag_p_d) {
+            flag_p_d = false;
+            r.append(to_string(temp));
+            r.push_back(',');
+            temp = 0;
+        }
+        while (!ops.empty()) {
+            char op = ops.top();
+            ops.pop();
+            r.push_back(op);
+        }
+        cout << r << endl;
+        stack<int> rnums;
+        for (auto i: r) {
+            if (isdigit(i)) {
+                if (!flag_p_d) {
+                    flag_p_d = true;
+                    temp = i - '0';
+                } else {
+                    temp *= 10;
+                    temp += i - '0';
+                }
+            } else {
+                if (flag_p_d) {
+                    flag_p_d = false;
+                    rnums.push(temp);
+                    temp = 0;
+                }
+            }
+            if (i == '+') {
+                int num1 = rnums.top();
+                rnums.pop();
+                int num2 = rnums.top();
+                rnums.pop();
+                rnums.push(num1 + num2);
+            } else if (i == '-') {
+                int num1 = rnums.top();
+                rnums.pop();
+                int num2 = rnums.top();
+                rnums.pop();
+                rnums.push(num2 - num1);
+            }
+        }
+        return rnums.top();
+    }
+
+    int diameterOfBinaryTree(TreeNode *root) {
+        int res = 0;
+        auto diameterOfBinaryTreeDFS = [&](auto &&diameterOfBinaryTreeDFS, TreeNode *root) -> int {
+            if (root == nullptr) {
+                return 0;
+            }
+            int left = diameterOfBinaryTreeDFS(diameterOfBinaryTreeDFS, root->left);
+            int right = diameterOfBinaryTreeDFS(diameterOfBinaryTreeDFS, root->right);
+            res < left + right ? (res = left + right) : res;
+            return (left > right ? left : right) + 1;
+        };
+        diameterOfBinaryTreeDFS(diameterOfBinaryTreeDFS, root);
+        return res;
+    }
+
+    vector<string> getFolderNames(const vector<string> &names) {
+        vector<string> res;
+        res.reserve(names.size());
+        unordered_map<string, int> hm;
+        for (const auto &i: names) {
+            auto iter = hm.find(i);
+            if (iter == hm.end()) {
+                res.push_back(i);
+                ++iter->second;
+            } else {
+                int k = iter->second;
+                string temp = i + '(' + to_string(k) + ')';
+                auto temp_iter = hm.find(temp);
+                while (temp_iter != hm.end()) {
+                    ++k;
+                    temp = i + '(' + to_string(k) + ')';
+                    temp_iter = hm.find(temp);
+                }
+                iter->second = k + 1;
+                hm[temp] = 1;
+                res.push_back(temp);
+            }
+        }
+        return res;
+    }
+
+    bool halvesAreAlike(const string &s) {
+        int size = s.size();
+        int a = 0;
+        int b = 0;
+        for (int i = 0; i < size / 2; ++i) {
+            if (s[i] == 'a' || s[i] == 'e' || s[i] == 'i' || s[i] == 'o' || s[i] == 'u' || s[i] == 'A' || s[i] == 'E' ||
+                s[i] == 'I' || s[i] == 'O' || s[i] == 'U') {
+                ++a;
+            }
+        }
+        for (int i = size / 2; i < size; ++i) {
+            if (s[i] == 'a' || s[i] == 'e' || s[i] == 'i' || s[i] == 'o' || s[i] == 'u' || s[i] == 'A' || s[i] == 'E' ||
+                s[i] == 'I' || s[i] == 'O' || s[i] == 'U') {
+                ++b;
+            }
+        }
+        return a == b;
+    }
+
+    Node *construct(vector<vector<int>> &grid) {
+        auto all_equals = [&](vector<vector<int>> &grid, int startx, int starty, int len) -> int {
+            int temp = grid[startx][starty];
+            for (int i = 0; i < len; ++i) {
+                for (int j = 0; j < len; ++j) {
+                    if (grid[startx + i][starty + j] == temp) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+            return temp == 1 ? 1 : -1;
+        };
+
+        auto dfs = [&](auto &&dfs, vector<vector<int>> &grid, int start_x, int start_y, int len) -> Node * {
+            if (len == 1) {
+                return new Node((grid[start_x][start_y] == 1), true);
+            } else {
+                int value = all_equals(grid, start_x, start_y, len);
+                if (value == 0) {
+                    return new Node((grid[start_x][start_y] == 1), false,
+                                    dfs(dfs, grid, start_x, start_y, len / 2),
+                                    dfs(dfs, grid, start_x, start_y + len / 2, len / 2),
+                                    dfs(dfs, grid, start_x + len / 2, start_y, len / 2),
+                                    dfs(dfs, grid, start_x + len / 2, start_y + len / 2, len / 2));
+                } else {
+                    return new Node((value == 1), true);
+                }
+            }
+        };
+        return dfs(dfs, grid, 0, 0, grid.size());
+    }
+
+    vector<vector<int>> outerTrees(vector<vector<int>> &trees) {
+        auto crossProduct = [](vector<int> p1, vector<int> p2, vector<int> p3) {
+            int a = p2[0] - p1[0];
+            int b = p2[1] - p1[1];
+            int c = p3[0] - p1[0];
+            int d = p3[1] - p1[1];
+            return a * d - b * c;
+        };
+
+        auto constructHalfHull = [&](vector<vector<int>> &trees) -> vector<vector<int>> {
+            vector<vector<int>> q;
+            for (int i = 0; i < trees.size(); ++i) {
+                while (q.size() >= 2 && crossProduct(*(q.end() - 2), *(q.end() - 1), trees[i]) > 0) {
+                    q.pop_back();
+                }
+                q.push_back(trees[i]);
+            }
+            return q;
+        };
+
+        if (trees.size() <= 3) {
+            return trees;
+        }
+        sort(trees.begin(), trees.end());
+
+        auto m = constructHalfHull(trees);
+        vector<vector<int>> temp;
+        for (auto i = trees.rbegin(); i != trees.rend(); ++i) {
+            temp.push_back(*i);
+        }
+        auto n = constructHalfHull(temp);
+        set<vector<int>> r;
+        for (auto i: m) {
+            r.insert(i);
+        }
+        for (auto i: n) {
+            r.insert(i);
+        }
+        vector<vector<int>> q;
+        for (auto i: r) {
+            q.push_back(i);
+        }
+
+        return q;
+    }
+
+
+    vector<vector<int>> threeSum(vector<int> &nums) {
+        static const long long int base = 200000 + 1;
+        static const long long int sqbase = base * base;
+        static const long long int bias = 100000;
+
+        auto bisect_left = [&](vector<int> &nums, int x, int a, int b) {
+            int mid = (a + b) / 2;
+            while (mid < b && a < b) {
+                if (nums[mid] == x) {
+                    return mid;
+                } else if (nums[mid] > x) {
+                    b = mid - 1;
+                    mid = (a + b) / 2;
+                } else {
+                    a = mid + 1;
+                    mid = (a + b) / 2;
+                }
+            }
+            return mid;
+        };
+
+        int n = nums.size();
+        unordered_set<long long int> res;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < n; ++i) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            for (int j = i + 1; j < n; ++j) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+                int dif = 0 - nums[i] - nums[j];
+                int idx = 0;
+                while (idx < n) {
+                    idx = bisect_left(nums, dif, idx + 1, n);
+                    if (idx == n || nums[idx] > dif)
+                        break;
+                    else if (i != idx && idx != j && nums[idx] == dif) {
+                        vector<int> l = {i, j, idx};
+                        sort(l.begin(), l.end());
+                        res.insert((l[0] + bias) * sqbase + (l[1] + bias) * base + l[2] + bias);
+                    }
+                }
+
+            }
+        }
+        vector<vector<int>> realres;
+        for (auto i: res) {
+            int a = i / sqbase;
+            int b = (i - a * sqbase) / base;
+            int c = (i - a * sqbase - b * base);
+            vector<int> temp = {a, b, c};
+            realres.push_back(temp);
+        }
+        return realres;
+
+    }
+
+    bool exist(vector<vector<char>> &board, string word) {
+        const int dx[4] = {0, 0, 1, -1};
+        const int dy[4] = {1, -1, 0, 0};
+
+        auto next_procedure = [&](auto &&next_procedure, vector<vector<char>> &board, string &word, int index, int x,
+                                  int y, vector<vector<bool>> &checks) -> bool {
+            ++index;
+            if (index == word.size())
+                return true;
+            for (int i = 0; i < 4; ++i) {
+                if (x + dx[i] >= 0 && x + dx[i] < board.size() && y + dy[i] >= 0 && y + dy[i] < board.front().size()) {
+                    if (!checks[x + dx[i]][y + dy[i]] && board[x + dx[i]][y + dy[i]] == word[index]) {
+                        checks[x + dx[i]][y + dy[i]] = true;
+                        if (next_procedure(next_procedure, board, word, index, x + dx[i], y + dy[i], checks)) {
+                            return true;
+                        }
+                        checks[x + dx[i]][y + dy[i]] = false;
+                    }
+                }
+            }
+            return false;
+        };
+
+        vector<bool> temp(10, false);
+        vector<vector<bool>> checks(10, temp);
+        for (int i = 0; i < board.size(); ++i) {
+            for (int j = 0; j < board.front().size(); ++j) {
+                if (board[i][j] == word.front()) {
+                    checks[i][j] = true;
+                    if (next_procedure(next_procedure, board, word, 0, i, j, checks)) {
+                        return true;
+                    }
+                    checks[i][j] = false;
+                }
+            }
+        }
+        return false;
     }
 };
 
