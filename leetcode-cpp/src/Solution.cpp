@@ -1800,6 +1800,20 @@ public:
         }
         return false;
     }
+
+    int findFinalValue(vector<int> &nums, int original) {
+        bool flag = true;
+        while (flag) {
+            flag = false;
+            for (auto i = 0; i < nums.size(); ++i) {
+                if (nums[i] == original) {
+                    original *= 2;
+                    flag = true;
+                }
+            }
+        }
+        return original;
+    }
 };
 
 int main() {
