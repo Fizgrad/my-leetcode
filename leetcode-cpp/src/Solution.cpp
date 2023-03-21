@@ -1397,6 +1397,26 @@ public:
         }
         return m;
     }
+
+    long long zeroFilledSubarray(vector<int> &nums) {
+        long long len = 0;
+        long long res = 0;
+        for (auto i: nums) {
+            if (i == 0) {
+                ++len;
+            } else {
+                if (len > 0) {
+                    res += len * (len + 1) / 2;
+                    len = 0;
+                }
+            }
+        }
+        if (len > 0) {
+            res += len * (len + 1) / 2;
+            len = 0;
+        }
+        return res;
+    }
 };
 
 int main() {
