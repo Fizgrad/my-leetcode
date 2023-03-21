@@ -13,6 +13,7 @@
 #include <cmath>
 #include <cctype>
 #include <sstream>
+#include <regex>
 #include <unordered_map>
 #include <unordered_set>
 #include <numeric>
@@ -1416,6 +1417,23 @@ public:
             len = 0;
         }
         return res;
+    }
+
+    string validIPAddress(const string &queryIP) {
+        static std::regex ipv4_pattern(
+                "^((25[0-5]|2[0-4][0-9]|[1][0-9][0-9]|[1-9][0-9]|[0-9])(\\.)){3}(25[0-5]|2[0-4][0-9]|[1][0-9][0-9]|[1-9][0-9]|[0-9])$");
+        static std::regex ipv6_pattern(
+                "^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$");
+        if (queryIP.empty()) {
+            return "Neither";
+        }
+        if (regex_match(queryIP, ipv4_pattern)) {
+            return "IPv4";
+        } else if (regex_match(queryIP, ipv6_pattern)) {
+            return "IPv6";
+        } else {
+            return "Neither";
+        }
     }
 };
 
