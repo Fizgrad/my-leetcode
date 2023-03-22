@@ -1814,6 +1814,64 @@ public:
         }
         return original;
     }
+
+    int minScore(int n, vector<vector<int>> &roads) {
+        vector<int> parent(n + 1, 0);
+        vector<unsigned long long> len(n + 1, 1);
+        for (auto i = 0; i < n + 1; ++i) {
+            parent[i] = i;
+        }
+        auto find = [&](int node) -> int {
+            int p = node;
+            while (p != parent[p]) {
+                p = parent[p];
+            }
+            return p;
+        };
+
+        auto update = [&](int x, int p) {
+            int temp;
+            while (x != (temp = parent[x])) {
+                parent[x] = p;
+                x = temp;
+            }
+        };
+
+        auto uni = [&](int a, int b) -> void {
+            int ap = find(a);
+            int bp = find(b);
+            if (len[ap] > len[bp]) {
+                update(b,ap);
+                parent[bp] = ap;
+                len[ap] += len[bp];
+            } else {
+                update(a,bp);
+                parent[ap] = bp;
+                len[bp] += len[ap];
+            }
+        };
+
+        for (auto &i: roads) {
+            uni(i[0], i[1]);
+        }
+        unordered_map<int, int> hm;
+        for (auto &i: roads) {
+            int ap = find(i[0]);
+            int bp = find(i[1]);
+            if (hm.find(ap) == hm.end()) {
+                hm[ap] = i[2];
+            } else {
+                hm[ap] = min(hm[ap], i[2]);
+            }
+            if (hm.find(bp) == hm.end()) {
+                hm[bp] = i[2];
+            } else {
+                hm[bp] = min(hm[bp], i[2]);
+            }
+        }
+
+        return hm[find(1)];
+    }
 };
 
 int main() {
