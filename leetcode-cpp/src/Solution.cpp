@@ -1841,11 +1841,11 @@ public:
             int ap = find(a);
             int bp = find(b);
             if (len[ap] > len[bp]) {
-                update(b,ap);
+                update(b, ap);
                 parent[bp] = ap;
                 len[ap] += len[bp];
             } else {
-                update(a,bp);
+                update(a, bp);
                 parent[ap] = bp;
                 len[bp] += len[ap];
             }
@@ -1872,6 +1872,95 @@ public:
 
         return hm[find(1)];
     }
+
+    int findKthNumber(int n, int k) {
+        auto count_nodes_with_prefix = [](long long n, long long prefix) {
+            long long count = 0;
+            long long current = prefix;
+            long long next = prefix + 1;
+            while (current <= n) {
+                count += std::min(n + 1, next) - current;
+                current *= 10;
+                next *= 10;
+            }
+            return count;
+        };
+        int prefix = 1;
+        while (k > 1) {
+            long long count = count_nodes_with_prefix(n, prefix);
+            if (k <= count) {
+                prefix *= 10;
+                k -= 1;
+            } else {
+                prefix += 1;
+                k -= count;
+            }
+        }
+        return prefix;
+    }
+
+    int makeConnected(int n, vector<vector<int>> &connections) {
+        vector<int> parent(n + 1, 0);
+        vector<unsigned long long> len(n + 1, 1);
+        for (auto i = 0; i < n + 1; ++i) {
+            parent[i] = i;
+        }
+        auto find = [&](int node) -> int {
+            int p = node;
+            while (p != parent[p]) {
+                p = parent[p];
+            }
+            return p;
+        };
+
+        auto update = [&](int x, int p) {
+            int temp;
+            while (x != (temp = parent[x])) {
+                parent[x] = p;
+                x = temp;
+            }
+        };
+
+        auto uni = [&](int a, int b) -> void {
+            int ap = find(a);
+            int bp = find(b);
+            if (len[ap] > len[bp]) {
+                update(b, ap);
+                parent[bp] = ap;
+                len[ap] += len[bp];
+            } else {
+                update(a, bp);
+                parent[ap] = bp;
+                len[bp] += len[ap];
+            }
+        };
+
+        int remains = 0;
+        for (auto &i: connections) {
+            int ap = find(i[0]);
+            int bp = find(i[1]);
+            if (ap == bp) {
+                ++remains;
+            } else {
+                uni(i[0], i[1]);
+            }
+        }
+
+        unordered_set<int> subGraphs;
+        for (auto i = 0; i < n; ++i) {
+            subGraphs.insert(find(i));
+        }
+        int subGraphSize = subGraphs.size();
+        if (subGraphSize > remains + 1) {
+            return -1;
+        } else if (subGraphSize == 1) {
+            return 0;
+        } else {
+            return subGraphSize - 1;
+        }
+    }
+
+
 };
 
 int main() {
