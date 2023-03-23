@@ -1960,6 +1960,30 @@ public:
         }
     }
 
+    vector<bool> checkArithmeticSubarrays(vector<int> &nums, vector<int> &l, vector<int> &r) {
+        vector<bool> res(l.size(), true);
+        for (auto i = 0; i < l.size(); ++i) {
+            auto [p_min, p_max] = minmax_element(begin(nums) + l[i], begin(nums) + r[i] + 1);
+            int len = r[i] - l[i] + 1, d = (*p_max - *p_min) / (len - 1);
+            if (*p_max == *p_min)
+                continue;
+            else if ((*p_max - *p_min) % (len - 1)) {
+                res[i] = false;
+                continue;
+            } else {
+                vector<bool> n(len);
+                int j;
+                for (j = l[i]; j <= r[i]; ++j) {
+                    if ((nums[j] - *p_min) % d || n[(nums[j] - *p_min) / d]) {
+                        break;
+                    }
+                    n[(nums[j] - *p_min) / d] = true;
+                }
+                res[i] = (j > r[i]);
+            }
+        }
+        return std::move(res);
+    }
 
 };
 
