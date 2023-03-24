@@ -1985,6 +1985,54 @@ public:
         return std::move(res);
     }
 
+    double myPow(double x, long long n) {
+        double res = 1;
+        if (n == 0) {
+            return res;
+        } else if (n < 0) {
+            n = -n;
+            x = 1.0 / x;
+        }
+        do {
+            if (n & 1) {
+                res *= x;
+            }
+            x *= x;
+        } while (n >>= 1);
+        return res;
+    }
+
+    int minReorder(int n, vector<vector<int>> &connections) {
+        int res = 0;
+        vector<vector<int>> to(n, vector<int>());
+        vector<vector<int>> from(n, vector<int>());
+        vector<bool> unvisited(n,true);
+        unvisited[0] = false;
+        for (auto &i: connections) {
+            to[i[0]].push_back(i[1]);
+            from[i[1]].push_back(i[0]);
+        }
+        queue<int> q;
+        q.push(0);
+        while (!q.empty()) {
+            int front = q.front();
+            q.pop();
+            for (auto i: from[front]) {
+                if (unvisited[i]) {
+                    unvisited[i] = false;
+                    q.push(i);
+                }
+            }
+            for (auto i: to[front]) {
+                if (unvisited[i]) {
+                    unvisited[i] = false;
+                    q.push(i);
+                    ++res;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
