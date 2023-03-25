@@ -7,4 +7,4 @@ include_directories(src)
 
 add_executable(leetcode
         src/Solution.cpp
-        src/LinkedListRandomNode.cpp src/MyLinkedList.cpp src/Trie.cpp src/BrowserHistory.cpp src/WordDictionary.cpp)
+        src/LinkedListRandomNode.cpp src/MyLinkedList.cpp src/Trie.cpp src/BrowserHistory.cpp src/WordDictionary.cpp src/StreamChecker.cpp)

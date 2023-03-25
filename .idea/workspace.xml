@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="leetcode" targetName="leetcode" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ff2ef82f-e4b2-4dc8-b019-d8aec44f2e5f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/leetcode-cpp/src/StreamChecker.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/leetcode-cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/leetcode-cpp/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/leetcode-cpp/src/Solution.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/leetcode-cpp/src/Solution.cpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2MXoDdyGR0yfeDYt9pTrzo891H5" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "last_opened_file_path": "/Users/david/leetcode",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "CPPToolchains",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="leetcode" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leetcode" TARGET_NAME="leetcode" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="leetcode" RUN_TARGET_NAME="leetcode">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ff2ef82f-e4b2-4dc8-b019-d8aec44f2e5f" name="Changes" comment="" />
+      <created>1677923170308</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1677923170308</updated>
+      <workItem from="1677923171628" duration="3889000" />
+      <workItem from="1677956764771" duration="39000" />
+      <workItem from="1677995490325" duration="3550000" />
+      <workItem from="1678068880626" duration="1954000" />
+      <workItem from="1678072526786" duration="878000" />
+      <workItem from="1678089557858" duration="1817000" />
+      <workItem from="1678182858211" duration="7979000" />
+      <workItem from="1678248307501" duration="10605000" />
+      <workItem from="1678304818215" duration="1019000" />
+      <workItem from="1678342530939" duration="1690000" />
+      <workItem from="1678430160671" duration="1000000" />
+      <workItem from="1678559710898" duration="2775000" />
+      <workItem from="1678610464268" duration="9008000" />
+      <workItem from="1678641902681" duration="346000" />
+      <workItem from="1678675307972" duration="1696000" />
+      <workItem from="1678677154267" duration="1268000" />
+      <workItem from="1678678431634" duration="9022000" />
+      <workItem from="1678729664698" duration="4467000" />
+      <workItem from="1678767417374" duration="1568000" />
+      <workItem from="1678778131319" duration="8973000" />
+      <workItem from="1678803191611" duration="5483000" />
+      <workItem from="1678846116945" duration="8129000" />
+      <workItem from="1678881770181" duration="8591000" />
+      <workItem from="1678949963321" duration="8118000" />
+      <workItem from="1678960027742" duration="7405000" />
+      <workItem from="1679074733810" duration="4998000" />
+      <workItem from="1679081218284" duration="13825000" />
+      <workItem from="1679235980978" duration="16646000" />
+      <workItem from="1679295159029" duration="332000" />
+      <workItem from="1679388704104" duration="1062000" />
+      <workItem from="1679389884967" duration="2658000" />
+      <workItem from="1679393061494" duration="1143000" />
+      <workItem from="1679395285636" duration="688000" />
+      <workItem from="1679449607478" duration="5700000" />
+      <workItem from="1679549688681" duration="4087000" />
+      <workItem from="1679582845111" duration="2739000" />
+      <workItem from="1679655986535" duration="6079000" />
+      <workItem from="1679725567821" duration="5831000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/leetcode-cpp/src/StreamChecker.cpp</url>
+          <line>22</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
