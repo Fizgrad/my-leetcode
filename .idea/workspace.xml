@@ -21,9 +21,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ff2ef82f-e4b2-4dc8-b019-d8aec44f2e5f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/leetcode-cpp/src/StreamChecker.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leetcode-cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/leetcode-cpp/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leetcode-cpp/src/Solution.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/leetcode-cpp/src/Solution.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +123,7 @@
       <workItem from="1679549688681" duration="4087000" />
       <workItem from="1679582845111" duration="2739000" />
       <workItem from="1679655986535" duration="6079000" />
-      <workItem from="1679725567821" duration="5831000" />
+      <workItem from="1679725567821" duration="5985000" />
     </task>
     <servers />
   </component>
