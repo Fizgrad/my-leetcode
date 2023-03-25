@@ -2006,7 +2006,7 @@ public:
         int res = 0;
         vector<vector<int>> to(n, vector<int>());
         vector<vector<int>> from(n, vector<int>());
-        vector<bool> unvisited(n,true);
+        vector<bool> unvisited(n, true);
         unvisited[0] = false;
         for (auto &i: connections) {
             to[i[0]].push_back(i[1]);
@@ -2032,6 +2032,58 @@ public:
             }
         }
         return res;
+    }
+
+    long long countPairs(int n, vector<vector<int>> &edges) {
+        vector<int> parent(n + 1, 0);
+        vector<unsigned long long> len(n + 1, 1);
+        for (auto i = 0; i < n + 1; ++i) {
+            parent[i] = i;
+        }
+        auto find = [&](int node) -> int {
+            int p = node;
+            while (p != parent[p]) {
+                p = parent[p];
+            }
+            return p;
+        };
+
+        auto update = [&](int x, int p) {
+            int temp;
+            while (x != (temp = parent[x])) {
+                parent[x] = p;
+                x = temp;
+            }
+        };
+
+        auto uni = [&](int a, int b) -> void {
+            int ap = find(a);
+            int bp = find(b);
+            if (ap == bp) {
+                return;
+            }
+            if (len[ap] > len[bp]) {
+                update(b, ap);
+                parent[bp] = ap;
+                len[ap] += len[bp];
+            } else {
+                update(a, bp);
+                parent[ap] = bp;
+                len[bp] += len[ap];
+            }
+        };
+        for (auto &i: edges) {
+            uni(i[0], i[1]);
+        }
+        unordered_map<int, long long> subGraphs;
+        for (auto i = 0; i < n; ++i) {
+            subGraphs[find(i)] += 1;
+        }
+        long long res = 0;
+        for (auto &i: subGraphs) {
+            res += i.second * (n - i.second);
+        }
+        return res / 2;
     }
 };
 
