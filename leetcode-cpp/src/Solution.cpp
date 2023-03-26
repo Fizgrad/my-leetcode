@@ -2086,7 +2086,54 @@ public:
         return res / 2;
     }
 
-
+    int longestCycle(vector<int> &edges) {
+        auto n = edges.size();
+        int res = -1;
+        unordered_map<int, int> cache;
+        for (int i = 0; i < n; ++i) {
+            if (cache.count(i)) {
+                continue;
+            }
+            int slow = i;
+            int len = -1;
+            int fast = i;
+            vector<int> path;
+            do {
+                slow = edges[slow];
+                if (cache.count(slow)) {
+                    break;
+                }
+                path.push_back(slow);
+                if (slow == -1)
+                    break;
+                if (edges[fast] == -1)
+                    break;
+                fast = edges[edges[fast]];
+                if (fast == -1)
+                    break;
+                if (slow == fast) {
+                    len = 0;
+                    int encounter = i;
+                    while (encounter != slow) {
+                        encounter = edges[encounter];
+                        slow = edges[slow];
+                        path.push_back(slow);
+                    }
+                    int temp = encounter;
+                    do {
+                        ++len;
+                        temp = edges[temp];
+                    } while (temp != encounter);
+                    res = max(res, len);
+                    break;
+                }
+            } while (true);
+            for (auto i: path) {
+                cache[i] = len;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
