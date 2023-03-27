@@ -91,12 +91,12 @@ public:
         return root;
     }
 
-    double maxAverageRatio(vector<vector<int>> &classes, int extraStudents) {
+    double maxAverageRatio(vector <vector<int>> &classes, int extraStudents) {
         auto profit = [](double pass, double total) {
             return (pass + 1) / (total + 1) - pass / total;
         };
         double total = 0;
-        priority_queue<pair<double, array<int, 2>>> pq;
+        priority_queue < pair < double, array < int, 2>>> pq;
         for (auto &c: classes) {
             total += (double) c[0] / c[1];
             pq.push({profit(c[0], c[1]), {c[0], c[1]}});
@@ -110,15 +110,15 @@ public:
         return total / classes.size();
     }
 
-    vector<vector<int>> zigzagLevelOrder(TreeNode *root) {
-        deque<TreeNode *> qu;
-        vector<vector<int>> res;
+    vector <vector<int>> zigzagLevelOrder(TreeNode *root) {
+        deque < TreeNode * > qu;
+        vector <vector<int>> res;
         qu.push_back(root);
         int need_reverse = 1;
         while (!qu.empty()) {
             need_reverse = 1 - need_reverse;
             vector<int> layer;
-            deque<TreeNode *> temp;
+            deque < TreeNode * > temp;
             TreeNode *top = qu.front();
             while (!qu.empty()) {
                 if (top != nullptr) {
@@ -190,7 +190,7 @@ public:
     }
 
     int strStr(string haystack, string needle) {
-        vector<vector<int>> dfa(256, vector<int>(needle.size()));
+        vector <vector<int>> dfa(256, vector<int>(needle.size()));
         dfa[needle[0]][0] = 1;
         for (int x = 0, j = 1; j < needle.size(); ++j) {
             for (int c = 0; c < 256; ++c) {
@@ -358,11 +358,11 @@ public:
     }
 
     long long kthLargestLevelSum(TreeNode *root, int k) {
-        queue<TreeNode *> q;
+        queue < TreeNode * > q;
         q.push(root);
         priority_queue<long long> res;
         while (!q.empty()) {
-            queue<TreeNode *> temp;
+            queue < TreeNode * > temp;
             long long sum_val = 0;
             while (!q.empty()) {
                 TreeNode *top = q.front();
@@ -415,8 +415,8 @@ public:
         return max_num;
     }
 
-    vector<string> multiply(vector<string> &a, vector<string> &b) {
-        vector<string> res;
+    vector <string> multiply(vector <string> &a, vector <string> &b) {
+        vector <string> res;
         if (a.empty()) {
             return b;
         }
@@ -431,13 +431,13 @@ public:
         return res;
     }
 
-    vector<string> parseBrace(string::iterator begin, string::iterator end) {
-        vector<string> res;
-        vector<string> temp;
+    vector <string> parseBrace(string::iterator begin, string::iterator end) {
+        vector <string> res;
+        vector <string> temp;
         for (auto i = begin; i != end; ++i) {
             if (isalpha(*i)) {
                 string a(i, i + 1);
-                vector<string> b{a};
+                vector <string> b{a};
                 temp = multiply(temp, b);
             } else if (*i == ',') {
                 res.insert(res.end(), temp.begin(), temp.end());
@@ -463,7 +463,7 @@ public:
         return {res.begin(), unique(res.begin(), res.end())};
     }
 
-    vector<string> braceExpansionII(string &expression) {
+    vector <string> braceExpansionII(string &expression) {
         return parseBrace(expression.begin(), expression.end());
     }
 
@@ -493,7 +493,7 @@ public:
         return max_k;
     }
 
-    int mostWordsFound(vector<string> &sentences) {
+    int mostWordsFound(vector <string> &sentences) {
         int res = 0;
         int num;
         for (auto &i: sentences) {
@@ -510,17 +510,17 @@ public:
         return res;
     }
 
-    vector<string> findItinerary(vector<vector<string>> &tickets) {
+    vector <string> findItinerary(vector <vector<string>> &tickets) {
         // Hierholzer's algorithm
-        vector<string> res;
+        vector <string> res;
         vector<int> path;
-        unordered_map<int, priority_queue<int, vector<int>, greater<>>> adj;
+        unordered_map < int, priority_queue < int, vector < int >, greater<>>> adj;
 
         function<int(string)> stringToInt = [](string input) -> int {
             return (((input[0] << 8) + input[1]) << 8) + input[2];
         };
 
-        function<string(int)> intToString = [](int input) -> string {
+        function < string(int) > intToString = [](int input) -> string {
             return {(char) (input >> 16), (char) ((input >> 8) % (1 << 8)), (char) (input % (1 << 8))};
         };
 
@@ -601,7 +601,7 @@ public:
         auto cmp = [](ListNode *a, ListNode *b) -> bool {
             return a->val > b->val;
         };
-        priority_queue<ListNode *, vector<ListNode *>, decltype(cmp)> heap(cmp);
+        priority_queue < ListNode * , vector < ListNode * >, decltype(cmp) > heap(cmp);
         ListNode *res = nullptr;
         ListNode *cur = res;
         for (auto &i: lists) {
@@ -626,7 +626,7 @@ public:
         return res;
     }
 
-    void subsetsHelper(int i, vector<int> &nums, vector<vector<int>> &ans, vector<int> &temp) {
+    void subsetsHelper(int i, vector<int> &nums, vector <vector<int>> &ans, vector<int> &temp) {
         if (i == nums.size()) {
             return;
         }
@@ -641,8 +641,8 @@ public:
         }
     }
 
-    vector<vector<int>> subsets(vector<int> &nums) {
-        vector<vector<int>> ans;
+    vector <vector<int>> subsets(vector<int> &nums) {
+        vector <vector<int>> ans;
         vector<int> temp;
         subsetsHelper(0, nums, ans, temp);
         return ans;
@@ -747,7 +747,7 @@ public:
         return top1 + 1;
     }
 
-    vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>> &edges) {
+    vector<int> countSubgraphsForEachDiameter(int n, vector <vector<int>> &edges) {
         vector<int> res(n - 1, 0);
         unordered_map<int, unordered_set<int>> graph;
         for (auto &i: edges) {
@@ -809,7 +809,7 @@ public:
         return res;
     }
 
-    bool mergeTriplets(vector<vector<int>> &triplets, vector<int> &target) {
+    bool mergeTriplets(vector <vector<int>> &triplets, vector<int> &target) {
         bool flag[3] = {false, false, false};
         for (auto &i: triplets) {
             if (i[0] > target[0] || i[1] > target[1] || i[2] > target[2]) {
@@ -838,7 +838,7 @@ public:
         return min(1.0, glass[query_glass]);
     }
 
-    long long interchangeableRectangles(vector<vector<int>> &rectangles) {
+    long long interchangeableRectangles(vector <vector<int>> &rectangles) {
         unordered_map<double, long long> hm;
         long long res = 0;
         for (auto &i: rectangles) {
@@ -909,8 +909,8 @@ public:
 //    Then we update the row sum and col sum:
 //            row[i] -= A[i][j]
 //    col[j] -= A[i][j]
-    vector<vector<int>> restoreMatrix(vector<int> &rowSum, vector<int> &colSum) {
-        vector<vector<int>> res(rowSum.size(), vector<int>(colSum.size(), 0));
+    vector <vector<int>> restoreMatrix(vector<int> &rowSum, vector<int> &colSum) {
+        vector <vector<int>> res(rowSum.size(), vector<int>(colSum.size(), 0));
         for (auto i = 0; i < rowSum.size(); ++i) {
             for (auto j = 0; j < colSum.size(); ++j) {
                 int num = min(rowSum[i], colSum[j]);
@@ -922,10 +922,10 @@ public:
         return res;
     }
 
-    vector<string> buildArray(vector<int> &target, int n) {
+    vector <string> buildArray(vector<int> &target, int n) {
         string push = "Push";
         string pop = "Pop";
-        vector<string> res;
+        vector <string> res;
         auto cur = target.begin();
         for (int i = 1; i <= n; ++i) {
             if (cur == target.end()) {
@@ -1075,8 +1075,8 @@ public:
     }
 
     bool isCompleteTree(TreeNode *root) {
-        queue<TreeNode *> q;
-        queue<TreeNode *> temp;
+        queue < TreeNode * > q;
+        queue < TreeNode * > temp;
         q.push(root);
         bool flag = true;
         while (!q.empty()) {
@@ -1098,8 +1098,8 @@ public:
         return true;
     }
 
-    int maximalNetworkRank(int n, vector<vector<int>> &roads) {
-        vector<unordered_set<int>> nexts(n);
+    int maximalNetworkRank(int n, vector <vector<int>> &roads) {
+        vector <unordered_set<int>> nexts(n);
         for (auto &i: roads) {
             nexts[i[0]].insert(i[1]);
             nexts[i[1]].insert(i[0]);
@@ -1368,7 +1368,7 @@ public:
             return ans;
         };
 
-        vector<ll> fact(10 + 1, 1ll);
+        vector <ll> fact(10 + 1, 1ll);
         for (auto i = 1; i < fact.size(); i++) {
             fact[i] = (fact[i - 1] * i);
         }
@@ -1581,8 +1581,8 @@ public:
         return res;
     }
 
-    vector<string> getFolderNames(const vector<string> &names) {
-        vector<string> res;
+    vector <string> getFolderNames(const vector <string> &names) {
+        vector <string> res;
         res.reserve(names.size());
         unordered_map<string, int> hm;
         for (const auto &i: names) {
@@ -1626,8 +1626,8 @@ public:
         return a == b;
     }
 
-    Node *construct(vector<vector<int>> &grid) {
-        auto all_equals = [&](vector<vector<int>> &grid, int startx, int starty, int len) -> int {
+    Node *construct(vector <vector<int>> &grid) {
+        auto all_equals = [&](vector <vector<int>> &grid, int startx, int starty, int len) -> int {
             int temp = grid[startx][starty];
             for (int i = 0; i < len; ++i) {
                 for (int j = 0; j < len; ++j) {
@@ -1641,7 +1641,7 @@ public:
             return temp == 1 ? 1 : -1;
         };
 
-        auto dfs = [&](auto &&dfs, vector<vector<int>> &grid, int start_x, int start_y, int len) -> Node * {
+        auto dfs = [&](auto &&dfs, vector <vector<int>> &grid, int start_x, int start_y, int len) -> Node * {
             if (len == 1) {
                 return new Node((grid[start_x][start_y] == 1), true);
             } else {
@@ -1660,7 +1660,7 @@ public:
         return dfs(dfs, grid, 0, 0, grid.size());
     }
 
-    vector<vector<int>> outerTrees(vector<vector<int>> &trees) {
+    vector <vector<int>> outerTrees(vector <vector<int>> &trees) {
         auto crossProduct = [](vector<int> p1, vector<int> p2, vector<int> p3) {
             int a = p2[0] - p1[0];
             int b = p2[1] - p1[1];
@@ -1669,8 +1669,8 @@ public:
             return a * d - b * c;
         };
 
-        auto constructHalfHull = [&](vector<vector<int>> &trees) -> vector<vector<int>> {
-            vector<vector<int>> q;
+        auto constructHalfHull = [&](vector <vector<int>> &trees) -> vector <vector<int>> {
+            vector <vector<int>> q;
             for (int i = 0; i < trees.size(); ++i) {
                 while (q.size() >= 2 && crossProduct(*(q.end() - 2), *(q.end() - 1), trees[i]) > 0) {
                     q.pop_back();
@@ -1686,19 +1686,19 @@ public:
         sort(trees.begin(), trees.end());
 
         auto m = constructHalfHull(trees);
-        vector<vector<int>> temp;
+        vector <vector<int>> temp;
         for (auto i = trees.rbegin(); i != trees.rend(); ++i) {
             temp.push_back(*i);
         }
         auto n = constructHalfHull(temp);
-        set<vector<int>> r;
+        set <vector<int>> r;
         for (auto i: m) {
             r.insert(i);
         }
         for (auto i: n) {
             r.insert(i);
         }
-        vector<vector<int>> q;
+        vector <vector<int>> q;
         for (auto i: r) {
             q.push_back(i);
         }
@@ -1707,7 +1707,7 @@ public:
     }
 
 
-    vector<vector<int>> threeSum(vector<int> &nums) {
+    vector <vector<int>> threeSum(vector<int> &nums) {
         static const long long int base = 200000 + 1;
         static const long long int sqbase = base * base;
         static const long long int bias = 100000;
@@ -1750,7 +1750,7 @@ public:
 
             }
         }
-        vector<vector<int>> realres;
+        vector <vector<int>> realres;
         for (auto i: res) {
             int a = i / sqbase;
             int b = (i - a * sqbase) / base;
@@ -1762,12 +1762,12 @@ public:
 
     }
 
-    bool exist(vector<vector<char>> &board, string word) {
+    bool exist(vector <vector<char>> &board, string word) {
         const int dx[4] = {0, 0, 1, -1};
         const int dy[4] = {1, -1, 0, 0};
 
-        auto next_procedure = [&](auto &&next_procedure, vector<vector<char>> &board, string &word, int index, int x,
-                                  int y, vector<vector<bool>> &checks) -> bool {
+        auto next_procedure = [&](auto &&next_procedure, vector <vector<char>> &board, string &word, int index, int x,
+                                  int y, vector <vector<bool>> &checks) -> bool {
             ++index;
             if (index == word.size())
                 return true;
@@ -1786,7 +1786,7 @@ public:
         };
 
         vector<bool> temp(10, false);
-        vector<vector<bool>> checks(10, temp);
+        vector <vector<bool>> checks(10, temp);
         for (int i = 0; i < board.size(); ++i) {
             for (int j = 0; j < board.front().size(); ++j) {
                 if (board[i][j] == word.front()) {
@@ -1815,7 +1815,7 @@ public:
         return original;
     }
 
-    int minScore(int n, vector<vector<int>> &roads) {
+    int minScore(int n, vector <vector<int>> &roads) {
         vector<int> parent(n + 1, 0);
         vector<unsigned long long> len(n + 1, 1);
         for (auto i = 0; i < n + 1; ++i) {
@@ -1899,7 +1899,7 @@ public:
         return prefix;
     }
 
-    int makeConnected(int n, vector<vector<int>> &connections) {
+    int makeConnected(int n, vector <vector<int>> &connections) {
         vector<int> parent(n + 1, 0);
         vector<unsigned long long> len(n + 1, 1);
         for (auto i = 0; i < n + 1; ++i) {
@@ -2002,10 +2002,10 @@ public:
         return res;
     }
 
-    int minReorder(int n, vector<vector<int>> &connections) {
+    int minReorder(int n, vector <vector<int>> &connections) {
         int res = 0;
-        vector<vector<int>> to(n, vector<int>());
-        vector<vector<int>> from(n, vector<int>());
+        vector <vector<int>> to(n, vector<int>());
+        vector <vector<int>> from(n, vector<int>());
         vector<bool> unvisited(n, true);
         unvisited[0] = false;
         for (auto &i: connections) {
@@ -2034,7 +2034,7 @@ public:
         return res;
     }
 
-    long long countPairs(int n, vector<vector<int>> &edges) {
+    long long countPairs(int n, vector <vector<int>> &edges) {
         vector<int> parent(n + 1, 0);
         vector<unsigned long long> len(n + 1, 1);
         for (auto i = 0; i < n + 1; ++i) {
@@ -2133,6 +2133,21 @@ public:
             }
         }
         return res;
+    }
+
+    int minPathSum(vector <vector<int>> &grid) {
+        for (int i = 1; i < grid[0].size(); ++i) {
+            grid[0][i] += grid[0][i - 1];
+        }
+        for (int i = 1; i < grid.size(); ++i) {
+            grid[i][0] += grid[i - 1][0];
+        }
+        for (int i = 1; i < grid.size(); ++i) {
+            for (int j = 1; j < grid[0].size(); ++j) {
+                grid[i][j] += min(grid[i - 1][j], grid[i][j - 1]);
+            }
+        }
+        return grid[grid.size() - 1][grid[0].size() - 1];
     }
 };
 
