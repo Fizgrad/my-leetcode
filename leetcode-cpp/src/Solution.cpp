@@ -2190,6 +2190,31 @@ public:
         }
         return dp[365];
     }
+
+    long long maximumSubarraySum(vector<int> &nums, int k) {
+        long long res = 0;
+        long long sum = 0;
+        int cur = 0;
+        unordered_set<int> selected;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (selected.find(nums[i]) != selected.end()) {
+                do {
+                    selected.erase(nums[cur]);
+                    sum -= nums[cur];
+                } while (nums[cur++] != nums[i]);
+            }
+            selected.insert(nums[i]);
+            sum += nums[i];
+            if (selected.size() == k) {
+                res = max(res, sum);
+                selected.erase(nums[cur]);
+                sum -= nums[cur++];
+            }
+        }
+        return res;
+    }
+
+
 };
 
 int main() {
