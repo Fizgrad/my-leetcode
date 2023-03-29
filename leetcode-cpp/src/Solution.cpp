@@ -2214,6 +2214,21 @@ public:
         return res;
     }
 
+    int maxSatisfaction(vector<int> &satisfaction) {
+        sort(satisfaction.rbegin(), satisfaction.rend());
+        int sum = 0;
+        int res = 0;
+        int i = 0;
+        while (i < satisfaction.size() && sum + satisfaction[i] > 0) {
+            sum += satisfaction[i];
+            ++i;
+        }
+        satisfaction.push_back(0);
+        for (int k = 0; k <= i; ++k) {
+            res += k * (satisfaction[i - k]);
+        }
+        return res;
+    }
 
 };
 
