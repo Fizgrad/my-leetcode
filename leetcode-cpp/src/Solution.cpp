@@ -2286,6 +2286,22 @@ public:
         f(f, 0, headID);
         return res;
     }
+
+    int subarrayBitwiseORs(vector<int> &arr) {
+        unordered_set<int> res;
+        unordered_set<int> prev;
+        for (auto i = 0; i < arr.size(); ++i) {
+            prev.insert(0);
+            unordered_set<int> current;
+            for (auto prevComputed : prev) {
+                current.insert(prevComputed | arr[i]);
+                res.insert(prevComputed | arr[i]);
+            }
+            prev.swap(current);
+        }
+        return res.size();
+    }
+
 };
 
 int main() {
