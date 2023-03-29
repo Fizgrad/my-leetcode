@@ -2268,7 +2268,24 @@ public:
         return res[n - 1];
     }
 
-
+    int numOfMinutes(int n, int headID, vector<int> &manager, vector<int> &informTime) {
+        vector<vector<int>> graph(n, vector<int>());
+        for (auto i = 0; i < manager.size(); ++i) {
+            if (manager[i] != -1)
+                graph[manager[i]].push_back(i);
+        }
+        int res = 0;
+        auto f = [&](auto &&f, int prev, int manager) -> void {
+            res = max(res, (prev += informTime[manager]));
+            for (auto i: graph[manager]) {
+                if (!graph[i].empty()) {
+                    f(f, prev, i);
+                }
+            }
+        };
+        f(f, 0, headID);
+        return res;
+    }
 };
 
 int main() {
