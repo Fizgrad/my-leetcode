@@ -2226,6 +2226,30 @@ public:
         }
         return res;
     }
+
+    bool checkOverlap(int radius, int xCenter, int yCenter, int x1, int y1, int x2, int y2) {
+        if (xCenter < x1) {
+            if (yCenter < y1) {
+                return (x1 - xCenter) * (x1 - xCenter) + (y1 - yCenter) * (y1 - yCenter) <= radius * radius;
+            } else if (yCenter > y2) {
+                return (x1 - xCenter) * (x1 - xCenter) + (y2 - yCenter) * (y2 - yCenter) <= radius * radius;
+            } else {
+                return x1 - xCenter <= radius;
+            }
+        } else if (xCenter > x2) {
+            if (yCenter < y1) {
+                return (x2 - xCenter) * (x2 - xCenter) + (y1 - yCenter) * (y1 - yCenter) <= radius * radius;
+            } else if (yCenter > y2) {
+                return (x2 - xCenter) * (x2 - xCenter) + (y2 - yCenter) * (y2 - yCenter) <= radius * radius;
+            } else {
+                return xCenter - x2 <= radius;
+            }
+        } else {
+            return abs(yCenter - y1) <= radius || abs(yCenter - y2) <= radius || (yCenter <= y2 && yCenter >= y1);
+        }
+    }
+
+
 };
 
 int main() {
