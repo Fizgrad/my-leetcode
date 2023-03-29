@@ -2221,15 +2221,11 @@ public:
         int i = 0;
         while (i < satisfaction.size() && sum + satisfaction[i] > 0) {
             sum += satisfaction[i];
+            res += sum;
             ++i;
-        }
-        satisfaction.push_back(0);
-        for (int k = 0; k <= i; ++k) {
-            res += k * (satisfaction[i - k]);
         }
         return res;
     }
-
 };
 
 int main() {
