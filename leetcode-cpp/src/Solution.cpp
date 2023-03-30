@@ -2333,6 +2333,18 @@ public:
         // Return whether the entire strings s1 and s2 are scrambled versions of each other
         return dp[n][0][0];
     }
+
+    int maxWidthOfVerticalArea(vector<vector<int>> &points) {
+        auto f = [](vector<int> &a, vector<int> &b) -> bool {
+            return a[0] < b[0];
+        };
+        sort(points.begin(), points.end(), f);
+        int res = 0;
+        for (int i = 1; i < points.size(); ++i) {
+            res = max(res, points[i][0] - points[i - 1][0]);
+        }
+        return res;
+    }
 };
 
 int main() {
