@@ -2355,6 +2355,18 @@ public:
             return item;
         });
     }
+
+    int numTimesAllBlue(vector<int> &flips) {
+        int max_temp = 0;
+        int res = 0;
+        for (int i = 0; i < flips.size(); ++i) {
+            max_temp = max(max_temp, flips[i]);
+            if (max_temp == i + 1) {
+                ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
