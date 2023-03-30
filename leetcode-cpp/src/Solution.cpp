@@ -2345,6 +2345,16 @@ public:
         }
         return res;
     }
+
+    bool hasAllCodes(const string &s, int k) {
+        vector<bool> flag(1 << k, false);
+        for (int i = 0; i + k <= s.size(); ++i) {
+            flag[stoi(s.substr(i, k), 0, 2)] = true;
+        }
+        return std::all_of(flag.begin(), flag.end(), [&](const auto &item) {
+            return item;
+        });
+    }
 };
 
 int main() {
