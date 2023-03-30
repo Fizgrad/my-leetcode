@@ -2293,7 +2293,7 @@ public:
         for (auto i = 0; i < arr.size(); ++i) {
             prev.insert(0);
             unordered_set<int> current;
-            for (auto prevComputed : prev) {
+            for (auto prevComputed: prev) {
                 current.insert(prevComputed | arr[i]);
                 res.insert(prevComputed | arr[i]);
             }
@@ -2302,6 +2302,37 @@ public:
         return res.size();
     }
 
+    bool isScramble(string s1, string s2) {
+        int n = s1.length();
+        // Initialize a 3D table to store the results of all possible substrings of the two strings
+        vector<vector<vector<bool>>> dp(n + 1, vector<vector<bool>>(n, vector<bool>(n)));
+
+        // Initialize the table for substrings of length 1
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[1][i][j] = s1[i] == s2[j];
+            }
+        }
+
+        // Fill the table for substrings of length 2 to n
+        for (int length = 2; length <= n; length++) {
+            for (int i = 0; i <= n - length; i++) {
+                for (int j = 0; j <= n - length; j++) {
+                    // Iterate over all possible lengths of the first substring
+                    for (int newLength = 1; newLength < length; newLength++) {
+                        // Check if the two possible splits of the substrings are scrambled versions of each other
+                        vector<bool> &dp1 = dp[newLength][i];
+                        vector<bool> &dp2 = dp[length - newLength][i + newLength];
+                        dp[length][i][j] = dp[length][i][j] || (dp1[j] && dp2[j + newLength]);
+                        dp[length][i][j] = dp[length][i][j] || (dp1[j + length - newLength] && dp2[j]);
+                    }
+                }
+            }
+        }
+
+        // Return whether the entire strings s1 and s2 are scrambled versions of each other
+        return dp[n][0][0];
+    }
 };
 
 int main() {
