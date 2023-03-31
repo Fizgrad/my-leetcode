@@ -2367,6 +2367,23 @@ public:
         }
         return res;
     }
+
+    int arithmeticTriplets(vector<int> &nums, int diff) {
+        int res = 0;
+        unordered_map<int, int> left;
+        unordered_map<int, int> right;
+        for (auto i = 0; i < nums.size(); ++i) {
+            for (auto j = i + 1; j < nums.size() && nums[j] - nums[i] <= diff; ++j) {
+                if (nums[j] - nums[i] == diff) {
+                    res += left[j] + right[i];
+                    ++left[i];
+                    ++right[j];
+                }
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
