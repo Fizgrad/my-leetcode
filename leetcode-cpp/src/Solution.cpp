@@ -2384,6 +2384,49 @@ public:
         return res;
     }
 
+    int search(vector<int> &nums, int target) {
+        int low = 0;
+        int high = nums.size() - 1;
+        int mid;
+        while (low <= high) {
+            mid = (low + high) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[mid] > target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    int ways(vector<string> &pizza, int k) {
+        int m = pizza.size(), n = pizza[0].size();
+        vector<vector<vector<int>>> dp(vector(k, vector(m, vector(n, -1))));
+        vector<vector<int>> preSum(vector(m + 1, vector(n + 1, 0)));
+        for (int r = m - 1; r >= 0; r--)
+            for (int c = n - 1; c >= 0; c--)
+                preSum[r][c] = preSum[r][c + 1] + preSum[r + 1][c] - preSum[r + 1][c + 1] + (pizza[r][c] == 'A');
+
+        auto dfs = [&](auto &&dfs, int temp_k, int r, int c) -> int {
+            if (preSum[r][c] == 0) return 0;
+            if (temp_k == 0) return 1;
+            if (dp[temp_k][r][c] != -1) return dp[temp_k][r][c];
+            int ans = 0;
+            for (int nr = r + 1; nr < m; nr++)
+                if (preSum[r][c] - preSum[nr][c] > 0)
+                    ans = (ans + dfs(dfs, temp_k - 1, nr, c)) % 1000000007;
+            for (int nc = c + 1; nc < n; nc++)
+                if (preSum[r][c] - preSum[r][nc] > 0)
+                    ans = (ans + dfs(dfs, temp_k - 1, r, nc)) % 1000000007;
+
+            return dp[temp_k][r][c] = ans;
+        };
+        return dfs(dfs, k - 1, 0, 0);
+    }
+
 };
 
 int main() {
