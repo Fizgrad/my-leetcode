@@ -2499,6 +2499,45 @@ public:
         return newHead->next;
     }
 
+//    int countPalindromicSubsequence(const string &s) {
+//        vector<vector<int>> count(s.size(), vector<int>('z' - 'a' + 1, 0));
+//        vector<int> start('z' - 'a' + 1, -1);
+//        vector<int> end('z' - 'a' + 1, -1);
+//        int res = 0;
+//        for (int i = 0; i < s.size(); ++i) {
+//            if (i >= 1) count[i] = count[i - 1];
+//            ++count[i][s[i] - 'a'];
+//            if (start[s[i] - 'a'] == -1) {
+//                start[s[i] - 'a'] = i;
+//            }
+//            end[s[i] - 'a'] = i;
+//        }
+//        for (auto i = 0; i < 'z' - 'a' + 1; ++i) {
+//            if (end[i] == start[i]) {
+//                continue;
+//            } else {
+//                for (auto j = 0; j < 'z' - 'a' + 1; ++j) {
+//                    res += (count[end[i] - 1][j] - count[start[i]][j] > 0);
+//                }
+//            }
+//        }
+//        return res;
+//    }
+
+    int countPalindromicSubsequence(const string &s1) {
+        int res = 0;
+        for (char i = 'a'; i <= 'z'; i++) {
+            int index1 = s1.find(i);
+            if (index1 == -1) continue;
+            for (char j = 'a'; j <= 'z'; j++) {
+                int index2 = s1.find(j, index1 + 1);
+                if (index2 == -1) continue;
+                if (s1.find(i, index2 + 1) != -1) res++;
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
