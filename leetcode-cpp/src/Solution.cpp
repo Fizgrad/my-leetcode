@@ -2427,6 +2427,40 @@ public:
         return dfs(dfs, k - 1, 0, 0);
     }
 
+    vector<int> productQueries(int n, vector<vector<int>> &queries) {
+        using ll = long long int;
+        const int MOD = 1e9 + 7;
+        auto modpow = [&](ll b, ll p) -> ll {
+            ll ans = 1;
+            do {
+                if (p & 1) {
+                    ans = (ans * b) % MOD;
+                }
+                b = b * b % MOD;
+            } while (p >>= 1);
+            return ans;
+        };
+        vector<int> nums;
+        bitset<32> n_bit(n);
+        for (int i = 0; i <= 31; ++i) {
+            if (n_bit[i]) {
+                nums.push_back(1 << i);
+            }
+        }
+        vector<ll> preProduct(nums.size());
+        vector<ll> ModPowRes(nums.size());
+        preProduct[0] = nums[0];
+        ModPowRes[0] = modpow(preProduct[0], MOD - 2);
+        for (int i = 1; i < nums.size(); ++i) {
+            preProduct[i] = preProduct[i - 1] * (ll) nums[i] % MOD;
+            ModPowRes[i] = modpow(preProduct[i], MOD - 2);
+        }
+        vector<int> res;
+        for (auto &i: queries) {
+            res.push_back(preProduct[i[1]] % MOD * (i[0] == 0 ? 1 : ModPowRes[i[0] - 1]) % MOD);
+        }
+        return res;
+    }
 };
 
 int main() {
