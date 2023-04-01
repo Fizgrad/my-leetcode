@@ -2481,6 +2481,23 @@ public:
         return res;
     }
 
+    ListNode *swapPairs(ListNode *head) {
+        auto swap = [](ListNode *a) -> void {
+            auto c = a->next->next;
+            auto b = a->next;
+            a->next = c;
+            b->next = c->next;
+            c->next = b;
+        };
+        auto newHead = new ListNode(0);
+        newHead->next = head;
+        auto i = newHead;
+        while (i->next && i->next->next) {
+            swap(i);
+            i = i->next->next;
+        }
+        return newHead->next;
+    }
 
 };
 
