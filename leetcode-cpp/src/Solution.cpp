@@ -2461,6 +2461,27 @@ public:
         }
         return res;
     }
+
+    long long maxMatrixSum(vector<vector<int>> &matrix) {
+        long long res = 0;
+        int min_abs = INT32_MAX;
+        bool flag = false;
+        for (auto &i: matrix) {
+            for (auto j: i) {
+                res += abs(j);
+                min_abs = min(min_abs, abs(j));
+                if (j < 0) {
+                    flag = !flag;
+                }
+            }
+        }
+        if (flag) {
+            res -= 2 * min_abs;
+        }
+        return res;
+    }
+
+
 };
 
 int main() {
