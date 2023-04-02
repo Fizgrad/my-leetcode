@@ -2538,6 +2538,25 @@ public:
         return res;
     }
 
+    vector<int> successfulPairs(vector<int> &spells, vector<int> &potions, long long success) {
+        sort(potions.rbegin(), potions.rend());
+        vector<int> res(spells.size());
+        for (int i = 0; i < spells.size(); ++i) {
+            int high = potions.size() - 1;
+            int low = 0;
+            int mid;
+            while (low <= high) {
+                mid = (high + low) / 2;
+                if (static_cast<long long > (potions[mid]) * spells[i] >= success) {
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+            res[i] = low;
+        }
+        return res;
+    }
 };
 
 int main() {
