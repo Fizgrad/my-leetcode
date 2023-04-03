@@ -2558,7 +2558,7 @@ public:
         return res;
     }
 
-    int numRescueBoats(vector<int>& people, int limit) {
+    int numRescueBoats(vector<int> &people, int limit) {
         int res = 0;
         sort(people.begin(), people.end());
         int left = 0, right = people.size() - 1;
@@ -2570,6 +2570,33 @@ public:
             res++;
         }
         return res;
+    }
+
+    ListNode *partition(ListNode *head, int x) {
+        ListNode *res = new ListNode(0);
+        ListNode *res_pt = res;
+        ListNode *bigger = new ListNode(0);
+        ListNode *bigger_pt = bigger;
+        ListNode *pt = head;
+        while (pt) {
+            if (pt->val >= x) {
+                bigger_pt->next = pt;
+                bigger_pt = pt;
+            } else {
+                res_pt->next = pt;
+                res_pt = pt;
+            }
+            pt = pt->next;
+            bigger_pt->next = nullptr;
+            res_pt->next = nullptr;
+        }
+        bigger = bigger->next;
+        while (bigger) {
+            res_pt->next = bigger;
+            res_pt = res_pt->next;
+            bigger = bigger->next;
+        }
+        return res->next;
     }
 };
 
