@@ -2616,6 +2616,19 @@ public:
         }
         return std::move(vector<int>(ans.begin(), ans.end()));
     }
+
+    int partitionString(const string &s) {
+        int res = 1;
+        vector<bool> exist(26, false);
+        for (auto i: s) {
+            if (exist[i - 'a']) {
+                ++res;
+                std::fill(exist.begin(), exist.end(), false);
+            }
+            exist[i - 'a'] = true;
+        }
+        return res;
+    }
 };
 
 int main() {
