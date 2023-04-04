@@ -2629,6 +2629,44 @@ public:
         }
         return res;
     }
+
+    int mergeStones(vector<int> &stones, int k) {
+        int n = stones.size();
+        if ((n - k) % (k - 1)) {
+            return -1;
+        }
+        vector<int> prefixSum(n, 0);
+        prefixSum[0] = stones[0];
+        for (int i = 1; i < stones.size(); i++) {
+            prefixSum[i] = prefixSum[i - 1] + stones[i];
+        }
+
+        vector<vector<vector<int>>> dp(50, vector<vector<int>>(50, vector<int>(50, -1)));
+        auto minCost = [&](auto &&minCost, int i, int j, int piles) -> int {
+            if (i == j && piles == 1)
+                return 0;
+            if (i == j)
+                return INT_MAX / 4;
+            if (dp[i][j][piles] != -1)
+                return dp[i][j][piles];
+            if (piles == 1) {
+                return dp[i][j][piles] = minCost(minCost, i, j, k) +
+                                         (i == 0 ? prefixSum[j] : prefixSum[j] - prefixSum[i - 1]);
+
+            } else {
+                int cost = INT_MAX / 4;
+                for (int t = i; t < j; t++) {
+                    cost = min(cost,
+                               minCost(minCost, i, t, 1) +
+                               minCost(minCost, t + 1, j, piles - 1));
+                }
+                return dp[i][j][piles] = cost;
+            }
+        };
+        return minCost(minCost, 0, n - 1, 1);
+    }
+
+
 };
 
 int main() {
