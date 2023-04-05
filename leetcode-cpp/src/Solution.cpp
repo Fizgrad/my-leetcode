@@ -2685,7 +2685,18 @@ public:
         return res;
     }
 
-
+    int commonFactors(int a, int b) {
+        int upperBound = min(a, b) + 1;
+        int res = 0;
+        while (--upperBound) {
+            if (a % upperBound || b % upperBound) {
+                continue;
+            } else {
+                ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
