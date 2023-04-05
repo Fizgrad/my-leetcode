@@ -2666,6 +2666,25 @@ public:
         return minCost(minCost, 0, n - 1, 1);
     }
 
+    int minimizeArrayValue(vector<int> &nums) {
+        vector<long long int> prefix(nums.size());
+        prefix[0] = nums[0];
+        for (int i = 1; i < nums.size(); ++i) {
+            prefix[i] = prefix[i - 1] + nums[i];
+        }
+        long long int res = nums[0];
+        for (int i = 1; i < nums.size(); ++i) {
+            if (nums[i] > res) {
+                if ((i + 1) * res >= prefix[i]) {
+                    continue;
+                } else {
+                    res = (prefix[i] + i) / (i + 1);
+                }
+            }
+        }
+        return res;
+    }
+
 
 };
 
