@@ -2697,6 +2697,43 @@ public:
         }
         return res;
     }
+
+    int closedIsland(vector<vector<int>> &grid) {
+        int res = 0;
+        int n = grid.size();
+        int m = grid.begin()->size();
+        int xy[5] = {0, 1, 0, -1, 0};
+        vector<vector<bool>> visited(n, vector<bool>(m, false));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                bool flag = true;
+                if (grid[i][j] == 0 && !visited[i][j]) {
+                    stack<pair<int, int>> q;
+                    q.push(pair<int, int>(i, j));
+                    visited[i][j] = true;
+                    while (!q.empty()) {
+                        auto [x, y] = q.top();
+                        q.pop();
+                        if (x == 0 || x == n - 1 || y == 0 || y == m - 1) {
+                            flag = false;
+                        }
+                        for (int k = 0; k < 4; ++k) {
+                            int xx = x + xy[k];
+                            int yy = y + xy[k + 1];
+                            if (xx >= 0 && yy >= 0 && xx < n && yy < m && grid[xx][yy] == 0 && !visited[xx][yy]) {
+                                q.push(pair<int, int>(xx, yy));
+                                visited[xx][yy] = true;
+                            }
+                        }
+                    }
+                    if (flag) {
+                        ++res;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
