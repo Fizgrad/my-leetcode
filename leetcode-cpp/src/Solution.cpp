@@ -2734,6 +2734,21 @@ public:
         }
         return res;
     }
+
+    string baseNeg2(int n) {
+        if (n == 0) return "0";
+        bitset<32> base2(n);
+        for (int flag = 0, i = 0; i < 32; ++i) {
+            if (flag && base2[i]) {
+                base2.reset(i);
+            } else if (flag || base2[i]) {
+                base2.set(i);
+                flag = i & 1;
+            }
+        }
+        auto res = base2.to_string();
+        return res.substr(res.find('1'));
+    }
 };
 
 int main() {
