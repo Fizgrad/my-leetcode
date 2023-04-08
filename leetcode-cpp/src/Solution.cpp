@@ -2736,21 +2736,14 @@ public:
     }
 
     string baseNeg2(int n) {
-        if (n == 0) return "0";
-        bitset<32> base2(n);
-        for (int flag = 0, i = 0; i < 32; ++i) {
-            if (flag && base2[i]) {
-                base2.reset(i);
-            } else if (flag || base2[i]) {
-                base2.set(i);
-                flag = i & 1;
-            }
+        for (int i = 1; i < 31; i += 2) {
+            if (1 << i & n) n += 1 << (i + 1);
         }
-        auto res = base2.to_string();
-        return res.substr(res.find('1'));
+        string res = std::bitset<32>(n).to_string();
+        return n ? std::move(res.substr(res.find('1'))) : "0";
     }
 
-    int numEnclaves(vector<vector<int>>& grid) {
+    int numEnclaves(vector<vector<int>> &grid) {
         int res = 0;
         int n = grid.size();
         int m = grid.begin()->size();
@@ -2787,6 +2780,78 @@ public:
             }
         }
         return res;
+    }
+
+    vector<int> smallestSufficientTeam(vector<string> &req_skills, vector<vector<string>> &people) {
+//        unordered_map<string, int> to_int;
+//        vector<vector<int>> people_int(people.size());
+//        for (int index = 0; auto &i: req_skills) {
+//            to_int[i] = index++;
+//        }
+//        int nums_skills = req_skills.size();
+//        vector<vector<int>> who_has_skill(nums_skills, vector<int>());
+//        for (int i = 0; i < people.size(); ++i) {
+//            for (auto &j: people[i]) {
+//                people_int[i].push_back(to_int[j]);
+//                who_has_skill[to_int[j]].push_back(i);
+//            }
+//        }
+//        vector<int> res;
+//        int min_len = INT32_MAX;
+//        auto f = [&](auto &&f, int skill_index, unordered_set<int> &persons) {
+//            if (std::any_of(who_has_skill[skill_index].begin(), who_has_skill[skill_index].end(),
+//                            [&](const auto &item) {
+//                                return persons.count(item);
+//                            })) {
+//                if (skill_index + 1 >= nums_skills) {
+//                    if (min_len > persons.size()) {
+//                        min_len = persons.size();
+//                        res = std::move(vector<int>(persons.begin(), persons.end()));
+//                    }
+//                    return;
+//                } else f(f, skill_index + 1, persons);
+//            } else {
+//                if (skill_index + 1 >= nums_skills) {
+//                    if (min_len > persons.size() + 1) {
+//                        min_len = persons.size() + 1;
+//                        res = std::move(vector<int>(persons.begin(), persons.end()));
+//                        res.push_back(who_has_skill[skill_index][0]);
+//                    }
+//                    return;
+//                } else
+//                    for (auto i: who_has_skill[skill_index]) {
+//                        persons.insert(i);
+//                        f(f, skill_index + 1, persons);
+//                        persons.erase(i);
+//                    }
+//            }
+//        };
+//        unordered_set<int> persons;
+//        f(f, 0, persons);
+//        return res;
+
+        int n = req_skills.size();
+        unordered_map<int, vector<int>> res;
+        res.reserve(1 << n);
+        res[0] = {};
+        unordered_map<string, int> skill_map;
+        for (int i = 0; i < req_skills.size(); i++)
+            skill_map[req_skills[i]] = i;
+
+        for (int i = 0; i < people.size(); i++) {
+            int curr_skill = 0;
+            for (int j = 0; j < people[i].size(); j++)
+                curr_skill |= 1 << skill_map[people[i][j]];
+
+            for (auto it = res.begin(); it != res.end(); it++) {
+                int comb = it->first | curr_skill;
+                if (res.find(comb) == res.end() || res[comb].size() > 1 + res[it->first].size()) {
+                    res[comb] = it->second;
+                    res[comb].push_back(i);
+                }
+            }
+        }
+        return res[(1 << n) - 1];
     }
 };
 
