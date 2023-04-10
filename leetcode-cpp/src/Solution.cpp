@@ -2853,6 +2853,70 @@ public:
         }
         return res[(1 << n) - 1];
     }
+
+    int largestPathValue(string colors, vector<vector<int>> &edges) {
+        int n = colors.size();
+        vector<int> in(n, 0);
+        vector<bool> visited(n, false);
+        vector<vector<int>> graph(n, vector<int>());
+        for (auto &i: edges) {
+            graph[i[0]].push_back(i[1]);
+            ++in[i[1]];
+        }
+        vector<vector<int>> dp(n, vector<int>(26, 0));
+        auto f = [&](int prev, int node) -> void {
+            for (int i = 0; i <= 'z' - 'a'; ++i) {
+                dp[node][i] = max(dp[node][i], dp[prev][i]);
+            }
+            dp[node][colors[node] - 'a'] = max(dp[node][colors[node] - 'a'], dp[prev][colors[node] - 'a'] + 1);
+        };
+        stack<int> s;
+        for (int i = 0; i < n; ++i) {
+            if (!in[i]) {
+                s.push(i);
+                dp[i][colors[i] - 'a'] = 1;
+            }
+        }
+        while (!s.empty()) {
+            auto top = s.top();
+            s.pop();
+            visited[top] = true;
+            for (auto i: graph[top]) {
+                --in[i];
+                f(top, i);
+                if (!in[i]) s.push(i);
+            }
+        }
+        if (std::any_of(visited.begin(), visited.end(), [&](const auto &item) {
+            return !item;
+        }))
+            return -1;
+        int res = 0;
+        for (auto &i: dp) {
+            for (auto j: i) {
+                res = max(res, j);
+            }
+        }
+        return res;
+    }
+
+    bool isValid(string s) {
+        stack<char> st;
+        auto f = [](char a, char b) -> bool {
+            return (a == '[' && b == ']') || (a == '{' && b == '}') || (a == '(' && b == ')');
+        };
+        for (auto i: s) {
+            if (i == '{' || i == '[' || i == '(') {
+                st.push(i);
+            } else {
+                if (st.empty() || !f(st.top(), i)) {
+                    return false;
+                }
+                st.pop();
+            }
+        }
+        return st.empty();
+    }
 };
 
 int main() {
