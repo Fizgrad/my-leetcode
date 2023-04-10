@@ -2917,6 +2917,25 @@ public:
         }
         return st.empty();
     }
+
+    vector<int> nextLargerNodes(ListNode *head) {
+        vector<pair<int, int>> st;
+        vector<int> res;
+        auto pt = head;
+        int index = 0;
+        while (pt) {
+            int val = pt->val;
+            res.push_back(0);
+            while (!st.empty() && val > st.back().second) {
+                res[st.back().first] = val;
+                st.pop_back();
+            }
+            st.push_back(pair<int, int>(index, val));
+            ++index;
+            pt = pt->next;
+        }
+        return res;
+    }
 };
 
 int main() {
