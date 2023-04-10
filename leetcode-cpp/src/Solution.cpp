@@ -2404,8 +2404,8 @@ public:
 
     int ways(vector<string> &pizza, int k) {
         int m = pizza.size(), n = pizza[0].size();
-        vector<vector<vector<int>>> dp(vector(k, vector(m, vector(n, -1))));
-        vector<vector<int>> preSum(vector(m + 1, vector(n + 1, 0)));
+        vector<vector<vector<int>>> dp(k, vector<vector<int>>(m, vector<int>(n, -1)));
+        vector<vector<int>> preSum(m + 1, vector<int>(n + 1, 0));
         for (int r = m - 1; r >= 0; r--)
             for (int c = n - 1; c >= 0; c--)
                 preSum[r][c] = preSum[r][c + 1] + preSum[r + 1][c] - preSum[r + 1][c + 1] + (pizza[r][c] == 'A');
