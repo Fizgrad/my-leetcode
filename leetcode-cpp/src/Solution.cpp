@@ -2947,6 +2947,23 @@ public:
         return std::move(res);
     }
 
+    bool isRobotBounded(const string &instructions) {
+        int x = 0, y = 0, dir = 0;
+        int xy[5] = {0, 1, 0, -1, 0};
+        for (int i = 0; i < instructions.size(); ++i) {
+            if (instructions[i] == 'G') {
+                x += xy[dir];
+                y += xy[dir + 1];
+            } else {
+                dir += (instructions[i] == 'L') ? 3 : 1;
+                dir %= 4;
+            }
+        }
+        if (dir == 0) {
+            return x == 0 && y == 0;
+        }
+        return true;
+    }
 };
 
 int main() {
