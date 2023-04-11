@@ -2937,6 +2937,16 @@ public:
         }
         return res;
     }
+
+    string removeStars(const string &s) {
+        string res;
+        for (auto i: s) {
+            if (i == '*' && !res.empty()) res.pop_back();
+            else res.push_back(i);
+        }
+        return std::move(res);
+    }
+
 };
 
 int main() {
