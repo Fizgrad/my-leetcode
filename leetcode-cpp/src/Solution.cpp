@@ -2992,6 +2992,32 @@ public:
         }
         return std::move(ans);
     }
+
+    int longestDecomposition(const string &text) {
+        int res = 0;
+        auto i = text.begin();
+        auto j = text.end() - 1;
+        deque<char> a;
+        deque<char> b;
+        auto cmp = [&]() -> bool {
+            for (auto i = 0; i < a.size(); ++i) {
+                if (a[i] != b[i]) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        while (i < j) {
+            a.push_back(*i++);
+            b.push_front(*j--);
+            if (cmp()) {
+                res += 2;
+                a.clear();
+                b.clear();
+            }
+        }
+        return res + (!a.empty() || i == j);
+    }
 };
 
 int main() {
