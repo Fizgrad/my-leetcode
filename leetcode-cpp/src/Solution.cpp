@@ -2964,6 +2964,34 @@ public:
         }
         return true;
     }
+
+    string simplifyPath(const string &path) {
+        vector<string> res;
+        for (int i = 0; i < path.size();) {
+            int j = i + 1;
+            while (j < path.size() && path[j] != '/') {
+                ++j;
+            }
+            if (j == i + 1 || (j == i + 2 && path[j - 1] == '.')) {
+            } else if (j == i + 3 && path[j - 1] == '.' && path[j - 2] == '.') {
+                if (!res.empty()) {
+                    res.pop_back();
+                }
+            } else {
+                res.push_back(path.substr(i + 1, j - i - 1));
+            }
+            i = j;
+        }
+        if (res.empty()) {
+            return "/";
+        }
+        string ans;
+        for (auto &i: res) {
+            ans.push_back('/');
+            ans.append(i);
+        }
+        return std::move(ans);
+    }
 };
 
 int main() {
