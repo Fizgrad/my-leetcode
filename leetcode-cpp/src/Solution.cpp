@@ -3018,6 +3018,31 @@ public:
         }
         return res + (!a.empty() || i == j);
     }
+
+    bool validateStackSequences(vector<int> &pushed, vector<int> &popped) {
+        stack<int> s;
+        int index = 0;
+        for (auto i: pushed) {
+            if (i != popped[index]) {
+                s.push(i);
+            } else {
+                ++index;
+                while (!s.empty() && index < pushed.size() && popped[index] == s.top()) {
+                    s.pop();
+                    ++index;
+                }
+            }
+        }
+        while (!s.empty()) {
+            if (index < pushed.size() && s.top() == popped[index]) {
+                s.pop();
+                ++index;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
