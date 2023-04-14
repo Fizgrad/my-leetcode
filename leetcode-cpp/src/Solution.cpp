@@ -3061,6 +3061,28 @@ public:
         return dp[0][n - 1];
     }
 
+    vector<bool> camelMatch(vector<string> &queries, const string &pattern) {
+        vector<bool> res(queries.size(), false);
+        for (int i = 0; i < queries.size(); ++i) {
+            int index = 0;
+            for (auto &c: queries[i]) {
+                if (index >= pattern.size()) {
+                    if (c >= 'A' && c <= 'Z') {
+                        res[i] = false;
+                    }
+                } else if (pattern[index] == c) {
+                    ++index;
+                    if (index == pattern.size()) {
+                        res[i] = true;
+                    }
+                } else if (c <= 'Z' && c >= 'A') {
+                    res[i] = false;
+                    break;
+                }
+            }
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
