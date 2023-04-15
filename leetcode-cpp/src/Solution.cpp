@@ -3083,6 +3083,58 @@ public:
         }
         return std::move(res);
     }
+
+    int minDays(vector<vector<int>> &grid) {
+        const int xy[5] = {0, 1, 0, -1, 0};
+        int n = grid.size();
+        int m = grid.begin()->size();
+        vector<vector<bool>> visited(n, vector<bool>(m, false));
+        auto cal_connected_component = [&](auto &&cal_connected_component, int x, int y) -> int {
+            visited[x][y] = true;
+            for (int k = 0; k < 4; ++k) {
+                int xx = x + xy[k];
+                int yy = y + xy[k + 1];
+                if (xx >= 0 && yy >= 0 && xx < n && yy < m) {
+                    if (!visited[xx][yy] && grid[xx][yy]) {
+                        cal_connected_component(cal_connected_component, xx, yy);
+                    }
+                }
+            }
+            return 1;
+        };
+        int con_com = 0;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] && !visited[i][j]) {
+                    con_com += cal_connected_component(cal_connected_component, i, j);
+                }
+            }
+        }
+        if (con_com ^ 1) {
+            return 0;
+        }
+        for (int a = 0; a < n; ++a) {
+            for (int b = 0; b < m; ++b) {
+                if (grid[a][b]) {
+                    grid[a][b] = 0;
+                    con_com = 0;
+                    std::fill(visited.begin(), visited.end(), vector<bool>(m, false));
+                    for (int i = 0; i < n; ++i) {
+                        for (int j = 0; j < m; ++j) {
+                            if (grid[i][j] && !visited[i][j]) {
+                                con_com += cal_connected_component(cal_connected_component, i, j);
+                            }
+                        }
+                    }
+                    if (con_com ^ 1) {
+                        return 1;
+                    }
+                    grid[a][b] = 1;
+                }
+            }
+        }
+        return 2;
+    }
 };
 
 int main() {
