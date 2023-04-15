@@ -3135,6 +3135,35 @@ public:
         }
         return 2;
     }
+
+    int maxValueOfCoins(vector<vector<int>> &piles, int k) {
+        for (auto &i: piles) {
+            for (int j = 1; j < i.size(); ++j) {
+                i[j] += i[j - 1];
+            }
+        }
+        int n = piles.size();
+        vector<int> dp(k + 1, 0);
+        int j = 1;
+        for (; j <= k && j <= piles[0].size(); ++j) {
+            dp[j] = piles[0][j - 1];
+        }
+        for (; j <= k; ++j) {
+            dp[j] = dp[j - 1];
+        }
+        for (int i = 1; i < n; ++i) {
+            vector<int> new_dp(k + 1, 0);
+            for (int j = 1; j <= k; ++j) {
+                new_dp[j] = max(dp[j], new_dp[j - 1]);
+                for (int m = 1; m <= j && m <= piles[i].size(); ++m) {
+                    new_dp[j] = max(new_dp[j],
+                                    dp[j - m] + piles[i][m - 1]);
+                }
+            }
+            dp.swap(new_dp);
+        }
+        return dp[k];
+    }
 };
 
 int main() {
