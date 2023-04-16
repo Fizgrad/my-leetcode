@@ -3164,6 +3164,31 @@ public:
         }
         return dp[k];
     }
+
+    int numWays(vector<string> &words, const string &target) {
+        int n = target.size();
+        int m = words.begin()->size();
+        int mod = 1000000007;
+        vector<int> dp(n + 1, 0);
+        dp[0] = 1;
+        vector<vector<int>> count(m, vector<int>(26, 0));
+        for (const string &word: words) {
+            for (int i = 0; i < m; i++) {
+                count[i][word[i] - 'a']++;
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            // 1D DP array optimization, dp[j+1] depends on previous dp[j].
+            // So we must update dp[j+1] before dp[j]. As a result, j begins at n-1,
+            // and decreases to 0, and can ensure when update dp[j+1], dp[j] is previous result.
+            for (int j = n - 1; j >= 0; j--) {
+                dp[j + 1] += (int) ((long) dp[j] * count[i][target[j] - 'a'] % mod);
+                dp[j + 1] %= mod;
+            }
+        }
+        return dp[n];
+    }
+
 };
 
 int main() {
