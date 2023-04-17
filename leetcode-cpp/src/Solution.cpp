@@ -3189,6 +3189,17 @@ public:
         return dp[n];
     }
 
+    vector<bool> kidsWithCandies(vector<int> &candies, int extraCandies) {
+        int max_num = candies[0];
+        for (int i = 1; i < candies.size(); ++i) {
+            if (max_num < candies[i]) max_num = candies[i];
+        }
+        vector<bool> res(candies.size(), true);
+        for (int i = 0; i < candies.size(); ++i) {
+            if (extraCandies + candies[i] < max_num) res[i] = false;
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
