@@ -3215,6 +3215,18 @@ public:
         }
         return std::move(res);
     }
+
+    int maxAncestorDiff(TreeNode *root) {
+        auto dfs = [&](auto &&dfs, TreeNode *cur, int mi, int ma) -> int {
+            if (cur) {
+                mi = min(cur->val, mi);
+                ma = max(cur->val, ma);
+                return max(dfs(dfs, cur->left, mi, ma), dfs(dfs, cur->right, mi, ma));
+            } else return ma - mi;
+        };
+        return dfs(dfs, root, INT32_MAX, INT32_MIN);
+    }
+
 };
 
 int main() {
