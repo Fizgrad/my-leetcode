@@ -3200,6 +3200,21 @@ public:
         }
         return std::move(res);
     }
+
+    string mergeAlternately(const string &word1, const string &word2) {
+        string res;
+        int a = 0;
+        int b = 0;
+        while (a < word1.size() || b < word2.size()) {
+            if (a < word1.size()) {
+                res.push_back(word1[a++]);
+            }
+            if (b < word2.size()) {
+                res.push_back(word2[b++]);
+            }
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
