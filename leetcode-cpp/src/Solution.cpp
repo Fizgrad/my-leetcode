@@ -3227,6 +3227,21 @@ public:
         return dfs(dfs, root, INT32_MAX, INT32_MIN);
     }
 
+    int longestZigZag(TreeNode *root) {
+        int res = 0;
+        auto dfs = [&](auto &&dfs, int left, int right, TreeNode *cur) -> void {
+            if (cur->left) {
+                dfs(dfs, 0, left + 1, cur->left);
+            }
+            if (cur->right) {
+                dfs(dfs, right + 1, 0, cur->right);
+            }
+            res = max(res, max(left, right));
+        };
+        dfs(dfs, 0, 0, root);
+        return res;
+    }
+
 };
 
 int main() {
