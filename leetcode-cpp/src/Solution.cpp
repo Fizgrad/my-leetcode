@@ -3268,6 +3268,53 @@ public:
         }
         return res;
     }
+
+    int lengthOfLIS(vector<int> &nums) {
+        int n = nums.size();
+        vector<int> tails(n, 0);
+        int size = 0;
+        for (auto num: nums) {
+            int i = 0, j = size;
+            while (i != j) {
+                int m = (i + j) >> 1;
+                if (tails[m] < num)
+                    i = m + 1;
+                else
+                    j = m;
+            }
+            tails[i] = num;
+            size = max(i + 1, size);
+        }
+        return size;
+    }
+
+
+//    int makeArrayIncreasing(vector<int> &arr1, vector<int> &arr2) {
+//        std::sort(arr2.begin(), arr2.end());
+//        auto bisect = [&](int target) -> int {
+//            int low = 0;
+//            int high = arr2.size() - 1;
+//            int mid = (low + high) >> 1;
+//            while (low <= high) {
+//                if(target < arr2[mid]){
+//                    high = mid;
+//                }else if(target >= arr2[mid]) {
+//                    low = mid + 1;
+//                }
+//            }
+//            return arr2[low];
+//        };
+//        using num_last = pair<int,int>;
+//        vector<vector<num_last>> dp(arr1.size(),vector<num_last>(2));
+//        // 0 num of operations min, 1 last_num min
+//        dp[0][0] = dp[0][1] = num_last (arr1[0],0);
+//        for(int i = 1; i< arr1.size();++i){
+//
+//        }
+
+
+}
+
 };
 
 int main() {
