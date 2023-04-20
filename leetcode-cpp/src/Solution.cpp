@@ -3321,6 +3321,65 @@ public:
         int res = solve(solve, 0, 0, -1);
         return res <= arr1.size() ? res : -1;
     }
+
+//    string longestPalindrome(const string &s) {
+//        int len = s.size();
+//        if (len == 1) return s;
+//        int start = 0;
+//        int res_len = 1;
+//        vector<vector<bool>> dp(2, vector<bool>(len, true));
+//        for (int i = 0; i < len - 1; ++i) {
+//            if (s[i] == s[i + 1]) {
+//                dp[0][i] = true;
+//                start = i;
+//                res_len = 2;
+//            } else {
+//                dp[0][i] = false;
+//            }
+//        }
+//        bool flag = true;
+//        auto proc = [&](int i) {
+//            for (int k = 0; k <= len - i; ++k) {
+//                if (dp[i % 2][k + 1] && s[k] == s[k + i - 1]) {
+//                    dp[i % 2][k] = true;
+//                    flag = true;
+//                    res_len = i;
+//                    start = k;
+//                } else {
+//                    dp[i % 2][k] = false;
+//                }
+//            }
+//        };
+//        for (int i = 3; i <= len && flag; ++i) {
+//            flag = false;
+//            proc(i);
+//            ++i;
+//            proc(i);
+//        }
+//        return s.substr(start, res_len);
+//    }
+    string longestPalindrome(const string &s) {
+        int n = s.size();
+        int res_r = 0;
+        int res_l = 0;
+        for (int i = 0; i < n; ++i) {
+            int j = i;
+            while (j < n - 1 && s[j + 1] == s[i]) {
+                ++j;
+            }
+            int l = i, r = j;
+            while (l > 0 && r < n - 1 && s[l - 1] == s[r + 1]) {
+                --l;
+                ++r;
+            }
+            if (res_r - res_l < r - l) {
+                res_r = r;
+                res_l = l;
+            }
+            i = j;
+        }
+        return std::move(s.substr(res_l, res_r - res_l + 1));
+    }
 };
 
 int main() {
