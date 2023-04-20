@@ -3242,6 +3242,32 @@ public:
         return res;
     }
 
+    int widthOfBinaryTree(TreeNode *root) {
+        int res = 1;
+        using item = pair<TreeNode *, unsigned int>;
+        vector<item> q;
+        vector<item> temp;
+        q.emplace_back(root, 1);
+        while (!q.empty()) {
+            temp.clear();
+            int base = q.front().second;
+            int max_num = q.front().second;
+            std::for_each(q.begin(), q.end(), [&](const auto &item) {
+                auto [front, num] = item;
+                num = num - base;
+                max_num = num;
+                if (front->left) {
+                    temp.emplace_back(front->left, 2 * num - 1);
+                }
+                if (front->right) {
+                    temp.emplace_back(front->right, 2 * num);
+                }
+            });
+            res = max(res, max_num + 1);
+            q.swap(temp);
+        }
+        return res;
+    }
 };
 
 int main() {
