@@ -3437,6 +3437,133 @@ public:
         }
         return total - (2 * dp[n][sum]);
     }
+
+    int minAbsDifference(vector<int> &nums, int goal) {
+        int n = nums.size();
+        vector<int> first;
+        vector<int> second;
+        auto generate = [&](auto &&generate, int i, int end, int sum, vector<int> &listOfSubsetSums) -> void {
+            if (i == end) {
+                listOfSubsetSums.push_back(sum); //add
+                return;
+            }
+            generate(generate, i + 1, end, sum + nums[i], listOfSubsetSums);
+            generate(generate, i + 1, end, sum, listOfSubsetSums);
+        };
+        generate(generate, 0, n / 2, 0, first); //generate all possible subset sums from half the array
+        generate(generate, n / 2, n, 0, second);//generate all possible subset sums from the second half of the array
+        std::sort(first.begin(), first.end());
+        int ans = INT32_MAX;
+        auto binarySearch = [&](vector<int> &first, int target) {
+            int i = 0;
+            int j = first.size() - 1;
+            int mid = (i + j) >> 1;
+            while (i <= j) {
+                mid = (i + j) >> 1;
+                if (first[mid] == target) {
+                    return mid;
+                } else if (first[mid] < target) {
+                    i = mid + 1;
+                } else {
+                    j = mid - 1;
+                }
+            }
+            return i;
+        };
+        for (auto secondSetSum: second) {
+            int left = goal - secondSetSum; // How far off are we from the desired goal?
+            if (first[0] > left) { // all subset sums from first half are too big => Choose the smallest
+                ans = min(ans, abs((first[0] + secondSetSum) - goal));
+                continue;
+            }
+            if (first[first.size() - 1] <
+                left) { // all subset sums from first half are too small => Choose the largest
+                ans = min(ans, abs((first[(first.size() - 1)] + secondSetSum) - goal));
+                continue;
+            }
+            int pos = binarySearch(first, left);
+            if (first[pos] == left)
+                return 0;
+            ans = min(ans, abs(
+                    secondSetSum + first[pos - 1] - goal)); // Checking for the floor value (largest sum < goal)
+            ans = min(ans, abs(
+                    secondSetSum + first[pos] - goal)); //Checking for the ceiling value (smallest sum > goal)
+        }
+        return ans;
+    }
+
+    int minimumDifference(vector<int> &nums) {
+        auto binarySearch = [&](vector<int> &arr, int target) {
+            int i = 0;
+            int j = arr.size() - 1;
+            int mid = (i + j) >> 1;
+            while (i <= j) {
+                mid = (i + j) >> 1;
+                if (arr[mid] == target) {
+                    return mid;
+                } else if (arr[mid] < target) {
+                    i = mid + 1;
+                } else {
+                    j = mid - 1;
+                }
+            }
+            return i;
+        };
+        int sum = 0;
+        int n = nums.size();
+        if (n == 2) {
+            return ::abs(nums[1] - nums[0]);
+        }
+        for (int i = 0; i < n; ++i) {
+            sum += nums[i];
+        }
+        int len = n / 2;
+        int target = sum >> 1;
+        vector<vector<int>> first(len + 1, vector<int>());
+        vector<vector<int>> second(len + 1, vector<int>());
+        first[0].push_back(0);
+        second[0].push_back(0);
+        auto generate = [&](auto &&generate, vector<vector<int>> &cur_set, int index, int end, int size,
+                            int sum) -> void {
+            if (size <= len) {
+                if (size > 0) cur_set[size].push_back(sum);
+            }
+            if (size == len || index >= end) {
+                return;
+            }
+            generate(generate, cur_set, index + 1, end, size + 1, sum + nums[index]);
+            generate(generate, cur_set, index + 1, end, size, sum);
+        };
+        generate(generate, first, 0, len, 0, 0);
+        generate(generate, second, len, n, 0, 0);
+        int res = INT32_MAX >> 1;
+        for (int i = 0; i < len; ++i) {
+            std::sort(first[i].begin(), first[i].end());
+        }
+        for (int i = 0; i <= len; ++i) {
+            for (auto k: second[i]) {
+                int left = target - k;
+                auto &left_vector = first[len - i];
+                if (left_vector[0] >= left) {
+                    res = min(res, ::abs(2 * (k + left_vector[0]) - sum));
+                    continue;
+                }
+                if (left_vector.back() <= left) {
+                    res = min(res, ::abs(sum - 2 * (k + left_vector.back())));
+                    continue;
+                }
+                int pos = binarySearch(left_vector, left);
+                int search_res = left_vector[pos];
+                if (search_res == left) {
+                    return sum - 2 * target;
+                } else {
+                    res = min(res, ::abs(2 * (k + search_res) - sum));
+                    res = min(res, ::abs(sum - 2 * (k + left_vector[pos - 1])));
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
