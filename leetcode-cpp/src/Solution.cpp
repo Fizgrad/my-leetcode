@@ -3708,6 +3708,29 @@ public:
         }
         return std::move(res);
     }
+
+    int kthLargestValue(vector<vector<int>> &matrix, int k) {
+        priority_queue<int> pq;
+        int m = matrix.size();
+        int n = matrix.begin()->size();
+        auto push_into_pq = [&](int value) {
+            pq.push(-value);
+            while (pq.size() > k) {
+                pq.pop();
+            }
+        };
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i) matrix[i][j] ^= matrix[i - 1][j];
+                if (j) matrix[i][j] ^= matrix[i][j - 1];
+                if (i && j) matrix[i][j] ^= matrix[i - 1][j - 1];
+                push_into_pq(matrix[i][j]);
+            }
+        }
+        return -pq.top();
+    }
+
+
 };
 
 int main() {
