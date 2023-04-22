@@ -3657,6 +3657,57 @@ public:
         return res;
     }
 
+    vector<int> shortestAlternatingPaths(int n, vector<vector<int>> &redEdges, vector<vector<int>> &blueEdges) {
+        vector<vector<int>> redGraph(n, vector<int>());
+        vector<vector<int>> blueGraph(n, vector<int>());
+        for (auto &i: redEdges) {
+            redGraph[i[0]].push_back(i[1]);
+        }
+        for (auto &i: blueEdges) {
+            blueGraph[i[0]].push_back(i[1]);
+        }
+        vector<int> res(n, INT32_MAX >> 1);
+        res[0] = 0;
+        auto proc = [&](bool flag) {
+            vector<int> next{0};
+            vector<vector<bool>> visited(2, vector<bool>(n, false));
+            visited[flag][0] = true;
+            int len = 0;
+            while (!next.empty()) {
+                vector<int> temp;
+                ++len;
+                for (auto v: next) {
+                    if (flag) {
+                        for (auto j: redGraph[v]) {
+                            if (!visited[flag][j]) {
+                                res[j] = min(res[j], len);
+                                temp.push_back(j);
+                                visited[flag][j] = true;
+                            }
+                        }
+                    } else {
+                        for (auto j: blueGraph[v]) {
+                            if (!visited[flag][j]) {
+                                res[j] = min(res[j], len);
+                                temp.push_back(j);
+                                visited[flag][j] = true;
+                            }
+                        }
+                    }
+                }
+                temp.swap(next);
+                flag = !flag;
+            }
+        };
+        proc(true);
+        proc(false);
+        for (int i = 0; i < n; ++i) {
+            if (res[i] == INT32_MAX >> 1) {
+                res[i] = -1;
+            }
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
