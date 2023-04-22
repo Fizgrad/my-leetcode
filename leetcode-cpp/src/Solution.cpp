@@ -3730,6 +3730,39 @@ public:
         return -pq.top();
     }
 
+    std::string longestDupSubstring(std::string s) {
+        auto RabinKarp = [](const std::string &text, int M, long long q) -> std::pair<bool, std::string> {
+            if (M == 0) return {true, ""};
+            long long h = 1, t = 0, d = 256;
+            std::unordered_map<long long, std::vector<int>> dic;
+            for (int i = 0; i < M - 1; ++i) { h = (h * d) % q; }
+            for (int i = 0; i < M; ++i) { t = (d * t + text[i]) % q; }
+            dic[t].push_back(0);
+            for (int i = 0; i < static_cast<int>(text.size()) - M; ++i) {
+                t = (d * (t - text[i] * h) + text[i + M]) % q;
+                if (t < 0) t += q;
+                for (int j: dic[t]) {
+                    if (text.substr(i + 1, M) == text.substr(j, M)) {
+                        return {true, text.substr(j, M)};
+                    }
+                }
+                dic[t].push_back(i + 1);
+            }
+            return {false, ""};
+        };
+        int beg = 0, end = s.size();
+        long long q = 1e9 + 7;
+        std::string found = "";
+        while (beg + 1 < end) {
+            int mid = beg + (end - beg) / 2;
+            auto [isFound, candidate] = RabinKarp(s, mid, q);
+            if (isFound) {
+                beg = mid;
+                found = candidate;
+            } else { end = mid; }
+        }
+        return found;
+    }
 
 };
 
