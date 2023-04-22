@@ -3579,6 +3579,66 @@ public:
         }
         return dp[n % 2][0];
     }
+
+    int longestArithSeqLength(vector<int> &nums) {
+        int n = nums.size();
+        int res = 1;
+        vector<vector<int>> dp(n + 1, vector<int>(1001, 1));
+        int maxLen = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int diff = nums[j] - nums[i];
+                dp[j][diff + 500] = 1 + dp[i][diff + 500];
+                res = max(res, dp[j][diff + 500]);
+            }
+        }
+        return res;
+    }
+
+    vector<int> getOrder(vector<vector<int>> &tasks) {
+        vector<int> res;
+        int n = tasks.size();
+        for (int i = 0; i < n; ++i) {
+            tasks[i].push_back(i);
+        }
+        std::sort(tasks.begin(), tasks.end(), [](const vector<int> &a, const vector<int> &b) {
+            return a[0] < b[0];
+        });
+        struct task {
+            int index;
+            int consumed;
+
+            task(int a, int b) : index(a), consumed(b) {}
+
+            bool operator<(const task &a) const {
+                return consumed > a.consumed || (consumed == a.consumed && index > a.index);
+            }
+        };
+        priority_queue<task> pq;
+        long long int time = 0;
+        for (int i = 0; i < n;) {
+            if (time >= tasks[i][0]) {
+                pq.push({tasks[i][2], tasks[i][1]});
+                ++i;
+            } else {
+                if (pq.empty()) {
+                    time = tasks[i][0];
+                } else {
+                    auto [index, consumed_time] = pq.top();
+                    res.push_back(index);
+                    time += consumed_time;
+                    pq.pop();
+                }
+            }
+        }
+        while (!pq.empty()) {
+            auto [index, consumed_time] = pq.top();
+            res.push_back(index);
+            time += consumed_time;
+            pq.pop();
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
