@@ -3639,6 +3639,24 @@ public:
         }
         return std::move(res);
     }
+
+    int numSubarraysWithSum(vector<int> &nums, int goal) {
+        int res = 0;
+        int n = nums.size();
+        for (int i = 1; i < n; ++i) {
+            nums[i] += nums[i - 1];
+        }
+        vector<int> times(nums[n - 1] + 1, 0);
+        ++times[0];
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] >= goal) {
+                res += times[nums[i] - goal];
+            }
+            ++times[nums[i]];
+        }
+        return res;
+    }
+
 };
 
 int main() {
