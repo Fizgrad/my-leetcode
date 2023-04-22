@@ -3564,6 +3564,21 @@ public:
         }
         return res;
     }
+
+    int minInsertions(const string &s) {
+        int n = s.size();
+        vector<vector<int>> dp(2, vector<int>(n, 0));
+        for (int i = 2; i <= n; ++i) {
+            for (int j = 0; j <= n - i; ++j) {
+                if (s[j] == s[j + i - 1]) {
+                    dp[i % 2][j] = dp[i % 2][j + 1];
+                } else {
+                    dp[i % 2][j] = 1 + min(dp[(i - 1) % 2][j], dp[(i - 1) % 2][j + 1]);
+                }
+            }
+        }
+        return dp[n % 2][0];
+    }
 };
 
 int main() {
