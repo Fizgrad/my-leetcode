@@ -3764,6 +3764,28 @@ public:
         return found;
     }
 
+    int numberOfArrays(const string &s, int k) {
+        int n = s.size();
+        const int mod = 1e9 + 7;
+        vector<int> dp(n + 1, 0);
+        dp[0] = 1;
+        for (int i = 0; i < n; ++i) {
+            if (s[i] == '0') {
+                continue;
+            }
+            long long int num = s[i] - '0';
+            if (num <= k) {
+                dp[i + 1] = (dp[i + 1] + dp[i]) % mod;
+            }
+            for (int j = i + 1; j < n; ++j) {
+                num = num * 10 + s[j] - '0';
+                if (num <= k)
+                    dp[j + 1] = (dp[j + 1] + dp[i]) % mod;
+                else break;
+            }
+        }
+        return dp[n];
+    }
 };
 
 int main() {
