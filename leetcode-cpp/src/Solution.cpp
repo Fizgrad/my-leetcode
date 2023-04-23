@@ -3786,12 +3786,80 @@ public:
         }
         return dp[n];
     }
+
+    long long minCost(vector<int> &basket1, vector<int> &basket2) {
+        unordered_map<int, int> map;
+        for (auto i: basket1) {
+            ++map[i];
+        }
+        for (auto i: basket2) {
+            --map[i];
+            if (map[i] == 0) {
+                map.erase(i);
+            }
+        };
+        int min_num = min(*std::min_element(basket1.begin(), basket1.end()),
+                          *std::min_element(basket2.begin(), basket2.end()));
+        long long int res = 0;
+        vector<pair<int, int>> more;
+        vector<pair<int, int>> less;
+        int more_size = 0;
+        int less_size = 0;
+        for (auto &i: map) {
+            if (i.second & 1) {
+                return -1;
+            }
+            if (i.second > 0) {
+                more_size += i.second;
+                more.emplace_back(i);
+            } else {
+                less_size -= i.second;
+                less.emplace_back(i);
+            }
+        }
+        if (more_size != less_size) {
+            return -1;
+        }
+        std::sort(more.begin(), more.end(), [](const pair<int, int> &a, const pair<int, int> &b) -> bool {
+            return a.first < b.first;
+        });
+        std::sort(less.begin(), less.end(), [](const pair<int, int> &a, const pair<int, int> &b) -> bool {
+            return a.first < b.first;
+        });
+        int i = 0;
+        int j = 0;
+        for (int k = 0; k < more_size / 2; ++k) {
+            if (more[i].first < less[j].first) {
+                res += min(more[i].first, 2 * min_num);
+                more[i].second -= 2;
+                if (more[i].second == 0) {
+                    ++i;
+                }
+            } else {
+                res += min(2 * min_num, less[j].first);
+                less[j].second += 2;
+                if (less[j].second == 0) {
+                    ++j;
+                }
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
     Solution s;
-    for (int i = 0; i <= 50; ++i) {
-        cout << s.countVowelStrings(i) << ",";
-    }
+    vector<int> b = {2317, 3053, 2916, 6655, 6325, 3511, 4929, 3161, 5660, 2027, 2557, 2343, 2563, 5588, 6562, 5466,
+                     5570, 5572, 314, 331, 922, 6504, 2559, 1793, 6504, 6086, 2563, 818, 3031, 2559, 2975, 2557, 2454,
+                     4721, 2143, 5572, 3511, 2143, 3549, 331, 4674, 176, 2454, 5237, 6383, 1943, 527, 3370, 140, 88,
+                     176, 1085, 2364, 4541, 2975, 1473, 2707, 4721, 5439, 3053, 64, 314, 5381, 5904, 6086, 3310, 3549,
+                     4157, 166, 140, 2343, 5799, 203, 4934, 44, 4929, 2786, 44, 166, 5644, 6325, 5904, 5466};
+    vector<int> a = {3697, 172, 5406, 5644, 5588, 4541, 2078, 172, 6492, 6152, 4545, 5660, 3310, 4525, 1971, 6655, 6562,
+                     1793, 5938, 2317, 3459, 6889, 5799, 5237, 2027, 4545, 203, 3681, 6587, 3031, 3710, 6152, 578, 818,
+                     3370, 5381, 88, 4525, 1971, 4157, 5439, 2078, 2590, 6712, 2786, 3681, 3618, 4396, 5268, 3459, 5570,
+                     2916, 4396, 3525, 1085, 3618, 3525, 4934, 5406, 2707, 3995, 64, 5938, 3161, 2364, 2590, 527, 1943,
+                     6587, 2184, 6383, 5268, 6492, 922, 3697, 578, 2184, 3710, 6889, 1473, 6712, 4674, 3995};
+    cout << s.minCost(a, b) << endl;
     return 0;
 }
