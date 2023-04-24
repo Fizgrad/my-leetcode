@@ -6,5 +6,4 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(src)
 
 add_executable(leetcode
-        src/Solution.cpp
-        src/LinkedListRandomNode.cpp src/MyLinkedList.cpp src/Trie.cpp src/BrowserHistory.cpp src/WordDictionary.cpp src/StreamChecker.cpp src/DutchNationalFlagPartitioning.cpp src/DutchNationalFlagPartitioning.cpp src/DutchNationalFlagPartitioning.cpp src/DetectSquares.cpp src/DetectSquares.cpp src/DetectSquares.cpp src/DetectSquares.cpp src/CloneGraph.cpp src/CloneGraph.cpp src/RLEIterator.cpp src/RLEIterator.cpp src/NumArray.cpp src/NumArray.cpp src/NumArray.cpp)
+        src/Solution.cpp)
