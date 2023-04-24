@@ -3846,6 +3846,52 @@ public:
         return res;
     }
 
+    int lastStoneWeight(vector<int> &stones) {
+        int n = stones.size();
+        int last = n - 1;
+        auto up = [&](int p) {
+            while (p > 1 && stones[p - 1] > stones[p / 2 - 1]) {
+                swap(stones[p - 1], stones[p / 2 - 1]);
+                p /= 2;
+            }
+        };
+        auto down = [&](int p) {
+            while (p * 2 - 1 <= last) {
+                int t = p * 2;
+                if (t <= last && stones[t] > stones[t - 1]) t++;
+                if (stones[t - 1] <= stones[p - 1]) break;
+                std::swap(stones[p - 1], stones[t - 1]);
+                p = t;
+            }
+        };
+        auto push = [&](int val) {
+            ++last;
+            stones[last] = val;
+            int i = last;
+            up(last + 1);
+        };
+        auto pop = [&]() -> int {
+            if (last >= 0) {
+                int res = stones[0];
+                swap(stones[0], stones[last]);
+                --last;
+                down(1);
+                return res;
+            } else {
+                return -1;
+            }
+        };
+        for (int i = n; i >= 1; i--) down(i);
+        while (last > 0) {
+            auto a = pop();
+            auto b = pop();
+            if (a ^ b) {
+                push(::abs(a - b));
+            }
+        }
+        return last == 0 ? stones[0] : 0;
+    }
+
 };
 
 int main() {
