@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(src)
 
 add_executable(leetcode
-        src/Solution.cpp)
+        src/Solution.cpp src/SmallestInfiniteSet.cpp)
