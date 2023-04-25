@@ -3892,6 +3892,65 @@ public:
         return last == 0 ? stones[0] : 0;
     }
 
+    int minMutation(const string &startGene, const string &endGene, vector<string> &bank) {
+        auto intoInt = [](char a) -> int {
+            switch (a) {
+                case 'A':
+                    return 0;
+                case 'C':
+                    return 1;
+                case 'G':
+                    return 2;
+                case 'T':
+                    return 3;
+                default:
+                    return -1;
+            }
+        };
+        auto hash = [&](const string &s) -> int {
+            int res = 0;
+            for (int i = 0; i < s.size(); ++i) {
+                res += intoInt(s[i]) * (1 << (2 * i));
+            }
+            return res;
+        };
+        unordered_set<int> bank_int;
+        for (auto &i: bank) {
+            bank_int.insert(hash(i));
+        }
+        queue<int> q;
+        int res = 0;
+        q.push(hash(startGene));
+        int end = hash(endGene);
+        while (!q.empty()) {
+            queue<int> temp;
+            while (!q.empty()) {
+                int top = q.front();
+                q.pop();
+                if (top == end) {
+                    return res;
+                }
+                for (int i = 0; i < startGene.size(); ++i) {
+                    for (int c = 0; c < 4; ++c) {
+                        int new_hash =
+                                top - (top >> (2 * i)) % 4 * (1 << (2 * i)) + (c) * (1 << (2 * i));
+                        if (new_hash == top) {
+                            continue;
+                        } else if (bank_int.count(new_hash)) {
+                            if (new_hash == end) {
+                                return res + 1;
+                            }
+                            temp.push(new_hash);
+                            bank_int.erase(new_hash);
+                        }
+                    }
+                }
+            }
+            temp.swap(q);
+            ++res;
+        }
+        return -1;
+    }
 };
 
 int main() {
