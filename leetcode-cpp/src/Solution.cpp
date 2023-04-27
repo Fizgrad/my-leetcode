@@ -3966,6 +3966,45 @@ public:
         }
         return false;
     }
+
+    int addDigits(int num) {
+        int sum = 0;
+        while (num > 9) {
+            for (auto i: to_string(num)) {
+                sum += (i - '0');
+            }
+            num = sum;
+            sum = 0;
+        }
+        return num;
+    }
+
+    double (*bulbSwitch)(double) = &sqrt;
+
+    long long maximumSubsequenceCount(const string &text, const string &pattern) {
+        long long sum = 0;
+        long long res = 0;
+        int num0 = 0;
+        int num1 = 0;
+        for (int i = 0; i < text.size(); ++i) {
+            if (text[i] == pattern[0]) {
+                ++sum;
+                ++num0;
+            } else if (text[i] == pattern[1]) {
+                res += sum;
+                ++num1;
+            }
+        }
+        if (pattern[0] == pattern[1]) {
+            res = (sum - 1) * sum / 2;
+        }
+        if (num1 > num0) {
+            res += num1;
+        } else {
+            res += num0;
+        }
+        return res;
+    }
 };
 
 int main() {
