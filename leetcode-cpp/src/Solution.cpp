@@ -4005,6 +4005,69 @@ public:
         }
         return res;
     }
+
+    int numSimilarGroups(vector<string> &strs) {
+        int n = strs.size();
+        int m = strs.begin()->size();
+        vector<vector<int>> graph(n, vector<int>());
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                int diff = 0;
+                int k;
+                for (k = 0; k < m; ++k) {
+                    if (strs[i][k] != strs[j][k]) {
+                        ++diff;
+                        if (diff >= 3) {
+                            break;
+                        }
+                    }
+                }
+                if (k == m) {
+                    graph[i].push_back(j);
+                    graph[j].push_back(i);
+                }
+            }
+        }
+        vector<int> parent(n);
+        vector<int> size(n);
+        for (int i = 0; i < n; ++i) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+        auto find = [&](int i) -> int {
+            int res = parent[i];
+            while (res != i) {
+                i = res;
+                res = parent[res];
+            }
+            return res;
+        };
+        auto uni = [&](int a, int b) -> void {
+            int pa = find(a);
+            int pb = find(b);
+            if (pa == pb) {
+                return;
+            }
+            if (size[pa] > size[pb]) {
+                size[pa] += size[pb];
+                parent[pb] = pa;
+            } else {
+                size[pb] += size[pa];
+                parent[pa] = pb;
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            for (auto j: graph[i]) {
+                uni(i, j);
+            }
+        }
+        unordered_set<int> sets;
+        for (int i = 0; i < n; ++i) {
+            sets.insert(find(parent[i]));
+        }
+        return sets.size();
+    }
+
 };
 
 int main() {
