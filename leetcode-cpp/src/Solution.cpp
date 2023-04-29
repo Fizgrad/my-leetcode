@@ -4090,6 +4090,56 @@ public:
         return res;
     }
 
+    vector<bool> distanceLimitedPathsExist(int n, vector<vector<int>> &edgeList, vector<vector<int>> &queries) {
+        vector<int> parent(n);
+        vector<int> size(n);
+        for (int i = 0; i < queries.size(); ++i) {
+            queries[i].push_back(i);
+        }
+        std::sort(edgeList.begin(), edgeList.end(), [](const vector<int> &a, const vector<int> &b) -> bool {
+            return a[2] < b[2];
+        });
+        std::sort(queries.begin(), queries.end(), [](const vector<int> &a, const vector<int> &b) -> bool {
+            return a[2] < b[2];
+        });
+        auto find = [&](int i) -> int {
+            int res = parent[i];
+            while (res != i) {
+                i = res;
+                res = parent[res];
+            }
+            return res;
+        };
+        auto uni = [&](int a, int b) -> void {
+            int pa = find(a);
+            int pb = find(b);
+            if (pa == pb) {
+                return;
+            }
+            if (size[pa] > size[pb]) {
+                size[pa] += size[pb];
+                parent[pb] = pa;
+            } else {
+                size[pb] += size[pa];
+                parent[pa] = pb;
+            }
+        };
+        vector<bool> res(queries.size());
+        for (int i = 0; i < n; ++i) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+        int index = 0;
+        for (auto &i: queries) {
+            while (index < edgeList.size() && edgeList[index][2] < i[2]) {
+                uni(edgeList[index][0], edgeList[index][1]);
+                ++index;
+            }
+            res[i[3]] = ((find(i[0]) == find(i[1])));
+        }
+        return std::move(res);
+    }
+
 };
 
 int main() {
