@@ -4068,6 +4068,28 @@ public:
         return sets.size();
     }
 
+    long long minimumMoney(vector<vector<int>> &transactions) {
+        for (auto &i: transactions) {
+            i[1] -= i[0];
+        }
+        long long int max_cost_pos = 0;
+        long long int neg_sum = 0;
+        vector<int> neg_index;
+        for (int i = 0; i < transactions.size(); ++i) {
+            if (transactions[i][1] >= 0) {
+                max_cost_pos = max(max_cost_pos, (long long int) transactions[i][0]);
+            } else {
+                neg_sum += transactions[i][1];
+                neg_index.push_back(i);
+            }
+        }
+        long long int res = max_cost_pos - neg_sum;
+        for (auto i: neg_index) {
+            res = max(res, transactions[i][0] - neg_sum + transactions[i][1]);
+        }
+        return res;
+    }
+
 };
 
 int main() {
