@@ -4214,6 +4214,37 @@ public:
         return num_of_edges - num;
     }
 
+    int minimumMountainRemovals(vector<int> &nums) {
+        int origin_len = nums.size();
+        vector<int> dp(nums.size());
+        vector<int> queue;
+        for (int i = 0; i < nums.size(); ++i) {
+            auto index = std::lower_bound(queue.begin(), queue.end(), nums[i]);
+            dp[i] = index - queue.begin();
+            if (index == queue.end()) {
+                queue.push_back(nums[i]);
+            } else {
+                *index = nums[i];
+            }
+        }
+        vector<int> rdp(nums.size());
+        queue.clear();
+        for (int i = nums.size() - 1; i >= 0; --i) {
+            auto index = std::lower_bound(queue.begin(), queue.end(), nums[i]);
+            rdp[i] = index - queue.begin();
+            if (index == queue.end()) {
+                queue.push_back(nums[i]);
+            } else {
+                *index = nums[i];
+            }
+        }
+        int sum = 0;
+        for (int i = 0; i < dp.size(); ++i) {
+            if (dp[i] > 0 && rdp[i] > 0)
+                sum = max(sum, dp[i] + rdp[i] + 1);
+        }
+        return origin_len - sum;
+    }
 };
 
 int main() {
