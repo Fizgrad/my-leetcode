@@ -4245,6 +4245,26 @@ public:
         }
         return origin_len - sum;
     }
+
+    double average(vector<int> &salary) {
+        int n = salary.size();
+        int min = ::min(salary[0], salary[1]);
+        int max = ::max(salary[0], salary[1]);
+        double sum = 0.0;
+        int i;
+        for (int k = 2; k < n; ++k) {
+            i = salary[k];
+            if (i > max) {
+                sum += max;
+                max = i;
+            } else if (i < min) {
+                sum += min;
+                min = i;
+            } else
+                sum += i;
+        }
+        return sum / (n - 2);
+    }
 };
 
 int main() {
