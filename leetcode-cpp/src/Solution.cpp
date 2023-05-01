@@ -4265,6 +4265,25 @@ public:
         }
         return sum / (n - 2);
     }
+
+    int maxEnvelopes(vector<vector<int>> &envelopes) {
+        std::sort(envelopes.begin(), envelopes.end(), [](const vector<int> &a, const vector<int> &b) -> bool {
+            return a[1] < b[1] || (a[1] == b[1] && a[0] > b[0]);
+        });
+        vector<int> q;
+        for (int i = 0; i < envelopes.size(); ++i) {
+            auto iter = std::lower_bound(q.begin(), q.end(), i, [&](int a, int b) -> bool {
+                return envelopes[a][0] < envelopes[b][0];
+            });
+            if (iter == q.end()) {
+                q.push_back(i);
+            } else {
+                *iter = i;
+            }
+        }
+        return q.size();
+    }
+
 };
 
 int main() {
