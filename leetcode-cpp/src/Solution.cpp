@@ -4284,6 +4284,46 @@ public:
         return q.size();
     }
 
+    vector<int> maxSumOfThreeSubarrays(vector<int> &nums, int k) {
+        int n = nums.size();
+        vector<int> sums(n - k + 1);
+        sums[0] = std::accumulate(nums.begin(), nums.begin() + k, 0);
+        for (int i = 1; i < sums.size(); ++i) {
+            sums[i] = sums[i - 1] + nums[i - 1 + k] - nums[i - 1];
+        }
+        vector<int> right(n - k + 1);
+        vector<int> left(n - k + 1);
+        int max_sum = sums[n - k];
+        right[n - k] = n - k;
+        for (int i = n - k - 1; i >= 0; --i) {
+            if (max_sum > sums[i]) {
+                right[i] = right[i + 1];
+            } else {
+                right[i] = i;
+                max_sum = sums[i];
+            }
+        }
+        max_sum = sums[0];
+        left[0] = 0;
+        for (int i = 1; i <= n - k; ++i) {
+            if (max_sum >= sums[i]) {
+                left[i] = left[i - 1];
+            } else {
+                left[i] = i;
+                max_sum = sums[i];
+            }
+        }
+        vector<int> res = {0, k, k + k};
+        max_sum = sums[0] + sums[k] + sums[k + k];
+        for (int i = k; i <= n - k - k; ++i) {
+            int sum = sums[i] + sums[left[i - k]] + sums[right[i + k]];
+            if (sum > max_sum) {
+                max_sum = sum;
+                res = {left[i - k], i, right[i + k]};
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
