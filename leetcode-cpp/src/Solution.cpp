@@ -4337,6 +4337,26 @@ public:
         return sign;
     }
 
+    int maxProfit(vector<int> &prices) {
+        int n = prices.size();
+        vector<int> left(n, 0);
+        vector<int> right(n, 0);
+        int min_num = prices[0];
+        for (int i = 1; i < n; ++i) {
+            min_num = min(prices[i], min_num);
+            left[i] = max(left[i - 1], prices[i] - min_num);
+        }
+        int max_num = prices[n - 1];
+        for (int i = n - 2; i >= 0; --i) {
+            max_num = max(prices[i], max_num);
+            right[i] = max(right[i + 1], max_num - prices[i]);
+        }
+        int res = right[0];
+        for (int i = 1; i < n; ++i) {
+            res = max(res, left[i - 1] + right[i]);
+        }
+        return res;
+    }
 };
 
 int main() {
