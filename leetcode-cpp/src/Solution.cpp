@@ -4337,7 +4337,20 @@ public:
         return sign;
     }
 
-    int maxProfit(vector<int> &prices) {
+    int maxProfitII(vector<int> &prices) {
+        int n = prices.size();
+        vector<int> now(2), prev(2);
+        prev[1] = -prices[0];
+        prev[0] = 0;
+        for (int i = 1; i < n; ++i) {
+            now[1] = max(prev[0] - prices[i], prev[1]);
+            now[0] = max(prev[1] + prices[i], prev[0]);
+            now.swap(prev);
+        }
+        return prev[0];
+    }
+
+    int maxProfitIII(vector<int> &prices) {
         int n = prices.size();
         vector<int> left(n, 0);
         vector<int> right(n, 0);
@@ -4356,6 +4369,25 @@ public:
             res = max(res, left[i - 1] + right[i]);
         }
         return res;
+    }
+
+    int maxProfitIV(int k, vector<int> &prices) {
+        int n = prices.size();
+        vector<vector<int>> now(2, vector<int>(k + 1, 0)), prev(2, vector<int>(k + 1, 0));
+        for (int j = 0; j <= k; ++j) {
+            prev[1][j] = -prices[0];
+            prev[0][j] = 0;
+        }
+        for (int i = 1; i < n; ++i) {
+            now[1][k] = max(prev[0][k] - prices[i], prev[1][k]);
+            now[0][k] = prev[0][k];
+            for (int j = 0; j < k; ++j) {
+                now[1][j] = max(prev[0][j] - prices[i], prev[1][j]);
+                now[0][j] = max(prev[1][j + 1] + prices[i], prev[0][j]);
+            }
+            now.swap(prev);
+        }
+        return prev[0][0];
     }
 };
 
