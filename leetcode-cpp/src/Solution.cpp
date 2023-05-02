@@ -4324,6 +4324,19 @@ public:
         }
         return res;
     }
+
+    int arraySign(vector<int> &nums) {
+        int sign = 1;
+        for (auto i: nums) {
+            if (i == 0) {
+                return 0;
+            } else if (i < 0) {
+                sign = -sign;
+            }
+        }
+        return sign;
+    }
+
 };
 
 int main() {
