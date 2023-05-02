@@ -4389,6 +4389,30 @@ public:
         }
         return prev[0][0];
     }
+
+    vector<int> maxSlidingWindow(vector<int> &nums, int k) {
+        int n = nums.size();
+        vector<int> res(n - k + 1);
+        deque<int> q;
+        auto push = [&](int index) -> void {
+            while (!q.empty() && nums[q.back()] <= nums[index]) {
+                q.pop_back();
+            }
+            q.push_back(index);
+        };
+        for (int i = 0; i < k; ++i) {
+            push(i);
+        }
+        res[0] = nums[q[0]];
+        for (int i = 1; i < res.size(); ++i) {
+            while (!q.empty() && q.front() < i) {
+                q.pop_front();
+            }
+            push(i + k - 1);
+            res[i] = nums[q[0]];
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
