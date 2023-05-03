@@ -4413,6 +4413,48 @@ public:
         }
         return std::move(res);
     }
+
+    vector<vector<int>> findDifference(vector<int> &nums1, vector<int> &nums2) {
+        std::sort(nums1.begin(), nums1.end());
+        std::sort(nums2.begin(), nums2.end());
+        nums1.erase(std::unique(nums1.begin(), nums1.end()), nums1.end());
+        nums2.erase(std::unique(nums2.begin(), nums2.end()), nums2.end());
+        vector<vector<int>> res(2, vector<int>());
+        for (auto i: nums1) {
+            if (std::lower_bound(nums2.begin(), nums2.end(), i) == std::upper_bound(nums2.begin(), nums2.end(), i)) {
+                res[0].push_back(i);
+            }
+        }
+        for (auto i: nums2) {
+            if (std::lower_bound(nums1.begin(), nums1.end(), i) == std::upper_bound(nums1.begin(), nums1.end(), i)) {
+                res[1].push_back(i);
+            }
+        }
+        return std::move(res);
+    }
+
+    bool isValid(const string &s) {
+        stack<char> st;
+        for (auto i: s) {
+            if (i == 'c') {
+                if (st.size() < 2) {
+                    return false;
+                }
+                auto top1 = st.top();
+                st.pop();
+                auto top2 = st.top();
+                st.pop();
+                if (top1 == 'b' && top2 == 'a') {
+                    continue;
+                } else {
+                    return false;
+                }
+            } else {
+                st.push(i);
+            }
+        }
+        return st.empty();
+    }
 };
 
 int main() {
