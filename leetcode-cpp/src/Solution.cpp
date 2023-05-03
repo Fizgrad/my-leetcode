@@ -4455,6 +4455,21 @@ public:
         }
         return st.empty();
     }
+
+    int findMaxValueOfEquation(vector<vector<int>> &points, int k) {
+        int res = INT32_MIN;
+        priority_queue<pair<int, int>> pq;
+        for (auto &i: points) {
+            while (!pq.empty() && pq.top().second + k < i[0]) {
+                pq.pop();
+            }
+            if (pq.size()) {
+                res = max(res, pq.top().first + i[0] + i[1]);
+            }
+            pq.emplace(i[1] - i[0], i[0]);
+        }
+        return res;
+    }
 };
 
 int main() {
