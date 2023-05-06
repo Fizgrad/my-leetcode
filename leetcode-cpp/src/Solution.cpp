@@ -4470,6 +4470,65 @@ public:
         }
         return res;
     }
+
+    string predictPartyVictory(const string &senate) {
+        queue<int> R, D;
+        int n = senate.length();
+        for (int i = 0; i < n; i++)
+            (senate[i] == 'R') ? R.push(i) : D.push(i);
+        while (R.size() && D.size()) {
+            int r_index = R.front(), d_index = D.front();
+            R.pop(), D.pop();
+            (r_index < d_index) ? R.push(r_index + n) : D.push(d_index + n);
+        }
+        return (D.empty()) ? "Radiant" : "Dire";
+    }
+
+    int maxVowels(const string &s, int k) {
+        auto f = [&](char c) -> bool {
+            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        int num = 0;
+        int res = 0;
+        for (int i = 0; i < k; ++i) {
+            if (f(s[i]))
+                ++num;
+        }
+        res = max(res, num);
+        for (int i = k; i < s.size(); ++i) {
+            if (f(s[i - k]))
+                --num;
+            if (f(s[i]))
+                ++num;
+            res = max(res, num);
+        }
+        return res;
+    }
+
+    int numSubseq(vector<int> &nums, int target) {
+        const long long int mod = 1e9 + 7;
+        int n = nums.size();
+        vector<int> pows(n, 1);
+        for (int i = 1; i < pows.size(); ++i) {
+            pows[i] = 2 * pows[i - 1] % mod;
+        }
+        long long int res = 0;
+        std::sort(nums.begin(), nums.end());
+        int l = 0;
+        int r = n - 1;
+        while (l <= r) {
+            if (nums[l] + nums[r] > target) {
+                r--;
+            } else {
+                res = (res + pows[r - l++]) % mod;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
