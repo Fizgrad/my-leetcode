@@ -4563,6 +4563,47 @@ public:
         return std::move(res);
     }
 
+    int maximumGap(vector<int> &nums) {
+        int counts[4][256];
+        const int N = nums.size();
+        vector<int> nums2(N);
+        fill(&counts[0][0], &counts[0][0] + 1024, 0);
+        // radix sort
+        uint8_t *st1 = (uint8_t *) (&nums[0]), *e1 = st1 + (N << 2), *c;
+        uint8_t *st2 = (uint8_t *) (&nums2[0]), *e2 = st2 + (N << 2);
+        for (c = st1; c < e1; c += 4) {
+            ++counts[0][*c];
+            ++counts[1][*(c + 1)];
+            ++counts[2][*(c + 2)];
+            ++counts[3][*(c + 3)];
+        }
+        //对每个计数数组，计算从 1 到 255 的前缀和。这将用于确定每个元素在排序过程中的正确位置。
+        for (int i = 1; i < 256; ++i) {
+            counts[0][i] += counts[0][i - 1];
+            counts[1][i] += counts[1][i - 1];
+            counts[2][i] += counts[2][i - 1];
+            counts[3][i] += counts[3][i - 1];
+        }
+        //对每个字节进行排序：
+        //接下来的四个循环是基数排序的核心。它们将 nums 数组的整数按照每个字节的值重新排列。每次循环处理一个字节，并在 nums 和 nums2 之间交替进行排序。
+        int *src = &nums[0] + N - 1, *dst = &nums2[0];
+        for (c = e1 - 4; c >= st1; c -= 4, --src)
+            *(dst + (--counts[0][*c])) = move(*src);
+        src = dst + N - 1, dst = &nums[0];
+        for (c = e2 - 3; c >= st2; c -= 4, --src)
+            *(dst + (--counts[1][*c])) = move(*src);
+        src = dst + N - 1, dst = &nums2[0];
+        for (c = e1 - 2; c >= st1; c -= 4, --src)
+            *(dst + (--counts[2][*c])) = move(*src);
+        src = dst + N - 1, dst = &nums[0];
+        for (c = e2 - 1; c >= st2; c -= 4, --src)
+            *(dst + (--counts[3][*c])) = move(*src);
+        int res = 0;
+        for (int i = 1; i < N; ++i)
+            res = max(res, nums[i] - nums[i - 1]);
+        return res;
+    }
+
 };
 
 int main() {
