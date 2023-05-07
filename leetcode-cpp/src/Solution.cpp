@@ -4546,6 +4546,22 @@ public:
         return {-1, -1};
     }
 
+    vector<int> longestObstacleCourseAtEachPosition(vector<int> &obstacles) {
+        int n = obstacles.size();
+        vector<int> q;
+        vector<int> res(obstacles.size());
+        for (int i = 0; i < n; ++i) {
+            if (q.empty() || obstacles[i] >= q.back()) {
+                q.push_back(obstacles[i]);
+                res[i] = q.size();
+            } else {
+                auto iter = upper_bound(q.begin(), q.end(), obstacles[i]);
+                res[i] = iter - q.begin() + 1;
+                *iter = obstacles[i];
+            }
+        }
+        return std::move(res);
+    }
 
 };
 
