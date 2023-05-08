@@ -4604,6 +4604,18 @@ public:
         return res;
     }
 
+    int diagonalSum(vector<vector<int>> &mat) {
+        int res = 0;
+        int n = mat.size();
+        for (int i = 0; i < n; ++i) {
+            res += mat[i][i];
+            if (i != n - i - 1) {
+                res += mat[i][n - i - 1];
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
