@@ -4681,6 +4681,10 @@ public:
         return res;
     }
 
+    bool canWinNim(int n) {
+        return n%4;
+    }
+
 };
 
 int main() {
