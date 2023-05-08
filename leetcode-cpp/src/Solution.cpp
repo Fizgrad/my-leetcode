@@ -4616,6 +4616,71 @@ public:
         return res;
     }
 
+    int maxSumBST(TreeNode *root) {
+        int res = 0;
+        auto dfs = [&](auto &&dfs, int high, int low, TreeNode *cur) -> pair<bool, int> {
+            int sum = cur->val;
+            bool continueBST = true;
+            bool canFormBST = true;
+            if (cur->val >= high || cur->val <= low) {
+                continueBST = false;
+            }
+            if (cur->left) {
+                if (cur->left->val >= cur->val) {
+                    continueBST = canFormBST = false;
+                }
+                if (continueBST) {
+                    auto [b, i] = dfs(dfs, min(high, cur->val), low,
+                                      cur->left);
+                    if (b) {
+                        sum += i;
+                    } else {
+                        continueBST = false;
+                    }
+                }
+                if (!continueBST) {
+                    auto [b, i] = dfs(dfs, cur->val, INT32_MIN,
+                                      cur->left);
+                    if (b) {
+                        sum += i;
+                    } else {
+                        canFormBST = false;
+                    }
+                }
+            }
+            if (cur->right) {
+                if (cur->right->val <= cur->val) {
+                    continueBST = false;
+                }
+                if (continueBST) {
+                    auto [b, i] = dfs(dfs, high, max(cur->val, low),
+                                      cur->right);
+                    if (b) {
+                        sum += i;
+                    } else {
+                        continueBST = false;
+                    }
+                }
+                if (!continueBST) {
+                    auto [b, i] = dfs(dfs, INT32_MAX, cur->val,
+                                      cur->right);
+                    if (b) {
+                        sum += i;
+                    } else {
+                        canFormBST = false;
+                    }
+                }
+            }
+            if (canFormBST) {
+                res = max(res, sum);
+            }
+            return {continueBST, sum};
+        };
+        dfs(dfs, std::numeric_limits<int>::max(), std::numeric_limits<int>::min(),
+            root);
+        return res;
+    }
+
 };
 
 int main() {
