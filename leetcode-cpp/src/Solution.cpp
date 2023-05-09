@@ -4756,6 +4756,90 @@ public:
         return true;
     }
 
+    int minPushBox(vector<vector<char>> &grid) {
+        int n = grid.size();
+        int m = grid.begin()->size();
+        int xy[5] = {0, 1, 0, -1, 0};
+        int px, py;
+        int bx, by;
+        bool visited[21][21][21][21];
+        ::memset(visited, 0, sizeof(visited) * sizeof(bool));
+        vector<vector<bool>> canReach(n, vector<bool>(m, false));
+
+        auto check = [&]() {
+            std::fill(canReach.begin(), canReach.end(), vector<bool>(m, false));
+            queue<pair<int, int>> q;
+            q.push({px, py});
+            canReach[px][py] = true;
+            while (!q.empty()) {
+                auto [x, y] = q.front();
+                q.pop();
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + xy[k];
+                    int yy = y + xy[k + 1];
+                    if (xx >= 0 && yy >= 0 && xx < n && yy < m && !canReach[xx][yy]) {
+                        if ((grid[xx][yy] == '.' || grid[xx][yy] == 'B' || grid[xx][yy] == 'S' ||
+                             grid[xx][yy] == 'T') &&
+                            (xx != bx || yy != by)) {
+                            q.push({xx, yy});
+                            canReach[xx][yy] = true;
+                        }
+                    }
+                }
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 'B') {
+                    bx = i;
+                    by = j;
+                } else if (grid[i][j] == 'S') {
+                    px = i;
+                    py = j;
+                }
+            }
+        }
+        queue<pair<int, int>> tempQueue;
+        queue<pair<int, int>> queue1;
+        int times = 0;
+        queue1.push({bx, by});
+        visited[bx][by][px][py] = true;
+        while (!queue1.empty()) {
+            tempQueue = queue<pair<int, int>>();
+            while (!queue1.empty()) {
+                auto [x, y] = queue1.front();
+                queue1.pop();
+                bx = x;
+                by = y;
+                check();
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + xy[k];
+                    int yy = y + xy[k + 1];
+                    int pxx = xx - 2 * xy[k];
+                    int pyy = yy - 2 * xy[k + 1];
+
+                    if (pxx >= 0 && pyy >= 0 && pxx < n && pyy < m && xx >= 0 && yy >= 0 && xx < n && yy < m &&
+                        canReach[pxx][pyy] &&
+                        !visited[xx][yy][pxx][pyy]) {
+                        if (grid[xx][yy] == '.' || grid[xx][yy] == 'B' || grid[xx][yy] == 'S' ||
+                            grid[xx][yy] == 'T') {
+                            if (grid[xx][yy] == 'T') {
+                                return times + 1;
+                            }
+                            tempQueue.push({xx, yy});
+                            visited[xx][yy][pxx][pyy] = true;
+                        }
+                    }
+                }
+                px = bx;
+                py = by;
+            }
+            queue1.swap(tempQueue);
+            ++times;
+        }
+        return -1;
+    }
+
 };
 
 int main() {
