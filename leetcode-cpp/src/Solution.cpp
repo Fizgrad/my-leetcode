@@ -4718,6 +4718,31 @@ public:
         return std::move(res);
     }
 
+    bool canIWin(int m, int dt) {
+        int sum = m * (m + 1) / 2;
+        if (dt < 2) { return true; }
+        if (sum < dt) { return false; }
+        if (sum == dt) { return m % 2; }
+        int dp[1 << 20];
+        memset(dp, 0, sizeof(dp));
+        //dp[k]={0--->not filled,1---->A wins,-1----->B wins or A looses}
+        auto dfs = [&](auto &&dfs, int dt, int k) -> bool {
+            if (dp[k] != 0) { return dp[k] > 0; }//return the memoized ans but instead of value the bool
+            if (dt <= 0) { return false; }//B player get that total so A player loose.
+
+            //check the k as binary string were unset bits implies not picked number
+            for (int i = 0; i < m; i++) {
+                if (!(k & (1 << i)) and !dfs(dfs, dt - (i + 1), k | (1 << i))) {
+                    dp[k] = 1;
+                    return true;
+                }
+            }
+
+            dp[k] = -1;
+            return false;
+        };
+        return dfs(dfs, dt, 0);
+    }
 };
 
 int main() {
