@@ -4743,6 +4743,19 @@ public:
         };
         return dfs(dfs, dt, 0);
     }
+
+    bool xorGame(vector<int> &nums) {
+        int xorr = 0;
+        int n = nums.size();
+        if (n == 1 && nums[0] != 0) return false;
+        for (int i = 0; i < n; i++) {
+            xorr = (xorr ^ nums[i]);
+        }
+        if (xorr == 0) return true;
+        if (n % 2 == 1) return false;
+        return true;
+    }
+
 };
 
 int main() {
