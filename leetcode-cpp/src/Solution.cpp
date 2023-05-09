@@ -4840,6 +4840,50 @@ public:
         return -1;
     }
 
+    int longestIncreasingPath(vector<vector<int>> &matrix) {
+        int n = matrix.size();
+        int m = matrix.begin()->size();
+        int res = 0;
+        int xy[5] = {0, 1, 0, -1, 0};
+        vector<vector<int>> dp(n, vector<int>(m, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                dp[i][j] = 1;
+                for (int k = 0; k < 4; ++k) {
+                    int xx = i + xy[k];
+                    int yy = j + xy[k + 1];
+                    if (xx >= 0 && yy >= 0 && xx < n && yy < m) {
+                        if (matrix[xx][yy] > matrix[i][j]) {
+                            dp[i][j] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        auto f = [&](auto &&f, int x, int y) -> int {
+            if (dp[x][y]) {
+                return dp[x][y];
+            } else {
+                int max_num = 0;
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + xy[k];
+                    int yy = y + xy[k + 1];
+                    if (xx >= 0 && yy >= 0 && xx < n && yy < m) {
+                        if (matrix[xx][yy] > matrix[x][y]) {
+                            max_num = max(max_num, f(f, xx, yy));
+                        }
+                    }
+                }
+                return dp[x][y] = max_num + 1;
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                res = max(res, f(f, i, j));
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
