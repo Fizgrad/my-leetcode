@@ -4884,6 +4884,39 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> res(n, vector<int>(n));
+        int xy[5] = {0, 1, 0, -1, 0};
+        int i = 0;
+        int j = -1;
+        vector<vector<bool>> visited(n, vector<bool>(n, true));
+        int dir = 0;
+        auto check = [&]() -> bool {
+            bool res = false;
+            int xx = i + xy[dir];
+            int yy = j + xy[dir + 1];
+            if (xx >= 0 && xx < n && yy >= 0 && yy < n) {
+                res = res || visited[xx][yy];
+            }
+            return res;
+        };
+        int num = 1;
+        while (1) {
+            if (!check()) {
+                dir = (dir + 1) % 4;
+                if (!check()) {
+                    break;
+                }
+            }
+            i = i + xy[dir];
+            j = j + xy[dir + 1];
+            visited[i][j] = false;
+            res[i][j] = num;
+            ++num;
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
