@@ -4917,6 +4917,24 @@ public:
         }
         return std::move(res);
     }
+
+    int maxUncrossedLines(vector<int> &nums1, vector<int> &nums2) {
+        if (nums1.size() < nums2.size())
+            swap(nums1, nums2);
+        vector<int> dp(nums2.size() + 1, 0);
+        for (int i = 1; i <= nums1.size(); ++i) {
+            int topLeft = dp[0];
+            for (int j = 1; j <= nums2.size(); ++j) {
+                int old_dp_j = dp[j];
+                if (nums1[i - 1] == nums2[j - 1])
+                    dp[j] = topLeft + 1;
+                else
+                    dp[j] = max(dp[j], dp[j - 1]);
+                topLeft = old_dp_j;
+            }
+        }
+        return dp[nums2.size()];
+    }
 };
 
 int main() {
