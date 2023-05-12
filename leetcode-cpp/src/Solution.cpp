@@ -4949,6 +4949,31 @@ public:
         }
         return dp[0];
     }
+
+    int numDistinct(const string &s, const string &t) {
+        if (s.size() < t.size()) {
+            return 0;
+        }
+        vector<unsigned int> dp(s.size());
+        vector<unsigned int> old_dp(s.size());
+        old_dp[0] = (s[0] == t[0]);
+        for (int i = 1; i < s.size(); ++i) {
+            old_dp[i] = old_dp[i - 1];
+            if (t[0] == s[i]) {
+                ++old_dp[i];
+            }
+        }
+        for (int i = 1; i < t.size(); ++i) {
+            for (int j = i; j < s.size(); ++j) {
+                dp[j] = dp[j - 1];
+                if (s[j] == t[i])
+                    dp[j] += old_dp[j - 1];
+            }
+            old_dp.swap(dp);
+            std::fill(dp.begin(), dp.end(), 0);
+        }
+        return old_dp.back();
+    }
 };
 
 int main() {
