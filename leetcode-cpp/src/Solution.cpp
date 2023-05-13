@@ -4974,6 +4974,28 @@ public:
         }
         return old_dp.back();
     }
+
+    int countGoodStrings(int low, int high, int zero, int one) {
+        int dp[100000];
+        ::memset(dp, 0, sizeof(dp));
+        const int mod = 1e9 + 7;
+        ++dp[zero - 1];
+        ++dp[one - 1];
+        for (int i = 0; i < high; ++i) {
+            if (i >= zero) {
+                dp[i] = (dp[i] + dp[i - zero]) % mod;
+            }
+            if (i >= one) {
+                dp[i] = (dp[i] + dp[i - one]) % mod;
+            }
+        }
+        int res = 0;
+        for (int i = low - 1; i < high; ++i) {
+            res = (res + dp[i] % mod) % mod;
+        }
+        return res;
+    }
+
 };
 
 int main() {
