@@ -4996,6 +4996,44 @@ public:
         return res;
     }
 
+    int maxScore(vector<int> &nums) {
+        int n = nums.size();
+        int iter_num = n / 2, maxMask = (1 << n);
+        int dp[iter_num + 1][maxMask];
+        int gcdValue[n][n];
+        int ones[maxMask];
+
+        memset(dp, 0, sizeof(dp));
+        memset(gcdValue, 0, sizeof(gcdValue));
+        memset(ones, 0, sizeof(ones));
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j)
+                gcdValue[i][j] = gcd(nums[i], nums[j]);
+        }
+        for (int msk = 0; msk < maxMask; ++msk)
+            ones[msk] = __builtin_popcount(msk);
+
+        for (int iteration = 1; iteration <= iter_num; ++iteration) {
+            for (int fromMask = 0; fromMask < maxMask; ++fromMask)
+                if (ones[fromMask] == (iteration - 1) * 2) {
+                    for (int i = 0; i < n; ++i) {
+                        int firstNumberMask = fromMask | (1 << i);
+                        if (firstNumberMask == fromMask)
+                            continue;
+                        for (int j = i + 1; j < n; ++j) {
+                            int toMask = firstNumberMask | (1 << j);
+                            if (toMask == firstNumberMask)
+                                continue;
+                            int g = gcdValue[i][j];
+                            dp[iteration][toMask] = max(dp[iteration][toMask],
+                                                        dp[iteration - 1][fromMask] + iteration * g);
+                        }
+                    }
+                }
+        }
+        return dp[iter_num][maxMask - 1];
+    }
+
 };
 
 int main() {
