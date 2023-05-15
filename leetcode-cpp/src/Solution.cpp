@@ -5034,6 +5034,21 @@ public:
         return dp[iter_num][maxMask - 1];
     }
 
+    ListNode *swapNodes(ListNode *head, int k) {
+        auto a = head;
+        while (--k) {
+            a = a->next;
+        }
+        auto temp = a;
+        auto b = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+            b = b->next;
+        }
+        std::swap(a->val, b->val);
+        return head;
+    }
+
 };
 
 int main() {
