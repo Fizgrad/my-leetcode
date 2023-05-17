@@ -5080,6 +5080,18 @@ public:
         return res;
     }
 
+    ListNode *reverseList(ListNode *head) {
+        ListNode *prev = nullptr;
+        auto cur = head;
+        ListNode *temp;
+        while (cur) {
+            temp = cur->next;
+            cur->next = prev;
+            prev = cur;
+            cur = temp;
+        }
+        return prev;
+    }
 };
 
 int main() {
