@@ -5049,6 +5049,37 @@ public:
         return head;
     }
 
+    int pairSum(ListNode *head) {
+        auto fast = head;
+        auto slow = head;
+        while (fast->next && fast->next->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        auto mid = slow->next;
+        auto ptr = mid;
+        slow->next = nullptr;
+        ListNode *prev = nullptr;
+        // reversing list
+        ListNode *curr = ptr;
+        ListNode *nxt = ptr;
+        while (curr != nullptr) {
+            nxt = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = nxt;
+        }
+        ptr = prev;
+        int res = 0;
+        ListNode *temp = head;
+        while (ptr != nullptr) {
+            res = max(res, temp->val + ptr->val);
+            temp = temp->next;
+            ptr = ptr->next;
+        }
+        return res;
+    }
+
 };
 
 int main() {
