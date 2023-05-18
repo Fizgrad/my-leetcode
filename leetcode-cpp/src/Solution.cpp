@@ -5092,6 +5092,28 @@ public:
         }
         return prev;
     }
+
+    vector<int> findSmallestSetOfVertices(int n, vector<vector<int>> &edges) {
+        vector<int> parent(n);
+        for (int i = 0; i < n; ++i) {
+            parent[i] = i;
+        }
+        for (auto &i: edges) {
+            parent[i[1]] = i[0];
+        }
+        auto find = [&](int i) -> int {
+            int p = parent[i];
+            while (parent[p] != p) {
+                p = parent[p];
+            }
+            return p;
+        };
+        unordered_set<int> s;
+        for (int i = 0; i < n; ++i) {
+            s.insert(find(i));
+        }
+        return {s.begin(), s.end()};
+    }
 };
 
 int main() {
