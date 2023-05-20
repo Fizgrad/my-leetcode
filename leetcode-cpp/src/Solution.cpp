@@ -5146,6 +5146,77 @@ public:
         return true;
     }
 
+    using VecVecStr = vector<vector<string>>;
+
+    vector<double> calcEquation(VecVecStr &equations, vector<double> &values, VecVecStr &queries) {
+        unordered_map<string, int> str2int;
+        auto find_index = [&](const string &str) -> int {
+            auto iter = str2int.find(str);
+            if (iter == str2int.end()) {
+                int index = str2int.size();
+                str2int[str] = index;
+                return index;
+            } else {
+                return iter->second;
+            }
+        };
+        vector<vector<int>> equations_int(equations.size());
+        vector<vector<int>> queries_int(queries.size());
+        for (int i = 0; i < equations.size(); ++i) {
+            for (int j = 0; j < 2; ++j) {
+                equations_int[i].push_back(find_index(equations[i][j]));
+            }
+        }
+        for (int i = 0; i < queries.size(); ++i) {
+            for (int j = 0; j < 2; ++j) {
+                queries_int[i].push_back(find_index(queries[i][j]));
+            }
+        }
+        int n = str2int.size();
+
+        vector<double> res;
+        vector<vector<double>> dp(n, vector<double>(n, -1.0));
+        for (int i = 0; i < equations_int.size(); ++i) {
+            dp[equations_int[i][0]][equations_int[i][1]] = values[i];
+            dp[equations_int[i][1]][equations_int[i][0]] = 1.0 / values[i];
+        }
+        bool flag = true;
+        while (flag) {
+            flag = false;
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (dp[i][j] == -1.0) {
+                        continue;
+                    }
+                    for (int k = 0; k < n; ++k) {
+                        if (dp[j][k] == -1.0) {
+                            continue;
+                        }
+                        if (dp[i][k] == -1.0) {
+                            flag = true;
+                            dp[i][k] = dp[i][j] * dp[j][k];
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < queries_int.size(); ++i) {
+            int start = queries_int[i][0];
+            int end = queries_int[i][1];
+            if (dp[start][end] != -1.0) {
+                res.push_back(dp[start][end]);
+                continue;
+            }
+            if (dp[end][start] != -1.0) {
+                res.push_back(1.0 / dp[end][start]);
+                continue;
+            }
+            res.push_back(-1.0);
+        }
+        return res;
+    }
+
 };
 
 int main() {
