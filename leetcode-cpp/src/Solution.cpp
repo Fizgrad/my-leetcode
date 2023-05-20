@@ -5114,6 +5114,38 @@ public:
         }
         return {s.begin(), s.end()};
     }
+
+    bool isBipartite(vector<vector<int>> &graph) {
+        int n = graph.size();
+        vector<short> colors(n, 0);
+        queue<int> q;
+        for (int i = 0; i < n; ++i) {
+            if (colors[i] == 0) {
+                q.push(i);
+                colors[i] = 1;
+                while (!q.empty()) {
+                    int front = q.front();
+                    q.pop();
+                    for (auto next: graph[front]) {
+                        if (colors[next] == 0) {
+                            colors[next] = 3 - colors[front];
+                            q.push(next);
+                        } else if (colors[next] == colors[front]) {
+                            return false;
+                        }
+                    }
+                }
+            } else {
+                for (auto next: graph[i]) {
+                    if (colors[next] == colors[i]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 };
 
 int main() {
