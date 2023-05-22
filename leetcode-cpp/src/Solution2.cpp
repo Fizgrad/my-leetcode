@@ -112,6 +112,23 @@ class Solution {
         return -1;
     }
 
+    vector<int> topKFrequent(vector<int> &nums, int k) {
+        unordered_map<int, int> m;
+        for (auto i: nums) {
+            ++m[i];
+        }
+        priority_queue<pair<int, int>> pq;
+        for (auto &i: m) {
+            pq.push({i.second, i.first});
+        }
+        vector<int> res;
+        while (k--) {
+            res.push_back(pq.top().second);
+            pq.pop();
+        }
+        return std::move(res);
+    }
+
 };
 
 int main() {
