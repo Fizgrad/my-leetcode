@@ -129,6 +129,29 @@ class Solution {
         return std::move(res);
     }
 
+    long long maxScore(vector<int> &nums1, vector<int> &nums2, int k) {
+        int n = nums1.size();
+        vector<pair<int, int>> vi2;
+        vi2.reserve(n);
+        for (int i = 0; i < n; ++i) {
+            vi2.emplace_back(nums2[i], i);
+        }
+        std::sort(vi2.begin(), vi2.end());
+        long long int res = 0;
+        priority_queue<int> pq;
+        long long int sum = 0;
+        for (int i = n - 1; i >= 0; --i) {
+            sum += nums1[vi2[i].second];
+            pq.push(-nums1[vi2[i].second]);
+            if (pq.size() > k) {
+                sum += pq.top();
+                pq.pop();
+            }
+            if (pq.size() == k)
+                res = max(res, sum * vi2[i].first);
+        }
+        return res;
+    }
 };
 
 int main() {
