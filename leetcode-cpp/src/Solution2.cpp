@@ -119,7 +119,7 @@ class Solution {
         }
         priority_queue<pair<int, int>> pq;
         for (auto &i: m) {
-            pq.push({i.second, i.first});
+            pq.emplace(i.second, i.first);
         }
         vector<int> res;
         while (k--) {
@@ -152,6 +152,31 @@ class Solution {
         }
         return res;
     }
+
+    double new21Game(int n, int k, int maxPts) {
+        // dp和滑动窗口的结合
+        if (k == 0 || n >= k + maxPts) {
+            return 1.0;
+        }
+        vector<double> dp(n + 1);
+        double currSum = 1.0;
+        dp[0] = 1.0;
+        for (int i = 1; i <= n; ++i) {
+            dp[i] = currSum / maxPts;
+            if (i < k) {
+                currSum += dp[i];
+            }
+            if (i - maxPts >= 0) {
+                currSum -= dp[i - maxPts];
+            }
+        }
+        double sum = 0.0;
+        for (int i = k; i <= n; ++i) {
+            sum += dp[i];
+        }
+        return sum;
+    }
+
 };
 
 int main() {
