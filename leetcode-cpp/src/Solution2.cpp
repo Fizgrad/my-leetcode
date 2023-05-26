@@ -258,6 +258,26 @@ class Solution {
         return f(f, 0, n - 1);
     }
 
+    int maxPerformance(int n, vector<int> &speed, vector<int> &efficiency, int k) {
+        vector<pair<int, int>> efficiency_v_i(n);
+        for (int i = 0; i < n; ++i) {
+            efficiency_v_i[i] = {efficiency[i], i};
+        }
+        std::sort(efficiency_v_i.begin(), efficiency_v_i.end());
+        long long int res = 0;
+        priority_queue<int> pq;
+        long long int cur_sum = 0;
+        for (int i = n - 1; i >= 0; --i) {
+            cur_sum += speed[efficiency_v_i[i].second];
+            pq.push(-speed[efficiency_v_i[i].second]);
+            if (pq.size() > k) {
+                cur_sum += pq.top();
+                pq.pop();
+            }
+            res = max(res, efficiency_v_i[i].first * cur_sum);
+        }
+        return res % 1000000007;
+    }
 };
 
 int main() {
