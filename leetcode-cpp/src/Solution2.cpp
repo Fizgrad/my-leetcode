@@ -192,6 +192,33 @@ class Solution {
         return false;
     }
 
+    int stoneGameII(vector<int> &piles) {
+        int n = piles.size();
+        vector<int> sum_piles(n);
+        sum_piles[n - 1] = piles[n - 1];
+        for (int i = n - 2; i >= 0; --i) {
+            sum_piles[i] += sum_piles[i + 1] + piles[i];
+        }
+        vector<vector<int>> dp(101, vector<int>(101, -1));
+        auto f = [&](auto &&f, int M, int index) -> int {
+            if (index >= n) {
+                return 0;
+            }
+            if (index + 2 * M >= dp.size()) {
+                return sum_piles[index];
+            }
+            if (dp[index][M] != -1) {
+                return dp[index][M];
+            }
+            int res = 0;
+            for (int i = 1; i <= 2 * M; ++i) {
+                res = max(res, sum_piles[index] - f(f, max(i, M), index + i));
+            }
+            return dp[index][M] = res;
+        };
+        return f(f, 1, 0);
+    }
+
 };
 
 int main() {
