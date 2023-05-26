@@ -219,6 +219,45 @@ class Solution {
         return f(f, 1, 0);
     }
 
+    int stoneGameV(vector<int> &stoneValue) {
+        int n = stoneValue.size();
+        vector<int> prefix_sum(n);
+        prefix_sum[0] = stoneValue[0];
+        for (int i = 1; i < n; ++i) {
+            prefix_sum[i] = prefix_sum[i - 1] + stoneValue[i];
+        }
+        int dp[501][501] = {0};
+        auto f = [&](auto &&f, int left, int right) -> int {
+            if (left >= right) {
+                return 0;
+            }
+            if (left == right - 1) {
+                return min(stoneValue[left], stoneValue[right]);
+            }
+            if (dp[left][right]) {
+                return dp[left][right];
+            }
+            int interval_sum = prefix_sum[right];
+            if (left) {
+                interval_sum -= prefix_sum[left - 1];
+            }
+            int res = 0;
+            for (int i = left + 1; i <= right; ++i) {
+                int right_sum = prefix_sum[right] - prefix_sum[i - 1];
+                int left_sum = interval_sum - right_sum;
+                if (right_sum > left_sum) {
+                    res = max(res, left_sum + f(f, left, i - 1));
+                } else if (right_sum < left_sum) {
+                    res = max(res, right_sum + f(f, i, right));
+                } else {
+                    res = max(res, max(right_sum + f(f, left, i - 1), left_sum + f(f, i, right)));
+                }
+            }
+            return dp[left][right] = res;
+        };
+        return f(f, 0, n - 1);
+    }
+
 };
 
 int main() {
