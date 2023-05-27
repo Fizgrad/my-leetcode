@@ -278,6 +278,21 @@ class Solution {
         }
         return res % 1000000007;
     }
+
+    string stoneGameIII(vector<int> &stoneValue) {
+        int n = stoneValue.size();
+        vector<int> dp(n + 1);
+        for (int i = n - 1; i >= 0; --i) {
+            int cur_sum = stoneValue[i];
+            dp[i] = cur_sum - dp[i + 1];
+            for (int k = 2; k <= 3 && i + k <= n; ++k) {
+                cur_sum += stoneValue[i + k - 1];
+                dp[i] = max(dp[i], cur_sum - dp[i + k]);
+            }
+        }
+        return dp[0] > 0 ? "Alice" : (dp[0] == 0 ? "Tie" : "Bob");
+    }
+
 };
 
 int main() {
