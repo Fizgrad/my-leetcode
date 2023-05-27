@@ -281,16 +281,20 @@ class Solution {
 
     string stoneGameIII(vector<int> &stoneValue) {
         int n = stoneValue.size();
-        vector<int> dp(n + 1);
+        vector<int> dp(3, 0);
+        int res = 0;
         for (int i = n - 1; i >= 0; --i) {
             int cur_sum = stoneValue[i];
-            dp[i] = cur_sum - dp[i + 1];
+            res = cur_sum - dp[0];
             for (int k = 2; k <= 3 && i + k <= n; ++k) {
                 cur_sum += stoneValue[i + k - 1];
-                dp[i] = max(dp[i], cur_sum - dp[i + k]);
+                res = max(res, cur_sum - dp[k - 1]);
             }
+            dp[2] = dp[1];
+            dp[1] = dp[0];
+            dp[0] = res;
         }
-        return dp[0] > 0 ? "Alice" : (dp[0] == 0 ? "Tie" : "Bob");
+        return res > 0 ? "Alice" : (res == 0 ? "Tie" : "Bob");
     }
 
 };
