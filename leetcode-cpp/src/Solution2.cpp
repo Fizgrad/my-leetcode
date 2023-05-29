@@ -300,7 +300,7 @@ class Solution {
     int stoneGameVIII(vector<int> &stones) {
         int n = stones.size();
         for (int i = 1; i < n; ++i) {
-            stones[i] += stones[i - 1]
+            stones[i] += stones[i - 1];
         }
         if (n == 2) {
             return stones.back();
@@ -314,6 +314,27 @@ class Solution {
         }
         return last;
     }
+
+    bool winnerSquareGame(int n) {
+        vector<bool> dp(n + 1, -1);
+        for (int i = 1; i <= n; ++i) {
+            int root = ::sqrt(i);
+            if (root * root == i) {
+                dp[i] = true;
+            } else {
+                bool res = false;
+                for (int j = 1; i - j * j >= 1; ++j) {
+                    if (!dp[i - j * j]) {
+                        res = true;
+                        break;
+                    }
+                }
+                dp[i] = res;
+            }
+        }
+        return dp[n];
+    }
+
 };
 
 int main() {
