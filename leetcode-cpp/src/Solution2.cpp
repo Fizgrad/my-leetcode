@@ -335,6 +335,26 @@ class Solution {
         return dp[n];
     }
 
+    int minCost(int n, vector<int> &cuts) {
+        int m = cuts.size();
+        cuts.push_back(0);
+        cuts.push_back(n);
+        std::sort(cuts.begin(), cuts.end());
+        int res = 0;
+        int N = m + 1;
+        int dp[101][101];
+        ::memset(dp, 0, sizeof(dp));
+        for (int k = 1; k < N; ++k) {
+            for (int i = 0; i < N && i + k < N; ++i) {
+                int len = cuts[i + k + 1] - cuts[i];
+                dp[i][i + k] = len + dp[i + 1][i + k];
+                for (int j = i + 1; j + 1 <= i + k; ++j) {
+                    dp[i][i + k] = min(dp[i][i + k], len + dp[i][j] + dp[j + 1][i + k]);
+                }
+            }
+        }
+        return dp[0][m];
+    }
 
 };
 
