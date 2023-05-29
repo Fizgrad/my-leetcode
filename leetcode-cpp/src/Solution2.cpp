@@ -297,6 +297,25 @@ class Solution {
         return res > 0 ? "Alice" : (res == 0 ? "Tie" : "Bob");
     }
 
+    int stoneGameVIII(vector<int> &stones) {
+        int n = stones.size();
+        vector<int> prefix(n);
+        prefix[0] = stones[0];
+        for (int i = 1; i < n; ++i) {
+            prefix[i] = prefix[i - 1] + stones[i];
+        }
+        if (n == 2) {
+            return prefix.back();
+        }
+        int last = prefix[n - 1];
+        int max_temp = prefix[n - 1];
+        for (int i = n - 2; i >= 1; --i) {
+            int now = max(max_temp, prefix[i] - last);
+            max_temp = max(max_temp, now);
+            last = now;
+        }
+        return last;
+    }
 };
 
 int main() {
