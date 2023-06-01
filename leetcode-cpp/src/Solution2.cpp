@@ -356,6 +356,44 @@ class Solution {
         return dp[0][m];
     }
 
+    int shortestPathBinaryMatrix(vector<vector<int>> &grid) {
+        if (grid[0][0] != 0) {
+            return -1;
+        }
+        int n = grid.size();
+        vector<vector<bool>> visited(n, vector<bool>(n, false));
+        visited[0][0] = true;
+        vector<pair<int, int>> next;
+        vector<pair<int, int>> temp;
+        int dx[8] = {0, 0, 1, 1, 1, -1, -1, -1};
+        int dy[8] = {1, -1, 0, 1, -1, 0, 1, -1};
+        next.emplace_back(0, 0);
+        int res = 0;
+        while (!next.empty()) {
+            ++res;
+            temp.clear();
+            while (!next.empty()) {
+                auto [x, y] = next.back();
+                if (x == n - 1 && y == n - 1) {
+                    return res;
+                }
+                next.pop_back();
+                for (int i = 0; i < 8; ++i) {
+                    int xx = x + dx[i];
+                    int yy = y + dy[i];
+                    if (xx >= 0 && yy >= 0 && xx < n && yy < n && !visited[xx][yy] && grid[xx][yy] == 0) {
+                        if (xx == n - 1 && yy == n - 1) {
+                            return res + 1;
+                        }
+                        visited[xx][yy] = true;
+                        temp.emplace_back(xx, yy);
+                    }
+                }
+            }
+            temp.swap(next);
+        }
+        return -1;
+    }
 };
 
 int main() {
