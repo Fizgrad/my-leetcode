@@ -394,6 +394,45 @@ class Solution {
         }
         return -1;
     }
+
+    int maximumDetonation(vector<vector<int>> &bombs) {
+        int n = bombs.size();
+        vector<vector<int>> graph(n);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (i == j) {
+                    continue;
+                }
+                if (static_cast<double>(bombs[i][0] - bombs[j][0]) * (bombs[i][0] - bombs[j][0]) +
+                    static_cast<double>(bombs[i][1] - bombs[j][1]) * (bombs[i][1] - bombs[j][1]) -
+                    static_cast<double>(bombs[i][2]) * bombs[i][2] <= 0) {
+                    graph[i].push_back(j);
+                }
+            }
+        }
+        int res = 1;
+        for (int i = 0; i < n; ++i) {
+            vector<bool> visited(n, false);
+            vector<int> stack;
+            stack.push_back(i);
+            visited[i] = true;
+            int temp = 0;
+            while (!stack.empty()) {
+                ++temp;
+                int now = stack.back();
+                stack.pop_back();
+                for (auto next: graph[now]) {
+                    if (!visited[next]) {
+                        stack.push_back(next);
+                        visited[next] = true;
+                    }
+                }
+            }
+            res = max(res, temp);
+        }
+        return res;
+    }
+
 };
 
 int main() {
