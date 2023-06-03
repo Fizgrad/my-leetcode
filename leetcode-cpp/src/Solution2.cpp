@@ -433,6 +433,21 @@ class Solution {
         return res;
     }
 
+    int maxPathSum(TreeNode *root) {
+        int res = root->val;
+        auto f = [&](auto &&f, TreeNode *node) -> int {
+            if (node == nullptr) {
+                return 0;
+            }
+            int left = f(f, node->left);
+            int right = f(f, node->right);
+            res = max(res, node->val + max(max(left + right, max(left, right)), 0));
+            return max(max(left, right), 0) + node->val;
+        };
+        f(f, root);
+        return res;
+    }
+
 };
 
 int main() {
