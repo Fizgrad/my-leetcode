@@ -448,6 +448,32 @@ class Solution {
         return res;
     }
 
+    int findCircleNum(vector<vector<int>> &isConnected) {
+        int n = isConnected.size();
+        vector<bool> isVisited(n, false);
+        int res = 0;
+        auto dfs = [&](auto dfs, int now) -> void {
+            for (int j = 0; j < n; ++j) {
+                if (isVisited[j]) {
+                    continue;
+                } else if (isConnected[now][j]) {
+                    isVisited[j] = true;
+                    dfs(dfs, j);
+                }
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            if (isVisited[i]) {
+                continue;
+            } else {
+                ++res;
+                isVisited[i] = true;
+                dfs(dfs, i);
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
