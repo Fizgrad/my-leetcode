@@ -474,6 +474,34 @@ class Solution {
         return res;
     }
 
+    bool checkStraightLine(vector<vector<int>> &coordinates) {
+        int n = coordinates.size();
+        if (n <= 2) {
+            return true;
+        }
+        if (coordinates[0][0] == coordinates[1][0]) {
+            for (int i = 2; i < n; ++i) {
+                if (coordinates[i][0] == coordinates[1][0]) {
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+            return true;
+        }
+        double k = static_cast<double>(coordinates[0][1] - coordinates[1][1]) / (coordinates[0][0] - coordinates[1][0]);
+        for (int i = 2; i < n; ++i) {
+            double temp = static_cast<double>(coordinates[i][1] - coordinates[1][1]) /
+                          (coordinates[i][0] - coordinates[1][0]);
+            if (k == temp) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
 };
 
 int main() {
