@@ -512,6 +512,12 @@ class Solution {
         return true;
     }
 
+    int minFlips(int a, int b, int c) {
+        return __builtin_popcount(c - ((a | b) - ((a | b | c) ^ c))) +
+               __builtin_popcount(a & ((a | b | c) ^ c)) +
+               __builtin_popcount(b & ((a | b | c) ^ c));
+    }
+
 };
 
 int main() {
