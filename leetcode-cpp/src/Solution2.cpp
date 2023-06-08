@@ -518,6 +518,25 @@ class Solution {
                __builtin_popcount(b & ((a | b | c) ^ c));
     }
 
+    int countNegatives(vector<vector<int>> &grid) {
+        int num = 0;
+        int r = 0;
+        int c = 0;
+        int n = grid.size();
+        int m = grid.begin()->size();
+        while (c < m && grid[0][c] >= 0) {
+            ++c;
+        }
+        num += c;
+        for (r = 1; r < n; ++r) {
+            while (c > 0 && grid[r][c - 1] < 0) {
+                --c;
+            }
+            num += c;
+        }
+        return m * n - num;
+    }
+
 };
 
 int main() {
