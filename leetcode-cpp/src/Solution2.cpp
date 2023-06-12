@@ -556,6 +556,31 @@ class Solution {
         return ans;
     }
 
+    vector<string> summaryRanges(vector<int> &nums) {
+        vector<string> res;
+        bool flag = false;
+        int begin = 0;
+        int prev = 0;
+        for (auto i: nums) {
+            if (!flag) {
+                flag = true;
+                prev = begin = i;
+            } else if (i == prev + 1) {
+                prev = i;
+            } else if (i > prev + 1) {
+                if (prev != begin) res.push_back(to_string(begin) + "->" + to_string(prev));
+                else res.push_back(to_string(begin));
+                prev = begin = i;
+            }
+        }
+        if (flag) {
+            flag = false;
+            if (prev != begin) res.push_back(to_string(begin) + "->" + to_string(prev));
+            else res.push_back(to_string(begin));
+        }
+        return std::move(res);
+    }
+
 };
 
 int main() {
