@@ -581,6 +581,22 @@ class Solution {
         return std::move(res);
     }
 
+    int maxValue(int n, long long int index, long long int maxSum) {
+        maxSum -= n;
+        int l = 0;
+        int r = maxSum;
+        while (l != r) {
+            long long int m = (l + r + 1) / 2;
+            long long int left = min(index, m);
+            long long int right = min(m, n - index - 1);
+            if (maxSum >= ((m * 2 - 1 - left) * left + (m * 2 - 1 - right) * right) / 2 + m)
+                l = m;
+            else
+                r = m - 1;
+        }
+        return r + 1;
+    }
+
 };
 
 int main() {
