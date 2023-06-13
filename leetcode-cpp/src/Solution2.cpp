@@ -597,6 +597,34 @@ class Solution {
         return r + 1;
     }
 
+    int equalPairs(vector<vector<int>> &grid) {
+        map<vector<int>, int> r;
+        map<vector<int>, int> c;
+        for (int i = 0; i < grid.size(); i++) {
+            if (r.count(grid[i])) {
+                r[grid[i]]++;
+            } else {
+                r[grid[i]] = 1;
+            }
+            vector<int> t;
+            for (int j = 0; j < grid.size(); j++) {
+                t.push_back(grid[j][i]);
+            }
+            if (c.count(t)) {
+                c[t]++;
+            } else {
+                c[t] = 1;
+            }
+        }
+        int ans = 0;
+        for (auto ele: r) {
+            if (c.count(ele.first)) {
+                ans += ele.second * c[ele.first];
+            }
+        }
+        return ans;
+    }
+
 };
 
 int main() {
