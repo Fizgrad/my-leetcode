@@ -625,6 +625,27 @@ class Solution {
         return ans;
     }
 
+    int getMinimumDifference(TreeNode *root) {
+        int prev = -1;
+        int res = INT32_MAX;
+        auto dfs = [&](auto &&dfs, TreeNode *node) -> void {
+            if (node) {
+                if (node->left) {
+                    dfs(dfs, node->left);
+                }
+                if (prev != -1) {
+                    res = min(res, node->val - prev);
+                }
+                prev = node->val;
+                if (node->right) {
+                    dfs(dfs, node->right);
+                }
+            }
+        };
+        dfs(dfs, root);
+        return res;
+    }
+
 };
 
 int main() {
