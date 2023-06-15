@@ -646,6 +646,37 @@ class Solution {
         return res;
     }
 
+    int maxLevelSum(TreeNode *root) {
+        int res = 1;
+        int level = 0;
+        int max_sum = root->val;
+        vector<TreeNode *> next;
+        vector<TreeNode *> temp;
+        next.push_back(root);
+        while (!next.empty()) {
+            ++level;
+            int sum = 0;
+            while (!next.empty()) {
+                auto i = next.back();
+                next.pop_back();
+                if (i->right) {
+                    temp.push_back(i->right);
+                }
+                if (i->left) {
+                    temp.push_back(i->left);
+                }
+                sum += i->val;
+            }
+            next.swap(temp);
+            temp.clear();
+            if (sum > max_sum) {
+                max_sum = sum;
+                res = level;
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
