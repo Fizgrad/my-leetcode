@@ -700,6 +700,47 @@ class Solution {
         }
         return std::move(res);
     }
+
+    TreeNode *replaceValueInTree(TreeNode *root) {
+        vector<TreeNode *> temp;
+        vector<TreeNode *> next;
+        temp.push_back(root);
+        root->val = 0;
+        while (!temp.empty()) {
+            int sum = 0;
+            for (auto &i: temp) {
+                if (i->left) {
+                    sum += i->left->val;
+                }
+                if (i->right) {
+                    sum += i->right->val;
+                }
+            }
+            while (!temp.empty()) {
+                auto i = temp.back();
+                temp.pop_back();
+                int sum_par = 0;
+                if (i->left) {
+                    sum_par += i->left->val;
+                }
+                if (i->right) {
+                    sum_par += i->right->val;
+                }
+                if (i->left) {
+                    i->left->val = sum - sum_par;
+                    next.push_back(i->left);
+                }
+                if (i->right) {
+                    i->right->val = sum - sum_par;
+                    next.push_back(i->right);
+                }
+            }
+            temp.swap(next);
+            next.clear();
+        }
+        return root;
+    }
+
 };
 
 int main() {
