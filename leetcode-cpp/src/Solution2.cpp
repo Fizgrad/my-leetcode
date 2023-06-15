@@ -677,6 +677,29 @@ class Solution {
         return res;
     }
 
+    vector<bool> canMakePaliQueries(const string &s, vector<vector<int>> &queries) {
+        vector<bool> res(queries.size(), false);
+        int n = s.size();
+        vector<int> prefix(n, 0);
+        prefix[0] = 1 << (s[0] - 'a');
+        for (int i = 1; i < n; ++i) {
+            prefix[i] = prefix[i - 1] ^ (1 << (s[i] - 'a'));
+        }
+        for (int i = 0; i < queries.size(); ++i) {
+            int temp = 0;
+            int start = queries[i][0];
+            int end = queries[i][1];
+            if (start > 0) {
+                temp = __builtin_popcount(prefix[end] ^ prefix[start - 1]);
+            } else {
+                temp = __builtin_popcount(prefix[end]);
+            }
+            if (queries[i][2] >= temp / 2) {
+                res[i] = true;
+            }
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
