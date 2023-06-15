@@ -741,6 +741,72 @@ class Solution {
         return root;
     }
 
+    string countOfAtoms(const string &formula) {
+        map<string, int> res;
+        vector<string> token;
+        string temp;
+        int type = 0; // 0: name  1: digits
+        for (int i = 0; i < formula.size(); ++i) {
+            if (isupper(formula[i])) {
+                if (!temp.empty())
+                    token.push_back(temp);
+                temp.clear();
+                type = 0;
+                temp.push_back(formula[i]);
+            }
+            if (isdigit(formula[i])) {
+                if (type == 0) {
+                    if (!temp.empty())
+                        token.push_back(temp);
+                    temp.clear();
+                    type = 1;
+                    temp.push_back(formula[i]);
+                } else {
+                    temp.push_back(formula[i]);
+                }
+            }
+            if (islower(formula[i])) {
+                temp.push_back(formula[i]);
+            }
+            if (formula[i] == '(' || formula[i] == ')') {
+                if (!temp.empty())
+                    token.push_back(temp);
+                temp.clear();
+                token.emplace_back(1, formula[i]);
+            }
+        }
+        if (!temp.empty())
+            token.push_back(temp);
+        temp.clear();
+        vector<int> nums = {1};
+        int num = 1;
+        for (auto i = token.rbegin(); i != token.rend(); ++i) {
+            if (isdigit(*i->begin())) {
+                num = stoi(*i);
+            }
+            if (isalpha(*i->begin())) {
+                res[*i] += num * nums.back();
+                num = 1;
+            }
+            if (')' == *i->begin()) {
+                nums.push_back(num * nums.back());
+                num = 1;
+            }
+
+            if ('(' == *i->begin()) {
+                nums.pop_back();
+            }
+
+        }
+        string string_res;
+        for (auto &i: res) {
+            string_res += i.first;
+            if (i.second != 1) {
+                string_res += to_string(i.second);
+            }
+        }
+        return std::move(string_res);
+    }
 };
 
 int main() {
