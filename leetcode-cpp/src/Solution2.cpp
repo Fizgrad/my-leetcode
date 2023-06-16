@@ -807,6 +807,69 @@ class Solution {
         }
         return std::move(string_res);
     }
+
+    int numOfWays(vector<int> &nums) {
+        constexpr int MOD = 1e9 + 7;
+        // 快速幂求 (x^y) % MOD
+        auto fast_pow = [&](int x, int y) -> int {
+            int res = 1;
+            while (y > 0) {
+                if (y & 1) {
+                    res = (1LL * res * x) % MOD;
+                }
+                x = (1LL * x * x) % MOD;
+                y >>= 1;
+            }
+            return res;
+        };
+
+        // 求 a 在模 MOD 下的乘法逆元，即 (a^-1) % MOD
+        auto mod_inverse = [&](int a) -> int {
+            return fast_pow(a, MOD - 2); // 根据费马小定理
+        };
+
+        // 计算 C(n, k) % MOD
+        auto nCk_mod = [&](int n, int k) {
+            int numerator = 1; // 分子，保存 n! % MOD
+            for (int i = 1; i <= n; ++i) {
+                numerator = (1LL * numerator * i) % MOD;
+            }
+
+            int denominator = 1; // 分母，保存 (k! * (n-k)!) % MOD
+            for (int i = 1; i <= k; ++i) {
+                denominator = (1LL * denominator * i) % MOD;
+            }
+            for (int i = 1; i <= n - k; ++i) {
+                denominator = (1LL * denominator * i) % MOD;
+            }
+
+            // 通过乘法逆元将除法转换为乘法
+            return (1LL * numerator * mod_inverse(denominator)) % MOD;
+        };
+
+        auto dfs = [&](auto &&dfs, vector<int> &arr) -> int {
+            if (arr.size() <= 1) {
+                return 1;
+            }
+            int mid = *arr.begin();
+            vector<int> right;
+            vector<int> left;
+            for (auto i: arr) {
+                if (i > mid) {
+                    right.push_back(i);
+                }
+                if (i < mid) {
+                    left.push_back(i);
+                }
+            }
+            int res = nCk_mod(right.size() + left.size(), left.size());
+            res = 1LL * res * (dfs(dfs, left) % MOD) % MOD;
+            res = 1LL * res * (dfs(dfs, right) % MOD) % MOD;
+            return res;
+        };
+        return dfs(dfs, nums) - 1;
+    }
+
 };
 
 int main() {
