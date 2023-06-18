@@ -870,6 +870,41 @@ class Solution {
         return dfs(dfs, nums) - 1;
     }
 
+    int countPaths(vector<vector<int>> &grid) {
+        constexpr int mod = 1e9 + 7;
+        int res = 0;
+        int n = grid.size();
+        int m = grid.front().size();
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+        constexpr int dx[4] = {0, 0, 1, -1};
+        constexpr int dy[4] = {1, -1, 0, 0};
+        auto f = [&](auto &&f, int x, int y) {
+            if (x < 0 || y < 0 || x >= n || y >= m) {
+                return 0;
+            } else if (dp[x][y] != -1) {
+                return dp[x][y];
+            } else {
+                dp[x][y] = 1;
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + dx[k];
+                    int yy = y + dy[k];
+                    if (xx < 0 || yy < 0 || xx >= n || yy >= m)
+                        continue;
+                    if (grid[x][y] < grid[xx][yy]) {
+                        dp[x][y] = (dp[x][y] + f(f, xx, yy)) % mod;
+                    }
+                }
+                return dp[x][y] % mod;
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                res = (res + f(f, i, j)) % mod;
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
