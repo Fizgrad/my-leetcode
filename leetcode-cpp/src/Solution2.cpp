@@ -905,6 +905,16 @@ class Solution {
         return res;
     }
 
+    int largestAltitude(vector<int> &gain) {
+        int res = 0;
+        int temp = 0;
+        for (auto i: gain) {
+            temp += i;
+            res = max(res, temp);
+        }
+        return res;
+    }
+
 };
 
 int main() {
