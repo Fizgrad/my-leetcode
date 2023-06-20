@@ -915,6 +915,23 @@ class Solution {
         return res;
     }
 
+    vector<int> getAverages(vector<int> &nums, int k) {
+        int n = nums.size();
+        if (2 * k >= n) {
+            return std::move(vector<int>(n, -1));
+        }
+        vector<int> res(n, -1);
+        long long int k_sum = 0;
+        for (int i = 0; i <= 2 * k; ++i) {
+            k_sum += nums[i];
+        }
+        res[k] = k_sum / (2 * k + 1);
+        for (int i = k + 1; i + k < n; ++i) {
+            k_sum += (-nums[i - k - 1] + nums[i + k]);
+            res[i] = k_sum / (2 * k + 1);
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
