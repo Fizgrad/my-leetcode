@@ -959,6 +959,16 @@ class Solution {
         return calc(median);
     }
 
+    int maxProfit(vector<int> &prices, int fee) {
+        int hold = -prices[0];
+        int not_hold = 0;
+        for (auto i: prices) {
+            not_hold = max(not_hold, hold + i - fee);
+            hold = max(hold, not_hold - i);
+        }
+        return max(hold, not_hold);
+    }
+
 };
 
 int main() {
