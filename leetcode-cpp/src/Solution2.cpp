@@ -969,6 +969,35 @@ class Solution {
         return max(hold, not_hold);
     }
 
+    int tallestBillboard(vector<int> &rods) {
+        int sum = accumulate(rods.begin(), rods.end(), 0);
+        vector<int> dp(sum / 2 + 1, -1);
+        vector<int> temp(sum / 2 + 1, -1);
+        temp[0] = dp[0] = 0;
+        for (auto i: rods) {
+            for (int j = 0; j <= sum / 2; ++j) {
+                if (dp[j] == -1) {
+                    continue;
+                }
+                if (i + j <= sum / 2)
+                    temp[j + i] = max(temp[j + i], dp[j]);
+                if (i > j) {
+                    //在这里使用temp的原因是，在之前可能会存在其他情况更新了temp[i-j]或者temp[j-i],
+                    //因为我们不能保证i-j, j-i的值在之前我们没修改，比如 i == 2 j == 4的时候
+                    //temp[4-2]在之前 temp[2-0]的时候也修改了，我们不能确定最终是谁最大，如果用的
+                    //temp[i - j] = max(dp[i - j], dp[j] + j);
+                    //temp[j - i] = max(dp[j - i], dp[j] + i);
+                    //我们会丢掉之前temp[2-0]的信息
+                    if (i - j <= sum / 2)
+                        temp[i - j] = max(temp[i - j] /* ！！！ */, dp[j] + j);
+                } else {
+                    temp[j - i] = max(temp[j - i] /* ！！！ */ , dp[j] + i);
+                }
+            }
+            dp = temp;
+        }
+        return dp[0];
+    }
 };
 
 int main() {
