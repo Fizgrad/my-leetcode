@@ -998,6 +998,32 @@ class Solution {
         }
         return dp[0];
     }
+
+    int countRoutes(vector<int> &locations, int start, int finish, int fuel) {
+        constexpr int mod = 1e9 + 7;
+        int n = locations.size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>(fuel + 1, -1)));
+        auto f = [&](auto &&f, int from, int to, int remaining_fuel) {
+
+            if (dp[from][to][remaining_fuel] != -1) {
+                return dp[from][to][remaining_fuel];
+            }
+            long long int ans = (from == to);
+            for (int i = 0; i < n; ++i) {
+                if (i == from) {
+                    continue;
+                }
+                int dis = ::abs(locations[i] - locations[from]);
+                if (dis > remaining_fuel) {
+                    continue;
+                }
+                ans = (ans + f(f, i, to, remaining_fuel - dis)) % mod;
+            }
+            return dp[from][to][remaining_fuel] = ans % mod;
+        };
+        return f(f, start, finish, fuel);
+    }
+
 };
 
 int main() {
