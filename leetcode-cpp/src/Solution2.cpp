@@ -42,6 +42,7 @@ struct ListNode {
 };
 
 class Solution {
+public:
     int shortestBridge(vector<vector<int>> &grid) {
         int n = grid.size();
         int xy[5] = {0, 1, 0, -1, 0};
@@ -1024,9 +1025,43 @@ class Solution {
         return f(f, start, finish, fuel);
     }
 
+    long long totalCost(vector<int> &costs, int k, int candidates) {
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+        vector<pair<int, int>> arr;
+        int n = costs.size();
+        for (int i = 0; i < n; ++i) {
+            arr.emplace_back(costs[i], i);
+        }
+        if (n >= 2 * candidates)
+            for (int i = 0; i < candidates; ++i) {
+                pq.push(arr[i]);
+                pq.push(arr[n - i - 1]);
+            }
+        else for (auto &i: arr) pq.push(i);
+        long long res = 0;
+        int left = candidates;
+        int right = n - candidates - 1;
+        while (k--) {
+            auto [val, idx] = pq.top();
+            pq.pop();
+            res += val;
+            if (left <= right) {
+                if (idx < left) {
+                    pq.push(arr[left++]);
+                } else if (idx > right) {
+                    pq.push(arr[right--]);
+                }
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
     Solution s;
+    vector<int> a = {18, 64, 12, 21, 21, 78, 36, 58, 88, 58, 99, 26, 92, 91, 53, 10, 24, 25, 20, 92, 73, 63, 51, 65, 87,
+                     6, 17, 32, 14, 42, 46, 65, 43, 9, 75};
+    cout << s.totalCost(a, 13, 23) << endl;
     return 0;
 }
