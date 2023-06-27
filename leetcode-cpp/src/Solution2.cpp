@@ -1056,6 +1056,25 @@ public:
         return res;
     }
 
+    vector<vector<int>> kSmallestPairs(vector<int> &nums1, vector<int> &nums2, int k) {
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+        for (auto i: nums1) {
+            pq.push({i + nums2[0], 0});
+            if (pq.size() >= k) {
+                break;
+            }
+        }
+        vector<vector<int>> res;
+        while (k-- && !pq.empty()) {
+            auto [sum, j] = pq.top();
+            pq.pop();
+            res.push_back({sum - nums2[j], nums2[j]});
+            if (j + 1 < nums2.size())
+                pq.push({sum - nums2[j] + nums2[j + 1], j + 1});
+        }
+        return std::move(res);
+    }
+
 };
 
 int main() {
