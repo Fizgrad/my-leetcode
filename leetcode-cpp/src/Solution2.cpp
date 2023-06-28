@@ -1075,6 +1075,34 @@ public:
         return std::move(res);
     }
 
+    double maxProbability(int n, vector<vector<int>> &edges, vector<double> &succProb, int start, int end) {
+        vector<vector<pair<int, double>>> graph(n);
+        for (auto &i: succProb) {
+            i = -::log(i) / ::log(2);
+        }
+        for (int i = 0; i < edges.size(); ++i) {
+            graph[edges[i][0]].emplace_back(edges[i][1], succProb[i]);
+            graph[edges[i][1]].emplace_back(edges[i][0], succProb[i]);
+        }
+        vector<double> prob(n, -1.0);
+        priority_queue<pair<double, int>, vector<pair<double, int>>, greater<>> pq;
+        pq.emplace(0, start);
+        while (!pq.empty()) {
+            auto [pb, now] = pq.top();
+            pq.pop();
+            prob[now] = pb;
+            if (now == end) {
+                return ::pow(2, -pb);
+            }
+            for (auto &k: graph[now]) {
+                if (prob[k.first] < 0.0) {
+                    pq.emplace(pb + k.second, k.first);
+                }
+            }
+        }
+        return 0.0;
+    }
+
 };
 
 int main() {
