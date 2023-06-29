@@ -1103,6 +1103,60 @@ public:
         return 0.0;
     }
 
+    int shortestPathAllKeys(vector<string> &grid) {
+        int m = grid.size();
+        int n = grid.front().size();
+        constexpr int dx[4] = {0, 0, -1, 1};
+        constexpr int dy[4] = {1, -1, 0, 0};
+        int start_x = 0;
+        int start_y = 0;
+        int num_keys = 0;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (islower(grid[i][j])) {
+                    num_keys = max(num_keys, grid[i][j] - 'a' + 1);
+                }
+                if (grid[i][j] == '@') {
+                    start_x = i;
+                    start_y = j;
+                }
+            }
+        }
+        int keys_all = (1 << num_keys) - 1;
+        vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(1 << num_keys, -1)));
+        queue<tuple<int, int, int, int>> s;
+        auto bfs = [&](int keys, int x, int y, int path) {
+            for (int k = 0; k < 4; ++k) {
+                int xx = x + dx[k];
+                int yy = y + dy[k];
+                if (xx >= 0 && xx < m && yy >= 0 && yy < n) {
+                    int keys_ = keys;
+                    char c = grid[xx][yy];
+                    if (c == '#') { continue; }
+                    if (islower(c)) { keys_ |= (1 << (c - 'a')); }
+                    if (isupper(c)) {
+                        if ((keys_ & (1 << (c - 'A'))) == 0) {
+                            continue;
+                        }
+                    }
+                    if (dp[xx][yy][keys_] == -1) {
+                        dp[xx][yy][keys_] = path;
+                        s.emplace(keys_, xx, yy, path + 1);
+                    }
+                }
+            }
+        };
+        s.emplace(0, start_x, start_y, 0);
+        while (!s.empty()) {
+            auto [keys, x, y, len] = s.front();
+            s.pop();
+            if (keys == keys_all)
+                return len;
+            bfs(keys, x, y, len);
+        }
+        return -1;
+    }
+
 };
 
 int main() {
