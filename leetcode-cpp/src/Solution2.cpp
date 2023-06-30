@@ -1157,6 +1157,71 @@ public:
         return -1;
     }
 
+    int latestDayToCross(int row, int col, vector<vector<int>> &cells) {
+
+        constexpr int dx[8] = {0, 0, 1, 1, 1, -1, -1, -1};
+        constexpr int dy[8] = {1, -1, 1, 0, -1, 1, 0, -1};
+
+        int low = col - 1;
+        int high = cells.size();
+//        vector<unordered_set<int>> graph(col, unordered_set < int > ());
+//        int prev_day = -1;
+        auto f = [&](int mid) {
+//            if (prev_day == -1) {
+//                for (int i = 0; i < mid; ++i) {
+//                    graph[cells[i][1] - 1].insert(cells[i][0] - 1);
+//                }
+//                prev_day = mid;
+//            } else if (prev_day < mid) {
+//                for (int i = prev_day; i < mid; ++i) {
+//                    graph[cells[i][1] - 1].insert(cells[i][0] - 1);
+//                }
+//                prev_day = mid;
+//            } else {
+//                for (int i = mid; i < prev_day; ++i) {
+//                    graph[cells[i][1] - 1].erase(cells[i][0] - 1);
+//                }
+//                prev_day = mid;
+//            }
+            vector<unordered_set<int>> graph(col, unordered_set < int > ());
+            for (int i = 0; i < mid; ++i) {
+                graph[cells[i][1] - 1].insert(cells[i][0] - 1);
+            }
+            vector<pair<int, int>> s;
+            for (auto i: graph[0]) {
+                s.emplace_back(i, 0);
+            }
+            while (!s.empty()) {
+                auto [x, y] = s.back();
+                s.pop_back();
+                for (int k = 0; k < 8; ++k) {
+                    int xx = x + dx[k];
+                    int yy = y + dy[k];
+                    if (yy > 0 && yy < col && xx >= 0 && xx < row) {
+                        if (graph[yy].count(xx)) {
+                            if (yy == col - 1) {
+                                return false;
+                            }
+                            s.emplace_back(xx, yy);
+                            graph[yy].erase(xx);
+                        }
+                    }
+                }
+            }
+            return true;
+        };
+
+        while (low >= 0 && low < high) {
+            int mid = (low + high + 1) / 2;
+            if (f(mid)) {
+                low = mid;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return low;
+    }
+
 };
 
 int main() {
