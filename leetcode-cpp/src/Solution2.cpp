@@ -1183,7 +1183,7 @@ public:
 //                }
 //                prev_day = mid;
 //            }
-            vector<unordered_set<int>> graph(col, unordered_set < int > ());
+            vector<unordered_set<int>> graph(col, unordered_set<int>());
             for (int i = 0; i < mid; ++i) {
                 graph[cells[i][1] - 1].insert(cells[i][0] - 1);
             }
@@ -1220,6 +1220,28 @@ public:
             }
         }
         return low;
+    }
+
+    int distributeCookies(vector<int> &cookies, int k) {
+        vector<int> children(k, 0);
+        int n = cookies.size();
+        int res = INT32_MAX;
+        auto dfs = [&](auto &&dfs, int index) {
+            if (index == n) {
+                res = min(res, *std::max_element(children.begin(), children.end()));
+                return;
+            } else {
+                int cookie = cookies[index];
+                for (int i = 0; i < k; ++i) {
+                    children[i] += cookie;
+                    if (children[i] < res)
+                        dfs(dfs, index + 1);
+                    children[i] -= cookie;
+                }
+            }
+        };
+        dfs(dfs, 0);
+        return res;
     }
 
 };
