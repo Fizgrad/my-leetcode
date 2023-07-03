@@ -1244,6 +1244,39 @@ public:
         return res;
     }
 
+    bool buddyStrings(const string &s, const string &goal) {
+        int n = s.size();
+        char c = 0;
+        char cc = 0;
+        bool count[26] = {0};
+        bool flag = false;
+        if (s.size() != goal.size()) {
+            return false;
+        }
+        for (int i = 0; i < n; ++i) {
+            if (s[i] == goal[i]) {
+                if (!flag) {
+                    count[s[i] - 'a'] = !count[s[i] - 'a'];
+                    if (!count[s[i] - 'a']) {
+                        flag = true;
+                    }
+                }
+                continue;
+            } else {
+                if (!c) {
+                    c = s[i];
+                    cc = goal[i];
+                } else {
+                    if (c != goal[i] || cc != s[i]) {
+                        return false;
+                    }
+                    c = cc = 'A';
+                }
+            }
+        }
+        return c == 'A' || (c == 0 && flag);
+    }
+
 };
 
 int main() {
