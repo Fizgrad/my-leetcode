@@ -1277,6 +1277,37 @@ public:
         return c == 'A' || (c == 0 && flag);
     }
 
+    int maximumRequests(int n, vector<vector<int>> &requests) {
+        int req_num = requests.size();
+        vector<int> degree(n, 0);
+        int bit = 0;
+        int res = 0;
+        auto dfs = [&](auto &&dfs, int index) {
+            if (index >= req_num) {
+                if (all_of(begin(degree), end(degree), [](int item) {
+                    return item == 0;
+                }))
+                    res = max(res, __builtin_popcount(bit));
+                return;
+            } else {
+                if (res >= __builtin_popcount(bit) + req_num - index)
+                    return;
+                int from = requests[index][0];
+                int to = requests[index][1];
+                bit |= (1 << index);
+                --degree[from];
+                ++degree[to];
+                dfs(dfs, index + 1);
+                ++degree[from];
+                --degree[to];
+                bit -= (1 << index);
+                dfs(dfs, index + 1);
+            }
+        };
+        dfs(dfs, 0);
+        return res;
+    }
+
 };
 
 int main() {
