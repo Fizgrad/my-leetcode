@@ -1325,6 +1325,23 @@ public:
         }
         return ones;
     }
+
+    vector<int> singleNumberII(vector<int> &nums) {
+        long long int xor_all = 0;
+        for (auto i: nums) {
+            xor_all ^= i;
+        }
+        int ans1 = 0, ans2 = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (xor_all & (-xor_all) & nums[i])
+                ans1 ^= nums[i];
+            else
+                ans2 ^= nums[i];
+        }
+        vector<int> res = {ans1, ans2};
+        return std::move(res);
+    }
+
 };
 
 int main() {
