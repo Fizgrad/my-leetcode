@@ -1308,6 +1308,23 @@ public:
         return res;
     }
 
+    int singleNumber(vector<int> &nums) {
+        int ones = 0;
+        int twos = 0;
+        int threes = 0;
+        for (auto num: nums) {
+//twos keep the bits which appear twice
+            twos |= ones & num;
+// ones keep the bits which appear only once
+            ones ^= num;
+// threes represent whether one bit has appeared three times
+            threes = ones & twos;
+//if one bit has appeared three times, we clear the corresponding bits in both ones and twos
+            ones &= ~threes;
+            twos &= ~threes;
+        }
+        return ones;
+    }
 };
 
 int main() {
