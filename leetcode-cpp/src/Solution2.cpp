@@ -1183,7 +1183,7 @@ public:
 //                }
 //                prev_day = mid;
 //            }
-            vector<unordered_set<int>> graph(col, unordered_set<int>());
+            vector<unordered_set<int>> graph(col, unordered_set < int > ());
             for (int i = 0; i < mid; ++i) {
                 graph[cells[i][1] - 1].insert(cells[i][0] - 1);
             }
@@ -1340,6 +1340,30 @@ public:
         }
         vector<int> res = {ans1, ans2};
         return std::move(res);
+    }
+
+    int longestSubarray(vector<int> &nums) {
+        int now = 0;
+        int prev = 0;
+        int res = 0;
+        int zeros = 0;
+        bool flag = false;
+        for (auto i: nums) {
+            if (i == 1) {
+                zeros = 0;
+                ++now;
+                res = max(res, now + prev);
+            } else {
+                flag = true;
+                ++zeros;
+                prev = now;
+                now = 0;
+                if (zeros > 1) {
+                    prev = 0;
+                }
+            }
+        }
+        return res - !flag;
     }
 
 };
