@@ -1403,6 +1403,36 @@ public:
         return res == INT32_MAX ? 0 : res;
     }
 
+    int maxConsecutiveAnswers(const string &answerKey, int k) {
+        int n = answerKey.size();
+        int res = 0;
+        char targets[2] = {'T', 'F'};
+        for (auto target: targets) {
+            int remains_k = k;
+            int left = 0;
+            int right = 0;
+            while (true) {
+                if (remains_k >= 0) {
+                    res = max(res, right - left);
+                }
+                if (right == n) {
+                    break;
+                }
+                if (remains_k >= 0 && right < n) {
+                    if (answerKey[right++] != target) {
+                        --remains_k;
+                    }
+                }
+                if (remains_k < 0) {
+                    if (answerKey[left++] != target) {
+                        ++remains_k;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
