@@ -1385,6 +1385,24 @@ public:
         return std::move(stack);
     }
 
+    int minSubArrayLen(int target, vector<int> &nums) {
+        int sum = 0;
+        int n = nums.size();
+        int left = 0, right = 0;
+        int res = INT32_MAX;
+        while (true) {
+            if (sum >= target) {
+                res = min(res, right - left);
+                sum -= nums[left++];
+            } else {
+                if (right < n)
+                    sum += nums[right++];
+                else break;
+            }
+        }
+        return res == INT32_MAX ? 0 : res;
+    }
+
 };
 
 int main() {
