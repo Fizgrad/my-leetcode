@@ -1183,7 +1183,7 @@ public:
 //                }
 //                prev_day = mid;
 //            }
-            vector<unordered_set<int>> graph(col, unordered_set < int > ());
+            vector<unordered_set<int>> graph(col, unordered_set<int>());
             for (int i = 0; i < mid; ++i) {
                 graph[cells[i][1] - 1].insert(cells[i][0] - 1);
             }
@@ -1431,6 +1431,24 @@ public:
             }
         }
         return res;
+    }
+
+    long long putMarbles(vector<int> &weights, int k) {
+        int n = weights.size();
+        if (n == k) {
+            return 0;
+        }
+        long long int max_ans = 0;
+        long long int min_ans = 0;
+        for (int i = 1; i < n; ++i) {
+            weights[i - 1] += weights[i];
+        }
+        std::sort(weights.begin(), weights.end() - 1);
+        for (int i = 0; i < k - 1; ++i) {
+            max_ans += weights[n - 2 - i];
+            min_ans += weights[i];
+        }
+        return max_ans - min_ans;
     }
 
 };
