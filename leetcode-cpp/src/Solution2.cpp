@@ -1451,6 +1451,35 @@ public:
         return max_ans - min_ans;
     }
 
+    int largestVariance(const string &s) {
+        vector<int> nums(26, 0);
+        for (auto c: s) ++nums[c - 'a'];
+        int res = 0;
+        for (char i = 'a'; i <= 'z'; ++i) {
+            if (nums[i - 'a'] == 0) continue;
+            for (char j = 'a'; j <= 'z'; ++j) {
+                if (i == j || nums[j - 'a'] == 0) continue;
+                int c1 = 0;
+                int c2 = 0;
+                for (auto iter = s.begin(); iter != s.end(); ++iter) {
+                    if (*iter == i) ++c1;
+                    if (*iter == j) ++c2;
+                    if (c2 > c1) c1 = c2 = 0;
+                    if (c2 && c1) res = max(res, c1 - c2);
+                }
+                c2 = c1 = 0;
+                for (auto iter = s.rbegin(); iter != s.rend(); ++iter) {
+                    if (*iter == i) ++c1;
+                    if (*iter == j) ++c2;
+                    if (c2 > c1) c1 = c2 = 0;
+                    if (c2 && c1) res = max(res, c1 - c2);
+                }
+
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
