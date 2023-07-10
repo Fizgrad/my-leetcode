@@ -1480,6 +1480,26 @@ public:
         return res;
     }
 
+    int minDepth(TreeNode *root) {
+        vector<TreeNode *> next;
+        vector<TreeNode *> temp;
+        if (!root) return 0;
+        next.push_back(root);
+        int res = 0;
+        while (!next.empty()) {
+            ++res;
+            temp.clear();
+            for (auto i: next) {
+                if (i->left || i->right) {
+                    if (i->left) temp.push_back(i->left);
+                    if (i->right) temp.push_back(i->right);
+                } else return res;
+            }
+            temp.swap(next);
+        }
+        return res;
+    }
+
 };
 
 int main() {
