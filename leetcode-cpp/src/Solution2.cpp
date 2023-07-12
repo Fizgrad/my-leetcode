@@ -1500,57 +1500,93 @@ public:
         return res;
     }
 
-    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        queue<TreeNode*> q;
-        unordered_map<TreeNode*,TreeNode*> parent;
+    vector<int> distanceK(TreeNode *root, TreeNode *target, int k) {
+        queue<TreeNode *> q;
+        unordered_map<TreeNode *, TreeNode *> parent;
         q.push(root);
 
-        while(!q.empty()){
-            TreeNode*front=q.front();
+        while (!q.empty()) {
+            TreeNode *front = q.front();
             q.pop();
-            if(front->left){
+            if (front->left) {
                 parent[front->left] = front;
                 q.push(front->left);
             }
-            if(front->right){
+            if (front->right) {
                 parent[front->right] = front;
                 q.push(front->right);
             }
         }
 
-        unordered_map<TreeNode*,bool> visited;
+        unordered_map<TreeNode *, bool> visited;
         q.push(target);
-        visited[target]=true;
-        int cnt=0;
-        while(!q.empty()){
-            if(cnt==k) break;
+        visited[target] = true;
+        int cnt = 0;
+        while (!q.empty()) {
+            if (cnt == k) break;
             cnt++;
-            int size=q.size();
-            for(int i=0;i<size;i++){
-                TreeNode*front=q.front();
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode *front = q.front();
                 q.pop();
-                if(front->left  &&  !visited[front->left]){
+                if (front->left && !visited[front->left]) {
                     q.push(front->left);
-                    visited[front->left]=true;
+                    visited[front->left] = true;
                 }
-                if(front->right  &&  !visited[front->right]){
+                if (front->right && !visited[front->right]) {
                     q.push(front->right);
-                    visited[front->right]=true;
+                    visited[front->right] = true;
                 }
-                if(parent[front]  &&  !visited[ parent[front] ]){
-                    q.push( parent[front] );
-                    visited[parent[front]]=true;
+                if (parent[front] && !visited[parent[front]]) {
+                    q.push(parent[front]);
+                    visited[parent[front]] = true;
                 }
             }
         }
         vector<int> ans;
-        while(!q.empty()){
-            TreeNode*front=q.front();
+        while (!q.empty()) {
+            TreeNode *front = q.front();
             q.pop();
-            ans.push_back( front->val );
+            ans.push_back(front->val);
         }
         return ans;
     }
+
+    vector<int> eventualSafeNodes(vector<vector<int>> &graph) {
+        int n = graph.size();
+        vector<short> isSafe(n, -1);
+        auto f = [&](auto &&f, int node, unordered_set<int> &path) {
+            if (isSafe[node] != -1) {
+                return isSafe[node];
+            }
+            vector<int> &next = graph[node];
+            if (next.empty())
+                return isSafe[node] = 1;
+            bool res = true;
+            path.insert(node);
+            for (auto i: next) {
+                if (path.count(i)) {
+                    path.erase(node);
+                    return isSafe[node] = 0;
+                }
+                res = res && f(f, i, path);
+            }
+            path.erase(node);
+            return isSafe[node] = res;
+        };
+        for (int i = 0; i < n; ++i) {
+            unordered_set<int> visited;
+            f(f, i, visited);
+        }
+        vector<int> res;
+        for (int i = 0; i < n; ++i) {
+            if (isSafe[i]) {
+                res.push_back(i);
+            }
+        }
+        return std::move(res);
+    }
+
 };
 
 int main() {
