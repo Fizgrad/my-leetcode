@@ -1587,6 +1587,41 @@ public:
         return std::move(res);
     }
 
+    bool canFinish(int numCourses, vector<vector<int>> &prerequisites) {
+        vector<bool> finished(numCourses, false);
+        vector<bool> visited(numCourses, false);
+        vector<vector<int>> graph(numCourses, vector<int>());
+
+        for (auto &i: prerequisites) {
+            graph[i[0]].emplace_back(i[1]);
+        }
+        auto f = [&](auto &&f, int course) -> bool {
+            auto &next = graph[course];
+            if (finished[course]) {
+                return true;
+            }
+            if (visited[course]) {
+                return false;
+            }
+            visited[course] = true;
+            if (next.empty()) {
+                return finished[course] = true;
+            }
+            for (auto i: next) {
+                if (!f(f, i)) {
+                    return finished[course] = false;
+                }
+            }
+            return finished[course] = true;
+        };
+        for (int i = 0; i < numCourses; ++i) {
+            if (!f(f, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 };
 
 int main() {
