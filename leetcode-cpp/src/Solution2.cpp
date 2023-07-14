@@ -1622,6 +1622,18 @@ public:
         return true;
     }
 
+    int longestSubsequence(vector<int> &arr, int difference) {
+        unordered_map<int, int> hm;
+        int res = 0;
+        for (auto i: arr) {
+            hm[i] = max(hm[i - difference] + 1, hm[i]);
+        }
+        for (auto &k: hm) {
+            res = max(res, k.second);
+        }
+        return res;
+    }
+
 };
 
 int main() {
