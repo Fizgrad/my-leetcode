@@ -1670,6 +1670,54 @@ public:
         return helper(helper, 0, k);
     }
 
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+        stack<int> num1;
+        stack<int> num2;
+        num1.push(l1->val);
+        num2.push(l2->val);
+        while (l1->next) {
+            num1.push(l1->next->val);
+            l1 = l1->next;
+        }
+        while (l2->next) {
+            num2.push(l2->next->val);
+            l2 = l2->next;
+        }
+        bool carry = false;
+        ListNode *res = nullptr;
+        while (!num1.empty() || !num2.empty() || carry) {
+            int c;
+            if (!num1.empty() && !num2.empty()) {
+                int a = num1.top();
+                num1.pop();
+                int b = num2.top();
+                num2.pop();
+                c = (a + b + carry) % 10;
+                carry = (a + b + carry > 9);
+            } else if (!num1.empty()) {
+                int a = num1.top();
+                num1.pop();
+                c = (a + carry) % 10;
+                carry = (a + carry > 9);
+            } else if (!num2.empty()) {
+                int b = num2.top();
+                num2.pop();
+                c = (b + carry) % 10;
+                carry = (b + carry > 9);
+            } else if (carry) {
+                c = carry;
+                carry = false;
+            }
+            if (res == nullptr) {
+                res = new ListNode(c);
+            } else {
+                auto temp = new ListNode(c);
+                temp->next = res;
+                res = temp;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
