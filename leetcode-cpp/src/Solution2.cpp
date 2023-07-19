@@ -1718,6 +1718,24 @@ public:
         }
         return res;
     }
+
+    int eraseOverlapIntervals(vector<vector<int>> &intervals) {
+        sort(begin(intervals), end(intervals));
+        int n = intervals.size();
+        int res = 0;
+        int end = INT32_MIN;
+        for (int i = 0; i < n; ++i) {
+            auto &interval = intervals[i];
+            if (interval[0] >= end) {
+                end = interval[1];
+            } else {
+                ++res;
+                end = min(end, interval[1]);
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
