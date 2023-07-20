@@ -1736,6 +1736,33 @@ public:
         return res;
     }
 
+    vector<int> asteroidCollision(vector<int> &asteroids) {
+        vector<int> res;
+        for (auto i: asteroids) {
+            if (i > 0) {
+                res.push_back(i);
+            } else {
+                bool flag = true;
+                while (res.size() && res.back() > 0) {
+                    if (res.back() > -i) {
+                        flag = false;
+                        break;
+                    } else if (res.back() == -i) {
+                        flag = false;
+                        res.pop_back();
+                        break;
+                    } else if (res.back() > 0) {
+                        res.pop_back();
+                    } else {
+                        break;
+                    }
+                }
+                if (flag) res.push_back(i);
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
