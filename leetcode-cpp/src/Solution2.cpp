@@ -1763,6 +1763,40 @@ public:
         return res;
     }
 
+    int findNumberOfLIS(vector<int> &nums) {
+        // dp[i] number of subseq ending at i
+        // dp[x] = dp[i], dp[0]+1, dp[1]+1
+        int n = nums.size();
+        vector<int> length(n, 1);
+        vector<int> count(n, 1);
+
+        int longest = 1;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (nums[j] < nums[i]) {
+                    if (length[j] + 1 > length[i]) {
+                        count[i] = 0;
+                        length[i] = 1 + length[j];
+                    }
+
+                    if (length[j] + 1 == length[i]) {
+                        count[i] += count[j];
+                    }
+                }
+            }
+
+            longest = max(longest, length[i]);
+        }
+
+        int result = 0;
+        for (int i = 0; i < n; ++i) {
+            if (length[i] == longest) {
+                result += count[i];
+            }
+        }
+        return result;
+    }
+
 };
 
 int main() {
