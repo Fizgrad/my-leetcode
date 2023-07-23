@@ -1815,6 +1815,26 @@ public:
         return f(f, row, column, k) / ::pow(8.0, k);
     }
 
+    vector<TreeNode *> allPossibleFBT(int n) {
+        if ((n & 1) == 0) return {};
+        int numNode = (n - 1) >> 1;
+        vector<TreeNode *> res;
+        TreeNode *root = new TreeNode(0);
+        if (n == 1) {
+            res.push_back(new TreeNode(0));
+        } else {
+            for (int i = 1; i <= n - 1; i += 2) {
+                vector<TreeNode *> lTrees = allPossibleFBT(i);
+                vector<TreeNode *> rTrees = allPossibleFBT(n - i - 1);
+                for (TreeNode *lt: lTrees) {
+                    for (TreeNode *rt: rTrees) {
+                        res.push_back(new TreeNode(0, lt, rt));
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
