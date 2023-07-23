@@ -1797,6 +1797,24 @@ public:
         return result;
     }
 
+    double knightProbability(int n, int k, int row, int column) {
+        constexpr int dx[8] = {-2, -2, -1, -1, 1, 1, 2, 2};
+        constexpr int dy[8] = {-1, 1, -2, 2, -2, 2, -1, 1};
+        vector<vector<vector<double>>> dp(n + 1, vector<vector<double>>(n + 1, vector<double>(k + 1, -1.0)));
+        auto f = [&](auto &&f, int x, int y, int k) -> double {
+            if (x >= n || x < 0 || y >= n || y < 0) return 0.0;
+            if (k <= 0) return 1.0;
+            if (dp[x][y][k] != -1) return dp[x][y][k];
+            dp[x][y][k] = 0.0;
+            for (int i = 0; i < 8; ++i) {
+                dp[x][y][k] += f(f, x + dx[i], y + dy[i], k - 1);
+            }
+            return dp[x][y][k];
+        };
+
+        return f(f, row, column, k) / ::pow(8.0, k);
+    }
+
 };
 
 int main() {
