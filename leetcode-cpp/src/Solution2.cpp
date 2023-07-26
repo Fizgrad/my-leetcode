@@ -1835,6 +1835,38 @@ public:
         }
         return res;
     }
+
+    int peakIndexInMountainArray(vector<int> &arr) {
+        int low = 0;
+        int high = arr.size() - 1;
+        int mid = (low + high) >> 1;
+        while (high > low) {
+            mid = (low + high) >> 1;
+            if (mid > 0 && mid < arr.size() - 1) {
+                if (arr[mid] > arr[mid + 1] && arr[mid] > arr[mid - 1])
+                    return mid;
+                else if (arr[mid] < arr[mid + 1]) {
+                    low = mid + 1;
+                } else if (arr[mid] < arr[mid - 1]) {
+                    high = mid - 1;
+                }
+            } else if (mid == 0) {
+                if (arr[mid] > arr[mid + 1])
+                    return mid;
+                else {
+                    low = mid + 1;
+                }
+            } else if (mid == arr.size() - 1) {
+                if (arr[mid] > arr[mid - 1]) {
+                    return mid;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return low;
+    }
+
 };
 
 int main() {
