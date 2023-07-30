@@ -1902,6 +1902,24 @@ public:
         return minspeed;
     }
 
+    int strangePrinter(const string &s) {
+        int n = s.size();
+        vector<vector<int>> dp(n, vector<int>(n, -1));
+        auto f = [&](auto &&f, int i, int j) {
+            if (i > j || i < 0 || j < 0 || j >= n || i >= n) return 0;
+            if (i == j) return 1;
+            if (dp[i][j] != -1) return dp[i][j];
+            dp[i][j] = f(f, i, j - 1) + 1;
+            for (int k = i; k < j; ++k) {
+                if (s[k] == s[j]) {
+                    dp[i][j] = min(dp[i][j], f(f, i, k) + f(f, k + 1, j - 1));
+                }
+            }
+            return dp[i][j];
+        };
+        return f(f, 0, n - 1);
+    }
+
 };
 
 int main() {
