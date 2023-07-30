@@ -1920,6 +1920,33 @@ public:
         return f(f, 0, n - 1);
     }
 
+    double soupServings(int n) {
+        map<pair<int, int>, double> cache;
+        const int da[4] = {100, 75, 50, 25};
+        const int db[4] = {0, 25, 50, 75};
+        auto f = [&](auto &&f, int A, int B) {
+            if (A < 0 || B < 0)return 0.0;
+            if (cache.count({A, B})) {
+                return cache[{A, B}];
+            }
+            double res = 0;
+            for (int k = 0; k < 4; ++k) {
+                int a = A - da[k];
+                int b = B - db[k];
+                if (a > 0 && b > 0) {
+                    res += 0.25 * (f(f, a, b));
+                } else if (a <= 0 && b <= 0) {
+                    res += 0.25 * 0.5;
+                } else if (a <= 0 && b > 0) {
+                    res += 0.25;
+                }
+            }
+            return cache[{A, B}] = res;
+        };
+        if (n >= 4800) return 1; // trick
+        return f(f, n, n);
+    }
+
 };
 
 int main() {
