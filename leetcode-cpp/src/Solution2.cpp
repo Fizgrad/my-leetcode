@@ -1947,6 +1947,18 @@ public:
         return f(f, n, n);
     }
 
+    bool PredictTheWinner(vector<int> &nums) {
+        int n = nums.size();
+        vector<vector<int>> cache(n, vector<int>(n, -1));
+        auto f = [&](auto &&f, int i, int j) {
+            if (i < 0 || j < 0 || i >= n || j >= n || i > j)return 0;
+            if (i == j) return nums[i];
+            if (cache[i][j] != -1) return cache[i][j];
+            return cache[i][j] = max(nums[i] - f(f, i + 1, j), nums[j] - f(f, i, j - 1));
+        };
+        return f(f, 0, n - 1) >= 0;
+    }
+
 };
 
 int main() {
