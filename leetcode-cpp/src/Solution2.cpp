@@ -1981,6 +1981,28 @@ public:
         return dp[n][m];
     }
 
+    vector<vector<int>> combine(int n, int k) {
+        vector<vector<int>> combinations;
+        vector<int> current;
+        auto backtracking = [&](auto &&backtracking, int cur, int k, int n) -> void {
+            if (current.size() == k) {
+                combinations.push_back(current);
+            } else {
+                int i = 0;
+                if (!current.empty()) {
+                    i = *(current.end() - 1);
+                }
+                for (++i; i < n + 1; i++) {
+                    current.push_back(i);
+                    backtracking(backtracking, cur + 1, k, n);
+                    current.pop_back();
+                }
+            }
+        };
+        backtracking(backtracking, 0, k, n);
+        return combinations;
+    }
+
 };
 
 int main() {
