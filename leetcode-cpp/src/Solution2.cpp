@@ -2003,6 +2003,15 @@ public:
         return combinations;
     }
 
+    vector<vector<int>> permute(vector<int> &nums) {
+        vector<vector<int>> res;
+        std::sort(nums.begin(), nums.end());
+        do {
+            res.emplace_back(nums);
+        } while (std::next_permutation(nums.begin(), nums.end()));
+        return res;
+    }
+
 };
 
 int main() {
