@@ -41,6 +41,37 @@ struct ListNode {
     ListNode(int x) : val(x), next(nullptr) {}
 };
 
+struct TrieNode {
+    TrieNode *next['z' - 'a' + 1] = {nullptr};
+    bool isEnd = false;
+};
+
+struct Trie {
+    TrieNode *root = new TrieNode();
+
+    bool contains(const string &input) {
+        auto temp = root;
+        for (int i = 0; i < input.size(); ++i) {
+            temp = temp->next[input[i] - 'a'];
+            if (temp == nullptr) {
+                return false;
+            }
+        }
+        return temp->isEnd;
+    }
+
+    void add(const string &input) {
+        auto temp = root;
+        for (int i = 0; i < input.size(); ++i) {
+            if (temp->next[input[i] - 'a'] == nullptr)
+                temp->next[input[i] - 'a'] = new TrieNode();
+            temp = temp->next[input[i] - 'a'];
+        }
+        temp->isEnd = true;
+    }
+};
+
+
 class Solution {
 public:
     vector<string> letterCombinations(const string &digits) {
@@ -70,6 +101,31 @@ public:
             temp.clear();
         }
         return next;
+    }
+
+    bool wordBreak(const string &s, vector<string> &wordDict) {
+        Trie trie;
+        for (auto &i: wordDict) {
+            trie.add(i);
+        }
+        int n = s.size();
+        vector<vector<int >> dp(n, vector<int>(n, -1));
+        auto f = [&](auto &&f, int i, int j) {
+            if (dp[i][j] != -1) {
+                return dp[i][j];
+            } else {
+                if (trie.contains(s.substr(i, j - i + 1))) {
+                    return dp[i][j] = 1;
+                }
+                for (int k = 1; k <= j - i; ++k) {
+                    if (trie.contains(s.substr(i, k)) && f(f, i + k, j)) {
+                        return dp[i][j] = 1;
+                    }
+                }
+                return dp[i][j] = 0;
+            }
+        };
+        return f(f, 0, s.size() - 1);
     }
 
 };
