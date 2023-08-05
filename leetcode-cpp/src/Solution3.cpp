@@ -128,6 +128,44 @@ public:
         return f(f, 0, s.size() - 1);
     }
 
+    vector<TreeNode *> generateTrees(int n) {
+        vector<vector<vector<TreeNode *>>> dp(n + 1, vector<vector<TreeNode *>>(n + 1, vector<TreeNode *>()));
+        auto f = [&](auto &&f, int low, int high) -> vector<TreeNode *> {
+            if (low > high) {
+                return {};
+            }
+            if (low == high) {
+                return {new TreeNode(low)};
+            }
+            if (!dp[low][high].empty())
+                return dp[low][high];
+            else {
+                vector<TreeNode *> res;
+                for (int k = low; k <= high; ++k) {
+                    auto left = f(f, low, k - 1);
+                    auto right = f(f, k + 1, high);
+                    if (left.empty()) {
+                        for (auto j: right) {
+                            res.emplace_back(new TreeNode(k, nullptr, j));
+                        }
+                    }
+                    if (right.empty()) {
+                        for (auto i: left) {
+                            res.emplace_back(new TreeNode(k, i, nullptr));
+                        }
+                    }
+                    for (auto i: left) {
+                        for (auto j: right) {
+                            res.emplace_back(new TreeNode(k, i, j));
+                        }
+                    }
+                }
+                return dp[low][high] = res;
+            }
+        };
+        return f(f, 1, n);
+    }
+
 };
 
 int main() {
