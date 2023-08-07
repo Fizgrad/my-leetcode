@@ -199,6 +199,21 @@ public:
         return false;
     }
 
+    int numMusicPlaylists(int n, int goal, int k) {
+        using ll = long long;
+        const int MOD = 1e9 + 7;
+        vector<vector<int>> dp(n + 1, vector<int>(goal + 1, -1));
+        auto solve = [&](auto &&solve, int n, int goal, int k) -> ll {
+            if (n == 0 && goal == 0) return 1;
+            if (n == 0 || goal == 0) return 0;
+            if (dp[n][goal] != -1) return dp[n][goal];
+            ll pick = solve(solve, n - 1, goal - 1, k) * n;
+            ll notpick = solve(solve, n, goal - 1, k) * max(n - k, 0);
+            return dp[n][goal] = (pick + notpick) % MOD;
+        };
+        return solve(solve, n, goal, k);
+    }
+
 };
 
 int main() {
