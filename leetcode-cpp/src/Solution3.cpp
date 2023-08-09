@@ -251,6 +251,20 @@ public:
         return -1;
     }
 
+    long long maximumImportance(int n, vector<vector<int>> &roads) {
+        vector<int> degree(n, 0);
+        for (auto &i: roads) {
+            ++degree[i[0]];
+            ++degree[i[1]];
+        }
+        sort(degree.begin(), degree.end());
+        long long res = 0;
+        for (int i = 0; i < n; ++i) {
+            res += static_cast<long long>(degree[i]) * (i + 1);
+        }
+        return res;
+    }
+
 };
 
 int main() {
