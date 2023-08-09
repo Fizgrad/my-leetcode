@@ -265,6 +265,36 @@ public:
         return res;
     }
 
+    int minimizeMax(vector<int> &nums, int p) {
+        if (p == 0) {
+            return 0;
+        }
+        sort(nums.begin(), nums.end());
+        int low = 0;
+        int high = nums.back() - nums.front();
+        int mid;
+        int res;
+        while (low <= high) {
+            mid = (low + high) >> 1;
+            int count = 0;
+            for (int i = 0; i < nums.size() - 1 && count < p;) {
+                if (nums[i + 1] - nums[i] <= mid) {
+                    count++;
+                    i += 2;
+                } else {
+                    i++;
+                }
+            }
+            if (count >= p) {
+                res = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
