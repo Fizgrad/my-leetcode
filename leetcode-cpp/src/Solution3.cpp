@@ -340,6 +340,32 @@ public:
         return false;
     }
 
+    int change(int amount, vector<int> &coins) {
+        vector<vector<int>> cache(amount + 1, vector<int>(coins.size(), -1));
+        auto f = [&](auto &&f, int money, int index) -> int {
+            if (index >= coins.size() && money > 0) {
+                return 0;
+            }
+            if (money < 0) {
+                return 0;
+            }
+            if (money == 0) {
+                return 1;
+            }
+            if (cache[money][index] != -1) {
+                return cache[money][index];
+            }
+            int res = f(f, money, index + 1);
+            int remains = money - coins[index];
+            while (remains >= 0) {
+                res += f(f, remains, index + 1);
+                remains -= coins[index];
+            }
+            return cache[money][index] = res;
+        };
+        return f(f, amount, 0);
+    }
+
 };
 
 int main() {
