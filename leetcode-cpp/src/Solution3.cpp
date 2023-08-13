@@ -390,6 +390,34 @@ public:
         return res.back();
     }
 
+    bool validPartition(vector<int> &nums) {
+        int n = nums.size();
+        vector<int> dp(n + 1, -1);
+        auto f = [&](auto &&f, int i) -> bool {
+            int n = nums.size();
+            if (i == nums.size())
+                return true;
+            if (dp[i] != -1)
+                return dp[i];
+
+            if (i + 1 < n && nums[i] == nums[i + 1]) {
+                if (f(f, i + 2))
+                    return dp[i] = true;
+            }
+
+            if (i + 2 < n && nums[i] == nums[i + 2] and nums[i] == nums[i + 1]) {
+                if (f(f, i + 3))
+                    return dp[i] = true;
+            }
+            if (i + 2 < n && nums[i] + 1 == nums[i + 1] && nums[i] + 2 == nums[i + 2]) {
+                if (f(f, i + 3))
+                    return dp[i] = true;
+            }
+            return dp[i] = false;
+        };
+        return f(f, 0);
+    }
+
 };
 
 int main() {
