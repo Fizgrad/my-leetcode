@@ -418,6 +418,11 @@ public:
         return f(f, 0);
     }
 
+    int findKthLargest(vector<int> &nums, int k) {
+        std::sort(nums.begin(), nums.end());
+        return *(nums.end() - k);
+    }
+
 };
 
 int main() {
