@@ -516,6 +516,37 @@ public:
         return res;
     }
 
+    string convertToTitle(int columnNumber) {
+        using ll = long long int;
+        auto pow = [](auto &&pow, ll x, ll n) -> ll {
+            if (n == 0) {
+                return 1;
+            }
+            if (n == 1) {
+                return x;
+            }
+            ll temp = pow(pow, x, n / 2);
+            ll res = temp * temp;
+            if (n & 1) {
+                res *= x;
+            }
+            return res;
+        };
+        float x = columnNumber - 1;
+        int n = log(x * (25.0) / (26.0) + 1) / log(26);
+        ll pre = 26 * (pow(pow, 26, n) - 1) / 25;
+        ll remain = columnNumber - pre - 1;
+        vector<char> res;
+        while (remain >= 1) {
+            res.push_back('A' + remain % 26);
+            remain /= 26;
+        }
+        while (res.size() < n + 1) {
+            res.push_back('A');
+        }
+        return {res.rbegin(), res.rend()};
+    }
+
 };
 
 int main() {
