@@ -74,7 +74,7 @@ struct Trie {
 
 class Solution {
 public:
-    vector <string> letterCombinations(const string &digits) {
+    vector<string> letterCombinations(const string &digits) {
         if (digits.empty()) {
             return {};
         }
@@ -88,8 +88,8 @@ public:
                                           {'8', "tuv"},
                                           {'9', "wxyz"},
                                           {'0', ""}};
-        vector <string> next = {""};
-        vector <string> temp;
+        vector<string> next = {""};
+        vector<string> temp;
         for (auto i: digits) {
             for (auto c: chars[i]) {
                 for (auto k: next) {
@@ -103,13 +103,13 @@ public:
         return next;
     }
 
-    bool wordBreak(const string &s, vector <string> &wordDict) {
+    bool wordBreak(const string &s, vector<string> &wordDict) {
         Trie trie;
         for (auto &i: wordDict) {
             trie.add(i);
         }
         int n = s.size();
-        vector <vector<int >> dp(n, vector<int>(n, -1));
+        vector<vector<int >> dp(n, vector<int>(n, -1));
         auto f = [&](auto &&f, int i, int j) {
             if (dp[i][j] != -1) {
                 return dp[i][j];
@@ -129,45 +129,45 @@ public:
     }
 
     vector<TreeNode *> generateTrees(int n) {
-        vector < vector < vector < TreeNode *>>> dp(n + 1,
-                                                    vector < vector < TreeNode * >> (n + 1, vector<TreeNode *>()));
-        auto f = [&](auto &&f, int low, int high) -> vector < TreeNode * > {
-                if (low > high) {
-                    return {};
-                }
-                if (low == high) {
-                    return {new TreeNode(low)};
-                }
-                if (!dp[low][high].empty())
+        vector<vector<vector<TreeNode *>>> dp(n + 1,
+                                              vector<vector<TreeNode * >>(n + 1, vector<TreeNode *>()));
+        auto f = [&](auto &&f, int low, int high) -> vector<TreeNode *> {
+            if (low > high) {
+                return {};
+            }
+            if (low == high) {
+                return {new TreeNode(low)};
+            }
+            if (!dp[low][high].empty())
                 return dp[low][high];
-                else {
-                    vector < TreeNode * > res;
-                    for (int k = low; k <= high; ++k) {
-                        auto left = f(f, low, k - 1);
-                        auto right = f(f, k + 1, high);
-                        if (left.empty()) {
-                            for (auto j: right) {
-                                res.emplace_back(new TreeNode(k, nullptr, j));
-                            }
-                        }
-                        if (right.empty()) {
-                            for (auto i: left) {
-                                res.emplace_back(new TreeNode(k, i, nullptr));
-                            }
-                        }
-                        for (auto i: left) {
-                            for (auto j: right) {
-                                res.emplace_back(new TreeNode(k, i, j));
-                            }
+            else {
+                vector<TreeNode *> res;
+                for (int k = low; k <= high; ++k) {
+                    auto left = f(f, low, k - 1);
+                    auto right = f(f, k + 1, high);
+                    if (left.empty()) {
+                        for (auto j: right) {
+                            res.emplace_back(new TreeNode(k, nullptr, j));
                         }
                     }
-                    return dp[low][high] = res;
+                    if (right.empty()) {
+                        for (auto i: left) {
+                            res.emplace_back(new TreeNode(k, i, nullptr));
+                        }
+                    }
+                    for (auto i: left) {
+                        for (auto j: right) {
+                            res.emplace_back(new TreeNode(k, i, j));
+                        }
+                    }
                 }
+                return dp[low][high] = res;
+            }
         };
         return f(f, 1, n);
     }
 
-    bool searchMatrix(vector <vector<int>> &matrix, int target) {
+    bool searchMatrix(vector<vector<int>> &matrix, int target) {
         int n = matrix.size();
         int m = matrix.begin()->size();
         int low = 0;
@@ -203,7 +203,7 @@ public:
     int numMusicPlaylists(int n, int goal, int k) {
         using ll = long long;
         const int MOD = 1e9 + 7;
-        vector <vector<int>> dp(n + 1, vector<int>(goal + 1, -1));
+        vector<vector<int>> dp(n + 1, vector<int>(goal + 1, -1));
         auto solve = [&](auto &&solve, int n, int goal, int k) -> ll {
             if (n == 0 && goal == 0) return 1;
             if (n == 0 || goal == 0) return 0;
@@ -252,7 +252,7 @@ public:
         return -1;
     }
 
-    long long maximumImportance(int n, vector <vector<int>> &roads) {
+    long long maximumImportance(int n, vector<vector<int>> &roads) {
         vector<int> degree(n, 0);
         for (auto &i: roads) {
             ++degree[i[0]];
@@ -342,7 +342,7 @@ public:
     }
 
     int change(int amount, vector<int> &coins) {
-        vector <vector<int>> cache(amount + 1, vector<int>(coins.size(), -1));
+        vector<vector<int>> cache(amount + 1, vector<int>(coins.size(), -1));
         auto f = [&](auto &&f, int money, int index) -> int {
             if (index >= coins.size() && money > 0) {
                 return 0;
@@ -367,7 +367,7 @@ public:
         return f(f, amount, 0);
     }
 
-    int uniquePathsWithObstacles(vector <vector<int>> &obstacleGrid) {
+    int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid) {
         int n = obstacleGrid.size();
         int m = obstacleGrid.begin()->size();
         vector<int> res(m, 0);
@@ -424,14 +424,14 @@ public:
         return *(nums.end() - k);
     }
 
-    vector <vector<int>> updateMatrix(vector <vector<int>> &mat) {
+    vector<vector<int>> updateMatrix(vector<vector<int>> &mat) {
         int n = mat.size();
         int m = mat.begin()->size();
 
-        vector <vector<int>> res(n, vector<int>(m, -1));
+        vector<vector<int>> res(n, vector<int>(m, -1));
         using coordinate = pair<int, int>;
-        vector <coordinate> next;
-        vector <coordinate> temp;
+        vector<coordinate> next;
+        vector<coordinate> temp;
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < m; ++j) {
                 if (mat[i][j] == 0) {
@@ -482,6 +482,38 @@ public:
             }
         }
         return false;
+    }
+
+    string reorganizeString(const string &s) {
+        int len = s.size();
+        vector<pair<int, char>> nums('z' - 'a' + 1);
+        for (int i = 0; i < 26; ++i) {
+            nums[i] = pair<int, char>(0, 'a' + i);
+        }
+        for (auto i: s) {
+            ++nums[i - 'a'].first;
+        }
+        std::sort(nums.begin(), nums.end());
+        if (nums.back().first * 2 > s.size() + 1) {
+            return "";
+        }
+        string res(len, '1');
+        int index = nums.size() - 1;
+        for (int i = 0; i < len; i += 2) {
+            res[i] = nums[index].second;
+            --nums[index].first;
+            if (nums[index].first == 0) {
+                --index;
+            }
+        }
+        for (int i = 1; i < len; i += 2) {
+            res[i] = nums[index].second;
+            --nums[index].first;
+            if (nums[index].first == 0) {
+                --index;
+            }
+        }
+        return res;
     }
 
 };
