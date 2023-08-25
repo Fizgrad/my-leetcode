@@ -547,6 +547,40 @@ public:
         return {res.rbegin(), res.rend()};
     }
 
+    bool isInterleave(const string &s1, const string &s2, const string &s3) {
+        int n = s1.size();
+        int m = s2.size();
+        int res_len = s3.size();
+        if (n + m != res_len) {
+            return false;
+        }
+        vector<vector<short>> dp(n, vector<short>(m, -1));
+        auto f = [&](auto &&f, int index1, int index2) -> int {
+            if (index1 == n && index2 == m) {
+                return 1;
+            } else if (index2 == m) {
+                return s3[index1 + index2] == s1[index1] && f(f, index1 + 1, index2);
+            } else if (index1 == n) {
+                return s3[index1 + index2] == s2[index2] && f(f, index1, index2 + 1);
+            } else {
+                if (dp[index1][index2] != -1) {
+                    return dp[index1][index2];
+                } else {
+                    int res = false;
+                    if (s3[index1 + index2] == s1[index1]) {
+                        res |= f(f, index1 + 1, index2);
+                    }
+                    if (s3[index1 + index2] == s2[index2]) {
+                        res |= f(f, index1, index2 + 1);
+                    }
+                    return dp[index1][index2] = res;
+                }
+            }
+
+        };
+        return f(f, 0, 0);
+    }
+
 };
 
 int main() {
