@@ -581,6 +581,35 @@ public:
         return f(f, 0, 0);
     }
 
+    int findLongestChain(vector<vector<int>> &pairs) {
+        sort(pairs.begin(), pairs.end());
+        int n = pairs.size();
+        vector<int> dp(n, -1);
+        auto f = [&](auto &&f, int index) {
+            if (index >= n) {
+                return 0;
+            }
+            if (index == n - 1) {
+                return 1;
+            }
+            if (dp[index] != -1) {
+                return dp[index];
+            }
+            int res = 1;
+            for (int i = index + 1; i < n; ++i) {
+                if (pairs[i][0] > pairs[index][1]) {
+                    res = max(res, 1 + f(f, i));
+                }
+            }
+            return dp[index] = res;
+        };
+        int res = 1;
+        for (int i = 0; i < n; ++i) {
+            res = max(res, f(f, i));
+        }
+        return res;
+    }
+
 };
 
 int main() {
