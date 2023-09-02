@@ -618,6 +618,34 @@ public:
         return res;
     }
 
+    int minTaps(int n, vector<int> &ranges) {
+        vector<int> a(n + 1, -1);
+        for (int i = 0; i < ranges.size(); ++i) {
+            int low = i - ranges[i];
+            int high = i + ranges[i];
+            if (low < 0) {
+                a[0] = max(a[0], high);
+            } else {
+                a[low] = max(a[low], high);
+            }
+        }
+        int res = 0;
+        int reach = 0;
+        int max_range = 0;
+        for (int i = 0; i < n + 1; ++i) {
+            if (i >= reach) {
+                if (i > max_range) {
+                    return -1;
+                } else if (i < n) {
+                    ++res;
+                    reach = max(a[i], max_range);
+                }
+            }
+            max_range = max(max_range, a[i]);
+        }
+        return res;
+    }
+
 };
 
 int main() {
