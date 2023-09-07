@@ -690,6 +690,35 @@ public:
         return virtual_node->next;
     }
 
+    bool hasCycle(ListNode *head) {
+        if (!head) {
+            return false;
+        }
+        auto fast = head;
+        auto slow = head;
+        do {
+            slow = slow->next;
+            if (fast)
+                fast = fast->next;
+            else
+                return false;
+            if (fast)
+                fast = fast->next;
+            else
+                return false;
+
+        } while (fast != slow);
+
+//        int res = 0;
+//        fast = head;
+//        while (fast != slow) {
+//            slow = slow->next;
+//            fast = fast->next;
+//            ++res;
+//        }
+        return true;
+    }
+
 };
 
 int main() {
