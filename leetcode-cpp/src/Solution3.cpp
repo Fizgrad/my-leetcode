@@ -719,6 +719,25 @@ public:
         return true;
     }
 
+    int bestClosingTime(const string &customers) {
+        int n = customers.size();
+        vector<int> prefix(n, 0);
+        prefix[0] = (customers[0] == 'Y');
+        for (int i = 1; i < n; ++i) {
+            prefix[i] = prefix[i - 1] + (customers[i] == 'Y');
+        }
+        int closed = 0;
+        int min_cost = prefix.back();
+        for (int i = 0; i < n; ++i) {
+            int cost = (i + 1) - prefix[i] + prefix.back() - prefix[i];
+            if (cost < min_cost) {
+                closed = i + 1;
+                min_cost = cost;
+            }
+        }
+        return closed;
+    }
+
 };
 
 int main() {
