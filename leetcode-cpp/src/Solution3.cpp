@@ -651,8 +651,45 @@ public:
         for (int i = 1; i <= m - 1; ++i) {
             ans = ans * (n - 1 + i) / i;
         }
-        return (int)ans;
+        return (int) ans;
     }
+
+    ListNode *reverseBetween(ListNode *head, int left, int right) {
+        if (left == right) {
+            return head;
+        }
+        auto virtual_node = new ListNode(0);
+        virtual_node->next = head;
+        auto at = [&](int index) -> ListNode * {
+            auto res = virtual_node;
+            while (index--) {
+                res = res->next;
+            }
+            return res;
+        };
+        auto left_left = at(left - 1);
+        auto right_right = at(right + 1);
+        auto left_pt = at(left);
+        auto right_pt = at(right);
+
+
+        auto next_pt = left_pt->next;
+        auto next_next_pt = left_pt->next->next;
+        auto pt = left_pt;
+        while (pt != right_pt) {
+            next_pt->next = pt;
+            pt = next_pt;
+            next_pt = next_next_pt;
+            if (next_next_pt)
+                next_next_pt = next_next_pt->next;
+        }
+
+        left_left->next = right_pt;
+        left_pt->next = right_right;
+
+        return virtual_node->next;
+    }
+
 };
 
 int main() {
