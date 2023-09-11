@@ -738,6 +738,20 @@ public:
         return closed;
     }
 
+    vector<vector<int>> groupThePeople(vector<int> &groupSizes) {
+        int n = groupSizes.size();
+        vector<vector<int>> res;
+        unordered_map<int, vector<int>> hm;
+        for (int i = 0; i < n; ++i) {
+            hm[groupSizes[i]].push_back(i);
+            if (hm[groupSizes[i]].size() == groupSizes[i]) {
+                res.push_back(hm[groupSizes[i]]);
+                hm[groupSizes[i]] = vector<int>();
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
