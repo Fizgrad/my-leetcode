@@ -752,6 +752,32 @@ public:
         return res;
     }
 
+    int minDeletions(const string &s) {
+        vector<int> freq('z' - 'a' + 1, 0);
+        for (auto c: s) {
+            ++freq[c - 'a'];
+        }
+        std::sort(freq.begin(), freq.end(), greater<>());
+        int res = 0;
+        int prev = 100000000;
+        for (auto i: freq) {
+            if (i == 0) {
+                return res;
+            }
+            if (prev == 0) {
+                res += i;
+            } else {
+                if (prev <= i) {
+                    res += i - (prev - 1);
+                    prev = prev - 1;
+                } else {
+                    prev = i;
+                }
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
