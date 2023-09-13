@@ -778,6 +778,48 @@ public:
         return res;
     }
 
+    int candy(vector<int> &ratings) {
+        int n = ratings.size();
+
+        if (n == 1) {
+            return ratings.size();
+        }
+        vector<int> res(n, 0);
+        auto dfs = [&](auto &&dfs, int count, int index) {
+
+            int dx[2] = {1, -1};
+            if (count < res[index]) {
+                return;
+            } else {
+                res[index] = count;
+            }
+            for (int i = 0; i < 2; ++i) {
+                int x = dx[i] + index;
+                if (x >= 0 && x < n && ratings[index] < ratings[x]) {
+                    dfs(dfs, count + 1, x);
+                }
+            }
+        };
+        if (ratings[0] <= ratings[1]) {
+            dfs(dfs, 1, 0);
+        }
+        if (ratings[n - 1] <= ratings[n - 2]) {
+            dfs(dfs, 1, n - 1);
+        }
+        for (int i = 1; i < n - 1; ++i) {
+            if (ratings[i] <= ratings[i - 1] && ratings[i] <= ratings[i + 1]) {
+                res[i] = 1;
+                dfs(dfs, 1, i);
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            ans += res[i];
+        }
+        return ans;
+    }
+
 };
 
 int main() {
