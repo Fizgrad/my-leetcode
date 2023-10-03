@@ -918,6 +918,34 @@ public:
         return -1;
     }
 
+    int findDuplicate(vector<int> &nums) {
+        int n = nums.size();
+        int fast = 0;
+        int slow = 0;
+
+        do {
+            slow = nums[slow];
+            fast = nums[fast];
+            fast = nums[fast];
+        } while (fast != slow);
+        fast = 0;
+        do {
+            slow = nums[slow];
+            fast = nums[fast];
+        } while (fast != slow);
+        return slow;
+    }
+
+    int numIdenticalPairs(vector<int> &nums) {
+        vector<int> size(101, 0);
+        int res = 0;
+        for (auto i: nums) {
+            res += size[i];
+            ++size[i];
+        }
+        return res;
+    }
+
 };
 
 int main() {
