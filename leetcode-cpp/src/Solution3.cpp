@@ -946,6 +946,20 @@ public:
         return res;
     }
 
+    int findContentChildren(vector<int> &g, vector<int> &s) {
+        std::sort(g.begin(), g.end());
+        std::sort(s.begin(), s.end());
+        int res = 0;
+        auto j = g.rbegin();
+        for (auto i = s.rbegin(); i != s.rend() && j != g.rend(); ++j) {
+            if (*i >= *j) {
+                ++res;
+                ++i;
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
