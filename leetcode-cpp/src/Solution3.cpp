@@ -960,6 +960,21 @@ public:
         return res;
     }
 
+    vector <vector<int>> findMatrix(vector<int> &nums) {
+        vector<int> times(201, 0);
+        vector <vector<int>> res(0);
+        int size = 0;
+        for (auto i: nums) {
+            if (size == times[i]) {
+                res.emplace_back(0);
+                ++size;
+            }
+            res[times[i]].push_back(i);
+            ++times[i];
+
+        }
+        return res;
+    }
 };
 
 int main() {
