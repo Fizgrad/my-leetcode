@@ -975,6 +975,31 @@ public:
         }
         return res;
     }
+
+    int numberOfBeams(vector <string> &bank) {
+        auto Count = [](const std::string &line) -> int {
+            return std::accumulate(line.begin(), line.end(), 0,
+                                   [](int acc, char ch) -> int { return acc + (ch == '1' ? 1 : 0); });
+        };
+
+        int totalBeams = 0, previousCount = 0, isFirst = 1;
+        std::for_each(bank.begin(), bank.end(),
+                      [&](const std::string &row) {
+                          if (!isFirst) {
+                              int currentCount = Count(row);
+                              if (currentCount) {
+                                  totalBeams += previousCount * currentCount;
+                                  previousCount = currentCount;
+                              }
+                          } else {
+                              previousCount = Count(row);
+                              isFirst = 0;
+                          }
+                      }
+        );
+
+        return totalBeams;
+    }
 };
 
 int main() {
