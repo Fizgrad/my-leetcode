@@ -1000,6 +1000,19 @@ public:
 
         return totalBeams;
     }
+
+    int minOperations(vector<int> &nums) {
+        unordered_map<int, int> times;
+        int res = 0;
+        std::for_each(nums.begin(), nums.end(), [&](int i) -> void { ++times[i]; });
+        for (auto [_, i]: times) {
+            if (i == 1) {
+                return -1;
+            }
+            res += (i + 2) / 3;
+        }
+        return res;
+    }
 };
 
 int main() {
