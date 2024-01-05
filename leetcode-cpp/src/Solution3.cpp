@@ -1013,6 +1013,37 @@ public:
         }
         return res;
     }
+
+    int lengthOfLIS(vector<int> &nums) {
+        vector<int> subsequence;
+        auto f = [&](int key) -> int {
+            int i = 0;
+            int j = subsequence.size();
+            int ans = j;
+            while (j >= i) {
+                int mid = (i + j) >> 1;
+                if (subsequence[mid] > key) {
+                    ans = mid;
+                    j = mid - 1;
+                } else if (subsequence[mid] == key) {
+                    return mid;
+                } else {
+                    i = mid + 1;
+                }
+            }
+            return ans;
+        };
+        for (auto i: nums) {
+            if (subsequence.empty() || i > subsequence.back()) {
+                subsequence.push_back(i);
+                continue;
+            }
+            auto index = f(i);
+            subsequence[index] = i;
+        }
+        return subsequence.size();
+    }
+
 };
 
 int main() {
