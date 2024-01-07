@@ -1080,6 +1080,21 @@ public:
         }
         return dp[0];
     }
+
+    int numberOfArithmeticSlices(vector<int> &nums) {
+        int n = nums.size();
+        int res = 0;
+        vector <unordered_map<int64_t, int>> dp(n);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                int64_t dif = nums[i] - nums[j];
+                res += dp[j][dif];
+                dp[i][dif] += dp[j][dif] + 1;
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
