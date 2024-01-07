@@ -1044,6 +1044,42 @@ public:
         return subsequence.size();
     }
 
+    int jobScheduling(vector<int> &startTime, vector<int> &endTime, vector<int> &profit) {
+        int n = startTime.size();
+        vector <tuple<int, int, int >> inputs(n);
+        for (int i = 0; i < n; ++i) {
+            inputs[i] = std::make_tuple(startTime[i], endTime[i], profit[i]);
+        }
+        std::sort(inputs.begin(), inputs.end());
+        vector<int> dp(n + 1, 0);
+        auto f = [&](int end_time) -> int {
+            int i = 0;
+            int j = n - 1;
+            int ans = -1;
+            while (i <= j) {
+                int mid = (i + j) >> 1;
+                if (get<0>(inputs[mid]) > end_time) {
+                    j = mid - 1;
+                    ans = mid;
+                } else if (get<0>(inputs[mid]) == end_time) {
+                    j = mid - 1;
+                    ans = mid;
+                } else {
+                    i = mid + 1;
+                }
+            }
+            return ans;
+        };
+        for (int i = n - 1; i >= 0; --i) {
+            int index = f(get<1>(inputs[i]));
+            if (index == -1) {
+                dp[i] = max(dp[i + 1], get<2>(inputs[i]));
+            } else {
+                dp[i] = max(dp[i + 1], get<2>(inputs[i]) + dp[index]);
+            }
+        }
+        return dp[0];
+    }
 };
 
 int main() {
