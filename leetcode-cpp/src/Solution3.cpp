@@ -1095,6 +1095,27 @@ public:
         return res;
     }
 
+    int rangeSumBST(TreeNode *root, int low, int high) {
+        auto sumSubTree = [&](auto &&sumSubTree, TreeNode *node, int low, int high) -> int {
+            int res = 0;
+            if (node == nullptr) {
+                return res;
+            }
+            int val = node->val;
+            if (val >= low && val <= high) {
+                res += val;
+                res += sumSubTree(sumSubTree, node->left, low, high);
+                res += sumSubTree(sumSubTree, node->right, low, high);
+            } else if (val > high) {
+                res += sumSubTree(sumSubTree, node->left, low, high);
+            } else if (val < low) {
+                res += sumSubTree(sumSubTree, node->right, low, high);
+            }
+            return res;
+        };
+        return sumSubTree(sumSubTree, root, low, high);
+    }
+
 };
 
 int main() {
