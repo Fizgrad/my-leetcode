@@ -1116,6 +1116,24 @@ public:
         return sumSubTree(sumSubTree, root, low, high);
     }
 
+    bool leafSimilar(TreeNode *root1, TreeNode *root2) {
+        auto f = [](auto &&f, TreeNode *root, vector<int> &num) {
+            if (root == nullptr) {
+                return;
+            }
+            if (root->left == nullptr && root->right == nullptr) {
+                num.push_back(root->val);
+            }
+            f(f, root->left, num);
+            f(f, root->right, num);
+        };
+        vector<int> num1;
+        vector<int> num2;
+        f(f, root1, num1);
+        f(f, root2, num2);
+        return num1.size() == num2.size() && std::equal(num1.begin(), num1.end(), num2.begin(), num2.end());
+    }
+
 };
 
 int main() {
