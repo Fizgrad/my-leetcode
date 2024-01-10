@@ -1134,6 +1134,40 @@ public:
         return num1.size() == num2.size() && std::equal(num1.begin(), num1.end(), num2.begin(), num2.end());
     }
 
+    int amountOfTime(TreeNode *root, int start) {
+        int ans = 0;
+        auto f = [&](auto &&f, TreeNode *node, bool encounterStart, int len) -> pair<int, bool> {
+            if (node == nullptr) {
+                return {0, 0};
+            }
+            if (node->val == start) {
+                f(f, node->left, true, 1);
+                f(f, node->right, true, 1);
+                return {1, 1};
+            }
+            if (encounterStart) {
+                ans = max(ans, len);
+                f(f, node->left, true, len + 1);
+                f(f, node->right, true, len + 1);
+                return {0, 1};
+            } else {
+                pair<int, bool> left = f(f, node->left, encounterStart, len + 1);
+                pair<int, bool> right = f(f, node->right, encounterStart, len + 1);
+                if (left.second) {
+                    ans = max(ans, left.first + right.first);
+                    return {left.first + 1, 1};
+                } else if (right.second) {
+                    ans = max(ans, left.first + right.first);
+                    return {right.first + 1, 1};
+                } else {
+                    return {max(left.first, right.first) + 1, 0};
+                }
+            }
+        };
+        f(f, root, false, 0);
+        return ans;
+    }
+
 };
 
 int main() {
