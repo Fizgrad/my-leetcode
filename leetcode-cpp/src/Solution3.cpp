@@ -1168,6 +1168,19 @@ public:
         return ans;
     }
 
+    int maxAncestorDiff(TreeNode *root) {
+        int ans = 0;
+        auto dfs = [&](auto &&dfs, TreeNode *node, int max_num, int min_num) {
+            if (!node)return;
+            max_num = max(max_num, node->val);
+            min_num = min(min_num, node->val);
+            ans = max(ans, std::abs(max_num - min_num));
+            dfs(dfs, node->left, max_num, min_num);
+            dfs(dfs, node->right, max_num, min_num);
+        };
+        dfs(dfs, root, root->val, root->val);
+        return ans;
+    }
 };
 
 int main() {
