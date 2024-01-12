@@ -1181,6 +1181,23 @@ public:
         dfs(dfs, root, root->val, root->val);
         return ans;
     }
+
+    bool halvesAreAlike(const string &s) {
+        int sum = 0;
+        auto i = 0;
+        for (; i < s.size() >> 1; ++i) {
+            if (s[i] == 'a' || s[i] == 'e' || s[i] == 'i' || s[i] == 'o' || s[i] == 'u' || s[i] == 'A' || s[i] == 'E' ||
+                s[i] == 'I' || s[i] == 'O' || s[i] == 'U')
+                ++sum;
+        }
+        for (; i < s.size(); ++i) {
+            if (s[i] == 'a' || s[i] == 'e' || s[i] == 'i' || s[i] == 'o' || s[i] == 'u' || s[i] == 'A' || s[i] == 'E' ||
+                s[i] == 'I' || s[i] == 'O' || s[i] == 'U')
+                --sum;
+        }
+        return !sum;
+    }
+
 };
 
 int main() {
