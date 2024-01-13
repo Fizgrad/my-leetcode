@@ -1198,6 +1198,21 @@ public:
         return !sum;
     }
 
+    int minSteps(const string &s, const string &t) {
+        int res = 0;
+        int nums[26] = {0};
+        for (auto i: s) {
+            ++nums[i - 'a'];
+        }
+        for (auto i: t) {
+            --nums[i - 'a'];
+        }
+        for (auto i: nums) {
+            res += (i > 0 ? i : 0);
+        }
+        return res;
+    }
+
 };
 
 int main() {
