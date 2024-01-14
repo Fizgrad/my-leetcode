@@ -1213,6 +1213,35 @@ public:
         return res;
     }
 
+    bool closeStrings(const string &word1, const string &word2) {
+        if (word2.size() != word1.size()) {
+            return false;
+        }
+        int nums1[26] = {0};
+        int nums2[26] = {0};
+        for (auto i: word1) {
+            ++nums1[i - 'a'];
+        }
+        for (auto i: word2) {
+            ++nums2[i - 'a'];
+        }
+        for (int i = 0; i < 26; ++i) {
+            if ((nums1[i] > 0 && nums2[i] == 0) || (nums2[i] > 0 && nums1[i] == 0)) {
+                return false;
+            }
+        }
+        unordered_map<int, int> num_times;
+        for (auto i: nums1) {
+            ++num_times[i];
+        }
+        for (auto i: nums2) {
+            --num_times[i];
+        }
+        return std::all_of(num_times.begin(), num_times.end(), [](auto i) {
+            return i.second == 0;
+        });
+    }
+
 };
 
 int main() {
