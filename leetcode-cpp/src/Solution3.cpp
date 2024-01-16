@@ -1242,6 +1242,29 @@ public:
         });
     }
 
+    vector <vector<int>> findWinners(vector <vector<int>> &matches) {
+        vector <vector<int>> answer(2);
+        unordered_set<int> all;
+        unordered_map<int, int> lost;
+        for (auto &i: matches) {
+            all.insert(i[0]);
+            all.insert(i[1]);
+            ++lost[i[1]];
+        }
+        for (auto i: all) {
+            if (lost.find(i) == lost.end()) {
+                answer[0].push_back(i);
+            }
+        }
+        for (auto [i, t]: lost) {
+            if (t == 1) {
+                answer[1].push_back(i);
+            }
+        }
+        std::sort(answer[0].begin(), answer[0].end());
+        std::sort(answer[1].begin(), answer[1].end());
+        return answer;
+    }
 };
 
 int main() {
