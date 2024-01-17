@@ -1265,6 +1265,22 @@ public:
         std::sort(answer[1].begin(), answer[1].end());
         return answer;
     }
+
+    bool uniqueOccurrences(vector<int> &arr) {
+        unordered_map<int, int> map;
+        for (auto i: arr) {
+            map[i] += 1;
+        }
+        unordered_set<int> set;
+        for (auto [i, time]: map) {
+            if (set.find(time) == set.end()) {
+                set.insert(time);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
