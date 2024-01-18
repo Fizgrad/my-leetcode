@@ -1281,6 +1281,26 @@ public:
         }
         return true;
     }
+
+    int climbStairs(int n) {
+        unordered_map<int, int> res;
+        auto f = [&](auto &&f, int n) -> int {
+            if (n <= 0) {
+                return 0;
+            }
+            if (n == 1) {
+                return 1;
+            }
+            if (n == 2) {
+                return 2;
+            }
+            if (res.find(n) != res.end()) {
+                return res[n];
+            }
+            return res[n] = f(f, n - 1) + f(f, n - 2);
+        };
+        return f(f, n);
+    }
 };
 
 int main() {
