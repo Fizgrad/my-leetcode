@@ -1301,6 +1301,21 @@ public:
         };
         return f(f, n);
     }
+
+    int minFallingPathSum(vector <vector<int>> &matrix) {
+        int n = matrix.size();
+        vector <vector<int>> dp(2, vector<int>(n, 0));
+        for (int i = 0; i < n; ++i) {
+            vector<int> &res = dp[i % 2];
+            vector<int> &prev = dp[1 - i % 2];
+            for (int j = 0; j < n; ++j) {
+                res[j] = prev[j] + matrix[i][j];
+                if (j > 0) res[j] = min(res[j], prev[j - 1] + matrix[i][j]);
+                if (j + 1 < n) res[j] = min(res[j], prev[j + 1] + matrix[i][j]);
+            }
+        }
+        return *std::min_element(dp[(n - 1) % 2].begin(), dp[(n - 1) % 2].end());
+    }
 };
 
 int main() {
