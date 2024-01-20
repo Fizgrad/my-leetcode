@@ -1316,6 +1316,38 @@ public:
         }
         return *std::min_element(dp[(n - 1) % 2].begin(), dp[(n - 1) % 2].end());
     }
+
+    int sumSubarrayMins(vector<int> &arr) {
+        constexpr int Mod = 1000000000 + 7;
+        int res = 0;
+        auto updateRes = [&](long long num) {
+            res = (res + num % Mod) % Mod;
+        };
+        int n = arr.size();
+        stack <pair<int, int>> stack;
+        for (int i = 0; i < n; ++i) {
+            if (stack.empty()) {
+                stack.emplace(arr[i], i);
+            } else {
+                while (stack.size() && arr[stack.top().second] >= arr[i]) {
+                    auto [num, index] = stack.top();
+                    stack.pop();
+                    updateRes((i - index) * num);
+                }
+                if (stack.empty()) {
+                    stack.emplace(arr[i] * static_cast<long long> (i + 1) % Mod, i);
+                } else {
+                    stack.emplace(arr[i] * static_cast<long long> (i - stack.top().second ) % Mod, i);
+                }
+            }
+        }
+        while (stack.size()) {
+            auto [num, index] = stack.top();
+            stack.pop();
+            updateRes(static_cast<long long> (n - index) % Mod * num);
+        }
+        return res;
+    }
 };
 
 int main() {
