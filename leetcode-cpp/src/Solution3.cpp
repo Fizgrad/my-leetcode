@@ -74,7 +74,7 @@ struct Trie {
 
 class Solution {
 public:
-    vector <string> letterCombinations(const string &digits) {
+    vector<string> letterCombinations(const string &digits) {
         if (digits.empty()) {
             return {};
         }
@@ -88,8 +88,8 @@ public:
                                           {'8', "tuv"},
                                           {'9', "wxyz"},
                                           {'0', ""}};
-        vector <string> next = {""};
-        vector <string> temp;
+        vector<string> next = {""};
+        vector<string> temp;
         for (auto i: digits) {
             for (auto c: chars[i]) {
                 for (auto k: next) {
@@ -103,13 +103,13 @@ public:
         return next;
     }
 
-    bool wordBreak(const string &s, vector <string> &wordDict) {
+    bool wordBreak(const string &s, vector<string> &wordDict) {
         Trie trie;
         for (auto &i: wordDict) {
             trie.add(i);
         }
         int n = s.size();
-        vector <vector<int >> dp(n, vector<int>(n, -1));
+        vector<vector<int >> dp(n, vector<int>(n, -1));
         auto f = [&](auto &&f, int i, int j) {
             if (dp[i][j] != -1) {
                 return dp[i][j];
@@ -129,45 +129,45 @@ public:
     }
 
     vector<TreeNode *> generateTrees(int n) {
-        vector < vector < vector < TreeNode *>>> dp(n + 1,
-                                                    vector < vector < TreeNode * >> (n + 1, vector<TreeNode *>()));
-        auto f = [&](auto &&f, int low, int high) -> vector < TreeNode * > {
-                if (low > high) {
-                    return {};
-                }
-                if (low == high) {
-                    return {new TreeNode(low)};
-                }
-                if (!dp[low][high].empty())
+        vector<vector<vector<TreeNode *>>> dp(n + 1,
+                                              vector<vector<TreeNode * >>(n + 1, vector<TreeNode *>()));
+        auto f = [&](auto &&f, int low, int high) -> vector<TreeNode *> {
+            if (low > high) {
+                return {};
+            }
+            if (low == high) {
+                return {new TreeNode(low)};
+            }
+            if (!dp[low][high].empty())
                 return dp[low][high];
-                else {
-                    vector < TreeNode * > res;
-                    for (int k = low; k <= high; ++k) {
-                        auto left = f(f, low, k - 1);
-                        auto right = f(f, k + 1, high);
-                        if (left.empty()) {
-                            for (auto j: right) {
-                                res.emplace_back(new TreeNode(k, nullptr, j));
-                            }
-                        }
-                        if (right.empty()) {
-                            for (auto i: left) {
-                                res.emplace_back(new TreeNode(k, i, nullptr));
-                            }
-                        }
-                        for (auto i: left) {
-                            for (auto j: right) {
-                                res.emplace_back(new TreeNode(k, i, j));
-                            }
+            else {
+                vector<TreeNode *> res;
+                for (int k = low; k <= high; ++k) {
+                    auto left = f(f, low, k - 1);
+                    auto right = f(f, k + 1, high);
+                    if (left.empty()) {
+                        for (auto j: right) {
+                            res.emplace_back(new TreeNode(k, nullptr, j));
                         }
                     }
-                    return dp[low][high] = res;
+                    if (right.empty()) {
+                        for (auto i: left) {
+                            res.emplace_back(new TreeNode(k, i, nullptr));
+                        }
+                    }
+                    for (auto i: left) {
+                        for (auto j: right) {
+                            res.emplace_back(new TreeNode(k, i, j));
+                        }
+                    }
                 }
+                return dp[low][high] = res;
+            }
         };
         return f(f, 1, n);
     }
 
-    bool searchMatrix(vector <vector<int>> &matrix, int target) {
+    bool searchMatrix(vector<vector<int>> &matrix, int target) {
         int n = matrix.size();
         int m = matrix.begin()->size();
         int low = 0;
@@ -203,7 +203,7 @@ public:
     int numMusicPlaylists(int n, int goal, int k) {
         using ll = long long;
         const int MOD = 1e9 + 7;
-        vector <vector<int>> dp(n + 1, vector<int>(goal + 1, -1));
+        vector<vector<int>> dp(n + 1, vector<int>(goal + 1, -1));
         auto solve = [&](auto &&solve, int n, int goal, int k) -> ll {
             if (n == 0 && goal == 0) return 1;
             if (n == 0 || goal == 0) return 0;
@@ -252,7 +252,7 @@ public:
         return -1;
     }
 
-    long long maximumImportance(int n, vector <vector<int>> &roads) {
+    long long maximumImportance(int n, vector<vector<int>> &roads) {
         vector<int> degree(n, 0);
         for (auto &i: roads) {
             ++degree[i[0]];
@@ -342,7 +342,7 @@ public:
     }
 
     int change(int amount, vector<int> &coins) {
-        vector <vector<int>> cache(amount + 1, vector<int>(coins.size(), -1));
+        vector<vector<int>> cache(amount + 1, vector<int>(coins.size(), -1));
         auto f = [&](auto &&f, int money, int index) -> int {
             if (index >= coins.size() && money > 0) {
                 return 0;
@@ -367,7 +367,7 @@ public:
         return f(f, amount, 0);
     }
 
-    int uniquePathsWithObstacles(vector <vector<int>> &obstacleGrid) {
+    int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid) {
         int n = obstacleGrid.size();
         int m = obstacleGrid.begin()->size();
         vector<int> res(m, 0);
@@ -424,14 +424,14 @@ public:
         return *(nums.end() - k);
     }
 
-    vector <vector<int>> updateMatrix(vector <vector<int>> &mat) {
+    vector<vector<int>> updateMatrix(vector<vector<int>> &mat) {
         int n = mat.size();
         int m = mat.begin()->size();
 
-        vector <vector<int>> res(n, vector<int>(m, -1));
+        vector<vector<int>> res(n, vector<int>(m, -1));
         using coordinate = pair<int, int>;
-        vector <coordinate> next;
-        vector <coordinate> temp;
+        vector<coordinate> next;
+        vector<coordinate> temp;
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < m; ++j) {
                 if (mat[i][j] == 0) {
@@ -486,7 +486,7 @@ public:
 
     string reorganizeString(const string &s) {
         int len = s.size();
-        vector <pair<int, char>> nums('z' - 'a' + 1);
+        vector<pair<int, char>> nums('z' - 'a' + 1);
         for (int i = 0; i < 26; ++i) {
             nums[i] = pair<int, char>(0, 'a' + i);
         }
@@ -554,7 +554,7 @@ public:
         if (n + m != res_len) {
             return false;
         }
-        vector <vector<short>> dp(n, vector<short>(m, -1));
+        vector<vector<short>> dp(n, vector<short>(m, -1));
         auto f = [&](auto &&f, int index1, int index2) -> int {
             if (index1 == n && index2 == m) {
                 return 1;
@@ -581,7 +581,7 @@ public:
         return f(f, 0, 0);
     }
 
-    int findLongestChain(vector <vector<int>> &pairs) {
+    int findLongestChain(vector<vector<int>> &pairs) {
         sort(pairs.begin(), pairs.end());
         int n = pairs.size();
         vector<int> dp(n, -1);
@@ -738,9 +738,9 @@ public:
         return closed;
     }
 
-    vector <vector<int>> groupThePeople(vector<int> &groupSizes) {
+    vector<vector<int>> groupThePeople(vector<int> &groupSizes) {
         int n = groupSizes.size();
-        vector <vector<int>> res;
+        vector<vector<int>> res;
         unordered_map<int, vector<int>> hm;
         for (int i = 0; i < n; ++i) {
             hm[groupSizes[i]].push_back(i);
@@ -820,7 +820,7 @@ public:
         return ans;
     }
 
-    int minCostConnectPoints(vector <vector<int>> &points) {
+    int minCostConnectPoints(vector<vector<int>> &points) {
         int n = points.size();
         auto cal_dis = [&](int i, int j) {
             return ::abs(points[i][0] - points[j][0]) + ::abs(points[i][1] - points[j][1]);
@@ -854,7 +854,7 @@ public:
         };
 
         using dis_a_b = pair<int, pair<int, int>>;
-        vector <dis_a_b> data;
+        vector<dis_a_b> data;
         for (int i = 0; i < n; ++i) {
             for (int j = i + 1; j < n; ++j) {
                 int dis = cal_dis(i, j);
@@ -883,11 +883,11 @@ public:
         return res;
     }
 
-    int minimumEffortPath(vector <vector<int>> &heights) {
+    int minimumEffortPath(vector<vector<int>> &heights) {
         int rows = heights.size(), cols = heights[0].size();
-        vector <vector<int>> dist(rows, vector<int>(cols, INT_MAX));
-        priority_queue < tuple < int, int, int >, vector < tuple < int, int, int >>, greater<>>
-        minHeap;
+        vector<vector<int>> dist(rows, vector<int>(cols, INT_MAX));
+        priority_queue<tuple<int, int, int>, vector<tuple<int, int, int >>, greater<>>
+                minHeap;
         minHeap.emplace(0, 0, 0);
         dist[0][0] = 0;
 
@@ -960,9 +960,9 @@ public:
         return res;
     }
 
-    vector <vector<int>> findMatrix(vector<int> &nums) {
+    vector<vector<int>> findMatrix(vector<int> &nums) {
         vector<int> times(201, 0);
-        vector <vector<int>> res(0);
+        vector<vector<int>> res(0);
         int size = 0;
         for (auto i: nums) {
             if (size == times[i]) {
@@ -976,7 +976,7 @@ public:
         return res;
     }
 
-    int numberOfBeams(vector <string> &bank) {
+    int numberOfBeams(vector<string> &bank) {
         auto Count = [](const std::string &line) -> int {
             return std::accumulate(line.begin(), line.end(), 0,
                                    [](int acc, char ch) -> int { return acc + (ch == '1' ? 1 : 0); });
@@ -1046,7 +1046,7 @@ public:
 
     int jobScheduling(vector<int> &startTime, vector<int> &endTime, vector<int> &profit) {
         int n = startTime.size();
-        vector <tuple<int, int, int >> inputs(n);
+        vector<tuple<int, int, int >> inputs(n);
         for (int i = 0; i < n; ++i) {
             inputs[i] = std::make_tuple(startTime[i], endTime[i], profit[i]);
         }
@@ -1084,7 +1084,7 @@ public:
     int numberOfArithmeticSlices(vector<int> &nums) {
         int n = nums.size();
         int res = 0;
-        vector <unordered_map<int64_t, int>> dp(n);
+        vector<unordered_map<int64_t, int>> dp(n);
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < i; ++j) {
                 int64_t dif = nums[i] - nums[j];
@@ -1242,8 +1242,8 @@ public:
         });
     }
 
-    vector <vector<int>> findWinners(vector <vector<int>> &matches) {
-        vector <vector<int>> answer(2);
+    vector<vector<int>> findWinners(vector<vector<int>> &matches) {
+        vector<vector<int>> answer(2);
         unordered_set<int> all;
         unordered_map<int, int> lost;
         for (auto &i: matches) {
@@ -1302,9 +1302,9 @@ public:
         return f(f, n);
     }
 
-    int minFallingPathSum(vector <vector<int>> &matrix) {
+    int minFallingPathSum(vector<vector<int>> &matrix) {
         int n = matrix.size();
-        vector <vector<int>> dp(2, vector<int>(n, 0));
+        vector<vector<int>> dp(2, vector<int>(n, 0));
         for (int i = 0; i < n; ++i) {
             vector<int> &res = dp[i % 2];
             vector<int> &prev = dp[1 - i % 2];
@@ -1324,7 +1324,7 @@ public:
             res = (res + num % Mod) % Mod;
         };
         int n = arr.size();
-        stack <pair<int, int>> stack;
+        stack<pair<int, int>> stack;
         for (int i = 0; i < n; ++i) {
             if (stack.empty()) {
                 stack.emplace(arr[i], i);
@@ -1347,6 +1347,23 @@ public:
             updateRes(static_cast<long long> (n - index) % Mod * num);
         }
         return res;
+    }
+
+    int rob(vector<int> &nums) {
+        auto n = nums.size();
+        vector<int> dp(3, 0);
+        if (n == 0) {
+            return 0;
+        }
+        if (n == 1) {
+            return nums[0];
+        }
+        dp[0] = nums[0];
+        dp[1] = max(nums[0], nums[1]);
+        for (auto i = 2; i < n; ++i) {
+            dp[i % 3] = max(dp[(i - 1) % 3], dp[(i - 2) % 3] + nums[i]);
+        }
+        return dp[(n - 1) % 3];
     }
 };
 
