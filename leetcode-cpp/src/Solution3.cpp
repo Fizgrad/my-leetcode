@@ -1365,6 +1365,24 @@ public:
         }
         return dp[(n - 1) % 3];
     }
+
+    vector<int> findErrorNums(vector<int> &nums) {
+        auto n = nums.size();
+        int xor_sum = 0;
+        vector<int> times(n + 1, 0);
+        int rep = 0;
+        for (auto i: nums) {
+            xor_sum ^= i;
+            if (!rep && times[i] == 1) {
+                rep = i;
+            }
+            ++times[i];
+        }
+        for (int i = 0; i <= n; ++i) {
+            xor_sum ^= i;
+        }
+        return {rep, xor_sum ^ rep};
+    }
 };
 
 int main() {
