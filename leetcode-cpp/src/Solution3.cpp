@@ -1383,6 +1383,42 @@ public:
         }
         return {rep, xor_sum ^ rep};
     }
+
+    int maxLength(vector<string> &arr) {
+        for (auto &i: arr) {
+            vector<int> nums(26, 0);
+            for (auto j: i) {
+                if (nums[j - 'a']) {
+                    i = "";
+                    break;
+                }
+                nums[j - 'a'] += 1;
+            }
+        }
+        int res = 0;
+        vector<int> nums(26, 0);
+        auto n = arr.size();
+        auto f = [&](auto &&f, int index) -> void {
+            res = max(res, std::accumulate(nums.begin(), nums.end(), 0));
+            if (index >= n) return;
+            f(f, index + 1);
+            for (auto i: arr[index]) {
+                if (nums[i - 'a']) {
+                    return;
+                }
+            }
+            for (auto i: arr[index]) {
+                nums[i - 'a'] = 1;
+            }
+            f(f, index + 1);
+            for (auto i: arr[index]) {
+                nums[i - 'a'] = 0;
+            }
+        };
+        f(f, 0);
+        return res;
+    }
+
 };
 
 int main() {
