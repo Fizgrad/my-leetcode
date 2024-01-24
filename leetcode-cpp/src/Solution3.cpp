@@ -1419,6 +1419,20 @@ public:
         return res;
     }
 
+    int pseudoPalindromicPaths(TreeNode *root) {
+        vector<int> nums(10, 0);
+        int res = 0;
+        auto f = [&](auto &&f, TreeNode *node) {
+            if (node == nullptr) return;
+            nums[node->val] = 1 - nums[node->val];
+            if (node->left) f(f, node->left);
+            if (node->right) f(f, node->right);
+            if (!node->left && !node->right && std::accumulate(nums.begin(), nums.end(), 0) <= 1) ++res;
+            nums[node->val] = 1 - nums[node->val];
+        };
+        f(f, root);
+        return res;
+    }
 };
 
 int main() {
