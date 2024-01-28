@@ -1433,6 +1433,91 @@ public:
         f(f, root);
         return res;
     }
+
+    int longestCommonSubsequence(const string &text1, const string &text2) {
+        auto n = text1.size();
+        auto m = text2.size();
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= m; ++j) {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                if (text2[j - 1] == text1[i - 1]) {
+                    dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + 1);
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
+    int findPaths(int m, int n, int N, int x, int y) {
+        const int M = 1000000000 + 7;
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+        dp[x][y] = 1;
+        int count = 0;
+
+        for (int moves = 1; moves <= N; moves++) {
+            vector<vector<int>> temp(m, vector<int>(n, 0));
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i == m - 1) count = (count + dp[i][j]) % M;
+                    if (j == n - 1) count = (count + dp[i][j]) % M;
+                    if (i == 0) count = (count + dp[i][j]) % M;
+                    if (j == 0) count = (count + dp[i][j]) % M;
+                    temp[i][j] = (((i > 0 ? dp[i - 1][j] : 0) + (i < m - 1 ? dp[i + 1][j] : 0)) % M +
+                                  ((j > 0 ? dp[i][j - 1] : 0) + (j < n - 1 ? dp[i][j + 1] : 0)) % M) % M;
+                }
+            }
+            dp = temp;
+        }
+        return count;
+    }
+
+    int kInversePairs(int n, int k) {
+        const int MOD = 1000000007;
+        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(k + 1, 0));
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 0; j <= k; ++j) {
+                if (j == 0) {
+                    dp[i][j] = 1;
+                } else {
+                    int val = (dp[i - 1][j] + MOD - (j - i >= 0 ? dp[i - 1][j - i] : 0)) % MOD;
+                    dp[i][j] = (dp[i][j - 1] + val) % MOD;
+                }
+            }
+        }
+        return (dp[n][k] + MOD - (k > 0 ? dp[n][k - 1] : 0)) % MOD;
+    }
+
+    int numSubmatrixSumTarget(vector<vector<int>>& matrix, int target)
+    {
+        int ans = 0;
+        int n = matrix.size(), m = matrix[0].size();
+        for(int left = 0 ; left < m ; left++)
+        {
+            vector<int>pre(n, 0);
+            for(int right = left ; right < m ; right++)
+            {
+                for(int i = 0 ; i<n; i++)
+                {
+                    pre[i] += matrix[i][right];
+                }
+
+                for(int i = 0 ; i<n;i++)
+                {
+                    int sum = 0;
+                    for(int j = i ; j<n; j++)
+                    {
+                        sum += pre[j];
+                        if(sum == target)
+                        {
+                            ans += 1;
+                        }
+                    }
+                }
+            }
+        }
+        return ans;
+    }
 };
 
 int main() {
