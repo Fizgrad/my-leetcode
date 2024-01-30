@@ -1488,28 +1488,21 @@ public:
         return (dp[n][k] + MOD - (k > 0 ? dp[n][k - 1] : 0)) % MOD;
     }
 
-    int numSubmatrixSumTarget(vector<vector<int>>& matrix, int target)
-    {
+    int numSubmatrixSumTarget(vector<vector<int>> &matrix, int target) {
         int ans = 0;
         int n = matrix.size(), m = matrix[0].size();
-        for(int left = 0 ; left < m ; left++)
-        {
-            vector<int>pre(n, 0);
-            for(int right = left ; right < m ; right++)
-            {
-                for(int i = 0 ; i<n; i++)
-                {
+        for (int left = 0; left < m; left++) {
+            vector<int> pre(n, 0);
+            for (int right = left; right < m; right++) {
+                for (int i = 0; i < n; i++) {
                     pre[i] += matrix[i][right];
                 }
 
-                for(int i = 0 ; i<n;i++)
-                {
+                for (int i = 0; i < n; i++) {
                     int sum = 0;
-                    for(int j = i ; j<n; j++)
-                    {
+                    for (int j = i; j < n; j++) {
                         sum += pre[j];
-                        if(sum == target)
-                        {
+                        if (sum == target) {
                             ans += 1;
                         }
                     }
@@ -1518,6 +1511,40 @@ public:
         }
         return ans;
     }
+
+    int evalRPN(vector<string> &tokens) {
+        vector<int> stack;
+        stack.push_back(0);
+        for (auto &i: tokens) {
+            if (i.size() == 1 && (i[0] < '0' || i[0] > '9')) {
+                int a = stack.back();
+                stack.pop_back();
+                int b = stack.back();
+                stack.pop_back();
+                switch (i[0]) {
+                    case '+':
+                        stack.push_back(a + b);
+                        break;
+                    case '-':
+                        stack.push_back(b - a);
+                        break;
+                    case '*':
+                        stack.push_back(a * b);
+                        break;
+                    case '/':
+                        stack.push_back(b / a);
+                        break;
+                }
+            } else if (std::all_of(i.begin(), i.end(), [&](const auto &item) {
+                return (item >= '0' && item <= '9') || item == '-';
+            })) {
+                stack.push_back(stoi(i));
+                continue;
+            }
+        }
+        return stack.back();
+    }
+
 };
 
 int main() {
