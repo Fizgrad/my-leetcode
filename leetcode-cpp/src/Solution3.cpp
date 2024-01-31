@@ -1545,6 +1545,25 @@ public:
         return stack.back();
     }
 
+    vector<int> dailyTemperatures(vector<int> &temperatures) {
+        auto n = temperatures.size();
+        vector<int> ans(n, 0);
+        stack<pair<int, int>> s;
+        for (auto i = 0; i < n; ++i) {
+            if (s.empty() || temperatures[i] <= s.top().first) {
+                s.emplace(temperatures[i], i);
+            } else {
+                while (!s.empty() && temperatures[i] > s.top().first) {
+                    auto [top_t, top_i] = s.top();
+                    s.pop();
+                    ans[top_i] = i - top_i;
+                }
+                s.emplace(temperatures[i], i);
+            }
+        }
+        return ans;
+    }
+
 };
 
 int main() {
