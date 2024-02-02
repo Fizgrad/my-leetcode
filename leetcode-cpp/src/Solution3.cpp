@@ -1577,6 +1577,29 @@ public:
         return ans;
     }
 
+    vector<int> sequentialDigits(int low, int high) {
+        vector<int> ans;
+        for (int len = 2; len <= 9; ++len) {
+            for (int k = 1; k <= 10 - len; ++k) {
+                int num = 0;
+                int j = k;
+                for (int i = 0; i < len; ++i) {
+                    num *= 10;
+                    num += j;
+                    ++j;
+                }
+                if (num >= low) {
+                    if (num <= high) {
+                        ans.push_back(num);
+                    } else {
+                        return ans;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+
 };
 
 int main() {
