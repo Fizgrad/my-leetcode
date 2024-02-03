@@ -1600,6 +1600,25 @@ public:
         return ans;
     }
 
+    int maxSumAfterPartitioning(vector<int> &arr, int k) {
+        int n = arr.size();
+        vector<int> dp(n, -1);
+        auto f = [&](auto &&f, int last_index) {
+            if (dp[last_index] != -1)
+                return dp[last_index];
+            if (last_index < k) {
+                return dp[last_index] = (last_index + 1) * (*max_element(arr.begin(), arr.begin() + last_index + 1));
+            }
+            int res = 0;
+            for (int i = 1; i <= k; ++i) {
+                res = max(f(f, last_index - i) +
+                          (i) * (*max_element(arr.begin() + last_index - i + 1, arr.begin() + last_index + 1)), res);
+            }
+            return dp[last_index] = res;
+        };
+        return f(f, n - 1);
+    }
+
 };
 
 int main() {
