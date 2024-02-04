@@ -1619,6 +1619,51 @@ public:
         return f(f, n - 1);
     }
 
+    string minWindow(const string &s, const string &t) {
+        auto i = s.begin();
+        auto j = i;
+        vector<int> nums('z' - 'A' + 1, 0);
+        for (auto c: t) {
+            ++nums[c - 'A'];
+        }
+        int res = INT32_MAX >> 1;
+        auto res_start = s.begin();
+        auto res_end = s.begin();
+        while (j <= s.end()) {
+            bool flag = false;
+            if (std::all_of(nums.begin(), nums.end(), [&](const auto &item) {
+                return item <= 0;
+            })) {
+                flag = true;
+                if (res > static_cast<int>( j - i )) {
+                    res_start = i;
+                    res_end = j;
+                    res = static_cast<int>( j - i );
+                }
+            }
+            if (i < j && j == s.end()) {
+                ++nums[*i - 'A'];
+                ++i;
+                continue;
+            }
+            if (j == i) {
+                if (j == s.end()) break;
+                --nums[*j - 'A'];
+                ++j;
+                continue;
+            }
+            if (flag) {
+                ++nums[*i - 'A'];
+                ++i;
+                continue;
+            } else {
+                --nums[*j - 'A'];
+                ++j;
+            }
+        }
+        return {res_start, res_end};
+    }
+
 };
 
 int main() {
