@@ -1671,6 +1671,28 @@ public:
         return -1;
     }
 
+    int maxResult(vector<int> &nums, int k) {
+        auto n = nums.size();
+        if (n == 1) {
+            return nums[0];
+        }
+        priority_queue<pair<int, int>> heap;
+        heap.emplace(nums[n - 1], n - 1);
+        for (int i = n - 2; i >= 0; --i) {
+            auto [dp, index] = heap.top();
+            while (index > i + k) {
+                heap.pop();
+                index = heap.top().second;
+                dp = heap.top().first;
+            }
+            heap.emplace(dp + nums[i], i);
+            if (i == 0) {
+                return dp + nums[i];
+            }
+        }
+        return -1;
+    }
+
 };
 
 int main() {
