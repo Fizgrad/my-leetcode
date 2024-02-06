@@ -1701,6 +1701,22 @@ public:
         return time;
     }
 
+    vector<vector<string>> groupAnagrams(vector<string> &strs) {
+        using CharFreq = array<unsigned char, 26>;
+        auto encode = [](const string &s) {
+            CharFreq res{};
+            for (auto c: s) ++res[c - 'a'];
+            return res;
+        };
+        map<CharFreq, vector<string>> res;
+        for (auto &i: strs) res[encode(i)].emplace_back(i);
+        return std::accumulate(res.begin(), res.end(), vector<vector<string>>(),
+                               [](vector<vector<string>> sum, auto item) {
+                                   sum.emplace_back(item.second);
+                                   return sum;
+                               });
+    }
+
 };
 
 int main() {
