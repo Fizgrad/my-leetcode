@@ -1717,6 +1717,16 @@ public:
                                });
     }
 
+    string frequencySort(const string &s) {
+        string res(s);
+        int nums[CHAR_MAX - CHAR_MIN + 1] = {};
+        for (auto i: s) ++nums[i];
+        std::sort(res.begin(), res.end(), [&](const auto a, const auto b) {
+            return nums[a] > nums[b] || (nums[a] == nums[b] && a < b);
+        });
+        return std::move(res);
+    }
+
 };
 
 int main() {
