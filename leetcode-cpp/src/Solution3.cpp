@@ -1744,7 +1744,26 @@ public:
         return 3;
     }
 
-}
+    vector<int> largestDivisibleSubset(vector<int> &nums) {
+        int n = nums.size(), res = 1, num = -1;
+        vector<int> ans;
+        sort(nums.begin(), nums.end());
+        vector<int> dp(n, 1);
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (!(nums[i] % nums[j]) && dp[i] < dp[j] + 1) {
+                    res = max(res, dp[i] = dp[j] + 1);
+                }
+            }
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            if (res == dp[i] && (num == -1 || !(num % nums[i]))) {
+                ans.push_back(num = nums[i]);
+                res--;
+            }
+        }
+        return ans;
+    }
 
 };
 
