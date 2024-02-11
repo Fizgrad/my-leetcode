@@ -1784,6 +1784,34 @@ public:
         return ans;
     }
 
+    int cherryPickup(vector<vector<int>> &grid) {
+        int rows = grid.size(), cols = grid[0].size();
+        vector<vector<int>> dp(cols, vector<int>(cols, 0));
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < cols; j++) {
+                dp[i][j] = i == j ? grid[rows - 1][i] : grid[rows - 1][i] + grid[rows - 1][j];
+            }
+        }
+        for (int row = rows - 2; row >= 0; row--) {
+            vector<vector<int>> newDp(cols, vector<int>(cols, 0));
+            for (int i = 0; i < cols; i++) {
+                for (int j = 0; j < cols; j++) {
+                    for (int di = -1; di <= 1; di++) {
+                        for (int dj = -1; dj <= 1; dj++) {
+                            int ni = i + di, nj = j + dj;
+                            if (ni >= 0 && ni < cols && nj >= 0 && nj < cols) {
+                                int cherries = i == j ? grid[row][i] : grid[row][i] + grid[row][j];
+                                newDp[i][j] = max(newDp[i][j], dp[ni][nj] + cherries);
+                            }
+                        }
+                    }
+                }
+            }
+            dp = std::move(newDp);
+        }
+        return dp[0][cols - 1];
+    }
+
 };
 
 int main() {
