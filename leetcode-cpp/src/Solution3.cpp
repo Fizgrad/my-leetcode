@@ -1812,6 +1812,82 @@ public:
         return dp[0][cols - 1];
     }
 
+    vector<int> majorityElement(vector<int> &nums) {
+        // 229. Majority Element II
+        auto n = nums.size();
+        if (n == 1 || (n == 2 && nums[0] == nums[1])) return {nums[0]};
+        if (n == 2) return {nums[0], nums[1]};
+        int candidate1 = nums[0];
+        int candidate2 = INT32_MIN;
+        int times1 = 2;
+        int times2 = 0;
+        for (int i = 1; i < (n / 3) * 3; ++i) {
+            if (nums[i] == candidate1) {
+                --times2;
+                times1 += 2;
+                if (times2 < 0) {
+                    candidate2 = INT32_MIN;
+                    times2 = 0;
+                }
+                continue;
+            } else if (nums[i] == candidate2) {
+                --times1;
+                times2 += 2;
+                if (times1 < 0) {
+                    candidate1 = INT32_MIN;
+                    times1 = 0;
+                }
+                continue;
+            } else if (candidate1 == INT32_MIN) {
+                candidate1 = nums[i];
+                times1 = 2;
+                --times2;
+                if (times2 < 0) {
+                    candidate2 = INT32_MIN;
+                    times2 = 0;
+                }
+                continue;
+            } else if (candidate2 == INT32_MIN) {
+                candidate2 = nums[i];
+                times2 = 2;
+                --times1;
+                if (times1 < 0) {
+                    candidate1 = INT32_MIN;
+                    times1 = 0;
+                }
+                continue;
+            } else {
+                --times1;
+                --times2;
+                if (times1 < 0) {
+                    candidate1 = nums[i];
+                    times1 = 2;
+                    if (times2 < 0) {
+                        candidate2 = INT32_MIN;
+                        times2 = 0;
+                    }
+                } else if (times2 < 0) {
+                    candidate2 = nums[i];
+                    times2 = 2;
+                }
+            }
+        }
+        vector<int> res;
+        times1 = 0;
+        for (auto i: nums) times1 += i == candidate1;
+        times2 = 0;
+        for (auto i: nums) times2 += i == candidate2;
+        if (times1 * 3 > nums.size()) res.push_back(candidate1);
+        if (times2 * 3 > nums.size()) res.push_back(candidate2);
+        for (auto i = (n / 3) * 3; i < n; ++i) {
+            if (std::find(res.begin(), res.end(), nums[i]) != res.end()) continue;
+            times1 = 0;
+            for (auto k: nums) times1 += (k == nums[i]);
+            if (times1 * 3 > nums.size()) res.push_back(nums[i]);
+        }
+        return res;
+    }
+
 };
 
 int main() {
