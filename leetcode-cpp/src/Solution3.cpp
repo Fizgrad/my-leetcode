@@ -1888,6 +1888,118 @@ public:
         return res;
     }
 
+    string firstPalindrome(vector<string> &words) {
+        auto isPalindrome = [](const string &i) {
+            auto left = i.begin();
+            auto right = i.end() - 1;
+            while (right > left) {
+                if (*left == *right) {
+                    --right;
+                    ++left;
+                } else return false;
+            }
+            return true;
+        };
+        for (auto &i: words) {
+            if (isPalindrome(i)) return i;
+        }
+        return "";
+    }
+
+    int maxProduct(const string &s) {
+        class StringIndexAdapter {
+        public:
+            StringIndexAdapter(const std::string &str, const std::vector<int> &indices)
+                    : str_(str), indices_(indices) {}
+
+            class Iterator {
+            public:
+                Iterator(const StringIndexAdapter *adapter, size_t pos)
+                        : adapter_(adapter), pos_(pos) {}
+
+                Iterator &operator++() {
+                    ++pos_;
+                    return *this;
+                }
+
+                Iterator &operator--() {
+                    --pos_;
+                    return *this;
+                }
+
+                char operator*() const { return adapter_->str_[adapter_->indices_[pos_]]; }
+
+                bool operator!=(const Iterator &other) const { return pos_ != other.pos_; }
+
+                bool operator==(const Iterator &other) const { return pos_ == other.pos_; }
+
+                bool operator<(const Iterator &other) const { return pos_ < other.pos_; }
+
+                bool operator>(const Iterator &other) const { return pos_ > other.pos_; }
+
+                bool operator<=(const Iterator &other) const { return pos_ <= other.pos_; }
+
+                bool operator>=(const Iterator &other) const { return pos_ >= other.pos_; }
+
+            private:
+                const StringIndexAdapter *adapter_;
+                size_t pos_;
+            };
+
+            Iterator begin() const { return {this, 0}; }
+
+            Iterator end() const { return {this, indices_.size()}; }
+
+            const std::string &str_;
+            const std::vector<int> indices_;
+        };
+
+        auto isPalindrome = [](const auto &i) -> bool {
+            if (i.begin() == i.end()) {
+                return false;
+            }
+            auto left = i.begin();
+            auto right = i.end();
+            --right;
+            while (right > left) {
+                if (*left == *right) {
+                    --right;
+                    ++left;
+                } else return false;
+            }
+            return true;
+        };
+        vector<StringIndexAdapter> Palindromes;
+
+        auto f = [&](auto &&f, vector<int> &indices_, int index) {
+            if (isPalindrome(StringIndexAdapter(s, indices_))) Palindromes.emplace_back(s, indices_);
+            if (index == s.size()) return;
+            indices_.push_back(index);
+            ++index;
+            f(f, indices_, index);
+            indices_.pop_back();
+            f(f, indices_, index);
+        };
+
+        auto checkIsDisjoint = [](const StringIndexAdapter &a, const StringIndexAdapter &b) {
+            for (auto i: a.indices_) for (auto j: b.indices_) if (i == j) return false;
+            return true;
+        };
+
+        vector<int> indices;
+        f(f, indices, 0);
+
+        int res = 0;
+        for (auto i = Palindromes.begin(); i != Palindromes.end(); ++i) {
+            for (auto j = i + 1; j != Palindromes.end(); ++j) {
+                if (checkIsDisjoint(*i, *j)) {
+                    res = max(res, static_cast<int>(i->indices_.size() * j->indices_.size()));
+                }
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
