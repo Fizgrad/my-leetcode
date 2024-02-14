@@ -2018,6 +2018,23 @@ public:
         return res;
     }
 
+    int wiggleMaxLength(vector<int> &nums) {
+        int n = static_cast<int>(std::unique(nums.begin(), nums.end()) - nums.begin());
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        int prev_diff = 0;
+        int res = 2;
+        for (int i = 1; i < n; ++i) {
+            int diff = nums[i] - nums[i - 1];
+            if (diff * prev_diff >= 0) {
+            } else {
+                res += 1;
+            }
+            prev_diff = diff;
+        }
+        return res;
+    }
+
 };
 
 int main() {
