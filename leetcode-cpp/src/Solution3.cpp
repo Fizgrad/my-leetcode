@@ -2000,6 +2000,24 @@ public:
         return res;
     }
 
+    vector<int> rearrangeArray(vector<int> &nums) {
+        int pos = 0;
+        int n = nums.size();
+        int pos_index = 0;
+        int neg_index = 0;
+        vector<int> res(n, 0);
+        while (pos < n) {
+            if (pos & 1) {
+                while (nums[neg_index] >= 0) { ++neg_index; }
+                res[pos++] = nums[neg_index++];
+            } else {
+                while (nums[pos_index] < 0) { ++pos_index; }
+                res[pos++] = nums[pos_index++];
+            }
+        }
+        return res;
+    }
+
 };
 
 int main() {
