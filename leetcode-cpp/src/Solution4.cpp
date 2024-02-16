@@ -100,6 +100,20 @@ public:
         return pq.size();
     }
 
+    long long largestPerimeter(vector<int> &nums) {
+        std::sort(nums.begin(), nums.end());
+        if (nums.size() < 3) return -1;
+        int n = nums.size();
+        long long res = std::accumulate(nums.begin(), nums.end(), static_cast<long long>(0));
+        int index = n - 1;
+        while (index >= 1) {
+            if (nums[index] >= res - nums[index]) {
+                res -= nums[index--];
+            } else return res;
+        }
+        return -1;
+    }
+
 };
 
 int main() {
