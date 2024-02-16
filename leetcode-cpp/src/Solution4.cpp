@@ -84,6 +84,22 @@ public:
         return res;
     }
 
+    int findLeastNumOfUniqueInts(vector<int> &arr, int k) {
+        unordered_map<int, int> freq;
+        for (auto i: arr) ++freq[i];
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        for (auto &k: freq) {
+            pq.emplace(k.second, k.first);
+        }
+        while (k > 0) {
+            if (k >= pq.top().first) {
+                k -= pq.top().first;
+                pq.pop();
+            } else return pq.size();
+        }
+        return pq.size();
+    }
+
 };
 
 int main() {
