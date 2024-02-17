@@ -114,6 +114,32 @@ public:
         return -1;
     }
 
+    int furthestBuilding(vector<int> &heights, int bricks, int ladders) {
+        priority_queue<int> pq;
+        int origin_bricks = bricks;
+        for (int i = 1; i < heights.size(); ++i) {
+            int need = heights[i] - heights[i - 1];
+            if (need <= 0)continue;
+            if (bricks >= need) {
+                bricks -= need;
+                pq.emplace(need);
+            } else if (origin_bricks < need) {
+                if (ladders > 0) --ladders;
+                else return i - 1;
+            } else {
+                bricks -= need;
+                pq.emplace(need);
+                while (bricks < 0 && ladders > 0 && !pq.empty()) {
+                    --ladders;
+                    bricks += pq.top();
+                    pq.pop();
+                }
+                if (bricks < 0) return i - 1;
+            }
+        }
+        return heights.size() - 1;
+    }
+
 };
 
 int main() {
