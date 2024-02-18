@@ -140,6 +140,47 @@ public:
         return heights.size() - 1;
     }
 
+    int mostBooked(int n, vector<vector<int>> &meetings) {
+        vector<int> rooms(n, 0);
+        set<int> s;
+        priority_queue<pair<int64_t, int64_t>, vector<pair<int64_t, int64_t>>, greater<pair<int64_t, int64_t>>> q;
+        sort(meetings.begin(), meetings.end());
+        int m = meetings.size();
+        for (int i = 0; i < n; i++) {
+            s.insert(i);
+        }
+        for (int i = 0; i < m; i++) {
+            int64_t start = meetings[i][0];
+            int64_t end = meetings[i][1];
+            while (q.size() > 0 && q.top().first <= start) {
+                int room = q.top().second;
+                q.pop();
+                s.insert(room);
+            }
+            if (s.size() == 0) {
+                pair<int64_t, int64_t> p = q.top();
+                q.pop();
+                int64_t dif = end - start;
+                start = p.first;
+                end = start + dif;
+                s.insert(p.second);
+            }
+            auto it = s.begin();
+            rooms[*it]++;
+            q.push({end, *it});
+            s.erase(*it);
+        }
+        int ans = 0;
+        int64_t max_num = 0;
+        for (int i = 0; i < n; i++) {
+            if (max_num < rooms[i]) {
+                max_num = rooms[i];
+                ans = i;
+            }
+        }
+        return ans;
+    }
+
 };
 
 int main() {
