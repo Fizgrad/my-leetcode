@@ -194,6 +194,19 @@ public:
         return res;
     }
 
+    int rangeBitwiseAnd(int left, int right) {
+        int and_sum = left & right;
+        int res = 0;
+        int index = 30;
+        while (index >= 0) {
+            if ((right & (1 << index)) == (left & (1 << index))) {
+                res |= (and_sum & (1 << index));
+                --index;
+            } else return res;
+        }
+        return res;
+    }
+
 };
 
 int main() {
