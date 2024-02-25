@@ -271,6 +271,60 @@ class Solution {
         return std::all_of(begin(isConnected), end(isConnected),
                            [](auto item) -> bool { return item == true; });
     }
+
+    vector<int> findAllPeople(int n, vector<vector<int>> &meetings,
+                              int firstPerson) {
+        sort(meetings.begin(), meetings.end(),
+             [](const auto &l, const auto &r) { return l[2] < r[2]; });
+
+        vector<int> res;
+        vector<int> parents(n + 1, 0);
+        for (int i = 0; i < parents.size(); ++i) {
+            parents[i] = i;
+        }
+
+        auto uf_find = [&](int i) {
+            int next = parents[i];
+            while (next != i) {
+                i = next;
+                next = parents[i];
+            }
+            return i;
+        };
+
+        auto uf_union = [&](int a, int b) {
+            int pa = uf_find(a);
+            int pb = uf_find(b);
+            parents[max(pa, pb)] = min(pa, pb);
+        };
+
+        uf_union(0, firstPerson);
+        int i = 0;
+        vector<int> temp;
+        while (i < meetings.size()) {
+            int currentTime = meetings[i][2];
+            temp.clear();
+            while (i < meetings.size() && meetings[i][2] == currentTime) {
+                int g1 = uf_find(meetings[i][0]);
+                int g2 = uf_find(meetings[i][1]);
+                uf_union(g1, g2);
+                temp.push_back(meetings[i][0]);
+                temp.push_back(meetings[i][1]);
+                ++i;
+            }
+            for (int j = 0; j < temp.size(); ++j) {
+                if (uf_find(temp[j]) != uf_find(0)) {
+                    parents[temp[j]] = temp[j];
+                }
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            if (uf_find(i) == uf_find(0)) {
+                res.emplace_back(i);
+            }
+        }
+        return {res.begin(), res.end()};
+    }
 };
 
 int main() { return 0; }
