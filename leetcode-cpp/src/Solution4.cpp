@@ -1,24 +1,23 @@
 //
 // Created by david on 2024/2/14.
 //
-#include<iostream>
-#include <vector>
 #include <algorithm>
-#include <queue>
-#include <map>
 #include <array>
-#include <set>
-#include <stack>
-#include <deque>
-#include <algorithm>
-#include <cmath>
 #include <cctype>
-#include <sstream>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <regex>
+#include <set>
+#include <sstream>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
-#include <numeric>
-#include <climits>
+#include <vector>
 
 using namespace std;
 
@@ -31,7 +30,8 @@ struct TreeNode {
 
     explicit TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right)
+        : val(x), left(left), right(right) {}
 };
 
 struct ListNode {
@@ -72,44 +72,55 @@ struct Trie {
 };
 
 class Solution {
-public:
+  public:
     int maxArea(vector<int> &height) {
         int res = min(height[0], height.back()) * (height.size() - 1);
         int i = 0;
         int j = height.size() - 1;
         while (i < j) {
-            if (height[i] < height[j]) ++i; else --j;
-            res = max(res, static_cast<int>(min(height[i], height[j]) * (j - i)));
+            if (height[i] < height[j])
+                ++i;
+            else
+                --j;
+            res =
+                max(res, static_cast<int>(min(height[i], height[j]) * (j - i)));
         }
         return res;
     }
 
     int findLeastNumOfUniqueInts(vector<int> &arr, int k) {
         unordered_map<int, int> freq;
-        for (auto i: arr) ++freq[i];
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        for (auto &k: freq) {
+        for (auto i : arr)
+            ++freq[i];
+        priority_queue<pair<int, int>, vector<pair<int, int>>,
+                       greater<pair<int, int>>>
+            pq;
+        for (auto &k : freq) {
             pq.emplace(k.second, k.first);
         }
         while (k > 0) {
             if (k >= pq.top().first) {
                 k -= pq.top().first;
                 pq.pop();
-            } else return pq.size();
+            } else
+                return pq.size();
         }
         return pq.size();
     }
 
     long long largestPerimeter(vector<int> &nums) {
         std::sort(nums.begin(), nums.end());
-        if (nums.size() < 3) return -1;
+        if (nums.size() < 3)
+            return -1;
         int n = nums.size();
-        long long res = std::accumulate(nums.begin(), nums.end(), static_cast<long long>(0));
+        long long res = std::accumulate(nums.begin(), nums.end(),
+                                        static_cast<long long>(0));
         int index = n - 1;
         while (index >= 1) {
             if (nums[index] >= res - nums[index]) {
                 res -= nums[index--];
-            } else return res;
+            } else
+                return res;
         }
         return -1;
     }
@@ -119,13 +130,16 @@ public:
         int origin_bricks = bricks;
         for (int i = 1; i < heights.size(); ++i) {
             int need = heights[i] - heights[i - 1];
-            if (need <= 0)continue;
+            if (need <= 0)
+                continue;
             if (bricks >= need) {
                 bricks -= need;
                 pq.emplace(need);
             } else if (origin_bricks < need) {
-                if (ladders > 0) --ladders;
-                else return i - 1;
+                if (ladders > 0)
+                    --ladders;
+                else
+                    return i - 1;
             } else {
                 bricks -= need;
                 pq.emplace(need);
@@ -134,7 +148,8 @@ public:
                     bricks += pq.top();
                     pq.pop();
                 }
-                if (bricks < 0) return i - 1;
+                if (bricks < 0)
+                    return i - 1;
             }
         }
         return heights.size() - 1;
@@ -143,7 +158,9 @@ public:
     int mostBooked(int n, vector<vector<int>> &meetings) {
         vector<int> rooms(n, 0);
         set<int> s;
-        priority_queue<pair<int64_t, int64_t>, vector<pair<int64_t, int64_t>>, greater<pair<int64_t, int64_t>>> q;
+        priority_queue<pair<int64_t, int64_t>, vector<pair<int64_t, int64_t>>,
+                       greater<pair<int64_t, int64_t>>>
+            q;
         sort(meetings.begin(), meetings.end());
         int m = meetings.size();
         for (int i = 0; i < n; i++) {
@@ -202,13 +219,58 @@ public:
             if ((right & (1 << index)) == (left & (1 << index))) {
                 res |= (and_sum & (1 << index));
                 --index;
-            } else return res;
+            } else
+                return res;
         }
         return res;
     }
 
+    bool canTraverseAllPairs(vector<int> &nums) {
+        auto primeFactors = [](int n) -> unordered_set<int> {
+            unordered_set<int> res;
+            while (n % 2 == 0) {
+                res.insert(2);
+                n = n / 2;
+            }
+            for (int i = 3; i <= sqrt(n); i = i + 2) {
+                while (n % i == 0) {
+                    res.insert(i);
+                    n = n / i;
+                }
+            }
+            if (n > 2)
+                res.insert(n);
+            return res;
+        };
+        unordered_map<int, unordered_set<int>> prime2index;
+        unordered_map<int, unordered_set<int>> index2prime;
+        int n = nums.size();
+        for (int i = 0; i < n; ++i) {
+            index2prime[i] = primeFactors(nums[i]);
+            for (auto k : index2prime[i]) {
+                prime2index[k].insert(i);
+            }
+        }
+        unordered_map<int, bool> isVisited;
+        vector<bool> isConnected(n, 0);
+        auto dfs = [&](auto &&dfs, int index) -> void {
+            for (auto prime : index2prime[index]) {
+                if (isVisited[prime])
+                    continue;
+                isVisited[prime] = true;
+                for (auto i : prime2index[prime]) {
+                    if (i == index || isConnected[i])
+                        continue;
+                    isConnected[i] = true;
+                    dfs(dfs, i);
+                }
+            }
+        };
+        isConnected[0] = true;
+        dfs(dfs, 0);
+        return std::all_of(begin(isConnected), end(isConnected),
+                           [](auto item) -> bool { return item == true; });
+    }
 };
 
-int main() {
-    return 0;
-}
+int main() { return 0; }

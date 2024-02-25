@@ -1,4 +1,8 @@
 .DS_Store
 cmake-build-debug
 .idea
+build/*
+build
+.vscode
+.vscode/*
 .idea/*
