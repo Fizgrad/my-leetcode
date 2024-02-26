@@ -325,6 +325,22 @@ class Solution {
         }
         return {res.begin(), res.end()};
     }
+
+    bool isSameTree(TreeNode *p, TreeNode *q) {
+        auto isSameTreeDFS = [](auto &&isSameTreeDFS, TreeNode *p,
+                                TreeNode *q) -> bool {
+            if (p == nullptr && q == nullptr) {
+                return true;
+            }
+            if (p == nullptr || q == nullptr) {
+                return false;
+            }
+            return p->val == q->val &&
+                   isSameTreeDFS(isSameTreeDFS, p->left, q->left) &&
+                   isSameTreeDFS(isSameTreeDFS, p->right, q->right);
+        };
+        return isSameTreeDFS(isSameTreeDFS, p, q);
+    }
 };
 
 int main() { return 0; }
