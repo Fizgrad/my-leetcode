@@ -341,6 +341,20 @@ class Solution {
         };
         return isSameTreeDFS(isSameTreeDFS, p, q);
     }
+
+    int diameterOfBinaryTree(TreeNode *root) {
+        int res = 0;
+        auto dfs = [&](auto &&dfs, TreeNode *node) -> int {
+            if (node == nullptr)
+                return 0;
+            int left = dfs(dfs, node->left);
+            int right = dfs(dfs, node->right);
+            res = max(res, left + right);
+            return max(right, left) + 1;
+        };
+        dfs(dfs, root);
+        return res;
+    }
 };
 
 int main() { return 0; }
