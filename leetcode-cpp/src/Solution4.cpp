@@ -433,6 +433,27 @@ class Solution {
         x = negtive ? -x : x;
         return x;
     }
+
+    void setZeroes(vector<vector<int>> &matrix) {
+        int n = matrix.size();
+        int m = matrix.begin()->size();
+        vector<bool> cols(m, 0);
+        vector<bool> rows(n, 0);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (matrix[i][j] == 0) {
+                    cols[j] = true;
+                    rows[i] = true;
+                }
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (cols[j] || rows[i])
+                    matrix[i][j] = 0;
+            }
+        }
+    }
 };
 
 int main() { return 0; }
