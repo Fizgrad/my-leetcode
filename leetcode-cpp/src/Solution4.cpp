@@ -372,6 +372,26 @@ class Solution {
         dfs(dfs, root, 0);
         return res;
     }
+
+    int lengthOfLongestSubstring(const string &s) {
+        int n = s.size();
+        if (n == 0)
+            return 0;
+        int left = 0;
+        int right = 0;
+        int res = 1;
+        unordered_map<char, int> noCollisionIndices;
+        noCollisionIndices[*s.begin()] = 1;
+        for (right = 0; right < n; ++right) {
+            res = max(right - left + 1, res);
+            char c = s[right + 1];
+            if (noCollisionIndices.find(c) != end(noCollisionIndices)) {
+                left = max(left, noCollisionIndices[c]);
+            }
+            noCollisionIndices[c] = right + 1 + 1;
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
