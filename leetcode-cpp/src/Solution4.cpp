@@ -418,6 +418,21 @@ class Solution {
             return (static_cast<double>(nums[k >> 1]) + nums[(k >> 1) - 1]) / 2;
         }
     }
+
+    int reverse(int x) {
+        bool negtive = (x < 0);
+        if (x == INT32_MIN)
+            return 0;
+        x = negtive ? -x : x;
+        string xString = to_string(x);
+        stringstream sstream;
+        sstream << string(xString.rbegin(), xString.rend());
+        sstream >> x;
+        if (x == INT32_MAX || x == INT32_MIN)
+            x = 0;
+        x = negtive ? -x : x;
+        return x;
+    }
 };
 
 int main() { return 0; }
