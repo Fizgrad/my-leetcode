@@ -355,6 +355,23 @@ class Solution {
         dfs(dfs, root);
         return res;
     }
+
+    int findBottomLeftValue(TreeNode *root) {
+        int res = root->val;
+        int level = 0;
+        auto dfs = [&](auto &&dfs, TreeNode *node, int depth) {
+            if (node == nullptr)
+                return;
+            if (depth > level) {
+                level = depth;
+                res = node->val;
+            }
+            dfs(dfs, node->left, depth + 1);
+            dfs(dfs, node->right, depth + 1);
+        };
+        dfs(dfs, root, 0);
+        return res;
+    }
 };
 
 int main() { return 0; }
