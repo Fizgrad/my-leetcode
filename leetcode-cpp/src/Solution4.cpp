@@ -454,6 +454,40 @@ class Solution {
             }
         }
     }
+
+    bool isEvenOddTree(TreeNode *root) {
+        int level = 0;
+        vector<TreeNode *> next;
+        vector<TreeNode *> nodes;
+        nodes.emplace_back(root);
+        while (!nodes.empty()) {
+            if (level & 1) {
+                for (int i = 1; i < nodes.size(); ++i) {
+                    if (nodes[i - 1]->val <= nodes[i]->val) {
+                        return false;
+                    }
+                }
+            } else {
+                for (int i = 1; i < nodes.size(); ++i) {
+                    if (nodes[i - 1]->val >= nodes[i]->val) {
+                        return false;
+                    }
+                }
+            }
+            for (auto i : nodes) {
+                if ((i->val & 1) == (level & 1))
+                    return false;
+                if (i->left)
+                    next.emplace_back(i->left);
+                if (i->right)
+                    next.emplace_back(i->right);
+            }
+            nodes.clear();
+            nodes.swap(next);
+            ++level;
+        }
+        return true;
+    }
 };
 
 int main() { return 0; }
