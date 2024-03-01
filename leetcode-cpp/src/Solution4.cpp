@@ -31,7 +31,7 @@ struct TreeNode {
     explicit TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 
     TreeNode(int x, TreeNode *left, TreeNode *right)
-        : val(x), left(left), right(right) {}
+            : val(x), left(left), right(right) {}
 };
 
 struct ListNode {
@@ -72,7 +72,7 @@ struct Trie {
 };
 
 class Solution {
-  public:
+public:
     int maxArea(vector<int> &height) {
         int res = min(height[0], height.back()) * (height.size() - 1);
         int i = 0;
@@ -83,19 +83,19 @@ class Solution {
             else
                 --j;
             res =
-                max(res, static_cast<int>(min(height[i], height[j]) * (j - i)));
+                    max(res, static_cast<int>(min(height[i], height[j]) * (j - i)));
         }
         return res;
     }
 
     int findLeastNumOfUniqueInts(vector<int> &arr, int k) {
         unordered_map<int, int> freq;
-        for (auto i : arr)
+        for (auto i: arr)
             ++freq[i];
         priority_queue<pair<int, int>, vector<pair<int, int>>,
-                       greater<pair<int, int>>>
-            pq;
-        for (auto &k : freq) {
+                greater<pair<int, int>>>
+                pq;
+        for (auto &k: freq) {
             pq.emplace(k.second, k.first);
         }
         while (k > 0) {
@@ -159,8 +159,8 @@ class Solution {
         vector<int> rooms(n, 0);
         set<int> s;
         priority_queue<pair<int64_t, int64_t>, vector<pair<int64_t, int64_t>>,
-                       greater<pair<int64_t, int64_t>>>
-            q;
+                greater<pair<int64_t, int64_t>>>
+                q;
         sort(meetings.begin(), meetings.end());
         int m = meetings.size();
         for (int i = 0; i < n; i++) {
@@ -247,18 +247,18 @@ class Solution {
         int n = nums.size();
         for (int i = 0; i < n; ++i) {
             index2prime[i] = primeFactors(nums[i]);
-            for (auto k : index2prime[i]) {
+            for (auto k: index2prime[i]) {
                 prime2index[k].insert(i);
             }
         }
         unordered_map<int, bool> isVisited;
         vector<bool> isConnected(n, 0);
         auto dfs = [&](auto &&dfs, int index) -> void {
-            for (auto prime : index2prime[index]) {
+            for (auto prime: index2prime[index]) {
                 if (isVisited[prime])
                     continue;
                 isVisited[prime] = true;
-                for (auto i : prime2index[prime]) {
+                for (auto i: prime2index[prime]) {
                     if (i == index || isConnected[i])
                         continue;
                     isConnected[i] = true;
@@ -474,7 +474,7 @@ class Solution {
                     }
                 }
             }
-            for (auto i : nodes) {
+            for (auto i: nodes) {
                 if ((i->val & 1) == (level & 1))
                     return false;
                 if (i->left)
@@ -487,6 +487,12 @@ class Solution {
             ++level;
         }
         return true;
+    }
+
+    string maximumOddBinaryNumber(const string &s) {
+        int num_one = 0;
+        for (auto i: s) num_one += (i == '1');
+        return string(num_one - 1, '1') + string(s.size() - num_one, '0') + "1";
     }
 };
 
