@@ -494,6 +494,13 @@ public:
         for (auto i: s) num_one += (i == '1');
         return string(num_one - 1, '1') + string(s.size() - num_one, '0') + "1";
     }
+
+    vector<int> sortedSquares(vector<int> &nums) {
+        for (auto &i: nums) i = i * i;
+        std::sort(nums.begin(), nums.end());
+        return nums;
+    }
+
 };
 
 int main() { return 0; }
