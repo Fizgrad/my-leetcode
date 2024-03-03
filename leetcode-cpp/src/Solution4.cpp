@@ -31,7 +31,7 @@ struct TreeNode {
     explicit TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 
     TreeNode(int x, TreeNode *left, TreeNode *right)
-            : val(x), left(left), right(right) {}
+        : val(x), left(left), right(right) {}
 };
 
 struct ListNode {
@@ -93,7 +93,7 @@ public:
         for (auto i: arr)
             ++freq[i];
         priority_queue<pair<int, int>, vector<pair<int, int>>,
-                greater<pair<int, int>>>
+                       greater<pair<int, int>>>
                 pq;
         for (auto &k: freq) {
             pq.emplace(k.second, k.first);
@@ -159,7 +159,7 @@ public:
         vector<int> rooms(n, 0);
         set<int> s;
         priority_queue<pair<int64_t, int64_t>, vector<pair<int64_t, int64_t>>,
-                greater<pair<int64_t, int64_t>>>
+                       greater<pair<int64_t, int64_t>>>
                 q;
         sort(meetings.begin(), meetings.end());
         int m = meetings.size();
@@ -501,6 +501,19 @@ public:
         return nums;
     }
 
+    ListNode *removeNthFromEnd(ListNode *head, int n) {
+        ListNode *removedNext = nullptr;
+        auto f = [&](auto &&f, ListNode *node) -> int {
+            if (node == nullptr) return 0;
+            int rIndex = 1 + f(f, node->next);
+            if (rIndex == n) removedNext = node->next;
+            if (rIndex == n + 1) node->next = removedNext;
+            return rIndex;
+        };
+        ListNode *virtualNode = new ListNode(0, head);
+        f(f, virtualNode);
+        return virtualNode->next;
+    }
 };
 
 int main() { return 0; }
