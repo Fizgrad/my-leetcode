@@ -1,24 +1,23 @@
 //
 // Created by Fitzgerald on 2/19/23.
 //
-#include<iostream>
-#include <vector>
 #include <algorithm>
-#include <queue>
-#include <map>
 #include <array>
-#include <set>
-#include <stack>
-#include <deque>
-#include <algorithm>
-#include <cmath>
 #include <cctype>
-#include <sstream>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <regex>
+#include <set>
+#include <sstream>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
-#include <numeric>
-#include <climits>
+#include <vector>
 
 using namespace std;
 
@@ -206,7 +205,8 @@ public:
         }
         if (j == needle.size())
             return i - needle.size();
-        else return -1;
+        else
+            return -1;
     }
 
     int strStr2(string &haystack, const string &needle) {
@@ -382,7 +382,6 @@ public:
                 res.pop();
             }
             q = temp;
-
         }
         return res.size() == k ? -res.top() : -1;
     }
@@ -649,83 +648,83 @@ public:
         return ans;
     }
 
-//    The best solution
-//    This code is a C++ function designed to solve a graph theory problem: given a tree with n nodes (represented by edges), find the diameter of all subtrees and count the occurrences of each diameter. The code employs techniques such as lambda expressions, recursion, bitwise operations, and breadth-first search (BFS).
-//    Here is a detailed explanation of the code:
-//
-//            Define a function called countSubgraphsForEachDiameter, which takes two arguments: an integer n (number of nodes) and a 2D integer vector edges (the tree's edges).
-//    Define a vector of type bitset<16> called adj, which represents the tree's adjacency matrix. The tree's node labels range from 1 to n, so the size of adj is n + 1.
-//    Iterate through edges, updating adj to populate the adjacency matrix.
-//    Define a 16x16 integer array called dis, which stores the distances between any two nodes in the tree.
-//    Define a lambda expression called dfs, which calculates the distances between any two nodes in the tree using depth-first search (DFS). dfs takes four arguments: root, u, p, and d. root is the root node of the subtree rooted at u, p is the parent node of u, and d is the distance between root and u.
-//    Use dfs to calculate the distances between any two nodes in the tree and store the results in the dis array.
-//    Define an integer vector called ans, which stores the number of occurrences of each diameter. Initially, set all elements to 0.
-//    Define a type alias called T, of type pair<B, int>. Objects of type T store a subtree (represented as a bitset) and its diameter.
-//    Define a vector of type T called V, which stores all visited subtrees and their diameters.
-//    Define an integer queue called Q for breadth-first search (BFS). Initially, enqueue node 1.
-//    Define a boolean vector called vis, which records whether each node has been visited. Initially, set all elements to false, and mark node 1 as visited.
-//    Traverse all nodes of the tree using BFS. For the currently visited node i, perform the following actions:
-//            a. Calculate the diameter of all visited subtrees, and update the ans vector.
-//    b. Add node i to the current subtree, and append the new subtree and its diameter to the V vector.
-//    c. Enqueue all unvisited neighbor nodes of node i into the queue Q, and mark them as visited.
-//    Once BFS is complete, return the ans vector, which represents the number of occurrences of each diameter.
-//    The primary goal of the code is to find the diameter of all subtrees in a given tree and count their occurrences. The code employs depth-first search (DFS) and breadth-first search (BFS) techniques, as well as bitwise operations to optimize storage and computation.
-//
-//
-//    vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>>& edges) {
-//        using B = bitset<16>;
-//        vector<B> adj(n + 1);
-//        for (auto& edge: edges) {
-//            int u = edge[0], v = edge[1];
-//            adj[u].set(v);
-//            adj[v].set(u);
-//        }
-//        int dis[16][16];
-//        auto dfs = [&](auto&& dfs, int root, int u, int p, int d) -> void {
-//            dis[root][u] = d;
-//            for (int v = 1; v <= n; v++) {
-//                if (!adj[u].test(v)) continue;
-//                if (v == p) continue;
-//                dfs(dfs, root, v, u, d + 1);
-//            }
-//        };
-//        for (int v = 1; v <= n; v++) dfs(dfs, v, v, v, 0);
-//
-//        vector<int> ans(n - 1);
-//
-//        using T = pair<B, int>;
-//        vector<T> V;
-//        queue<int> Q;
-//        vector<bool> vis(16);
-//        Q.push(1);
-//        vis[1] = true;
-//
-//        while (!Q.empty()) {
-//            auto i = Q.front();
-//            Q.pop();
-//            auto conn = adj[i];
-//            int sz = V.size();
-//            for (int j = 0; j < sz; j++) {
-//                auto [bs, d] = V[j];
-//                if (!(conn & bs).any()) continue;
-//                for (int k = 1; k <= n; k++) {
-//                    if (!bs.test(k)) continue;
-//                    d = max(d, dis[k][i]);
-//                }
-//                ans[d - 1] += 1;
-//                bs.set(i);
-//                V.emplace_back(bs, d);
-//            }
-//            V.emplace_back(B(1 << i), 0);
-//            for (int v = 1; v <= n; v++) {
-//                if (!adj[i].test(v)) continue;
-//                if (vis[v]) continue;
-//                vis[v] = true;
-//                Q.push(v);
-//            }
-//        }
-//        return ans;
-//    }
+    //    The best solution
+    //    This code is a C++ function designed to solve a graph theory problem: given a tree with n nodes (represented by edges), find the diameter of all subtrees and count the occurrences of each diameter. The code employs techniques such as lambda expressions, recursion, bitwise operations, and breadth-first search (BFS).
+    //    Here is a detailed explanation of the code:
+    //
+    //            Define a function called countSubgraphsForEachDiameter, which takes two arguments: an integer n (number of nodes) and a 2D integer vector edges (the tree's edges).
+    //    Define a vector of type bitset<16> called adj, which represents the tree's adjacency matrix. The tree's node labels range from 1 to n, so the size of adj is n + 1.
+    //    Iterate through edges, updating adj to populate the adjacency matrix.
+    //    Define a 16x16 integer array called dis, which stores the distances between any two nodes in the tree.
+    //    Define a lambda expression called dfs, which calculates the distances between any two nodes in the tree using depth-first search (DFS). dfs takes four arguments: root, u, p, and d. root is the root node of the subtree rooted at u, p is the parent node of u, and d is the distance between root and u.
+    //    Use dfs to calculate the distances between any two nodes in the tree and store the results in the dis array.
+    //    Define an integer vector called ans, which stores the number of occurrences of each diameter. Initially, set all elements to 0.
+    //    Define a type alias called T, of type pair<B, int>. Objects of type T store a subtree (represented as a bitset) and its diameter.
+    //    Define a vector of type T called V, which stores all visited subtrees and their diameters.
+    //    Define an integer queue called Q for breadth-first search (BFS). Initially, enqueue node 1.
+    //    Define a boolean vector called vis, which records whether each node has been visited. Initially, set all elements to false, and mark node 1 as visited.
+    //    Traverse all nodes of the tree using BFS. For the currently visited node i, perform the following actions:
+    //            a. Calculate the diameter of all visited subtrees, and update the ans vector.
+    //    b. Add node i to the current subtree, and append the new subtree and its diameter to the V vector.
+    //    c. Enqueue all unvisited neighbor nodes of node i into the queue Q, and mark them as visited.
+    //    Once BFS is complete, return the ans vector, which represents the number of occurrences of each diameter.
+    //    The primary goal of the code is to find the diameter of all subtrees in a given tree and count their occurrences. The code employs depth-first search (DFS) and breadth-first search (BFS) techniques, as well as bitwise operations to optimize storage and computation.
+    //
+    //
+    //    vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>>& edges) {
+    //        using B = bitset<16>;
+    //        vector<B> adj(n + 1);
+    //        for (auto& edge: edges) {
+    //            int u = edge[0], v = edge[1];
+    //            adj[u].set(v);
+    //            adj[v].set(u);
+    //        }
+    //        int dis[16][16];
+    //        auto dfs = [&](auto&& dfs, int root, int u, int p, int d) -> void {
+    //            dis[root][u] = d;
+    //            for (int v = 1; v <= n; v++) {
+    //                if (!adj[u].test(v)) continue;
+    //                if (v == p) continue;
+    //                dfs(dfs, root, v, u, d + 1);
+    //            }
+    //        };
+    //        for (int v = 1; v <= n; v++) dfs(dfs, v, v, v, 0);
+    //
+    //        vector<int> ans(n - 1);
+    //
+    //        using T = pair<B, int>;
+    //        vector<T> V;
+    //        queue<int> Q;
+    //        vector<bool> vis(16);
+    //        Q.push(1);
+    //        vis[1] = true;
+    //
+    //        while (!Q.empty()) {
+    //            auto i = Q.front();
+    //            Q.pop();
+    //            auto conn = adj[i];
+    //            int sz = V.size();
+    //            for (int j = 0; j < sz; j++) {
+    //                auto [bs, d] = V[j];
+    //                if (!(conn & bs).any()) continue;
+    //                for (int k = 1; k <= n; k++) {
+    //                    if (!bs.test(k)) continue;
+    //                    d = max(d, dis[k][i]);
+    //                }
+    //                ans[d - 1] += 1;
+    //                bs.set(i);
+    //                V.emplace_back(bs, d);
+    //            }
+    //            V.emplace_back(B(1 << i), 0);
+    //            for (int v = 1; v <= n; v++) {
+    //                if (!adj[i].test(v)) continue;
+    //                if (vis[v]) continue;
+    //                vis[v] = true;
+    //                Q.push(v);
+    //            }
+    //        }
+    //        return ans;
+    //    }
 
     int countSubgraphsForEachDiameterDFS(int &maxDis, unordered_map<int, unordered_set<int>> &graph, set<int> &vertices,
                                          int node, int prev) {
@@ -786,7 +785,8 @@ public:
     bool isSymmetric(TreeNode *root) {
         if (root) {
             return isSymmetric(root->left, root->right);
-        } else return true;
+        } else
+            return true;
     }
 
     bool isSymmetric(TreeNode *root1, TreeNode *root2) {
@@ -848,20 +848,20 @@ public:
         return res;
     }
 
-//    We make good use of the condition "n is odd" as follow
-//    a1,(a2,a3),(a4,a5).....,
-//    making the decoded into pairs.
-//    a2^a3 = A[1]
-//    a4^a5 = A[3]
-//    a6^a7 = A[5]
-//    ...
-//    so we can have the result of a2^a3^a4...^an.
-//    And a1,a2,a3... is a permutation of 1,2,3,4...n
-//
-//    so we can have
-//    a1 = 1^2^3...^n^a2^a2^a3...^an
-//
-//    Then we can deduct the whole decoded array.
+    //    We make good use of the condition "n is odd" as follow
+    //    a1,(a2,a3),(a4,a5).....,
+    //    making the decoded into pairs.
+    //    a2^a3 = A[1]
+    //    a4^a5 = A[3]
+    //    a6^a7 = A[5]
+    //    ...
+    //    so we can have the result of a2^a3^a4...^an.
+    //    And a1,a2,a3... is a permutation of 1,2,3,4...n
+    //
+    //    so we can have
+    //    a1 = 1^2^3...^n^a2^a2^a3...^an
+    //
+    //    Then we can deduct the whole decoded array.
     vector<int> decode(vector<int> &encoded) {
         int n = encoded.size() + 1;
         int temp = 0;
@@ -904,12 +904,12 @@ public:
         return res;
     }
 
-//    The greedy pick won't break anything, so just take as much as possible.
-//    For each result value at A[i][j],
-//            we greedily take the min(row[i], col[j]).
-//    Then we update the row sum and col sum:
-//            row[i] -= A[i][j]
-//    col[j] -= A[i][j]
+    //    The greedy pick won't break anything, so just take as much as possible.
+    //    For each result value at A[i][j],
+    //            we greedily take the min(row[i], col[j]).
+    //    Then we update the row sum and col sum:
+    //            row[i] -= A[i][j]
+    //    col[j] -= A[i][j]
     vector<vector<int>> restoreMatrix(vector<int> &rowSum, vector<int> &colSum) {
         vector<vector<int>> res(rowSum.size(), vector<int>(colSum.size(), 0));
         for (auto i = 0; i < rowSum.size(); ++i) {
@@ -1182,17 +1182,17 @@ public:
     int minImpossibleOR(vector<int> &v) {
         int res;
         unordered_set<int> s(v.begin(), v.end());
-        while (s.find(res) != s.end())res <<= 1;
+        while (s.find(res) != s.end()) res <<= 1;
         return res;
     }
 
-//    In this example, using auto&& has a reason. auto&& is a universal reference, which can bind to any type of value, including lvalues and rvalues. This is very useful for generic programming and perfect forwarding.
-//
-//    In the Y-combinator example, we need to pass the lambda function f as the first argument to itself. Using auto&& here ensures that, during the recursive call, f is passed to itself with the correct reference type.
-//
-//    By using auto&&, we can ensure that the reference to f is correct in the recursive call, whether f is an lvalue or an rvalue. This can reduce unnecessary copying and ensure the efficiency of the code.
-//
-//    If we use auto& or auto instead of auto&&, it might lead to copying or reference errors during the recursive call. This is because auto& can only bind to lvalues, while auto creates a new object, resulting in unnecessary copying in the recursive call. Therefore, using auto&& is a more suitable choice in this example.
+    //    In this example, using auto&& has a reason. auto&& is a universal reference, which can bind to any type of value, including lvalues and rvalues. This is very useful for generic programming and perfect forwarding.
+    //
+    //    In the Y-combinator example, we need to pass the lambda function f as the first argument to itself. Using auto&& here ensures that, during the recursive call, f is passed to itself with the correct reference type.
+    //
+    //    By using auto&&, we can ensure that the reference to f is correct in the recursive call, whether f is an lvalue or an rvalue. This can reduce unnecessary copying and ensure the efficiency of the code.
+    //
+    //    If we use auto& or auto instead of auto&&, it might lead to copying or reference errors during the recursive call. This is because auto& can only bind to lvalues, while auto creates a new object, resulting in unnecessary copying in the recursive call. Therefore, using auto&& is a more suitable choice in this example.
 
     TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
         using iter = vector<int>::iterator;
@@ -1301,11 +1301,11 @@ public:
                     t += nums[i];
                 rev = (rev * fact[nums[i]]) % mod;
             }
-//            According to Fermat's Little Theorem, for a prime modulus p and an integer a that is not divisible by p,
-//            the following holds: a^(p-1) ≡ 1 (mod p).
-//            Therefore, the modular multiplicative inverse a^(-1) is a^(p-2)
-//            a/b mod m == a*b’mod m b' is b's modular multiplicative inverse
-//            the modular division a / b is equivalent to a * (b^(-1)), or a * modpow(b, p-2).
+            //            According to Fermat's Little Theorem, for a prime modulus p and an integer a that is not divisible by p,
+            //            the following holds: a^(p-1) ≡ 1 (mod p).
+            //            Therefore, the modular multiplicative inverse a^(-1) is a^(p-2)
+            //            a/b mod m == a*b’mod m b' is b's modular multiplicative inverse
+            //            the modular division a / b is equivalent to a * (b^(-1)), or a * modpow(b, p-2).
             res += (t * fact[l] % mod) * modpow(rev, mod - 2);
             res %= mod;
             nums[c - 'a']--;
@@ -1390,7 +1390,7 @@ public:
                 res += (number - 1) * pow(10, len - l);
                 unique += (number - 1) * fact[9] / fact[9 - len + l];
             } else {
-                res += (number) * pow(10, len - l);
+                res += (number) *pow(10, len - l);
                 if (has_smaller_unique) {
                     int cur_num = number - 1;
                     while (cur_num >= 0 && flag[cur_num]) {
@@ -1404,7 +1404,7 @@ public:
                             }
                         }
                         int remains = 10 - flag.count() - 1;
-                        unique += (choice) * fact[remains] / fact[remains - len + l];
+                        unique += (choice) *fact[remains] / fact[remains - len + l];
                     }
                     if (flag[number]) {
                         has_smaller_unique = false;
@@ -1748,7 +1748,6 @@ public:
                         res.insert((l[0] + bias) * sqbase + (l[1] + bias) * base + l[2] + bias);
                     }
                 }
-
             }
         }
         vector<vector<int>> realres;
@@ -1760,7 +1759,6 @@ public:
             realres.push_back(temp);
         }
         return realres;
-
     }
 
     bool exist(vector<vector<char>> &board, string word) {
@@ -2251,17 +2249,17 @@ public:
     }
 
     int countVowelStrings(int n) {
-//        int res = 0;
-//        auto f = [&](auto &&f, int depth, int last) -> void {
-//            if (depth == n) {
-//                res += 5 - last;
-//            } else {
-//                for (int i = last; i < 5; ++i)
-//                    f(f, depth + 1, i);
-//            }
-//        };
-//        f(f, 0, 0);
-//        return res;
+        //        int res = 0;
+        //        auto f = [&](auto &&f, int depth, int last) -> void {
+        //            if (depth == n) {
+        //                res += 5 - last;
+        //            } else {
+        //                for (int i = last; i < 5; ++i)
+        //                    f(f, depth + 1, i);
+        //            }
+        //        };
+        //        f(f, 0, 0);
+        //        return res;
         int res[50] = {5, 15, 35, 70, 126, 210, 330, 495, 715, 1001, 1365, 1820, 2380, 3060, 3876, 4845, 5985, 7315,
                        8855, 10626, 12650, 14950, 17550, 20475, 23751, 27405, 31465, 35960, 40920, 46376, 52360, 58905,
                        66045, 73815, 82251, 91390, 101270, 111930, 123410, 135751, 148995, 163185, 178365, 194580,
@@ -2500,30 +2498,30 @@ public:
         return newHead->next;
     }
 
-//    int countPalindromicSubsequence(const string &s) {
-//        vector<vector<int>> count(s.size(), vector<int>('z' - 'a' + 1, 0));
-//        vector<int> start('z' - 'a' + 1, -1);
-//        vector<int> end('z' - 'a' + 1, -1);
-//        int res = 0;
-//        for (int i = 0; i < s.size(); ++i) {
-//            if (i >= 1) count[i] = count[i - 1];
-//            ++count[i][s[i] - 'a'];
-//            if (start[s[i] - 'a'] == -1) {
-//                start[s[i] - 'a'] = i;
-//            }
-//            end[s[i] - 'a'] = i;
-//        }
-//        for (auto i = 0; i < 'z' - 'a' + 1; ++i) {
-//            if (end[i] == start[i]) {
-//                continue;
-//            } else {
-//                for (auto j = 0; j < 'z' - 'a' + 1; ++j) {
-//                    res += (count[end[i] - 1][j] - count[start[i]][j] > 0);
-//                }
-//            }
-//        }
-//        return res;
-//    }
+    //    int countPalindromicSubsequence(const string &s) {
+    //        vector<vector<int>> count(s.size(), vector<int>('z' - 'a' + 1, 0));
+    //        vector<int> start('z' - 'a' + 1, -1);
+    //        vector<int> end('z' - 'a' + 1, -1);
+    //        int res = 0;
+    //        for (int i = 0; i < s.size(); ++i) {
+    //            if (i >= 1) count[i] = count[i - 1];
+    //            ++count[i][s[i] - 'a'];
+    //            if (start[s[i] - 'a'] == -1) {
+    //                start[s[i] - 'a'] = i;
+    //            }
+    //            end[s[i] - 'a'] = i;
+    //        }
+    //        for (auto i = 0; i < 'z' - 'a' + 1; ++i) {
+    //            if (end[i] == start[i]) {
+    //                continue;
+    //            } else {
+    //                for (auto j = 0; j < 'z' - 'a' + 1; ++j) {
+    //                    res += (count[end[i] - 1][j] - count[start[i]][j] > 0);
+    //                }
+    //            }
+    //        }
+    //        return res;
+    //    }
 
     int countPalindromicSubsequence(const string &s1) {
         int res = 0;
@@ -2548,7 +2546,7 @@ public:
             int mid;
             while (low <= high) {
                 mid = (high + low) / 2;
-                if (static_cast<long long > (potions[mid]) * spells[i] >= success) {
+                if (static_cast<long long>(potions[mid]) * spells[i] >= success) {
                     low = mid + 1;
                 } else {
                     high = mid - 1;
@@ -2659,7 +2657,7 @@ public:
                 for (int t = i; t < j; t++) {
                     cost = min(cost,
                                minCost(minCost, i, t, 1) +
-                               minCost(minCost, t + 1, j, piles - 1));
+                                       minCost(minCost, t + 1, j, piles - 1));
                 }
                 return dp[i][j][piles] = cost;
             }
@@ -2784,52 +2782,52 @@ public:
     }
 
     vector<int> smallestSufficientTeam(vector<string> &req_skills, vector<vector<string>> &people) {
-//        unordered_map<string, int> to_int;
-//        vector<vector<int>> people_int(people.size());
-//        for (int index = 0; auto &i: req_skills) {
-//            to_int[i] = index++;
-//        }
-//        int nums_skills = req_skills.size();
-//        vector<vector<int>> who_has_skill(nums_skills, vector<int>());
-//        for (int i = 0; i < people.size(); ++i) {
-//            for (auto &j: people[i]) {
-//                people_int[i].push_back(to_int[j]);
-//                who_has_skill[to_int[j]].push_back(i);
-//            }
-//        }
-//        vector<int> res;
-//        int min_len = INT32_MAX;
-//        auto f = [&](auto &&f, int skill_index, unordered_set<int> &persons) {
-//            if (std::any_of(who_has_skill[skill_index].begin(), who_has_skill[skill_index].end(),
-//                            [&](const auto &item) {
-//                                return persons.count(item);
-//                            })) {
-//                if (skill_index + 1 >= nums_skills) {
-//                    if (min_len > persons.size()) {
-//                        min_len = persons.size();
-//                        res = std::move(vector<int>(persons.begin(), persons.end()));
-//                    }
-//                    return;
-//                } else f(f, skill_index + 1, persons);
-//            } else {
-//                if (skill_index + 1 >= nums_skills) {
-//                    if (min_len > persons.size() + 1) {
-//                        min_len = persons.size() + 1;
-//                        res = std::move(vector<int>(persons.begin(), persons.end()));
-//                        res.push_back(who_has_skill[skill_index][0]);
-//                    }
-//                    return;
-//                } else
-//                    for (auto i: who_has_skill[skill_index]) {
-//                        persons.insert(i);
-//                        f(f, skill_index + 1, persons);
-//                        persons.erase(i);
-//                    }
-//            }
-//        };
-//        unordered_set<int> persons;
-//        f(f, 0, persons);
-//        return res;
+        //        unordered_map<string, int> to_int;
+        //        vector<vector<int>> people_int(people.size());
+        //        for (int index = 0; auto &i: req_skills) {
+        //            to_int[i] = index++;
+        //        }
+        //        int nums_skills = req_skills.size();
+        //        vector<vector<int>> who_has_skill(nums_skills, vector<int>());
+        //        for (int i = 0; i < people.size(); ++i) {
+        //            for (auto &j: people[i]) {
+        //                people_int[i].push_back(to_int[j]);
+        //                who_has_skill[to_int[j]].push_back(i);
+        //            }
+        //        }
+        //        vector<int> res;
+        //        int min_len = INT32_MAX;
+        //        auto f = [&](auto &&f, int skill_index, unordered_set<int> &persons) {
+        //            if (std::any_of(who_has_skill[skill_index].begin(), who_has_skill[skill_index].end(),
+        //                            [&](const auto &item) {
+        //                                return persons.count(item);
+        //                            })) {
+        //                if (skill_index + 1 >= nums_skills) {
+        //                    if (min_len > persons.size()) {
+        //                        min_len = persons.size();
+        //                        res = std::move(vector<int>(persons.begin(), persons.end()));
+        //                    }
+        //                    return;
+        //                } else f(f, skill_index + 1, persons);
+        //            } else {
+        //                if (skill_index + 1 >= nums_skills) {
+        //                    if (min_len > persons.size() + 1) {
+        //                        min_len = persons.size() + 1;
+        //                        res = std::move(vector<int>(persons.begin(), persons.end()));
+        //                        res.push_back(who_has_skill[skill_index][0]);
+        //                    }
+        //                    return;
+        //                } else
+        //                    for (auto i: who_has_skill[skill_index]) {
+        //                        persons.insert(i);
+        //                        f(f, skill_index + 1, persons);
+        //                        persons.erase(i);
+        //                    }
+        //            }
+        //        };
+        //        unordered_set<int> persons;
+        //        f(f, 0, persons);
+        //        return res;
 
         int n = req_skills.size();
         unordered_map<int, vector<int>> res;
@@ -2889,8 +2887,8 @@ public:
             }
         }
         if (std::any_of(visited.begin(), visited.end(), [&](const auto &item) {
-            return !item;
-        }))
+                return !item;
+            }))
             return -1;
         int res = 0;
         for (auto &i: dp) {
@@ -2942,7 +2940,8 @@ public:
         string res;
         for (auto i: s) {
             if (i == '*' && !res.empty()) res.pop_back();
-            else res.push_back(i);
+            else
+                res.push_back(i);
         }
         return std::move(res);
     }
@@ -3222,7 +3221,8 @@ public:
                 mi = min(cur->val, mi);
                 ma = max(cur->val, ma);
                 return max(dfs(dfs, cur->left, mi, ma), dfs(dfs, cur->right, mi, ma));
-            } else return ma - mi;
+            } else
+                return ma - mi;
         };
         return dfs(dfs, root, INT32_MAX, INT32_MIN);
     }
@@ -3287,10 +3287,10 @@ public:
                 }
                 tails[i] = num;
             }
-//            This replacement technique works because replaced elements don't matter to us
-//            We only used end elements of existing lists to check if they can be extended otherwise form newer lists
-//            And since we have replaced a bigger element with smaller one it won't affect the
-//            step of creating new list after taking some part of existing list
+            //            This replacement technique works because replaced elements don't matter to us
+            //            We only used end elements of existing lists to check if they can be extended otherwise form newer lists
+            //            And since we have replaced a bigger element with smaller one it won't affect the
+            //            step of creating new list after taking some part of existing list
         }
         return tails.size();
     }
@@ -3322,42 +3322,42 @@ public:
         return res <= arr1.size() ? res : -1;
     }
 
-//    string longestPalindrome(const string &s) {
-//        int len = s.size();
-//        if (len == 1) return s;
-//        int start = 0;
-//        int res_len = 1;
-//        vector<vector<bool>> dp(2, vector<bool>(len, true));
-//        for (int i = 0; i < len - 1; ++i) {
-//            if (s[i] == s[i + 1]) {
-//                dp[0][i] = true;
-//                start = i;
-//                res_len = 2;
-//            } else {
-//                dp[0][i] = false;
-//            }
-//        }
-//        bool flag = true;
-//        auto proc = [&](int i) {
-//            for (int k = 0; k <= len - i; ++k) {
-//                if (dp[i % 2][k + 1] && s[k] == s[k + i - 1]) {
-//                    dp[i % 2][k] = true;
-//                    flag = true;
-//                    res_len = i;
-//                    start = k;
-//                } else {
-//                    dp[i % 2][k] = false;
-//                }
-//            }
-//        };
-//        for (int i = 3; i <= len && flag; ++i) {
-//            flag = false;
-//            proc(i);
-//            ++i;
-//            proc(i);
-//        }
-//        return s.substr(start, res_len);
-//    }
+    //    string longestPalindrome(const string &s) {
+    //        int len = s.size();
+    //        if (len == 1) return s;
+    //        int start = 0;
+    //        int res_len = 1;
+    //        vector<vector<bool>> dp(2, vector<bool>(len, true));
+    //        for (int i = 0; i < len - 1; ++i) {
+    //            if (s[i] == s[i + 1]) {
+    //                dp[0][i] = true;
+    //                start = i;
+    //                res_len = 2;
+    //            } else {
+    //                dp[0][i] = false;
+    //            }
+    //        }
+    //        bool flag = true;
+    //        auto proc = [&](int i) {
+    //            for (int k = 0; k <= len - i; ++k) {
+    //                if (dp[i % 2][k + 1] && s[k] == s[k + i - 1]) {
+    //                    dp[i % 2][k] = true;
+    //                    flag = true;
+    //                    res_len = i;
+    //                    start = k;
+    //                } else {
+    //                    dp[i % 2][k] = false;
+    //                }
+    //            }
+    //        };
+    //        for (int i = 3; i <= len && flag; ++i) {
+    //            flag = false;
+    //            proc(i);
+    //            ++i;
+    //            proc(i);
+    //        }
+    //        return s.substr(start, res_len);
+    //    }
     string longestPalindrome(const string &s) {
         int n = s.size();
         int res_r = 0;
@@ -3402,21 +3402,21 @@ public:
         return sum;
     }
 
-//    let say array be [a,b,c,d]
-//    answer = (a+b)-(c+d) OR
-//    answer = a-(b+c+d) Or
-//    answer = (d+b)-(a+c) and so on.. any combination could be possible
-//    notice that in general I can say that
-//    answer = S1-S2
-//    where S1 is sum of some of the numbers and S2 is sum of rest of numbers
-//    also note that S1+S2 = SUM (sum of all numbers)
-//    S1 >= S2 beacuse negative answer is not possible
-//    now we have to minimise answer
-//    answer = SUM - 2*S2 (Just substituting S1 by SUM-S2)
-//    To minimise answer S2 has to be maximum
-//    Now, max value of S2 is SUM/2 (bigger than this and answer would be negative which is not possible)
-//    so the question reduces to find closest sum (sum of numbers) to (SUM/2)
-//    now this could be understood as subset sum problem or 0/1 knapsack problem
+    //    let say array be [a,b,c,d]
+    //    answer = (a+b)-(c+d) OR
+    //    answer = a-(b+c+d) Or
+    //    answer = (d+b)-(a+c) and so on.. any combination could be possible
+    //    notice that in general I can say that
+    //    answer = S1-S2
+    //    where S1 is sum of some of the numbers and S2 is sum of rest of numbers
+    //    also note that S1+S2 = SUM (sum of all numbers)
+    //    S1 >= S2 beacuse negative answer is not possible
+    //    now we have to minimise answer
+    //    answer = SUM - 2*S2 (Just substituting S1 by SUM-S2)
+    //    To minimise answer S2 has to be maximum
+    //    Now, max value of S2 is SUM/2 (bigger than this and answer would be negative which is not possible)
+    //    so the question reduces to find closest sum (sum of numbers) to (SUM/2)
+    //    now this could be understood as subset sum problem or 0/1 knapsack problem
 
     int lastStoneWeightII(vector<int> &stones) {
         int n = stones.size();
@@ -3444,7 +3444,7 @@ public:
         vector<int> second;
         auto generate = [&](auto &&generate, int i, int end, int sum, vector<int> &listOfSubsetSums) -> void {
             if (i == end) {
-                listOfSubsetSums.push_back(sum); //add
+                listOfSubsetSums.push_back(sum);//add
                 return;
             }
             generate(generate, i + 1, end, sum + nums[i], listOfSubsetSums);
@@ -3471,13 +3471,13 @@ public:
             return i;
         };
         for (auto secondSetSum: second) {
-            int left = goal - secondSetSum; // How far off are we from the desired goal?
-            if (first[0] > left) { // all subset sums from first half are too big => Choose the smallest
+            int left = goal - secondSetSum;// How far off are we from the desired goal?
+            if (first[0] > left) {         // all subset sums from first half are too big => Choose the smallest
                 ans = min(ans, abs((first[0] + secondSetSum) - goal));
                 continue;
             }
             if (first[first.size() - 1] <
-                left) { // all subset sums from first half are too small => Choose the largest
+                left) {// all subset sums from first half are too small => Choose the largest
                 ans = min(ans, abs((first[(first.size() - 1)] + secondSetSum) - goal));
                 continue;
             }
@@ -3485,9 +3485,9 @@ public:
             if (first[pos] == left)
                 return 0;
             ans = min(ans, abs(
-                    secondSetSum + first[pos - 1] - goal)); // Checking for the floor value (largest sum < goal)
+                                   secondSetSum + first[pos - 1] - goal));// Checking for the floor value (largest sum < goal)
             ans = min(ans, abs(
-                    secondSetSum + first[pos] - goal)); //Checking for the ceiling value (smallest sum > goal)
+                                   secondSetSum + first[pos] - goal));//Checking for the ceiling value (smallest sum > goal)
         }
         return ans;
     }
@@ -3759,7 +3759,9 @@ public:
             if (isFound) {
                 beg = mid;
                 found = candidate;
-            } else { end = mid; }
+            } else {
+                end = mid;
+            }
         }
         return found;
     }
@@ -3781,7 +3783,8 @@ public:
                 num = num * 10 + s[j] - '0';
                 if (num <= k)
                     dp[j + 1] = (dp[j + 1] + dp[i]) % mod;
-                else break;
+                else
+                    break;
             }
         }
         return dp[n];
@@ -4728,7 +4731,7 @@ public:
         //dp[k]={0--->not filled,1---->A wins,-1----->B wins or A looses}
         auto dfs = [&](auto &&dfs, int dt, int k) -> bool {
             if (dp[k] != 0) { return dp[k] > 0; }//return the memoized ans but instead of value the bool
-            if (dt <= 0) { return false; }//B player get that total so A player loose.
+            if (dt <= 0) { return false; }       //B player get that total so A player loose.
 
             //check the k as binary string were unset bits implies not picked number
             for (int i = 0; i < m; i++) {
@@ -5216,7 +5219,6 @@ public:
         }
         return res;
     }
-
 };
 
 int main() {

@@ -1,8 +1,8 @@
 //
 // Created by David on 2023/8/28.
 //
-#include <queue>
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
@@ -13,7 +13,6 @@ public:
     queue<int> q_temp;
 
     MyStack() {
-
     }
 
     void push(int x) {
@@ -56,6 +55,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your MyStack object will be instantiated and called as such:
  * MyStack* obj = new MyStack();

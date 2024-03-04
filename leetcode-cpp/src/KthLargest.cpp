@@ -1,9 +1,9 @@
 //
 // Created by David Chen on 5/23/23.
 //
-#include<vector>
 #include <iostream>
 #include <queue>
+#include <vector>
 
 using namespace std;
 
@@ -30,3 +30,5 @@ public:
         return -pq.top();
     }
 };
+
+int main() { return 0; }

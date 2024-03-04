@@ -40,6 +40,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your BrowserHistory object will be instantiated and called as such:
  * BrowserHistory* obj = new BrowserHistory(homepage);

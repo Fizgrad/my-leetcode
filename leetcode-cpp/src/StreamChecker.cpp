@@ -46,6 +46,8 @@ public:
         return false;
     }
 };
+
+int main() { return 0; }
 /**
  * Your StreamChecker object will be instantiated and called as such:
  * StreamChecker* obj = new StreamChecker(words);

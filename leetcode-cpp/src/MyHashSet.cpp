@@ -17,7 +17,6 @@ public:
     static constexpr int mod = 1007;
 
     MyHashSet() : arr(1007, nullptr) {
-
     }
 
     void add(int key) {
@@ -76,6 +75,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your MyHashSet object will be instantiated and called as such:
  * MyHashSet* obj = new MyHashSet();

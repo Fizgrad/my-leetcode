@@ -21,7 +21,6 @@ public:
             decreasing.push(increasing.top());
             increasing.pop();
         }
-
     }
 
     double findMedian() {
@@ -29,3 +28,5 @@ public:
         return (decreasing.top() + increasing.top()) / 2.0;
     }
 };
+
+int main() { return 0; }

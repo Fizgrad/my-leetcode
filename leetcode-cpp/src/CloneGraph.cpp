@@ -2,9 +2,9 @@
 // Created by David Chen on 4/8/23.
 //
 #include <iostream>
+#include <queue>
 #include <unordered_map>
 #include <vector>
-#include <queue>
 
 using namespace std;
 
@@ -37,7 +37,7 @@ public:
         unordered_map<int, Node *> umap;
         queue<Node *> q;
         q.push(node);
-        if(node == nullptr){
+        if (node == nullptr) {
             return nullptr;
         }
         auto res = (umap[node->val] = new Node(node->val));
@@ -63,3 +63,5 @@ public:
         return res;
     }
 };
+
+int main() { return 0; }

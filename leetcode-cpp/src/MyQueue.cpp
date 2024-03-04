@@ -40,7 +40,7 @@ public:
     }
 };
 
-
+int main() { return 0; }
 
 /**
  * Your MyQueue object will be instantiated and called as such:

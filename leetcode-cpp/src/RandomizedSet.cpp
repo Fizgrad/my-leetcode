@@ -1,11 +1,12 @@
-#include <vector>
+#include <iostream>
 #include <unordered_map>
-
+#include <vector>
 using namespace std;
 
 class RandomizedSet {
     vector<int> v;
     unordered_map<int, int> mp;
+
 public:
     RandomizedSet() {}
 
@@ -38,3 +39,5 @@ public:
         return v[rand() % v.size()];
     }
 };
+
+int main() { return 0; }

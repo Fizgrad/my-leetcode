@@ -3,12 +3,13 @@
 //
 #include <iostream>
 #include <map>
+#include <unordered_map>
+#include <vector>
 
 using namespace std;
 
 class UndergroundSystem {
 public:
-
     unordered_map<int, pair<int, int>> customers;
     unordered_map<string, int> string_tab;
     vector<unordered_map<int, pair<int, double>>> avg;
@@ -23,7 +24,6 @@ public:
     }
 
     UndergroundSystem() {
-
     }
 
     void checkIn(int id, string stationName, int t) {
@@ -46,6 +46,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your UndergroundSystem object will be instantiated and called as such:
  * UndergroundSystem* obj = new UndergroundSystem();

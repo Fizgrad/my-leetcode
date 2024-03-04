@@ -1,8 +1,8 @@
 //
 // Created by David Chen on 3/18/23.
 //
-#include<iostream>
-#include<unordered_map>
+#include <iostream>
+#include <unordered_map>
 
 using namespace std;
 struct TrieNode {
@@ -51,6 +51,8 @@ public:
         return temp != nullptr;
     }
 };
+
+int main() { return 0; }
 
 /**
  * Your Trie object will be instantiated and called as such:

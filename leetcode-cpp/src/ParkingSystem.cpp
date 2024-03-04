@@ -24,6 +24,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your ParkingSystem object will be instantiated and called as such:
  * ParkingSystem* obj = new ParkingSystem(big, medium, small);

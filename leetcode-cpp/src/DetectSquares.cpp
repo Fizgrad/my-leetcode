@@ -1,8 +1,9 @@
 //
 // Created by David Chen on 4/2/23.
 //
-#include <vector>
+#include <algorithm>
 #include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -34,6 +35,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your DetectSquares object will be instantiated and called as such:
  * DetectSquares* obj = new DetectSquares();

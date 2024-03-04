@@ -2,12 +2,11 @@
 // Created by david on 23-7-18.
 //
 #include <iostream>
-#include <unordered_map>
 #include <queue>
+#include <unordered_map>
 
 class LRUCache {
 public:
-
     int capacity;
     std::unordered_map<int, int> data;
     std::unordered_map<int, int> times;
@@ -42,7 +41,6 @@ public:
                     continue;
                 } else {
                     break;
-
                 }
             }
             data.erase(eraseElement);
@@ -53,6 +51,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your LRUCache object will be instantiated and called as such:
  * LRUCache* obj = new LRUCache(capacity);

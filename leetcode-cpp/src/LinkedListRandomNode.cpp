@@ -5,9 +5,9 @@
  * Definition for singly-linked list.
  */
 #include <iostream>
-#include <vector>
 #include <random>
-using namespace  std;
+#include <vector>
+using namespace std;
 
 
 struct ListNode {
@@ -29,7 +29,7 @@ public:
 
     Solution(ListNode *head) {
 
-        while(head!= nullptr){
+        while (head != nullptr) {
             this->vals.push_back(head->val);
             head = head->next;
         }
@@ -37,10 +37,12 @@ public:
 
     int getRandom() {
         int n = vals.size();
-        uniform_int_distribution<unsigned> u(0,n);
+        uniform_int_distribution<unsigned> u(0, n);
         return vals[u(e)];
     }
 };
+
+int main() { return 0; }
 
 /**
  * Your Solution object will be instantiated and called as such:

@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 #include <queue>
 
 using namespace std;
@@ -82,6 +82,7 @@ public:
     }
 };
 
+int main() { return 0; }
 // Your Codec object will be instantiated and called as such:
 // Codec ser, deser;
 // TreeNode* ans = deser.deserialize(ser.serialize(root));

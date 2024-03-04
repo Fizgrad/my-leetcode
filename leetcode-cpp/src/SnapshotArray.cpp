@@ -13,7 +13,6 @@ public:
     int snap_id = 0;
 
     SnapshotArray(int length) : snapshot(length, vector<pair<int, int>>(1, {0, 0})) {
-
     }
 
     void set(int index, int val) {
@@ -22,7 +21,6 @@ public:
         } else {
             snapshot[index].back().second = val;
         }
-
     }
 
     int snap() {
@@ -47,11 +45,11 @@ public:
             }
         }
 
-        return 0; // 如果找不到合适的快照，则返回默认值（此处为0）
+        return 0;// 如果找不到合适的快照，则返回默认值（此处为0）
     }
-
 };
 
+int main() { return 0; }
 /**
  * Your SnapshotArray object will be instantiated and called as such:
  * SnapshotArray* obj = new SnapshotArray(length);

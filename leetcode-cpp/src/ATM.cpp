@@ -12,7 +12,6 @@ public:
     constexpr static int num[5] = {20, 50, 100, 200, 500};
 
     ATM() : banknotesCount(5, 0) {
-
     }
 
     void deposit(vector<int> banknotesCount) {
@@ -41,6 +40,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your ATM object will be instantiated and called as such:
  * ATM* obj = new ATM();

@@ -39,6 +39,7 @@ struct ListNode {
     ListNode *next;
 
     ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
 struct TrieNode {
@@ -513,6 +514,24 @@ public:
         ListNode *virtualNode = new ListNode(0, head);
         f(f, virtualNode);
         return virtualNode->next;
+    }
+
+    int bagOfTokensScore(vector<int> &tokens, int power) {
+        sort(begin(tokens), end(tokens));
+        int score = 0;
+        int res = 0;
+        int i = 0;
+        int j = tokens.size() - 1;
+        while (j >= i) {
+            while (i < tokens.size() && power >= tokens[i]) {
+                power -= tokens[i++];
+                res = max(res, ++score);
+            }
+            if (j < i || score == 0) return res;
+            power += tokens[j--];
+            --score;
+        }
+        return res;
     }
 };
 

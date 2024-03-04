@@ -1,24 +1,23 @@
 //
 // Created by David Chen on 5/20/23.
 //
-#include<iostream>
-#include <vector>
 #include <algorithm>
-#include <queue>
-#include <map>
 #include <array>
-#include <set>
-#include <stack>
-#include <deque>
-#include <algorithm>
-#include <cmath>
 #include <cctype>
-#include <sstream>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <regex>
+#include <set>
+#include <sstream>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
-#include <numeric>
-#include <climits>
+#include <vector>
 
 using namespace std;
 
@@ -405,8 +404,9 @@ public:
                     continue;
                 }
                 if (static_cast<double>(bombs[i][0] - bombs[j][0]) * (bombs[i][0] - bombs[j][0]) +
-                    static_cast<double>(bombs[i][1] - bombs[j][1]) * (bombs[i][1] - bombs[j][1]) -
-                    static_cast<double>(bombs[i][2]) * bombs[i][2] <= 0) {
+                            static_cast<double>(bombs[i][1] - bombs[j][1]) * (bombs[i][1] - bombs[j][1]) -
+                            static_cast<double>(bombs[i][2]) * bombs[i][2] <=
+                    0) {
                     graph[i].push_back(j);
                 }
             }
@@ -570,14 +570,16 @@ public:
                 prev = i;
             } else if (i > prev + 1) {
                 if (prev != begin) res.push_back(to_string(begin) + "->" + to_string(prev));
-                else res.push_back(to_string(begin));
+                else
+                    res.push_back(to_string(begin));
                 prev = begin = i;
             }
         }
         if (flag) {
             flag = false;
             if (prev != begin) res.push_back(to_string(begin) + "->" + to_string(prev));
-            else res.push_back(to_string(begin));
+            else
+                res.push_back(to_string(begin));
         }
         return std::move(res);
     }
@@ -746,7 +748,7 @@ public:
         map<string, int> res;
         vector<string> token;
         string temp;
-        int type = 0; // 0: name  1: digits
+        int type = 0;// 0: name  1: digits
         for (int i = 0; i < formula.size(); ++i) {
             if (isupper(formula[i])) {
                 if (!temp.empty())
@@ -797,7 +799,6 @@ public:
             if ('(' == *i->begin()) {
                 nums.pop_back();
             }
-
         }
         string string_res;
         for (auto &i: res) {
@@ -826,17 +827,17 @@ public:
 
         // 求 a 在模 MOD 下的乘法逆元，即 (a^-1) % MOD
         auto mod_inverse = [&](int a) -> int {
-            return fast_pow(a, MOD - 2); // 根据费马小定理
+            return fast_pow(a, MOD - 2);// 根据费马小定理
         };
 
         // 计算 C(n, k) % MOD
         auto nCk_mod = [&](int n, int k) {
-            int numerator = 1; // 分子，保存 n! % MOD
+            int numerator = 1;// 分子，保存 n! % MOD
             for (int i = 1; i <= n; ++i) {
                 numerator = (1LL * numerator * i) % MOD;
             }
 
-            int denominator = 1; // 分母，保存 (k! * (n-k)!) % MOD
+            int denominator = 1;// 分母，保存 (k! * (n-k)!) % MOD
             for (int i = 1; i <= k; ++i) {
                 denominator = (1LL * denominator * i) % MOD;
             }
@@ -992,7 +993,7 @@ public:
                     if (i - j <= sum / 2)
                         temp[i - j] = max(temp[i - j] /* ！！！ */, dp[j] + j);
                 } else {
-                    temp[j - i] = max(temp[j - i] /* ！！！ */ , dp[j] + i);
+                    temp[j - i] = max(temp[j - i] /* ！！！ */, dp[j] + i);
                 }
             }
             dp = temp;
@@ -1005,7 +1006,6 @@ public:
         int n = locations.size();
         vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>(fuel + 1, -1)));
         auto f = [&](auto &&f, int from, int to, int remaining_fuel) {
-
             if (dp[from][to][remaining_fuel] != -1) {
                 return dp[from][to][remaining_fuel];
             }
@@ -1037,7 +1037,8 @@ public:
                 pq.push(arr[i]);
                 pq.push(arr[n - i - 1]);
             }
-        else for (auto &i: arr) pq.push(i);
+        else
+            for (auto &i: arr) pq.push(i);
         long long res = 0;
         int left = candidates;
         int right = n - candidates - 1;
@@ -1164,25 +1165,25 @@ public:
 
         int low = col - 1;
         int high = cells.size();
-//        vector<unordered_set<int>> graph(col, unordered_set < int > ());
-//        int prev_day = -1;
+        //        vector<unordered_set<int>> graph(col, unordered_set < int > ());
+        //        int prev_day = -1;
         auto f = [&](int mid) {
-//            if (prev_day == -1) {
-//                for (int i = 0; i < mid; ++i) {
-//                    graph[cells[i][1] - 1].insert(cells[i][0] - 1);
-//                }
-//                prev_day = mid;
-//            } else if (prev_day < mid) {
-//                for (int i = prev_day; i < mid; ++i) {
-//                    graph[cells[i][1] - 1].insert(cells[i][0] - 1);
-//                }
-//                prev_day = mid;
-//            } else {
-//                for (int i = mid; i < prev_day; ++i) {
-//                    graph[cells[i][1] - 1].erase(cells[i][0] - 1);
-//                }
-//                prev_day = mid;
-//            }
+            //            if (prev_day == -1) {
+            //                for (int i = 0; i < mid; ++i) {
+            //                    graph[cells[i][1] - 1].insert(cells[i][0] - 1);
+            //                }
+            //                prev_day = mid;
+            //            } else if (prev_day < mid) {
+            //                for (int i = prev_day; i < mid; ++i) {
+            //                    graph[cells[i][1] - 1].insert(cells[i][0] - 1);
+            //                }
+            //                prev_day = mid;
+            //            } else {
+            //                for (int i = mid; i < prev_day; ++i) {
+            //                    graph[cells[i][1] - 1].erase(cells[i][0] - 1);
+            //                }
+            //                prev_day = mid;
+            //            }
             vector<unordered_set<int>> graph(col, unordered_set<int>());
             for (int i = 0; i < mid; ++i) {
                 graph[cells[i][1] - 1].insert(cells[i][0] - 1);
@@ -1285,8 +1286,8 @@ public:
         auto dfs = [&](auto &&dfs, int index) {
             if (index >= req_num) {
                 if (all_of(begin(degree), end(degree), [](int item) {
-                    return item == 0;
-                }))
+                        return item == 0;
+                    }))
                     res = max(res, __builtin_popcount(bit));
                 return;
             } else {
@@ -1313,13 +1314,13 @@ public:
         int twos = 0;
         int threes = 0;
         for (auto num: nums) {
-//twos keep the bits which appear twice
+            //twos keep the bits which appear twice
             twos |= ones & num;
-// ones keep the bits which appear only once
+            // ones keep the bits which appear only once
             ones ^= num;
-// threes represent whether one bit has appeared three times
+            // threes represent whether one bit has appeared three times
             threes = ones & twos;
-//if one bit has appeared three times, we clear the corresponding bits in both ones and twos
+            //if one bit has appeared three times, we clear the corresponding bits in both ones and twos
             ones &= ~threes;
             twos &= ~threes;
         }
@@ -1397,7 +1398,8 @@ public:
             } else {
                 if (right < n)
                     sum += nums[right++];
-                else break;
+                else
+                    break;
             }
         }
         return res == INT32_MAX ? 0 : res;
@@ -1474,7 +1476,6 @@ public:
                     if (c2 > c1) c1 = c2 = 0;
                     if (c2 && c1) res = max(res, c1 - c2);
                 }
-
             }
         }
         return res;
@@ -1493,7 +1494,8 @@ public:
                 if (i->left || i->right) {
                     if (i->left) temp.push_back(i->left);
                     if (i->right) temp.push_back(i->right);
-                } else return res;
+                } else
+                    return res;
             }
             temp.swap(next);
         }
@@ -1646,7 +1648,8 @@ public:
                 if (events[mid][0] > value) {
                     req = mid;
                     hi = mid - 1;
-                } else lo = mid + 1;
+                } else
+                    lo = mid + 1;
             }
             return req;
         };
@@ -1925,7 +1928,7 @@ public:
         const int da[4] = {100, 75, 50, 25};
         const int db[4] = {0, 25, 50, 75};
         auto f = [&](auto &&f, int A, int B) {
-            if (A < 0 || B < 0)return 0.0;
+            if (A < 0 || B < 0) return 0.0;
             if (cache.count({A, B})) {
                 return cache[{A, B}];
             }
@@ -1943,7 +1946,7 @@ public:
             }
             return cache[{A, B}] = res;
         };
-        if (n >= 4800) return 1; // trick
+        if (n >= 4800) return 1;// trick
         return f(f, n, n);
     }
 
@@ -1951,7 +1954,7 @@ public:
         int n = nums.size();
         vector<vector<int>> cache(n, vector<int>(n, -1));
         auto f = [&](auto &&f, int i, int j) {
-            if (i < 0 || j < 0 || i >= n || j >= n || i > j)return 0;
+            if (i < 0 || j < 0 || i >= n || j >= n || i > j) return 0;
             if (i == j) return nums[i];
             if (cache[i][j] != -1) return cache[i][j];
             return cache[i][j] = max(nums[i] - f(f, i + 1, j), nums[j] - f(f, i, j - 1));
@@ -2011,7 +2014,6 @@ public:
         } while (std::next_permutation(nums.begin(), nums.end()));
         return res;
     }
-
 };
 
 int main() {

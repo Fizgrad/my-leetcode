@@ -30,6 +30,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your RLEIterator object will be instantiated and called as such:
  * RLEIterator* obj = new RLEIterator(encoding);

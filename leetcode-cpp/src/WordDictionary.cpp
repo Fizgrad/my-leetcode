@@ -1,6 +1,7 @@
 //
 // Created by David Chen on 3/19/23.
 //
+#include <algorithm>
 #include <iostream>
 #include <unordered_map>
 
@@ -53,6 +54,7 @@ public:
     }
 };
 
+int main() { return 0; }
 /**
  * Your WordDictionary object will be instantiated and called as such:
  * WordDictionary* obj = new WordDictionary();

@@ -1,24 +1,23 @@
 //
 // Created by David Chen on 8/2/23.
 //
-#include<iostream>
-#include <vector>
 #include <algorithm>
-#include <queue>
-#include <map>
 #include <array>
-#include <set>
-#include <stack>
-#include <deque>
-#include <algorithm>
-#include <cmath>
 #include <cctype>
-#include <sstream>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <regex>
+#include <set>
+#include <sstream>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
-#include <numeric>
-#include <climits>
+#include <vector>
 
 using namespace std;
 
@@ -109,7 +108,7 @@ public:
             trie.add(i);
         }
         int n = s.size();
-        vector<vector<int >> dp(n, vector<int>(n, -1));
+        vector<vector<int>> dp(n, vector<int>(n, -1));
         auto f = [&](auto &&f, int i, int j) {
             if (dp[i][j] != -1) {
                 return dp[i][j];
@@ -130,7 +129,7 @@ public:
 
     vector<TreeNode *> generateTrees(int n) {
         vector<vector<vector<TreeNode *>>> dp(n + 1,
-                                              vector<vector<TreeNode * >>(n + 1, vector<TreeNode *>()));
+                                              vector<vector<TreeNode *>>(n + 1, vector<TreeNode *>()));
         auto f = [&](auto &&f, int low, int high) -> vector<TreeNode *> {
             if (low > high) {
                 return {};
@@ -375,17 +374,20 @@ public:
         for (int i = 0; i < m; ++i) {
             if (obstacleGrid[0][i] == 0)
                 res[i] = 1;
-            else break;
+            else
+                break;
         }
         while (--n) {
             res.swap(temp);
             if (obstacleGrid[obstacleGrid.size() - n][0] == 0) {
                 res[0] = temp[0];
-            } else res[0] = 0;
+            } else
+                res[0] = 0;
             for (int i = 1; i < m; ++i) {
                 if (obstacleGrid[obstacleGrid.size() - n][i] == 0)
                     res[i] = temp[i] + res[i - 1];
-                else res[i] = 0;
+                else
+                    res[i] = 0;
             }
         }
         return res.back();
@@ -576,7 +578,6 @@ public:
                     return dp[index1][index2] = res;
                 }
             }
-
         };
         return f(f, 0, 0);
     }
@@ -709,13 +710,13 @@ public:
 
         } while (fast != slow);
 
-//        int res = 0;
-//        fast = head;
-//        while (fast != slow) {
-//            slow = slow->next;
-//            fast = fast->next;
-//            ++res;
-//        }
+        //        int res = 0;
+        //        fast = head;
+        //        while (fast != slow) {
+        //            slow = slow->next;
+        //            fast = fast->next;
+        //            ++res;
+        //        }
         return true;
     }
 
@@ -786,7 +787,6 @@ public:
         }
         vector<int> res(n, 0);
         auto dfs = [&](auto &&dfs, int count, int index) {
-
             int dx[2] = {1, -1};
             if (count < res[index]) {
                 return;
@@ -832,7 +832,6 @@ public:
         }
 
         auto uf_find = [&](int i) {
-
             int next = parents[i];
             while (next != i) {
                 i = next;
@@ -878,7 +877,6 @@ public:
                 uf_union(a, b);
                 res += tmp.first;
             }
-
         }
         return res;
     }
@@ -886,14 +884,14 @@ public:
     int minimumEffortPath(vector<vector<int>> &heights) {
         int rows = heights.size(), cols = heights[0].size();
         vector<vector<int>> dist(rows, vector<int>(cols, INT_MAX));
-        priority_queue<tuple<int, int, int>, vector<tuple<int, int, int >>, greater<>>
+        priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>>
                 minHeap;
         minHeap.emplace(0, 0, 0);
         dist[0][0] = 0;
 
-        int directions[4][2] = {{0,  1},
-                                {0,  -1},
-                                {1,  0},
+        int directions[4][2] = {{0, 1},
+                                {0, -1},
+                                {1, 0},
                                 {-1, 0}};
 
         while (!minHeap.empty()) {
@@ -971,7 +969,6 @@ public:
             }
             res[times[i]].push_back(i);
             ++times[i];
-
         }
         return res;
     }
@@ -995,8 +992,7 @@ public:
                               previousCount = Count(row);
                               isFirst = 0;
                           }
-                      }
-        );
+                      });
 
         return totalBeams;
     }
@@ -1046,7 +1042,7 @@ public:
 
     int jobScheduling(vector<int> &startTime, vector<int> &endTime, vector<int> &profit) {
         int n = startTime.size();
-        vector<tuple<int, int, int >> inputs(n);
+        vector<tuple<int, int, int>> inputs(n);
         for (int i = 0; i < n; ++i) {
             inputs[i] = std::make_tuple(startTime[i], endTime[i], profit[i]);
         }
@@ -1171,7 +1167,7 @@ public:
     int maxAncestorDiff(TreeNode *root) {
         int ans = 0;
         auto dfs = [&](auto &&dfs, TreeNode *node, int max_num, int min_num) {
-            if (!node)return;
+            if (!node) return;
             max_num = max(max_num, node->val);
             min_num = min(min_num, node->val);
             ans = max(ans, std::abs(max_num - min_num));
@@ -1335,16 +1331,16 @@ public:
                     updateRes((i - index) * num);
                 }
                 if (stack.empty()) {
-                    stack.emplace(arr[i] * static_cast<long long> (i + 1) % Mod, i);
+                    stack.emplace(arr[i] * static_cast<long long>(i + 1) % Mod, i);
                 } else {
-                    stack.emplace(arr[i] * static_cast<long long> (i - stack.top().second ) % Mod, i);
+                    stack.emplace(arr[i] * static_cast<long long>(i - stack.top().second) % Mod, i);
                 }
             }
         }
         while (stack.size()) {
             auto [num, index] = stack.top();
             stack.pop();
-            updateRes(static_cast<long long> (n - index) % Mod * num);
+            updateRes(static_cast<long long>(n - index) % Mod * num);
         }
         return res;
     }
@@ -1464,7 +1460,8 @@ public:
                     if (i == 0) count = (count + dp[i][j]) % M;
                     if (j == 0) count = (count + dp[i][j]) % M;
                     temp[i][j] = (((i > 0 ? dp[i - 1][j] : 0) + (i < m - 1 ? dp[i + 1][j] : 0)) % M +
-                                  ((j > 0 ? dp[i][j - 1] : 0) + (j < n - 1 ? dp[i][j + 1] : 0)) % M) % M;
+                                  ((j > 0 ? dp[i][j - 1] : 0) + (j < n - 1 ? dp[i][j + 1] : 0)) % M) %
+                                 M;
                 }
             }
             dp = temp;
@@ -1536,8 +1533,8 @@ public:
                         break;
                 }
             } else if (std::all_of(i.begin(), i.end(), [&](const auto &item) {
-                return (item >= '0' && item <= '9') || item == '-';
-            })) {
+                           return (item >= '0' && item <= '9') || item == '-';
+                       })) {
                 stack.push_back(stoi(i));
                 continue;
             }
@@ -1566,7 +1563,7 @@ public:
 
     vector<vector<int>> divideArray(vector<int> &nums, int k) {
         std::sort(nums.begin(), nums.end());
-        vector<vector<int >> ans;
+        vector<vector<int>> ans;
         for (auto i = 0; i < nums.size(); i += 3) {
             if (nums[i + 2] - nums[i] <= k) {
                 ans.push_back({nums[i], nums[i + 1], nums[i + 2]});
@@ -1612,7 +1609,8 @@ public:
             int res = 0;
             for (int i = 1; i <= k; ++i) {
                 res = max(f(f, last_index - i) +
-                          (i) * (*max_element(arr.begin() + last_index - i + 1, arr.begin() + last_index + 1)), res);
+                                  (i) * (*max_element(arr.begin() + last_index - i + 1, arr.begin() + last_index + 1)),
+                          res);
             }
             return dp[last_index] = res;
         };
@@ -1632,13 +1630,13 @@ public:
         while (j <= s.end()) {
             bool flag = false;
             if (std::all_of(nums.begin(), nums.end(), [&](const auto &item) {
-                return item <= 0;
-            })) {
+                    return item <= 0;
+                })) {
                 flag = true;
-                if (res > static_cast<int>( j - i )) {
+                if (res > static_cast<int>(j - i)) {
                     res_start = i;
                     res_end = j;
-                    res = static_cast<int>( j - i );
+                    res = static_cast<int>(j - i);
                 }
             }
             if (i < j && j == s.end()) {
@@ -1667,7 +1665,8 @@ public:
     int firstUniqChar(const std::string &s) {
         int freq[26] = {};
         for (char c: s) ++freq[c - 'a'];
-        for (int i = 0; i < s.size(); ++i) if (freq[s[i] - 'a'] == 1) return i;
+        for (int i = 0; i < s.size(); ++i)
+            if (freq[s[i] - 'a'] == 1) return i;
         return -1;
     }
 
@@ -1697,7 +1696,7 @@ public:
         if (time[0] == '?') time[0] = (time[1] <= '3' || time[1] == '?') ? '2' : '1';
         if (time[1] == '?') time[1] = (time[0] == '2') ? '3' : '9';
         if (time[3] == '?') time[3] = '5';
-        if (time[4] == '?')time[4] = '9';
+        if (time[4] == '?') time[4] = '9';
         return time;
     }
 
@@ -1896,7 +1895,8 @@ public:
                 if (*left == *right) {
                     --right;
                     ++left;
-                } else return false;
+                } else
+                    return false;
             }
             return true;
         };
@@ -1910,12 +1910,12 @@ public:
         class StringIndexAdapter {
         public:
             StringIndexAdapter(const std::string &str, const std::vector<int> &indices)
-                    : str_(str), indices_(indices) {}
+                : str_(str), indices_(indices) {}
 
             class Iterator {
             public:
                 Iterator(const StringIndexAdapter *adapter, size_t pos)
-                        : adapter_(adapter), pos_(pos) {}
+                    : adapter_(adapter), pos_(pos) {}
 
                 Iterator &operator++() {
                     ++pos_;
@@ -1965,7 +1965,8 @@ public:
                 if (*left == *right) {
                     --right;
                     ++left;
-                } else return false;
+                } else
+                    return false;
             }
             return true;
         };
@@ -1982,7 +1983,9 @@ public:
         };
 
         auto checkIsDisjoint = [](const StringIndexAdapter &a, const StringIndexAdapter &b) {
-            for (auto i: a.indices_) for (auto j: b.indices_) if (i == j) return false;
+            for (auto i: a.indices_)
+                for (auto j: b.indices_)
+                    if (i == j) return false;
             return true;
         };
 
@@ -2034,7 +2037,6 @@ public:
         }
         return res;
     }
-
 };
 
 int main() {
