@@ -533,6 +533,26 @@ public:
         }
         return res;
     }
+
+    int minimumLength(const string &s) {
+        int i = 0;
+        int j = s.size() - 1;
+        while (i <= j) {
+            if (i == j) return 1;
+            auto c = s[i];
+            if (s[j] == c) {
+                while (j > i && s[j] == c) {
+                    --j;
+                }
+                while (i < j && s[i] == c) {
+                    ++i;
+                }
+                if (i == j) return (s[i] == c) ? 0 : 1;
+            } else
+                return j - i + 1;
+        }
+        return j - i + 1;
+    }
 };
 
 int main() { return 0; }
