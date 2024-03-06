@@ -6,6 +6,7 @@
 #include <cctype>
 #include <climits>
 #include <cmath>
+#include <cstddef>
 #include <deque>
 #include <iostream>
 #include <map>
@@ -552,6 +553,30 @@ public:
                 return j - i + 1;
         }
         return j - i + 1;
+    }
+
+    bool hasCycle(ListNode *head) {
+        ListNode *slow = head;
+        ListNode *fast = head;
+        if (head == nullptr) return false;
+        do {
+            if (slow->next != nullptr) {
+                slow = slow->next;
+            } else {
+                return false;
+            }
+            if (fast->next != nullptr) {
+                fast = fast->next;
+            } else {
+                return false;
+            }
+            if (fast->next != nullptr) {
+                fast = fast->next;
+            } else {
+                return false;
+            }
+        } while (fast != slow);
+        return true;
     }
 };
 
