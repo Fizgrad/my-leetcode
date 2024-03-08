@@ -594,6 +594,26 @@ public:
         }
         return res;
     }
+
+    ListNode *middleNode(ListNode *head) {
+        auto fast = head;
+        auto slow = head;
+        while (fast->next) {
+            if (slow->next != nullptr) {
+                slow = slow->next;
+            } else
+                return slow;
+            if (fast->next != nullptr) {
+                fast = fast->next;
+            } else
+                return slow;
+            if (fast->next != nullptr) {
+                fast = fast->next;
+            } else
+                return slow;
+        }
+        return slow;
+    }
 };
 
 int main() { return 0; }
