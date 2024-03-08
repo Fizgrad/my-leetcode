@@ -578,6 +578,22 @@ public:
         } while (fast != slow);
         return true;
     }
+
+    int maxFrequencyElements(vector<int> &nums) {
+        int max_freq = 1;
+        unordered_map<int, int> times;
+        int res = 0;
+        for (auto i: nums) {
+            ++times[i];
+            if (times[i] > max_freq) {
+                res = times[i];
+                max_freq = times[i];
+            } else if (times[i] == max_freq) {
+                res += times[i];
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
