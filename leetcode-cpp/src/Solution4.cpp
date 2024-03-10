@@ -626,6 +626,17 @@ public:
         }
         return -1;
     }
+
+    vector<int> intersection(vector<int> &nums1, vector<int> &nums2) {
+        unordered_set<int> set1;
+        unordered_set<int> set2;
+        for (auto i: nums1) set1.insert(i);
+        for (auto i: nums2) set2.insert(i);
+        vector<int> res;
+        for (auto i: set1)
+            if (set2.find(i) != set2.end()) res.emplace_back(i);
+        return res;
+    }
 };
 
 int main() { return 0; }
