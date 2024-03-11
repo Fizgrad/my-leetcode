@@ -637,6 +637,18 @@ public:
             if (set2.find(i) != set2.end()) res.emplace_back(i);
         return res;
     }
+
+    string customSortString(string order, string s) {
+        int i = 0;
+        vector<int> weights('z' - 'a' + 1, 0);
+        for (auto c: order) {
+            weights[c - 'a'] = i++;
+        }
+        std::sort(s.begin(), s.end(), [&](const auto &a, const auto &b) -> bool {
+            return weights[a - 'a'] < weights[b - 'a'];
+        });
+        return s;
+    }
 };
 
 int main() { return 0; }
