@@ -649,6 +649,48 @@ public:
         });
         return s;
     }
+
+    ListNode *removeZeroSumSublists(ListNode *head) {
+        int sum = 0;
+        int index = 0;
+        auto pt = head;
+        unordered_map<int, ListNode *> index2node;
+        unordered_map<ListNode *, int> node2sum;
+        unordered_map<int, int> sum2index;
+        auto virtual_node = new ListNode(0);
+        virtual_node->next = head;
+        index2node[index] = virtual_node;
+        sum2index[0] = index;
+        node2sum[virtual_node] = 0;
+        while (pt != nullptr) {
+            sum += pt->val;
+            index += 1;
+            index2node[index] = pt;
+            node2sum[pt] = sum;
+            if (sum2index.find(sum) == sum2index.end()) {
+                sum2index[sum] = index;
+            } else {
+                auto prev_index = sum2index[sum];
+                auto prev_node = index2node[prev_index];
+                auto remove_node = prev_node->next;
+                while (remove_node != nullptr && remove_node != pt->next) {
+                    auto remove_sum = node2sum[remove_node];
+                    if (index2node[sum2index[remove_sum]] == remove_node)
+                        sum2index.erase(remove_sum);
+                    remove_node = remove_node->next;
+                }
+                prev_node->next = pt->next;
+                sum2index[sum] = prev_index;
+            }
+            pt = pt->next;
+        }
+        if (sum2index.find(0) != sum2index.end()) {
+            auto prev_index = sum2index[sum];
+            auto prev_node = index2node[prev_index];
+            prev_node->next = nullptr;
+        }
+        return virtual_node->next;
+    }
 };
 
 int main() { return 0; }
