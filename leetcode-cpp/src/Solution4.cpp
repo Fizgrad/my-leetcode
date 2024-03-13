@@ -691,6 +691,12 @@ public:
         }
         return virtual_node->next;
     }
+
+    int pivotInteger(int n) {
+        int x2 = n * (1 + n) / 2;
+        int x = sqrt(x2);
+        return x * x == x2 ? x : -1;
+    }
 };
 
 int main() { return 0; }
