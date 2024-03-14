@@ -697,6 +697,33 @@ public:
         int x = sqrt(x2);
         return x * x == x2 ? x : -1;
     }
+
+    int numSubarraysWithSum(vector<int> &nums, int goal) {
+        vector<int> gaps;
+        int res = 0;
+        int last_index = -1;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (nums[i] == 1) {
+                gaps.push_back(i - last_index - 1);
+                last_index = i;
+            }
+        }
+        gaps.push_back(nums.size() - last_index - 1);
+        if (goal == 0) {
+            for (int i = 0; i < gaps.size(); ++i) {
+                res += (gaps[i] + 1) * gaps[i] / 2;
+            }
+        } else if (goal == 1) {
+            for (int i = 0; i + 1 < gaps.size(); ++i) {
+                res += (gaps[i] + 1) * (gaps[i + 1] + 1);
+            }
+        } else {
+            for (int i = 0; i + goal < gaps.size(); ++i) {
+                res += (gaps[i] + 1) * (gaps[i + goal] + 1);
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
