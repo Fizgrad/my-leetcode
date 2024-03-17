@@ -739,6 +739,26 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> insert(vector<vector<int>> &intervals, vector<int> &newInterval) {
+        vector<vector<int>> res;
+        bool flag = 0;
+        for (int i = 0; i < intervals.size(); ++i) {
+            if (intervals[i][1] < newInterval[0]) {
+                res.emplace_back(intervals[i]);
+                continue;
+            }
+            if (newInterval[1] < intervals[i][0]) {
+                if (!flag) res.emplace_back(newInterval);
+                res.emplace_back(intervals[i]);
+                flag = 1;
+                continue;
+            }
+            newInterval = {min(newInterval[0], intervals[i][0]), max(newInterval[1], intervals[i][1])};
+        }
+        if (!flag) res.emplace_back(newInterval);
+        return res;
+    }
 };
 
 int main() { return 0; }
