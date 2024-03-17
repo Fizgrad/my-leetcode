@@ -759,6 +759,24 @@ public:
         if (!flag) res.emplace_back(newInterval);
         return res;
     }
+
+    int findMaxLength(vector<int> &nums) {
+        int sum = 0;
+        unordered_map<int, int> indices;
+        indices[0] = -1;
+        int res = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (nums[i] == 0) --sum;
+            else
+                ++sum;
+            if (indices.find(sum) == indices.end())
+                indices[sum] = i;
+            else {
+                res = max(res, i - indices[sum]);
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
