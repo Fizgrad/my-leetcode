@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <deque>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <numeric>
 #include <queue>
@@ -16,6 +17,7 @@
 #include <set>
 #include <sstream>
 #include <stack>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -773,6 +775,25 @@ public:
                 indices[sum] = i;
             else {
                 res = max(res, i - indices[sum]);
+            }
+        }
+        return res;
+    }
+
+    int findMinArrowShots(vector<vector<int>> &points) {
+        std::sort(begin(points), end(points), [](const auto &a, const auto &b) {
+            return a[0] < b[0];
+        });
+        int res = 1;
+        int x = points[0][1];
+        for (int i = 1; i < points.size(); ++i) {
+            if (x < points[i][0]) {
+                x = points[i][1];
+                ++res;
+                continue;
+            }
+            if (x > points[i][1]) {
+                x = points[i][1];
             }
         }
         return res;
