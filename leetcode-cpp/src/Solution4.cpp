@@ -20,6 +20,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 using namespace std;
@@ -797,6 +798,19 @@ public:
             }
         }
         return res;
+    }
+
+    int leastInterval(vector<char> &tasks, int n) {
+        int max_freq = 0;
+        int size = tasks.size();
+        int nums['Z' - 'A' + 1] = {0};
+        for (auto c: tasks) {
+            max_freq = max(max_freq, ++nums[c - 'A']);
+        }
+        int num_max_freq = 0;
+        for (auto i: nums) num_max_freq += (i == max_freq);
+        int time = (max_freq - 1) * (n + 1) + num_max_freq;
+        return max(time, size);
     }
 };
 
