@@ -812,6 +812,28 @@ public:
         int time = (max_freq - 1) * (n + 1) + num_max_freq;
         return max(time, size);
     }
+
+    ListNode *mergeInBetween(ListNode *list1, int a, int b, ListNode *list2) {
+        ListNode *b_next;
+        ListNode *a_prev;
+        auto virtual_node = new ListNode(0);
+        virtual_node->next = list1;
+        b_next = list1->next;
+        while (b--) {
+            b_next = b_next->next;
+        }
+        a_prev = virtual_node;
+        for (int i = 0; i < a; ++i) {
+            a_prev = a_prev->next;
+        }
+        a_prev->next = list2;
+        auto list2_end = list2;
+        while (list2_end->next != nullptr) {
+            list2_end = list2_end->next;
+        }
+        list2_end->next = b_next;
+        return virtual_node->next;
+    }
 };
 
 int main() { return 0; }
