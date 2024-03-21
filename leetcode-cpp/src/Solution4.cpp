@@ -834,6 +834,21 @@ public:
         list2_end->next = b_next;
         return virtual_node->next;
     }
+
+    ListNode *reverseList(ListNode *head) {
+        if (head == nullptr || head->next == nullptr)
+            return head;
+        auto prev = head;
+        auto pt = head->next;
+        head->next = nullptr;
+        while (pt != nullptr) {
+            auto next_pt = pt->next;
+            pt->next = prev;
+            prev = pt;
+            pt = next_pt;
+        }
+        return prev;
+    }
 };
 
 int main() { return 0; }
