@@ -870,6 +870,36 @@ public:
             pt = next_pt;
         }
     }
+
+    bool isPalindrome(ListNode *head) {
+        if (head->next == nullptr) return true;
+        ListNode *pt = head;
+        ListNode *fast = head;
+        while (fast->next != nullptr) {
+            fast = fast->next;
+            if (fast->next != nullptr) {
+                fast = fast->next;
+                pt = pt->next;
+            }
+        }
+        ListNode *prev_pt = nullptr;
+        ListNode *next_pt;
+        while (pt) {
+            next_pt = pt->next;
+            pt->next = prev_pt;
+            prev_pt = pt;
+            pt = next_pt;
+        }
+        pt = prev_pt;
+        while (pt != nullptr && head != nullptr) {
+            if (pt->val == head->val) {
+                pt = pt->next;
+                head = head->next;
+            } else
+                return false;
+        }
+        return true;
+    }
 };
 
 int main() { return 0; }
