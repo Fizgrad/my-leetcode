@@ -849,6 +849,27 @@ public:
         }
         return prev;
     }
+
+    void reorderList(ListNode *head) {
+        stack<ListNode *> s;
+        auto pt = head;
+        while (pt != nullptr) {
+            s.push(pt);
+            pt = pt->next;
+        }
+        pt = head;
+        while (true) {
+            if (s.top() == pt || pt->next == s.top()) {
+                s.top()->next = nullptr;
+                return;
+            }
+            auto next_pt = pt->next;
+            pt->next = s.top();
+            s.top()->next = next_pt;
+            s.pop();
+            pt = next_pt;
+        }
+    }
 };
 
 int main() { return 0; }
