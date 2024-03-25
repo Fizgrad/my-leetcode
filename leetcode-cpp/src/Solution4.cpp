@@ -917,6 +917,18 @@ public:
         } while (fast != slow);
         return slow;
     }
+
+    vector<int> findDuplicates(vector<int> &nums) {
+        vector<int> result;
+        for (auto i: nums) {
+            auto index = std::abs(i) - 1;
+            if (nums[index] < 0)
+                result.push_back(std::abs(i));
+            else
+                nums[index] = -nums[index];
+        }
+        return result;
+    }
 };
 
 int main() { return 0; }
