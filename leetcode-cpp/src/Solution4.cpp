@@ -951,6 +951,26 @@ public:
         }
         return n + 1;
     }
+
+    int numSubarrayProductLessThanK(vector<int> &nums, int k) {
+        int product = nums[0];
+        int res = product < k ? 1 : 0;
+        int i = 0;
+        int j = 0;
+        int n = nums.size();
+        while (j + 1 < n) {
+            ++j;
+            product *= nums[j];
+            while (product >= k && i < j) {
+                product /= nums[i];
+                ++i;
+            }
+            if (product < k) {
+                res += j - i + 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
