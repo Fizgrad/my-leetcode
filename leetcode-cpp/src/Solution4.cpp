@@ -971,6 +971,27 @@ public:
         }
         return res;
     }
+
+    int maxSubarrayLength(vector<int> &nums, int k) {
+        int n = nums.size();
+        int i = 0;
+        int j = 0;
+        int res = 1;
+        unordered_map<int, int> freq;
+        freq[nums[0]]++;
+        while (j + 1 < n) {
+            ++j;
+            ++freq[nums[j]];
+            while (freq[nums[j]] > k && i < j) {
+                --freq[nums[i]];
+                ++i;
+            }
+            if (freq[nums[j]] <= k) {
+                res = max(res, j - i + 1);
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
