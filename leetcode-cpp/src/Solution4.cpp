@@ -992,6 +992,25 @@ public:
         }
         return res;
     }
+
+    long long countSubarrays(vector<int> &nums, int k) {
+        int n = nums.size();
+        int max_num = *std::max_element(begin(nums), end(nums));
+        vector<int> indices;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] == max_num) {
+                indices.push_back(i);
+            }
+        }
+        if (indices.size() < k) return 0;
+        long long res = 0;
+        for (int i = 0; i < indices.size(); ++i) {
+            long long front = indices[i] + 1;
+            long long behind = (i + k < indices.size()) ? indices[i + k] - indices[i + k - 1] : (i + k == indices.size() ? n - indices.back() : 0);
+            res += front * behind;
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
