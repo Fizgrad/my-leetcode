@@ -1011,6 +1011,28 @@ public:
         }
         return res;
     }
+
+    // 刚好 n -> (最大为n - 最大为n-1)
+    int subarraysWithKDistinct(vector<int> &nums, int k) {
+        auto atMostKDistinct = [](const vector<int> &nums, int k) {
+            unordered_map<int, int> count;
+            int total = 0, i = 0, distinct = 0;
+            for (int j = 0; j < nums.size(); ++j) {
+                if (!count[nums[j]]++) {
+                    distinct++;// 新增一个不同的整数
+                }
+                while (distinct > k) {
+                    if (!--count[nums[i]]) {
+                        distinct--;// 移除一个不同的整数
+                    }
+                    i++;
+                }
+                total += j - i + 1;// 加上以nums[j]结尾的、最多有k个不同整数的子数组数量
+            }
+            return total;
+        };
+        return atMostKDistinct(nums, k) - atMostKDistinct(nums, k - 1);
+    }
 };
 
 int main() { return 0; }
