@@ -1055,6 +1055,20 @@ public:
         }
         return res;
     }
+
+    int lengthOfLastWord(const string &s) {
+        int res = 0;
+        int len = 0;
+        for (auto i: s) {
+            if (i == ' ') {
+                len = 0;
+            } else {
+                ++len;
+                res = len;
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
