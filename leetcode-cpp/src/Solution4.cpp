@@ -1069,6 +1069,29 @@ public:
         }
         return res;
     }
+
+    bool isIsomorphic(const string &s, const string &t) {
+        unordered_map<char, char> s2t;
+        unordered_set<char> mapped;
+        int n = s.size();
+        for (int i = 0; i < n; ++i) {
+            int ss = s[i];
+            int tt = t[i];
+            auto iter = s2t.find(ss);
+            if (iter == s2t.end()) {
+                if (mapped.count(tt)) {
+                    return false;
+                }
+                s2t[ss] = tt;
+                mapped.insert(tt);
+            } else {
+                if (iter->second != tt) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 };
 
 int main() { return 0; }
