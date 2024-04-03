@@ -1092,6 +1092,40 @@ public:
         }
         return true;
     }
+
+    bool exist(vector<vector<char>> &board, const string &word) {
+        int n = board.size();
+        int m = board.begin()->size();
+        vector<vector<bool>> is_visited(n, vector<bool>(m, false));
+        auto dfs = [&](auto &&dfs, int index, int x, int y) -> bool {
+            if (word[index] == board[x][y]) {
+                if (index == word.size() - 1) {
+                    return true;
+                }
+                is_visited[x][y] = true;
+                constexpr int d[5] = {0, -1, 0, 1, 0};
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + d[k];
+                    int yy = y + d[k + 1];
+                    if (xx < 0 || xx >= n || yy < 0 || yy >= m || is_visited[xx][yy]) {
+                        continue;
+                    } else {
+                        if (dfs(dfs, index + 1, xx, yy))
+                            return true;
+                    }
+                }
+                is_visited[x][y] = false;
+            }
+            return false;
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (dfs(dfs, 0, i, j))
+                    return true;
+            }
+        }
+        return false;
+    }
 };
 
 int main() { return 0; }
