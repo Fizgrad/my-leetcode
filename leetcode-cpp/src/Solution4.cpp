@@ -1126,6 +1126,16 @@ public:
         }
         return false;
     }
+
+    int maxDepth(const string& s) {
+        int res = 0;
+        int now = 0;
+        for(auto c :s){
+            if(c == '(') res =max(res, ++now);
+            else if(c == ')') --now;
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
