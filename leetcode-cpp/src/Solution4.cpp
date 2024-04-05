@@ -1127,12 +1127,31 @@ public:
         return false;
     }
 
-    int maxDepth(const string& s) {
+    int maxDepth(const string &s) {
         int res = 0;
         int now = 0;
-        for(auto c :s){
-            if(c == '(') res =max(res, ++now);
-            else if(c == ')') --now;
+        for (auto c: s) {
+            if (c == '(') res = max(res, ++now);
+            else if (c == ')')
+                --now;
+        }
+        return res;
+    }
+
+    string makeGood(const string &s) {
+        string res;
+        char prev = s[0];
+        res.push_back(s[0]);
+        for (int i = 1; i < s.size(); ++i) {
+            if (prev - s[i] == 'A' - 'a' || prev - s[i] == 'a' - 'A') {
+                res.pop_back();
+                if (res.empty())
+                    prev = 127;
+                else
+                    prev = res.back();
+            } else {
+                res.push_back((prev = s[i]));
+            }
         }
         return res;
     }
