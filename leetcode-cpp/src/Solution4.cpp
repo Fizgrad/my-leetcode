@@ -1155,6 +1155,37 @@ public:
         }
         return res;
     }
+
+    string minRemoveToMakeValid(const string &s) {
+        auto minRemoveToMakeValid = [](auto &&minRemoveToMakeValid, decltype(s.begin()) begin, decltype(s.end()) end) -> string {
+            string res;
+            for (auto i = begin; i != end; ++i) {
+                if (*i != '(' && *i != ')') {
+                    res.push_back(*i);
+                } else if (*i == '(') {
+                    int count = 1;
+                    auto left_iter = i + 1;
+                    while (left_iter != end) {
+                        if (*left_iter == '(')
+                            ++count;
+                        else if (*left_iter == ')') {
+                            --count;
+                            if (count == 0) break;
+                        }
+                        ++left_iter;
+                    }
+                    if (left_iter != end) {
+                        res += '(';
+                        res += minRemoveToMakeValid(minRemoveToMakeValid, i + 1, left_iter);
+                        res += ')';
+                        i = left_iter;
+                    }
+                }
+            }
+            return res;
+        };
+        return minRemoveToMakeValid(minRemoveToMakeValid, s.begin(), s.end());
+    }
 };
 
 int main() { return 0; }
