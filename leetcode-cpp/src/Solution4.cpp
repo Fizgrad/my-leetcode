@@ -1186,6 +1186,49 @@ public:
         };
         return minRemoveToMakeValid(minRemoveToMakeValid, s.begin(), s.end());
     }
+
+    bool checkValidString(const string &s) {
+        int stars = 0;
+        int lefts = 0;
+        int rights = 0;
+        for (auto i = s.begin(); i != s.end(); ++i) {
+            auto c = *i;
+            if (c == '*') {
+                ++stars;
+            } else if (c == '(') {
+                ++lefts;
+            } else if (c == ')') {
+                if (lefts == 0) {
+                    --stars;
+                } else {
+                    --lefts;
+                }
+                if (stars < 0) {
+                    return false;
+                }
+            }
+        }
+        stars = 0;
+        lefts = 0;
+        for (auto i = s.rbegin(); i != s.rend(); ++i) {
+            auto c = *i;
+            if (c == '*') {
+                ++stars;
+            } else if (c == ')') {
+                ++rights;
+            } else if (c == '(') {
+                if (rights == 0) {
+                    --stars;
+                } else {
+                    --rights;
+                }
+                if (stars < 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 };
 
 int main() { return 0; }
