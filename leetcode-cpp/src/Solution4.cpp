@@ -1229,6 +1229,29 @@ public:
         }
         return true;
     }
+
+    int countStudents(vector<int> &students, vector<int> &sandwiches) {
+        int n = students.size();
+        int ones = 0;
+        for (auto i: students) {
+            ones += (i == 1);
+        }
+        int zeros = n - ones;
+        for (auto i: sandwiches) {
+            if (i == 1) {
+                if (ones > 0)
+                    --ones;
+                else
+                    return zeros;
+            } else {
+                if (zeros > 0)
+                    --zeros;
+                else
+                    return ones;
+            }
+        }
+        return 0;
+    }
 };
 
 int main() { return 0; }
