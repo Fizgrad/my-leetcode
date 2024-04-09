@@ -1252,6 +1252,16 @@ public:
         }
         return 0;
     }
+
+   int timeRequiredToBuy(vector<int>& tickets, int k) {
+        for(int i = 0; i < k;++i){
+            tickets[i] =  min(tickets[i], tickets[k]);
+        }
+        for(int i = k+1; i < tickets.size();++i){
+            tickets[i] =  min(tickets[i], tickets[k]-1);
+        }
+        return accumulate(begin(tickets),end(tickets),0);
+    }
 };
 
 int main() { return 0; }
