@@ -1,6 +1,9 @@
+use std::collections::VecDeque;
+
 pub mod structs;
 
 struct Solution {}
+
 impl Solution {
     fn min_operations(nums: Vec<i32>, x: i32) -> i32 {
         let sum: i32 = nums.iter().sum();
@@ -162,7 +165,7 @@ impl Solution {
             res
         } else {
             [0].repeat(len)
-        }
+        };
     }
 
     fn min_moves2(nums: Vec<i32>) -> i32 {
@@ -419,7 +422,7 @@ impl Solution {
         }
         const LIMIT: i32 = 200001;
         let mut ans = 0;
-        let mut hash: Vec<bool> = std::vec![false;LIMIT as usize];
+        let mut hash: Vec<bool> = std::vec![false; LIMIT as usize];
         nums.iter().for_each(|&num| {
             hash[num as usize] = true;
         });
@@ -481,8 +484,8 @@ impl Solution {
         let n = vals.len();
         let m = edges.len();
         let mut ans = 0;
-        let mut x = std::vec![Vec::new();n];
-        let mut y = std::vec![0;n];
+        let mut x = std::vec![Vec::new(); n];
+        let mut y = std::vec![0; n];
         for i in 0..n {
             y[i] = i;
             x[i] = std::vec![vals[i], 1];
@@ -594,7 +597,7 @@ impl Solution {
     }
 
     fn subarrays_div_by_k(nums: Vec<i32>, k: i32) -> i32 {
-        let mut remains_num = std::vec![0;k as usize];
+        let mut remains_num = std::vec![0; k as usize];
         let mut sum = 0;
         for i in nums {
             sum += i;
@@ -605,7 +608,7 @@ impl Solution {
     fn finding_users_active_minutes(logs: Vec<Vec<i32>>, k: i32) -> Vec<i32> {
         use std::collections::HashMap;
         use std::collections::HashSet;
-        let mut ans = std::vec![0;k as usize];
+        let mut ans = std::vec![0; k as usize];
         let mut user_time = HashMap::new();
         for i in logs {
             user_time.entry(i[0]).or_insert(HashSet::new()).insert(i[1]);
@@ -761,8 +764,8 @@ impl Solution {
         // }
         // return res[n * n];
         let mut moves = 0;
-        let mut visited = std::vec![false;n*n+1];
-        let mut q = std::collections::VecDeque::new();
+        let mut visited = std::vec![false; n * n + 1];
+        let mut q = VecDeque::new();
         q.push_back(1);
         visited[1] = true;
         while !q.is_empty() {
@@ -802,9 +805,9 @@ impl Solution {
         // Maximum stops: 2
 
         // The fastest way would be to go from 0-> 3-> 1-> 4-> 2. But this would have 3 stops, and 3 stops won't be allowed.
-        // As a result we have to settle for 0->5->1->4->2. But if we're to use dijstra, this method will not be discovered because in dijstra only the fastest options are considered. But in this case, an actual dijstra doesn't consider it since the path is slower, so it would never find this solution, instead it'd be skipped over since its less than the option that we already have.
+        // As a result we have to settle for 0->5->1->4->2. But if we're to use dijstra, this method will not be discovered because in dijstra only the fastest options are considered. But in this case, an actual dijstra doesn't consider it since the path is slower, so it would never find this solution, instead it'd be skipped over since it is less than the option that we already have.
 
-        // As a result its not really dijstra because due to it having to reinsert the same already explored nodes into the heap again, it'd run a lot slower.
+        // As a result it is not really dijstra because due to it having to reinsert the same already explored nodes into the heap again, it'd run a lot slower.
 
         // Can you guys tell me if I'm right or wrong? Thanks.
         // Actually it is a slight variation in Dijkstra's. The distance that you calculate from the source has less priority than the number of stops and if you can build heap/PQ around num of stops, you can figure it out. (PS - as number of stops increase by +1 everytime, no need of PQ but just a normal Q suffices).
@@ -887,7 +890,7 @@ impl Solution {
         });
         for word in words.iter() {
             let n = word.len();
-            let mut dp = std::vec![false;n +1];
+            let mut dp = std::vec![false; n + 1];
             dp[0] = true;
             for i in 0..n {
                 if !dp[i] {
@@ -1072,9 +1075,10 @@ impl Solution {
             -1
         } else {
             num_xy / 2 + num_yx / 2 + (num_xy % 2) * 2
-        }
+        };
     }
 }
+
 impl Solution {
     pub fn max_profit(mut prices: Vec<i32>) -> i32 {
         let mut res = 0;
@@ -1091,7 +1095,7 @@ impl Solution {
     pub fn min_distance(mut word1: String, mut word2: String) -> i32 {
         let l1 = word1.len();
         let l2 = word2.len();
-        let mut dp = std::vec![std::vec![0;l2+1];l1+1];
+        let mut dp = std::vec![std::vec![0; l2 + 1]; l1 + 1];
         let a: Vec<char> = word1.chars().collect();
         let b: Vec<char> = word2.chars().collect();
         // Base cases
@@ -1121,6 +1125,7 @@ impl Solution {
         return dp[l1][l2] as i32;
     }
 }
+
 impl Solution {
     pub fn sort_array(nums: Vec<i32>) -> Vec<i32> {
         let mut heap = std::collections::BinaryHeap::new();
@@ -1138,7 +1143,7 @@ impl Solution {
 
 impl Solution {
     pub fn largest_local(grid: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
-        let mut res = std::vec![std::vec![0;grid.len()-2];grid.len()-2];
+        let mut res = std::vec![std::vec![0; grid.len() - 2]; grid.len() - 2];
         let dx = [-1, -1, -1, 1, 1, 1, 0, 0, 0];
         let dy = [1, 0, -1, 1, 0, -1, 1, 0, -1];
         for i in 0..res.len() {
@@ -1197,6 +1202,30 @@ impl Solution {
         *chars = modified_input;
         return chars.len() as i32;
     }
+
+    pub fn deck_revealed_increasing(deck: Vec<i32>) -> Vec<i32> {
+        let mut n = deck.len();
+        let mut res = std::vec![0; n];
+        let mut sorted = deck.clone();
+        sorted.sort();
+        let mut deque = std::collections::VecDeque::with_capacity(n);
+        for i in 0..n {
+            deque.push_back(i);
+        }
+        let mut order = std::vec![0usize; n];
+        for i in 0..n {
+            order[i] = *deque.front().unwrap();
+            deque.pop_front();
+            if !deque.is_empty() {
+                deque.push_back(*deque.front().unwrap());
+                deque.pop_front();
+            }
+        }
+        for i in 0..n {
+            res[order[i]] = sorted[i];
+        }
+        res
+    }
 }
 
 fn main() {
@@ -1223,7 +1252,7 @@ fn main() {
         Solution::smallest_equivalent_string(
             "leetcode".to_string(),
             "programs".to_string(),
-            "sourcecode".to_string()
+            "sourcecode".to_string(),
         )
     );
     println!(
@@ -1231,14 +1260,14 @@ fn main() {
         Solution::smallest_equivalent_string(
             "hello".to_string(),
             "world".to_string(),
-            "hold".to_string()
+            "hold".to_string(),
         )
     );
     println!(
         "{:?}",
         Solution::is_anagram(
             std::string::String::from("rat"),
-            std::string::String::from("car")
+            std::string::String::from("car"),
         )
     );
     println!("{:?}", Solution::reinitialize_permutation(100));
@@ -1266,7 +1295,7 @@ fn main() {
             std::vec![5, 3],
             std::vec![4, 1],
             std::vec![2, 3],
-            std::vec![1, 4]
+            std::vec![1, 4],
         ])
     );
     println!("{:?}", Solution::sort_array(std::vec![5, 1, 1, 2, 0, 0]));
