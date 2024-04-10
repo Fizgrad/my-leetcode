@@ -89,22 +89,22 @@ impl Solution {
         let mut ans = 0;
         for it1 in &points {
             let mut mp = std::collections::HashMap::new();
-            mp.insert((0 as i32, std::i32::MAX), 0);
-            let x1 = it1[0] as i32;
-            let y1 = it1[1] as i32;
+            mp.insert((0i32, i32::MAX), 0);
+            let x1 = it1[0];
+            let y1 = it1[1];
             for it2 in &points {
                 if it2 == it1 {
                     continue;
                 }
-                let x2 = it2[0] as i32;
-                let y2 = it2[1] as i32;
-                let mut slope = (0 as i32, std::i32::MAX);
+                let x2 = it2[0];
+                let y2 = it2[1];
+                let mut slope = (0i32, i32::MAX);
                 if x2 - x1 == 0 {
                     // slope is infinity for vertical line
                 } else {
                     let temp = gcd(y2 - y1, x2 - x1);
                     slope = if temp == 0 {
-                        ((y2 - y1), (x2 - x1))
+                        (y2 - y1, x2 - x1)
                     } else {
                         ((y2 - y1) / temp, (x2 - x1) / temp)
                     }
@@ -117,7 +117,7 @@ impl Solution {
                         mp.insert(slope, 1);
                     }
                 }
-                ans = i32::max(ans, mp.values().into_iter().max().unwrap().clone() as i32);
+                ans = i32::max(ans, mp.values().into_iter().max().unwrap().clone());
             }
         }
         return ans + 1; //including point i
@@ -129,7 +129,7 @@ impl Solution {
             .filter(|x| !(x.is_negative() || x.is_positive()))
             .count();
         let len = nums.len();
-        if num_zero == 0 {
+        return if num_zero == 0 {
             let mut res = [0].repeat(len);
             let mut premuti = [nums[0]].repeat(len);
             let mut endmuti = [nums[len - 1]].repeat(len);
@@ -146,7 +146,7 @@ impl Solution {
                 res[index] = premuti[index - 1] * endmuti[index + 1];
                 index += 1;
             }
-            return res;
+            res
         } else if num_zero == 1 {
             let mut res = [0].repeat(len);
             let mut mult = 1;
@@ -159,9 +159,9 @@ impl Solution {
                 }
             }
             res[index] = mult;
-            return res;
+            res
         } else {
-            return [0].repeat(len);
+            [0].repeat(len)
         }
     }
 
@@ -252,13 +252,13 @@ impl Solution {
         let mut hm = std::collections::HashMap::new();
         num.chars().into_iter().for_each(|v| {
             *hm.entry(v.to_digit(10).unwrap() as usize)
-                .or_insert(0 as u32) += 1
+                .or_insert(0u32) += 1
         });
         println!("{:?}", hm);
         num.chars()
             .into_iter()
             .enumerate()
-            .all(|(i, v)| (*hm.entry(i).or_insert(0) == v.to_digit(10).unwrap()))
+            .all(|(i, v)| *hm.entry(i).or_insert(0) == v.to_digit(10).unwrap())
     }
 
     fn min_time(n: i32, edges: Vec<Vec<i32>>, has_apple: Vec<bool>) -> i32 {
@@ -566,10 +566,10 @@ impl Solution {
             }
             i_copy = i.clone();
             for j in 1..=times {
-                i -= (i_copy % 10) * 10_i32.pow(times - j) as i32;
+                i -= (i_copy % 10) * 10_i32.pow(times - j);
                 i_copy /= 10;
             }
-            *hm.entry(i).or_insert(0 as i64) += 1;
+            *hm.entry(i).or_insert(0i64) += 1;
         }
         return hm
             .values()
@@ -1068,17 +1068,17 @@ impl Solution {
                 }
             }
         }
-        if (num_xy + num_yx) % 2 == 1 {
-            return -1;
+        return if (num_xy + num_yx) % 2 == 1 {
+            -1
         } else {
-            return num_xy / 2 + num_yx / 2 + (num_xy % 2) * 2;
+            num_xy / 2 + num_yx / 2 + (num_xy % 2) * 2
         }
     }
 }
 impl Solution {
     pub fn max_profit(mut prices: Vec<i32>) -> i32 {
         let mut res = 0;
-        let mut temp = std::i32::MAX;
+        let mut temp = i32::MAX;
         for &v in prices.iter() {
             res = res.max(v - temp);
             temp = temp.min(v);
@@ -1144,7 +1144,7 @@ impl Solution {
         for i in 0..res.len() {
             for j in 0..res.len() {
                 let mut max_num = 0;
-                for k in 0..9 as usize {
+                for k in 0..9usize {
                     let grid_i = grid.get((1 + i as i32 + dx[k]) as usize);
                     if grid_i.is_some() {
                         let grid_i_j = grid_i.unwrap().get((1 + j as i32 + dy[k]) as usize);
@@ -1153,9 +1153,9 @@ impl Solution {
                         }
                     }
                 }
-                *res.get_mut(i as usize)
+                *res.get_mut(i)
                     .unwrap()
-                    .get_mut(j as usize)
+                    .get_mut(j)
                     .unwrap() = max_num;
             }
         }

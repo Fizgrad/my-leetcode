@@ -7,3 +7,5 @@ build
 .vscode/*
 .idea/*
 .cache/*
+leetcode-rust/target
+leetcode-rust/target/*
