@@ -8,4 +8,4 @@ build
 .idea/*
 .cache/*
 leetcode-rust/target
-leetcode-rust/target/*
+leetcode-rust/target/** 
