@@ -1,3 +1,4 @@
+use std::cmp::min;
 use std::collections::VecDeque;
 
 pub mod structs;
@@ -1223,6 +1224,42 @@ impl Solution {
         }
         for i in 0..n {
             res[order[i]] = sorted[i];
+        }
+        res
+    }
+
+    pub fn remove_kdigits(num: String, k: i32) -> String {
+        let n = num.len();
+        let mut res = String::new();
+        if k >= n as i32 {
+            return String::from("0");
+        }
+        let mut num_chars: Vec<char> = num.chars().collect();
+        let mut kk = k;
+        let mut stack = std::collections::VecDeque::new();
+        for ch in num_chars {
+            while !stack.is_empty() && *stack.back().unwrap() > ch && kk > 0 {
+                kk -= 1;
+                stack.pop_back();
+            }
+            stack.push_back(ch);
+        }
+        while kk > 0 {
+            kk -= 1;
+            stack.pop_back();
+        }
+        loop {
+            if !stack.is_empty() && *stack.front().unwrap() == '0' {
+                stack.pop_front();
+            } else {
+                break;
+            }
+        }
+        for i in stack {
+            res.push(i);
+        }
+        if res.is_empty() {
+            res.push('0');
         }
         res
     }
