@@ -1,4 +1,3 @@
-use std::cmp::min;
 use std::collections::VecDeque;
 
 pub mod structs;
@@ -1260,6 +1259,31 @@ impl Solution {
         }
         if res.is_empty() {
             res.push('0');
+        }
+        res
+    }
+
+    pub fn trap(height: Vec<i32>) -> i32 {
+        let n = height.len();
+        let mut left = std::vec![0; n];
+        let mut right = std::vec![0; n];
+        let mut res = 0;
+        if n == 1 {
+            return 0;
+        }
+        let mut temp = height[0];
+        for i in 1..n {
+            temp = i32::max(temp, height[i - 1]);
+            left[i] = temp;
+        }
+
+        let mut temp = height[n - 1];
+        for i in (0..n - 1).rev() {
+            temp = i32::max(temp, height[i + 1]);
+            right[i] = temp;
+        }
+        for i in 0..n {
+            res += i32::max(0, i32::min(right[i], left[i]) - height[i]);
         }
         res
     }
