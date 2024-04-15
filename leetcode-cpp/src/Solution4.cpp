@@ -1262,6 +1262,26 @@ public:
         }
         return accumulate(begin(tickets), end(tickets), 0);
     }
+
+    int sumNumbers(TreeNode *root) {
+        if (root == nullptr)
+            return 0;
+        int res = 0;
+        auto dfs = [&](auto &&dfs, TreeNode *node, int prev) -> void {
+            prev *= 10;
+            prev += node->val;
+            if (node->left || node->right) {
+                if (node->left)
+                    dfs(dfs, node->left, prev);
+                if (node->right)
+                    dfs(dfs, node->right, prev);
+            } else {
+                res += prev;
+            }
+        };
+        dfs(dfs, root, 0);
+        return res;
+    }
 };
 
 int main() { return 0; }
