@@ -1,5 +1,27 @@
 use std::collections::VecDeque;
 
+// Definition for a binary tree node.
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}
+
+use std::rc::Rc;
+use std::cell::RefCell;
+
 pub mod structs;
 
 struct Solution {}
@@ -1286,6 +1308,16 @@ impl Solution {
             res += i32::max(0, i32::min(right[i], left[i]) - height[i]);
         }
         res
+    }
+
+    pub fn sum_of_left_leaves(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, is_left: bool) -> i32 {
+            if let Some(n) = node {
+                let node = n.borrow();
+                if is_left && node.left.is_none() && node.right.is_none() { node.val } else { dfs(&node.left, true) + dfs(&node.right, false) }
+            } else { 0 }
+        }
+        dfs(&root, false)
     }
 }
 
