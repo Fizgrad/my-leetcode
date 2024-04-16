@@ -1319,6 +1319,46 @@ impl Solution {
         }
         dfs(&root, false)
     }
+
+    pub fn add_one_row(root: Option<Rc<RefCell<TreeNode>>>, val: i32, depth: i32) -> Option<Rc<RefCell<TreeNode>>> {
+        if depth == 1 {
+            Some(Rc::new(RefCell::new(TreeNode {
+                val: val,
+                left: root,
+                right: None,
+            })))
+        } else {
+            fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, deep: i32, depth: i32, val: i32) {
+                if deep == depth - 1 {
+                    if let Some(n) = node {
+                        let mut node = n.borrow_mut();
+                        node.left = Some(Rc::new(RefCell::new(TreeNode {
+                            val: val,
+                            left: node.left.take(),
+                            right: None,
+                        })));
+                        node.right = Some(Rc::new(RefCell::new(TreeNode {
+                            val: val,
+                            left: None,
+                            right: node.right.take(),
+                        })));
+                    }
+                } else {
+                    if let Some(n) = node {
+                        let node = n.borrow();
+                        if node.left.is_some() {
+                            dfs(&node.left, deep + 1, depth, val);
+                        }
+                        if node.right.is_some() {
+                            dfs(&node.right, deep + 1, depth, val);
+                        }
+                    }
+                }
+            }
+            dfs(&root, 1, depth, val);
+            root
+        }
+    }
 }
 
 fn main() {
