@@ -1394,6 +1394,31 @@ impl Solution {
         }
         res
     }
+
+    pub fn valid_path(n: i32, edges: Vec<Vec<i32>>, source: i32, destination: i32) -> bool {
+        let mut accessed = std::vec![false; n as usize];
+        let mut to = std::vec![Vec::new(); n as usize];
+        for i in edges {
+            to.get_mut(i[0] as usize).unwrap().push(i[1]);
+            to.get_mut(i[1] as usize).unwrap().push(i[0]);
+        }
+        let mut now = std::vec![source];
+        accessed[source as usize] = true;
+        while (!now.is_empty()) {
+            let top = now.pop().unwrap();
+            if top == destination {
+                return true;
+            }
+            accessed[top as usize] = true;
+            for &i in to.get(top as usize).unwrap() {
+                if accessed[i as usize] == false {
+                    accessed[i as usize] = true;
+                    now.push(i);
+                }
+            }
+        }
+        return false;
+    }
 }
 
 fn main() {
