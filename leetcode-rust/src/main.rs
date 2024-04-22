@@ -1419,6 +1419,46 @@ impl Solution {
         }
         return false;
     }
+
+    pub fn find_farmland(land: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let mut land = land;
+        let mut res = Vec::new();
+        let n = land.len();
+        let m = land.first().unwrap().len();
+        for i in 0..n {
+            let mut j = 0;
+            while j < m {
+                if land[i][j] == 1 {
+                    let mut x = 1;
+                    let mut y = 1;
+                    while y + j < m {
+                        if land[i][j + y] == 1 {
+                            land[i][j + y] = 0;
+                            y += 1;
+                        } else {
+                            break;
+                        }
+                    }
+                    while x + i < n {
+                        if land[x + i][j] == 1 {
+                            land[x + i][j] = if y == 1 { 0i32 } else { y as i32 };
+                            x += 1;
+                        } else {
+                            break;
+                        }
+                    }
+                    y -= 1;
+                    x -= 1;
+                    res.push(std::vec![i as i32, j as i32, i as i32 + x as i32, j as i32 + y as i32]);
+                }
+                if land[i][j] > 1 {
+                    j += land[i][j] as usize;
+                }
+                j += 1;
+            }
+        }
+        res
+    }
 }
 
 fn main() {
