@@ -17,6 +17,7 @@
 #include <set>
 #include <sstream>
 #include <stack>
+#include <string>
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
@@ -1281,6 +1282,41 @@ public:
         };
         dfs(dfs, root, 0);
         return res;
+    }
+
+    int openLock(vector<string> &deadends, const string &target) {
+        unordered_set<string> deadends_set;
+        for (auto &i: deadends) {
+            deadends_set.insert(i);
+        }
+        if (deadends_set.count("0000")) { return -1; }
+        queue<pair<string, int>> queue;
+        queue.push({"0000", 0});
+        unordered_set<string> visited;
+        visited.insert("0000");
+
+        while (!queue.empty()) {
+            auto current = queue.front();
+            queue.pop();
+            string currentCombination = current.first;
+            int moves = current.second;
+
+            if (currentCombination == target) {
+                return moves;
+            }
+            for (int i = 0; i < 4; i++) {
+                for (int delta: {-1, 1}) {
+                    int newDigit = (currentCombination[i] - '0' + delta + 10) % 10;
+                    string newCombination = currentCombination;
+                    newCombination[i] = '0' + newDigit;
+                    if (!visited.count(newCombination) && !deadends_set.count(newCombination)) {
+                        visited.insert(newCombination);
+                        queue.push({newCombination, moves + 1});
+                    }
+                }
+            }
+        }
+        return -1;
     }
 };
 
