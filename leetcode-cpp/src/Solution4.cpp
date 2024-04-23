@@ -7,6 +7,7 @@
 #include <climits>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <deque>
 #include <iostream>
 #include <iterator>
@@ -1317,6 +1318,40 @@ public:
             }
         }
         return -1;
+    }
+
+    vector<int> findMinHeightTrees(int n, vector<vector<int>> &edges) {
+        if (n == 1) return {0};
+        std::vector<std::vector<int>> adjacency(n);
+        std::vector<int> degree(n, 0);
+        for (auto &edge: edges) {
+            int u = edge[0], v = edge[1];
+            adjacency[u].push_back(v);
+            adjacency[v].push_back(u);
+            degree[u]++;
+            degree[v]++;
+        }
+
+        std::deque<int> leaves;
+        for (int i = 0; i < n; ++i) {
+            if (degree[i] == 1) leaves.push_back(i);
+        }
+
+        int remainingNodes = n;
+        while (remainingNodes > 2) {
+            int leavesCount = leaves.size();
+            remainingNodes -= leavesCount;
+            for (int i = 0; i < leavesCount; ++i) {
+                int leaf = leaves.front();
+                leaves.pop_front();
+                for (int neighbor: adjacency[leaf]) {
+                    if (--degree[neighbor] == 1) {
+                        leaves.push_back(neighbor);
+                    }
+                }
+            }
+        }
+        return {leaves.begin(), leaves.end()};
     }
 };
 
