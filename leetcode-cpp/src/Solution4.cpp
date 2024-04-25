@@ -1369,6 +1369,20 @@ public:
         }
         return res;
     }
+
+    int longestIdealString(const string &s, int k) {
+        int n = s.size();
+        int res = 1;
+        vector<int> dp(26, 0);
+        for (auto c: s) {
+            int tmp = 1;
+            for (int i = max(0, c - k - 'a'); i < min(26, c + k + 1 - 'a'); ++i) {
+                tmp = max(tmp, dp[i] + 1);
+            }
+            res = max(res, dp[c - 'a'] = max(dp[c - 'a'], tmp));
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
