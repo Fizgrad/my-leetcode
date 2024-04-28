@@ -1383,6 +1383,39 @@ public:
         }
         return res;
     }
+
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>> &edges) {
+        std::vector<std::vector<int>> adjacency(n);
+        for (auto &edge: edges) {
+            int u = edge[0], v = edge[1];
+            adjacency[u].push_back(v);
+            adjacency[v].push_back(u);
+        }
+        vector<int> res(n, 0);
+        vector<int> count(n, 1);
+        vector<int> sum(n, 0);
+        auto dfs = [&](auto &&f, int node, int prev) -> void {
+            for (auto i: adjacency[node]) {
+                if (i != prev) {
+                    f(f, i, node);
+                    count[node] += count[i];
+                    sum[node] += sum[i] + count[i];
+                }
+            }
+        };
+        dfs(dfs, 0, -1);
+        auto reroot = [&](auto &&reroot, int node, int prev) -> void {
+            for (auto i: adjacency[node]) {
+                if (i != prev) {
+                    res[i] = res[node] + n - 2 * count[i];
+                    reroot(reroot, i, node);
+                }
+            }
+        };
+        res[0] = sum[0];
+        reroot(reroot, 0, -1);
+        return res;
+    }
 };
 
 int main() { return 0; }
