@@ -11,6 +11,7 @@
 #include <deque>
 #include <iostream>
 #include <iterator>
+#include <limits>
 #include <map>
 #include <numeric>
 #include <queue>
@@ -1462,6 +1463,35 @@ public:
             return dp[now][pos] = steps;
         };
         return dfs(dfs, 0, 0);
+    }
+
+    int minFallingPathSum(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.begin()->size();
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+        auto f = [&](auto &&f, int row, int col) {
+            if (row >= n) {
+                return 0;
+            }
+            if (dp[row][col] != -1) {
+                return dp[row][col];
+            }
+            int minimun = std::numeric_limits<int>::max();
+            for (int i = 0; i < m; ++i) {
+                if (i != col) {
+                    minimun = min(minimun, f(f, row + 1, i));
+                }
+            }
+            return dp[row][col] = grid[row][col] + minimun;
+        };
+        if (n == 1 && m == 1) {
+            return grid[0][0];
+        }
+        int res = std::numeric_limits<int>::max();
+        for (int i = 0; i < m; ++i) {
+            res = min(res, f(f, 0, i));
+        }
+        return res;
     }
 };
 
