@@ -1416,6 +1416,53 @@ public:
         reroot(reroot, 0, -1);
         return res;
     }
+
+    int findRotateSteps(const string &ring, const string &key) {
+        int ring_size = ring.size();
+        auto clockwise = [&](int curr, int new_pos) {
+            if (new_pos >= curr) {
+                return new_pos - curr;
+            }
+            return ring_size - (curr - new_pos);
+        };
+        auto anti_clockwise = [&](int curr, int new_pos) {
+            if (curr >= new_pos) {
+                return curr - new_pos;
+            }
+            return ring_size - (new_pos - curr);
+        };
+
+        auto to = [&](int pos, int new_pos) {
+            return min(anti_clockwise(pos, new_pos), clockwise(pos, new_pos));
+        };
+
+        int n = key.size();
+
+        vector<vector<int>> dp(n, vector<int>(ring_size, -1));
+
+        unordered_map<char, vector<int>> indices;
+        for (int i = 0; i < ring_size; i++) {
+            indices[ring[i]].push_back(i);
+        }
+
+        auto dfs = [&](auto &&dfs, int now, int pos) {
+            if (now >= n) return 0;
+            if (dp[now][pos] != -1) {
+                return dp[now][pos];
+            }
+
+            int steps = INT_MAX;
+            int key_value = key[now];
+
+            for (int i = 0; i < indices[key_value].size(); i++) {
+                int new_pos = indices[key_value][i];
+                int taken = dfs(dfs, now + 1, new_pos);
+                steps = min(steps, 1 + to(pos, new_pos) + taken);
+            }
+            return dp[now][pos] = steps;
+        };
+        return dfs(dfs, 0, 0);
+    }
 };
 
 int main() { return 0; }
