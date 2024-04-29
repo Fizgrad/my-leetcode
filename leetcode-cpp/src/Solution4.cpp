@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bitset>
 #include <cctype>
 #include <climits>
 #include <cmath>
@@ -1490,6 +1491,22 @@ public:
         int res = std::numeric_limits<int>::max();
         for (int i = 0; i < m; ++i) {
             res = min(res, f(f, 0, i));
+        }
+        return res;
+    }
+
+    int minOperations(vector<int> &nums, int k) {
+        std::bitset<32> target(k);
+        int xor_sum = 0;
+        for (auto i: nums) {
+            xor_sum ^= i;
+        }
+        std::bitset<32> from(xor_sum);
+        int res = 0;
+        for (int i = 0; i < 32; ++i) {
+            if (target.test(i) != from.test(i)) {
+                ++res;
+            }
         }
         return res;
     }
