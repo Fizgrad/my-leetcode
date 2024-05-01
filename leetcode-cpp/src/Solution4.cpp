@@ -1528,6 +1528,17 @@ public:
         }
         return res;
     }
+
+    string reversePrefix(const string &word, char ch) {
+        auto fist = word.find_first_of(ch);
+        if (fist == word.size()) {
+            return word;
+        } else {
+            string res = word.substr(0, fist + 1);
+            std::reverse(res.begin(), res.end());
+            return res + word.substr(fist + 1);
+        }
+    }
 };
 
 int main() { return 0; }
