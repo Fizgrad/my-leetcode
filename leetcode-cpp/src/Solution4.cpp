@@ -1539,6 +1539,19 @@ public:
             return res + word.substr(fist + 1);
         }
     }
+
+    int findMaxK(vector<int> &nums) {
+        int k = -1;
+        unordered_set<int> nums_set(nums.begin(), nums.end());
+        for (auto i: nums) {
+            if (i > k) {
+                if (nums_set.count(-i)) {
+                    k = i;
+                }
+            }
+        }
+        return k;
+    }
 };
 
 int main() { return 0; }
