@@ -1571,6 +1571,28 @@ public:
         }
         return 0;
     }
+
+    int numRescueBoats(vector<int> &people, int limit) {
+        sort(begin(people), end(people));
+        int n = people.size();
+        int i = 0;
+        int j = n - 1;
+        int res = 0;
+        while (i <= j) {
+            if (i == j) {
+                return ++res;
+            }
+            if (people[i] + people[j] <= limit) {
+                ++i;
+                ++res;
+                --j;
+            } else {
+                res += 1;
+                --j;
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
