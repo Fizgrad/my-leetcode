@@ -1593,6 +1593,19 @@ public:
         }
         return res;
     }
+
+    void deleteNode(ListNode *node) {
+        auto pt = node;
+        auto next = node->next;
+        auto prev = node;
+        while (next != nullptr) {
+            pt->val = next->val;
+            prev = pt;
+            pt = next;
+            next = next->next;
+        }
+        prev->next = nullptr;
+    }
 };
 
 int main() { return 0; }
