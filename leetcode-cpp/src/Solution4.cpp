@@ -1606,6 +1606,22 @@ public:
         }
         prev->next = nullptr;
     }
+
+    ListNode *removeNodes(ListNode *head) {
+        vector<ListNode *> nodes;
+        auto pt = head;
+        while (pt) {
+            while (nodes.size() && pt->val > nodes.back()->val) {
+                nodes.pop_back();
+            }
+            nodes.push_back(pt);
+            pt = pt->next;
+        }
+        for (int i = 1; i < nodes.size(); ++i) {
+            nodes[i - 1]->next = nodes[i];
+        }
+        return nodes[0];
+    }
 };
 
 int main() { return 0; }
