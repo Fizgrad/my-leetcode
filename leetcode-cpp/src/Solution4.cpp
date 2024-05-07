@@ -1622,6 +1622,26 @@ public:
         }
         return nodes[0];
     }
+
+    ListNode *doubleIt(ListNode *head) {
+        auto f = [&](auto &&f, ListNode *node) -> bool {
+            if (node == nullptr) {
+                return false;
+            }
+            bool flag = f(f, node->next);
+            int sum = flag + node->val * 2;
+            node->val = sum % 10;
+            if (sum >= 10) return true;
+            else
+                return false;
+        };
+        if (f(f, head)) {
+            ListNode *res = new ListNode(1);
+            res->next = head;
+            return res;
+        }
+        return head;
+    }
 };
 
 int main() { return 0; }
