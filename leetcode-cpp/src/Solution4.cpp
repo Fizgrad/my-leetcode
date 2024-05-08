@@ -1642,6 +1642,33 @@ public:
         }
         return head;
     }
+
+    vector<string> findRelativeRanks(vector<int> &score) {
+        int n = score.size();
+        vector<pair<int, int>> temp;
+        vector<string> res(n);
+        temp.reserve(n);
+        for (int i = 0; i < n; ++i) {
+            temp.emplace_back(score[i], i);
+        }
+        sort(begin(temp), end(temp));
+        res[temp[n - 1].second] = "Gold Medal";
+        if (n <= 1) {
+            return res;
+        }
+        res[temp[n - 2].second] = "Silver Medal";
+        if (n <= 2) {
+            return res;
+        }
+        res[temp[n - 3].second] = "Bronze Medal";
+        if (n <= 3) {
+            return res;
+        }
+        for (int i = n - 4; i >= 0; --i) {
+            res[temp[i].second] = to_string(n - i);
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
