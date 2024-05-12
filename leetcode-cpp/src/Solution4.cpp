@@ -1678,6 +1678,25 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> largestLocal(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int dx[9] = {1, 1, 1, 0, 0, -1, -1, -1, 0};
+        int dy[9] = {1, 0, -1, 1, -1, 1, -1, 0, 0};
+        vector<vector<int>> res(n - 2, vector<int>(n - 2));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                for (int k = 0; k < 9; ++k) {
+                    int xx = i + dx[k];
+                    int yy = j + dy[k];
+                    if (xx >= 1 && yy >= 1 && xx <= n - 2 && yy <= n - 2) {
+                        res[xx - 1][yy - 1] = max(res[xx - 1][yy - 1], grid[i][j]);
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
