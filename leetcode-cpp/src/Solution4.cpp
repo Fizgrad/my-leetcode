@@ -1697,6 +1697,56 @@ public:
         }
         return res;
     }
+
+    int matrixScore(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int res = 0;
+
+        auto flip_row = [&](int x) {
+            for (int i = 0; i < m; ++i) {
+                grid[x][i] = 1 - grid[x][i];
+            }
+        };
+        auto flip_col = [&](int y) {
+            for (int i = 0; i < n; ++i) {
+                grid[i][y] = 1 - grid[i][y];
+            }
+        };
+
+        auto count_col = [&](int y) {
+            int res = 0;
+            for (int i = 0; i < n; ++i) {
+                res += grid[i][y];
+            }
+            return res;
+        };
+
+        for (int i = 0; i < n; ++i) {
+            if (grid[i][0] == 0) {
+                flip_row(i);
+            }
+        }
+
+        auto get_row = [&](int x) {
+            int res = 0;
+            for (int i = 0; i < m; ++i) {
+                res = res * 2 + grid[x][i];
+            }
+            return res;
+        };
+
+        for (int i = 0; i < m; ++i) {
+            if (2 * count_col(i) < n) {
+                flip_col(i);
+            }
+        }
+
+        for (int i = 0; i < n; ++i) {
+            res += get_row(i);
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
