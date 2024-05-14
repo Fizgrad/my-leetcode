@@ -1747,6 +1747,43 @@ public:
         }
         return res;
     }
+
+    int getMaximumGold(vector<vector<int>> &grid) {
+        int res = 0;
+
+        int n = grid.size();
+        int m = grid.front().size();
+        int ds[5] = {0, 1, 0, -1, 0};
+
+        vector<vector<bool>> isVisited(n, vector<bool>(m, false));
+
+        auto dfs = [&](auto &&dfs, int x, int y, int sum) {
+            if (x >= n || y >= m || x < 0 || y < 0 || grid[x][y] == 0) return;
+            sum += grid[x][y];
+            res = max(res, sum);
+            for (int k = 0; k < 4; ++k) {
+                int xx = ds[k] + x;
+                int yy = ds[k + 1] + y;
+                if (xx >= n || yy >= m || xx < 0 || yy < 0 || grid[xx][yy] == 0) continue;
+                if (isVisited[xx][yy] == false) {
+                    isVisited[xx][yy] = true;
+                    dfs(dfs, xx, yy, sum);
+                    isVisited[xx][yy] = false;
+                }
+            }
+        };
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j]) {
+                    isVisited[i][j] = true;
+                    dfs(dfs, i, j, 0);
+                    isVisited[i][j] = false;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
