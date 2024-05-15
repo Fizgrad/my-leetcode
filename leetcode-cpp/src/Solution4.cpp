@@ -1784,6 +1784,82 @@ public:
         }
         return res;
     }
+
+    int maximumSafenessFactor(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int ds[5] = {0, 1, 0, -1, 0};
+        int res = 0;
+        vector<pair<int, int>> next;
+        vector<pair<int, int>> temp;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 1) {
+                    next.emplace_back(i, j);
+                }
+            }
+        }
+        int dis = 0;
+        while (next.size()) {
+            temp.clear();
+            ++dis;
+            while (next.size()) {
+                auto [x, y] = next.back();
+                next.pop_back();
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + ds[k];
+                    int yy = y + ds[k + 1];
+                    if (xx < 0 || yy < 0 || xx >= n || yy >= m) {
+                        continue;
+                    }
+                    if (grid[xx][yy] != 0) {
+                        continue;
+                    } else {
+                        temp.emplace_back(xx, yy);
+                        grid[xx][yy] = -dis;
+                    }
+                }
+            }
+            temp.swap(next);
+        }
+        priority_queue<tuple<int, int, int>> pq;
+        if (grid[0][0] == 1 || grid[n - 1][m - 1] == 1) return 0;
+        pq.emplace(-grid[0][0], 0, 0);
+        vector<vector<int>> visited(n, vector<int>(m, 0));
+        while (pq.size()) {
+            auto [safe, x, y] = pq.top();
+            pq.pop();
+            if (x == n - 1 && y == m - 1) {
+                res = max(res, safe);
+            }
+            if (safe <= res) {
+                continue;
+            }
+            if (visited[x][y] >= safe) {
+                continue;
+            } else {
+                visited[x][y] = safe;
+            }
+            for (int k = 0; k < 4; ++k) {
+                int xx = x + ds[k];
+                int yy = y + ds[k + 1];
+                if (xx < 0 || yy < 0 || xx >= n || yy >= m) {
+                    continue;
+                }
+                if (grid[xx][yy] == 1) {
+                    int new_ans = min(safe, 0);
+                    if (new_ans > res)
+                        pq.emplace(new_ans, xx, yy);
+
+                } else if (grid[xx][yy] < 0) {
+                    int new_ans = min(safe, -grid[xx][yy]);
+                    if (new_ans > res)
+                        pq.emplace(new_ans, xx, yy);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
