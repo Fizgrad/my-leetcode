@@ -1831,6 +1831,7 @@ public:
             pq.pop();
             if (x == n - 1 && y == m - 1) {
                 res = max(res, safe);
+                return res;
             }
             if (safe <= res) {
                 continue;
