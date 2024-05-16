@@ -1861,6 +1861,24 @@ public:
         }
         return res;
     }
+
+    bool evaluateTree(TreeNode *root) {
+        auto &&dfs = [&](auto &&dfs, TreeNode *node) -> bool {
+            if (node == nullptr) {
+                return false;
+            }
+            if (node->left && node->right) {
+                if (node->val == 2) {
+                    return dfs(dfs, node->left) || dfs(dfs, node->right);
+                }
+                if (node->val == 3) {
+                    return dfs(dfs, node->left) && dfs(dfs, node->right);
+                }
+            }
+            return node->val;
+        };
+        return dfs(dfs, root);
+    }
 };
 
 int main() { return 0; }
