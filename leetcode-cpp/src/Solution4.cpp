@@ -1879,6 +1879,32 @@ public:
         };
         return dfs(dfs, root);
     }
+
+    TreeNode *removeLeafNodes(TreeNode *root, int target) {
+        auto dfs = [&](auto &&dfs, TreeNode *node) -> bool {
+            if (!node) {
+                return false;
+            }
+            if (node->left) {
+                if (dfs(dfs, node->left))
+                    node->left = nullptr;
+            }
+            if (node->right) {
+                if (dfs(dfs, node->right))
+                    node->right = nullptr;
+            }
+            if (!(node->left || node->right)) {
+                if (node->val == target) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        if (dfs(dfs, root)) {
+            return nullptr;
+        }
+        return root;
+    }
 };
 
 int main() { return 0; }
