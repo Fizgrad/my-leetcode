@@ -1905,6 +1905,20 @@ public:
         }
         return root;
     }
+
+    int distributeCoins(TreeNode *root) {
+        int res = 0;
+        auto dfs = [&](auto &&dfs, TreeNode *node) -> int {
+            if (node == nullptr) return 0;
+            int left = dfs(dfs, node->left);
+            int right = dfs(dfs, node->right);
+            int sum = node->val - 1 + left + right;
+            res += std::abs(left) + std::abs(right);
+            return sum;
+        };
+        dfs(dfs, root);
+        return res;
+    }
 };
 
 int main() { return 0; }
