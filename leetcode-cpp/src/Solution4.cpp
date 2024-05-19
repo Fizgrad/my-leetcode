@@ -1919,6 +1919,38 @@ public:
         dfs(dfs, root);
         return res;
     }
+
+    long long maximumValueSum(vector<int> &nums, int k, vector<vector<int>> &edges) {
+        long long sum = std::accumulate(begin(nums), end(nums), 0ll);
+        long long max_neg_diff = std::numeric_limits<int>::min();
+        long long min_pos_diff = std::numeric_limits<int>::max();
+        long long diff_sum = 0;
+        long long pos_diff_nums = 0;
+        for (auto i: nums) {
+            long long diff = (i ^ k) - i;
+            if (diff >= 0) {
+                diff_sum += diff;
+                ++pos_diff_nums;
+                min_pos_diff = min(min_pos_diff, diff);
+            } else {
+                max_neg_diff = max(max_neg_diff, diff);
+            }
+        }
+        if (min_pos_diff == std::numeric_limits<int>::max())
+            return sum;
+        if (pos_diff_nums & 1) {
+            if (max_neg_diff == std::numeric_limits<int>::min()) {
+                return diff_sum + sum - min_pos_diff;
+            }
+            if (max_neg_diff + min_pos_diff > 0) {
+                return diff_sum + sum + max_neg_diff;
+            } else {
+                return diff_sum + sum - min_pos_diff;
+            }
+        } else {
+            return diff_sum + sum;
+        }
+    }
 };
 
 int main() { return 0; }
