@@ -1951,6 +1951,20 @@ public:
             return diff_sum + sum;
         }
     }
+
+    int subsetXORSum(vector<int> &nums) {
+        int res = 0;
+        int n = nums.size();
+        auto dfs = [&](auto &&dfs, int index, int sum) {
+            if (index >= n) return;
+            dfs(dfs, index + 1, sum);
+            sum ^= nums[index];
+            res += sum;
+            dfs(dfs, index + 1, sum);
+        };
+        dfs(dfs, 0, 0);
+        return res;
+    }
 };
 
 int main() { return 0; }
