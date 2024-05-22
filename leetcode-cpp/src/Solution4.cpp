@@ -1965,6 +1965,23 @@ public:
         dfs(dfs, 0, 0);
         return res;
     }
+
+    vector<vector<int>> subsets(vector<int> &nums) {
+        vector<vector<int>> res;
+        int n = nums.size();
+        auto dfs = [&](auto &&dfs, int index, vector<int> temp) {
+            if (index >= n) {
+                return;
+            }
+            dfs(dfs, index + 1, temp);
+            temp.emplace_back(nums[index]);
+            res.emplace_back(temp);
+            dfs(dfs, index + 1, temp);
+        };
+        res.emplace_back();
+        dfs(dfs, 0, vector<int>());
+        return res;
+    }
 };
 
 int main() { return 0; }
