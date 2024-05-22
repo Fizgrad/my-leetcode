@@ -1969,17 +1969,53 @@ public:
     vector<vector<int>> subsets(vector<int> &nums) {
         vector<vector<int>> res;
         int n = nums.size();
-        auto dfs = [&](auto &&dfs, int index, vector<int> temp) {
+        vector<int> temp;
+        auto dfs = [&](auto &&dfs, int index) {
             if (index >= n) {
                 return;
             }
-            dfs(dfs, index + 1, temp);
+            dfs(dfs, index + 1);
             temp.emplace_back(nums[index]);
             res.emplace_back(temp);
-            dfs(dfs, index + 1, temp);
+            dfs(dfs, index + 1);
+            temp.pop_back();
         };
         res.emplace_back();
-        dfs(dfs, 0, vector<int>());
+        dfs(dfs, 0);
+        return res;
+    }
+
+    vector<vector<string>> partition(const string &s) {
+        vector<vector<string>> res;
+        int n = s.size();
+
+        auto is_palindrome = [&](int from, int to) {
+            while (from < to) {
+                if (s[from] != s[to]) {
+                    return false;
+                }
+                ++from;
+                --to;
+            }
+            return true;
+        };
+
+        vector<string> temp;
+        auto dfs = [&](auto &&dfs, int index) {
+            if (index >= n) {
+                res.push_back(temp);
+                return;
+            }
+            for (int i = index; i < n; ++i) {
+                if (is_palindrome(index, i)) {
+                    temp.emplace_back(s.substr(index, i - index + 1));
+                    dfs(dfs, i + 1);
+                    temp.pop_back();
+                }
+            }
+        };
+
+        dfs(dfs, 0);
         return res;
     }
 };
