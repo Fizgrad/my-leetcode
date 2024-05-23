@@ -2018,6 +2018,24 @@ public:
         dfs(dfs, 0);
         return res;
     }
+
+    int beautifulSubsets(vector<int> &nums, int k) {
+        unordered_map<int, int> hashmap;
+        int n = nums.size();
+        auto dfs = [&](auto &&dfs, int index) {
+            if (index == n) return 1;
+            int num = nums[index];
+            int taken = 0;
+            if (!(hashmap[num + k] || hashmap[num - k])) {
+                hashmap[nums[index]]++;
+                taken = dfs(dfs, index + 1);
+                hashmap[nums[index]]--;
+            }
+            int notTaken = dfs(dfs, index + 1);
+            return taken + notTaken;
+        };
+        return dfs(dfs, 0) - 1;
+    }
 };
 
 int main() { return 0; }
