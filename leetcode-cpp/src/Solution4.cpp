@@ -2055,6 +2055,49 @@ public:
         // So here we need only f(f, n, 0, 0). At the beginning, "absent" and "late" must be both zero.
         return f(f, n, 0, 0) % MOD;
     }
+
+    vector<string> wordBreak(const string &s, vector<string> &wordDict) {
+        string temp;
+        vector<string> res;
+        Trie trie;
+        for (auto &i: wordDict) {
+            trie.add(i);
+        }
+        auto root = trie.root;
+        auto f = [&](auto &&f, int index) {
+            if (index >= s.size()) {
+                res.emplace_back(temp);
+                return;
+            }
+            auto pt = root;
+            string subtemp = "";
+            while (index < s.size()) {
+                auto c = s[index];
+                if (pt->next[c - 'a']) {
+                    pt = pt->next[c - 'a'];
+                    subtemp.push_back(c);
+                    ++index;
+                    if (pt->isEnd) {
+                        int append_size = 0;
+                        if (temp.size()) {
+                            temp.append(" ");
+                            ++append_size;
+                        }
+                        temp.append(subtemp);
+                        append_size += subtemp.size();
+                        f(f, index);
+                        for (int i = 0; i < append_size; ++i) {
+                            temp.pop_back();
+                        }
+                    }
+                } else {
+                    break;
+                }
+            }
+        };
+        f(f, 0);
+        return res;
+    }
 };
 
 int main() { return 0; }
