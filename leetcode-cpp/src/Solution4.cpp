@@ -14,6 +14,7 @@
 #include <iterator>
 #include <limits>
 #include <map>
+#include <memory>
 #include <numeric>
 #include <queue>
 #include <regex>
@@ -2093,6 +2094,45 @@ public:
                 } else {
                     break;
                 }
+            }
+        };
+        f(f, 0);
+        return res;
+    }
+
+    int maxScoreWords(vector<string> &words, vector<char> &letters, vector<int> &score) {
+        int res = 0;
+        vector<int> chars(26);
+        vector<int> word_count(26, 0);
+        for (auto i = 0; i < letters.size(); ++i) {
+            ++chars[letters[i] - 'a'];
+        }
+        int score_sum = 0;
+        auto f = [&](auto &&f, int index) {
+            if (index >= words.size()) {
+                res = max(res, score_sum);
+                return;
+            }
+            f(f, index + 1);
+            auto &word = words[index];
+            std::fill_n(begin(word_count), 26, 0);
+            for (auto i: word) {
+                ++word_count[i - 'a'];
+            }
+            for (auto i = 0; i < 26; ++i) {
+                if (word_count[i] > chars[i]) {
+                    res = max(res, score_sum);
+                    return;
+                }
+            }
+            for (auto i: word) {
+                score_sum += score[i - 'a'];
+                --chars[i - 'a'];
+            }
+            f(f, index + 1);
+            for (auto i: word) {
+                score_sum -= score[i - 'a'];
+                ++chars[i - 'a'];
             }
         };
         f(f, 0);
