@@ -2036,6 +2036,25 @@ public:
         };
         return dfs(dfs, 0) - 1;
     }
+
+    int checkRecord(int n) {
+        int res = 0;
+        constexpr int MOD = 1e9 + 7;
+        vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(2, vector<int>(3, -1)));
+        // The parameter "day" represents the number of remaining days to choose P, L or A.
+        auto f = [&](auto &&f, int day, int absent, int late) -> long long {
+            if (day == 0) return 1;
+            if (dp[day][absent][late] != -1) return dp[day][absent][late];
+            long long ans = f(f, day - 1, absent, 0);
+            if (late < 2)
+                ans += f(f, day - 1, absent, late + 1);
+            if (absent == 0)
+                ans += f(f, day - 1, absent + 1, 0);
+            return dp[day][absent][late] = ans % MOD;
+        };
+        // So here we need only f(f, n, 0, 0). At the beginning, "absent" and "late" must be both zero.
+        return f(f, n, 0, 0) % MOD;
+    }
 };
 
 int main() { return 0; }
