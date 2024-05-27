@@ -16,6 +16,7 @@
 #include <map>
 #include <memory>
 #include <numeric>
+#include <optional>
 #include <queue>
 #include <regex>
 #include <set>
@@ -2137,6 +2138,26 @@ public:
         };
         f(f, 0);
         return res;
+    }
+
+    int specialArray(vector<int> &nums) {
+        std::sort(begin(nums), end(nums));
+        int left = 0;
+        int right = 100;
+        while (left < right) {
+            int mid = (left + right) >> 1;
+            auto i = std::lower_bound(begin(nums), end(nums), mid);
+            auto num = end(nums) - i;
+            if (num == mid) {
+                return mid;
+            } else if (num > mid) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        if (end(nums) - std::lower_bound(begin(nums), end(nums), left) == left) return left;
+        return -1;
     }
 };
 
