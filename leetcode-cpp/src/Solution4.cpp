@@ -27,6 +27,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
+#include <valarray>
 #include <vector>
 
 using namespace std;
@@ -2158,6 +2159,30 @@ public:
         }
         if (end(nums) - std::lower_bound(begin(nums), end(nums), left) == left) return left;
         return -1;
+    }
+
+    int equalSubstring(const string &s, const string &t, int maxCost) {
+        int n = s.size();
+        vector<int> cost(n, 0);
+        for (int i = 0; i < n; ++i) {
+            cost[i] = std::abs(s[i] - t[i]);
+        }
+        int i = 0;
+        int j = 0;
+        int cost_sum = 0;
+        int res = 0;
+        do {
+            cost_sum += cost[j];
+            if (cost_sum <= maxCost) {
+                res = max(res, j - i + 1);
+            }
+            while (cost_sum > maxCost) {
+                cost_sum -= cost[i];
+                ++i;
+            }
+            ++j;
+        } while (j < n);
+        return res;
     }
 };
 
