@@ -2184,6 +2184,33 @@ public:
         } while (j < n);
         return res;
     }
+
+    int numSteps(string s) {
+        int n = s.size();
+        int j = n - 1;
+        int res = 0;
+        while (j > 0) {
+            if (s[j] == '0') {
+                --j;
+                ++res;
+                continue;
+            } else {
+                int k = 1;
+                while (j - k >= 0 && s[j - k] == '1') {
+                    ++k;
+                }
+                if (k > j) {
+                    res += 1 + k;
+                    j = j - k;
+                } else {
+                    s[j - k] = '1';
+                    res += 1 + k;
+                    j = j - k;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
