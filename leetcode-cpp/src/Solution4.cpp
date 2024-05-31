@@ -2211,6 +2211,28 @@ public:
         }
         return res;
     }
+
+    int countTriplets(vector<int> &arr) {
+        int n = arr.size();
+        int res = 0;
+        vector<int> prefix_sums(n + 1, 0);
+        int prefix = 0;
+        for (int i = 0; i < n; ++i) {
+            prefix = prefix_sums[i + 1] = (prefix ^ arr[i]);
+        }
+        for (int i = 0; i < n + 1; ++i) {
+            for (int j = i + 2; j < n + 1; ++j) {
+                for (int k = i + 1; k < j; ++k) {
+                    int a = prefix_sums[k] ^ prefix_sums[i];
+                    int b = prefix_sums[j] ^ prefix_sums[k];
+                    if (a == b) {
+                        ++res;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
