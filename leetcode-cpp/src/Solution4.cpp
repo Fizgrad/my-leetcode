@@ -2233,6 +2233,14 @@ public:
         }
         return res;
     }
+
+    int scoreOfString(const string &s) {
+        int res = 0;
+        for (int i = 1; i < s.size(); ++i) {
+            res += (std::abs(s[i - 1] - s[i]));
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
