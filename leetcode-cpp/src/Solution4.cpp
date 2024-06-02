@@ -2241,6 +2241,18 @@ public:
         }
         return res;
     }
+
+    void reverseString(vector<char> &s) {
+        int i = 0;
+        int j = s.size() - 1;
+        while (i < j) {
+            auto temp = s[j];
+            s[j] = s[i];
+            s[i] = temp;
+            ++i;
+            --j;
+        }
+    }
 };
 
 int main() { return 0; }
