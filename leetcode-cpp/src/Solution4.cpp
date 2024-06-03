@@ -2253,6 +2253,19 @@ public:
             --j;
         }
     }
+
+    int appendCharacters(const string &s, const string &t) {
+        int res = 0;
+        int j = 0;
+        int i = 0;
+        while (i < s.size() && j < t.size()) {
+            if (s[i] == t[j]) {
+                ++j;
+            }
+            ++i;
+        }
+        return t.size() - j;
+    }
 };
 
 int main() { return 0; }
