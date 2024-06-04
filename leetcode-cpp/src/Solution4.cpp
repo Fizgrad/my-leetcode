@@ -2266,6 +2266,22 @@ public:
         }
         return t.size() - j;
     }
+
+    int longestPalindrome(const string &s) {
+        vector<bool> c(256, 0);
+        int odd = 0;
+        int res = 0;
+        for (auto i: s) {
+            if (c[i]) {
+                --odd;
+                res += 2;
+            } else {
+                ++odd;
+            }
+            c[i] = !c[i];
+        }
+        return res + (odd >= 1 ? 1 : 0);
+    }
 };
 
 int main() { return 0; }
