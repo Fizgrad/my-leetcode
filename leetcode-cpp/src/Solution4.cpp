@@ -2282,6 +2282,24 @@ public:
         }
         return res + (odd >= 1 ? 1 : 0);
     }
+
+    vector<string> commonChars(vector<string> &words) {
+        if (words.empty()) return {};
+        multiset<char> word_set;
+        multiset<char> res(words[0].begin(), words[0].end());
+        multiset<char> temp;
+        for (auto &word: words) {
+            temp.clear();
+            word_set.clear();
+            word_set.insert(word.begin(), word.end());
+            std::set_intersection(res.begin(), res.end(), word_set.begin(), word_set.end(), std::inserter(temp, temp.begin()));
+            res.swap(temp);
+        }
+        return std::accumulate(res.begin(), res.end(), vector<string>(), [](vector<string> a, char b) {
+            a.emplace_back(1, b);
+            return std::move(a);
+        });
+    }
 };
 
 int main() { return 0; }
