@@ -2300,6 +2300,39 @@ public:
             return std::move(a);
         });
     }
+
+    bool isNStraightHand(vector<int> &hand, int groupSize) {
+        int n = hand.size();
+        if (n % groupSize) {
+            return false;
+        }
+        unordered_map<int, int> nums;
+        for (auto i: hand) {
+            ++nums[i];
+        }
+        vector<int> keys;
+        for (auto &i: nums) {
+            keys.push_back(i.first);
+        }
+        std::sort(keys.begin(), keys.end());
+        for (int i = 0; i < keys.size(); ++i) {
+            int key = keys[i];
+            if (nums[key] == 0) {
+                continue;
+            } else if (nums[key] < 0) {
+                return false;
+            } else {
+                while (nums[key])
+                    for (int k = 0; k < groupSize; ++k) {
+                        --nums[key + k];
+                        if (nums[key + k] < 0) {
+                            return false;
+                        }
+                    }
+            };
+        }
+        return true;
+    }
 };
 
 int main() { return 0; }
