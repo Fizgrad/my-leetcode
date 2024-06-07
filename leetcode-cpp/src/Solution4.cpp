@@ -2333,6 +2333,40 @@ public:
         }
         return true;
     }
+
+    string replaceWords(vector<string> &dictionary, const string &sentence) {
+        string res;
+        Trie dict_trie;
+        for (auto &i: dictionary) {
+            dict_trie.add(i);
+        }
+
+        auto transform = [&](const string &s) {
+            auto trie_node = dict_trie.root;
+            for (int i = 0; i < s.size(); ++i) {
+                trie_node = trie_node->next[s[i] - 'a'];
+                if (trie_node) {
+                    if (trie_node->isEnd) {
+                        return s.substr(0, i + 1);
+                    }
+                } else {
+                    break;
+                }
+            }
+            return s;
+        };
+
+        auto i = sentence.begin();
+        while (i < sentence.end()) {
+            auto j = std::find(i, sentence.end(), ' ');
+            if (res.size()) {
+                res.push_back(' ');
+            }
+            res.append(transform(string(i, j)));
+            i = j + 1;
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
