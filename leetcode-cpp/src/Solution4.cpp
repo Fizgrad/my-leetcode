@@ -2367,6 +2367,27 @@ public:
         }
         return res;
     }
+
+    bool checkSubarraySum(vector<int> &nums, int k) {
+        int n = nums.size();
+        int prefix_sum = nums[0];
+        unordered_map<int, int> remains;
+        remains[prefix_sum % k] = 0;
+        for (int i = 1; i < n; ++i) {
+            prefix_sum = prefix_sum + nums[i];
+            int remain = prefix_sum % k;
+            if (remain == 0) {
+                return true;
+            }
+            if (remains.count(remain)) {
+                if (i - remains[remain] > 1) {
+                    return true;
+                }
+            } else
+                remains[remain] = i;
+        }
+        return false;
+    }
 };
 
 int main() { return 0; }
