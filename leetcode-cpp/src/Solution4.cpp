@@ -2388,6 +2388,18 @@ public:
         }
         return false;
     }
+
+    int subarraysDivByK(vector<int> &nums, int k) {
+        vector<int> remains(k, 0);
+        int res = 0;
+        long long int sum = 0;
+        remains[sum]++;
+        for (auto i: nums) {
+            sum = (sum + i + k * 10000) % k;
+            res += remains[sum % k]++;
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
