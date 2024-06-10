@@ -2400,6 +2400,16 @@ public:
         }
         return res;
     }
+
+    int heightChecker(vector<int> &heights) {
+        vector<int> sorted(heights);
+        std::sort(heights.begin(), heights.end());
+        int res = 0;
+        for (int i = 0; i < heights.size(); ++i) {
+            res += (heights[i] != sorted[i]);
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
