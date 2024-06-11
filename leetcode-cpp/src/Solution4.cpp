@@ -18,6 +18,7 @@
 #include <numeric>
 #include <optional>
 #include <queue>
+#include <random>
 #include <regex>
 #include <set>
 #include <sstream>
@@ -2408,6 +2409,28 @@ public:
         for (int i = 0; i < heights.size(); ++i) {
             res += (heights[i] != sorted[i]);
         }
+        return res;
+    }
+
+    vector<int> relativeSortArray(vector<int> &arr1, vector<int> &arr2) {
+        unordered_map<int, int> nums;
+        for (auto i: arr1) {
+            ++nums[i];
+        }
+        vector<int> res;
+        for (auto i: arr2) {
+            while (nums[i]--) {
+                res.push_back(i);
+            }
+        }
+        int n = res.size();
+        for (auto &i: nums) {
+            while (i.second > 0) {
+                res.push_back(i.first);
+                --i.second;
+            }
+        }
+        std::sort(res.begin() + n, res.end());
         return res;
     }
 };
