@@ -2448,6 +2448,20 @@ public:
             }
         }
     }
+
+    int minMovesToSeat(vector<int> &seats, vector<int> &students) {
+        int n = seats.size();
+        int res = 0;
+        auto f = [&](auto &a) {
+            std::sort(a.begin(), a.end());
+        };
+        f(seats);
+        f(students);
+        for (int i = 0; i < n; ++i) {
+            res += std::abs(students[i] - seats[i]);
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
