@@ -2462,6 +2462,20 @@ public:
         }
         return res;
     }
+
+    int minIncrementForUnique(vector<int> &nums) {
+        std::sort(nums.begin(), nums.end());
+        int res = 0;
+        int n = nums.size();
+        int prev = nums[0];
+        for (int i = 1; i < n; ++i) {
+            if (nums[i] <= prev) {
+                res += (prev + 1) - nums[i];
+            }
+            prev = max(prev + 1, nums[i]);
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
