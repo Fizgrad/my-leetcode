@@ -2476,6 +2476,22 @@ public:
         }
         return res;
     }
+
+    int minPatches(vector<int> &nums, int n) {
+        int res = 0;
+        int i = 0;
+        long long int miss = 1;
+        while (miss <= n) {
+            if (i < nums.size() && nums[i] <= miss) {
+                miss += nums[i];
+                ++i;
+            } else {
+                miss += miss;
+                ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
