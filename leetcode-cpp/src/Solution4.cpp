@@ -2492,6 +2492,37 @@ public:
         }
         return res;
     }
+
+    int findMaximizedCapital(int k, int w, vector<int> &profits, vector<int> &capital) {
+        int n = profits.size();
+        vector<int> sorted(n, 0);
+        for (int i = 0; i < n; ++i) {
+            sorted[i] = i;
+        }
+
+        auto cmp = [&](int a, int b) {
+            return capital[a] < capital[b];
+        };
+
+        std::sort(sorted.begin(), sorted.end(), cmp);
+
+        int index = 0;
+        priority_queue<int> profits_sorted;
+
+        while (k--) {
+            while (index < n && capital[sorted[index]] <= w) {
+                profits_sorted.push(profits[sorted[index]]);
+                ++index;
+            }
+            if (profits_sorted.size()) {
+                w += profits_sorted.top();
+                profits_sorted.pop();
+            } else {
+                return w;
+            }
+        }
+        return w;
+    }
 };
 
 int main() { return 0; }
