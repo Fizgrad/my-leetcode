@@ -2523,6 +2523,24 @@ public:
         }
         return w;
     }
+
+    bool judgeSquareSum(int c) {
+        long long int b = sqrt(c);
+        long long int a = 0;
+        while (a <= b) {
+            long long int sum = a * a + b * b;
+            if (sum < c) {
+                ++a;
+                continue;
+            } else if (sum == c) {
+                return true;
+            } else {
+                --b;
+                continue;
+            }
+        }
+        return false;
+    }
 };
 
 int main() { return 0; }
