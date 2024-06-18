@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <deque>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <limits>
@@ -2540,6 +2541,45 @@ public:
             }
         }
         return false;
+    }
+
+    int maxProfitAssignment(vector<int> &difficulty, vector<int> &profit, vector<int> &worker) {
+        int n = difficulty.size();
+        int m = worker.size();
+
+        vector<int> worker_sorted(m);
+
+        std::function<bool(int, int)> cmp = [&](int a, int b) {
+            return profit[a] < profit[b];
+        };
+
+        priority_queue<int, vector<int>, decltype(cmp)> available(cmp);
+
+        for (int i = 0; i < m; ++i) {
+            worker_sorted[i] = i;
+        }
+
+        for (int i = 0; i < n; ++i) {
+            available.push(i);
+        }
+
+        std::sort(worker_sorted.begin(), worker_sorted.end(), [&](int a, int b) {
+            return worker[a] > worker[b];
+        });
+
+        int res = 0;
+        for (int i = 0; i < m; ++i) {
+            int difficulty_now = worker[worker_sorted[i]];
+            while (available.size() && difficulty[available.top()] > difficulty_now) {
+                available.pop();
+            }
+            if (available.size()) {
+                res += profit[available.top()];
+            } else {
+                return res;
+            }
+        }
+        return res;
     }
 };
 
