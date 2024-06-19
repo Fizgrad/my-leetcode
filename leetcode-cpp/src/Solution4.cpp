@@ -2581,6 +2581,48 @@ public:
         }
         return res;
     }
+
+    int minDays(vector<int> &bloomDay, int m, int k) {
+        int n = bloomDay.size();
+        int max_day = *std::max_element(bloomDay.begin(), bloomDay.end());
+        if (static_cast<long long int>(m) * k > n) {
+            return -1;
+        }
+        if (m * k == n) {
+            return max_day;
+        }
+        int min_day = 1;
+        auto f = [&](int day) {
+            int bouquets = 0;
+            int prev = 0;
+            for (int i = 0; i < n; ++i) {
+                if (bloomDay[i] <= day) {
+                    ++prev;
+                    if (prev == k) {
+                        ++bouquets;
+                        prev = 0;
+                    }
+                } else {
+                    prev = 0;
+                }
+            }
+            return bouquets >= m;
+        };
+        int res = -1;
+        while (true) {
+            if (max_day < min_day) {
+                break;
+            }
+            int day = (max_day + min_day) >> 1;
+            if (f(day)) {
+                res = day;
+                max_day = day - 1;
+            } else {
+                min_day = day + 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() { return 0; }
