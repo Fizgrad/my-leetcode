@@ -18,6 +18,7 @@
 #include <memory>
 #include <numeric>
 #include <optional>
+#include <ostream>
 #include <queue>
 #include <random>
 #include <regex>
@@ -2623,6 +2624,38 @@ public:
         }
         return res;
     }
+
+    int maxSatisfied(vector<int> &customers, vector<int> &grumpy, int minutes) {
+        int n = customers.size();
+        int max_add = 0;
+        int add_now = 0;
+        for (int i = 0; i < minutes; ++i) {
+            if (grumpy[i] == 1) {
+                add_now += customers[i];
+                max_add = max(max_add, add_now);
+            }
+        }
+        for (int i = minutes; i < n; ++i) {
+            if (grumpy[i - minutes] == 1)
+                add_now -= customers[i - minutes];
+            if (grumpy[i] == 1)
+                add_now += customers[i];
+            max_add = max(max_add, add_now);
+        }
+        int res = max_add;
+        for (int i = 0; i < n; ++i) {
+            if (grumpy[i] == 0) {
+                res += customers[i];
+            }
+        }
+        return res;
+    }
 };
 
-int main() { return 0; }
+int main() {
+    [&out = std::cout]() -> void {
+        out << "Hello World\n"
+            << std::endl;
+    }();
+    return 0;
+}
