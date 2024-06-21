@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <deque>
 #include <functional>
 #include <iostream>
@@ -2620,6 +2621,39 @@ public:
                 max_day = day - 1;
             } else {
                 min_day = day + 1;
+            }
+        }
+        return res;
+    }
+
+    int maxDistance(vector<int> &position, int m) {
+        int min_dis = 0;
+        int max_dis = INT_MAX;
+        int res = 0;
+        std::sort(position.begin(), position.end());
+        auto f = [&](int dis) {
+            int prev = 0;
+            int remaining = m - 1;
+            int index = 1;
+            while (index < position.size()) {
+                if (position[index] >= position[prev] + dis) {
+                    --remaining;
+                    prev = index;
+                }
+                ++index;
+            }
+            return remaining <= 0;
+        };
+        while (true) {
+            if (min_dis > max_dis) {
+                break;
+            }
+            int mid = (min_dis + max_dis) >> 1;
+            if (f(mid)) {
+                res = mid;
+                min_dis = mid + 1;
+            } else {
+                max_dis = mid - 1;
             }
         }
         return res;
