@@ -2723,6 +2723,28 @@ public:
         }
         return ans;
     }
+
+    int minKBitFlips(vector<int> &nums, int k) {
+        int n = nums.size();
+        int res = 0;
+        vector<bool> flip(n, 0);
+        bool current = false;
+        for (int i = 0; i < n; ++i) {
+            if (i >= k) {
+                current = current ^ flip[i - k];
+            }
+            if ((current ^ nums[i]) == 0) {
+                if (i + k <= n) {
+                    ++res;
+                    flip[i] = 1;
+                    current = !current;
+                } else {
+                    return -1;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
