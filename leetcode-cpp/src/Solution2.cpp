@@ -13,6 +13,8 @@
 #include <queue>
 #include <regex>
 #include <set>
+#include <string.h>
+#include <cstdint>
 #include <sstream>
 #include <stack>
 #include <unordered_map>

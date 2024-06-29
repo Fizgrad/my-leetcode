@@ -6,6 +6,7 @@
 #include <cctype>
 #include <climits>
 #include <cmath>
+#include <cstdint>
 #include <deque>
 #include <iostream>
 #include <map>
@@ -15,6 +16,7 @@
 #include <set>
 #include <sstream>
 #include <stack>
+#include <string.h>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -2463,7 +2465,7 @@ public:
 
     long long maxMatrixSum(vector<vector<int>> &matrix) {
         long long res = 0;
-        int min_abs = INT32_MAX;
+        int min_abs = std::numeric_limits<std::int32_t>::max();
         bool flag = false;
         for (auto &i: matrix) {
             for (auto j: i) {
@@ -2796,7 +2798,7 @@ public:
         //            }
         //        }
         //        vector<int> res;
-        //        int min_len = INT32_MAX;
+        //        int min_len = std::numeric_limits<std::int32_t>::max();
         //        auto f = [&](auto &&f, int skill_index, unordered_set<int> &persons) {
         //            if (std::any_of(who_has_skill[skill_index].begin(), who_has_skill[skill_index].end(),
         //                            [&](const auto &item) {
@@ -3224,7 +3226,7 @@ public:
             } else
                 return ma - mi;
         };
-        return dfs(dfs, root, INT32_MAX, INT32_MIN);
+        return dfs(dfs, root, std::numeric_limits<std::int32_t>::max(), INT32_MIN);
     }
 
     int longestZigZag(TreeNode *root) {
@@ -3453,7 +3455,7 @@ public:
         generate(generate, 0, n / 2, 0, first); //generate all possible subset sums from half the array
         generate(generate, n / 2, n, 0, second);//generate all possible subset sums from the second half of the array
         std::sort(first.begin(), first.end());
-        int ans = INT32_MAX;
+        int ans = std::numeric_limits<std::int32_t>::max();
         auto binarySearch = [&](vector<int> &first, int target) {
             int i = 0;
             int j = first.size() - 1;
@@ -3536,7 +3538,7 @@ public:
         };
         generate(generate, first, 0, len, 0, 0);
         generate(generate, second, len, n, 0, 0);
-        int res = INT32_MAX >> 1;
+        int res = std::numeric_limits<std::int32_t>::max() >> 1;
         for (int i = 0; i < len; ++i) {
             std::sort(first[i].begin(), first[i].end());
         }
@@ -3666,7 +3668,7 @@ public:
         for (auto &i: blueEdges) {
             blueGraph[i[0]].push_back(i[1]);
         }
-        vector<int> res(n, INT32_MAX >> 1);
+        vector<int> res(n, std::numeric_limits<std::int32_t>::max() >> 1);
         res[0] = 0;
         auto proc = [&](bool flag) {
             vector<int> next{0};
@@ -3702,7 +3704,7 @@ public:
         proc(true);
         proc(false);
         for (int i = 0; i < n; ++i) {
-            if (res[i] == INT32_MAX >> 1) {
+            if (res[i] == std::numeric_limits<std::int32_t>::max() >> 1) {
                 res[i] = -1;
             }
         }
@@ -3956,8 +3958,8 @@ public:
     }
 
     bool increasingTriplet(vector<int> &nums) {
-        int min1 = INT32_MAX;
-        int min2 = INT32_MAX;
+        int min1 = std::numeric_limits<std::int32_t>::max();
+        int min2 = std::numeric_limits<std::int32_t>::max();
         for (auto i: nums) {
             if (i <= min1) {
                 min1 = i;
@@ -4665,7 +4667,7 @@ public:
                     }
                 }
                 if (!continueBST) {
-                    auto [b, i] = dfs(dfs, INT32_MAX, cur->val,
+                    auto [b, i] = dfs(dfs, std::numeric_limits<std::int32_t>::max(), cur->val,
                                       cur->right);
                     if (b) {
                         sum += i;

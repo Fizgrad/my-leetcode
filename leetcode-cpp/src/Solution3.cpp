@@ -6,6 +6,7 @@
 #include <cctype>
 #include <climits>
 #include <cmath>
+#include <cstdint>
 #include <deque>
 #include <iostream>
 #include <map>
@@ -1624,7 +1625,7 @@ public:
         for (auto c: t) {
             ++nums[c - 'A'];
         }
-        int res = INT32_MAX >> 1;
+        int res = std::numeric_limits<std::int32_t>::max() >> 1;
         auto res_start = s.begin();
         auto res_end = s.begin();
         while (j <= s.end()) {
@@ -1817,7 +1818,7 @@ public:
         if (n == 1 || (n == 2 && nums[0] == nums[1])) return {nums[0]};
         if (n == 2) return {nums[0], nums[1]};
         int candidate1 = nums[0];
-        int candidate2 = INT32_MIN;
+        int candidate2 = std::numeric_limits<std::int32_t>::min();
         int times1 = 2;
         int times2 = 0;
         for (int i = 1; i < (n / 3) * 3; ++i) {
@@ -1825,7 +1826,7 @@ public:
                 --times2;
                 times1 += 2;
                 if (times2 < 0) {
-                    candidate2 = INT32_MIN;
+                    candidate2 = std::numeric_limits<std::int32_t>::min();
                     times2 = 0;
                 }
                 continue;
@@ -1833,25 +1834,25 @@ public:
                 --times1;
                 times2 += 2;
                 if (times1 < 0) {
-                    candidate1 = INT32_MIN;
+                    candidate1 = std::numeric_limits<std::int32_t>::min();
                     times1 = 0;
                 }
                 continue;
-            } else if (candidate1 == INT32_MIN) {
+            } else if (candidate1 == std::numeric_limits<std::int32_t>::min()) {
                 candidate1 = nums[i];
                 times1 = 2;
                 --times2;
                 if (times2 < 0) {
-                    candidate2 = INT32_MIN;
+                    candidate2 = std::numeric_limits<std::int32_t>::min();
                     times2 = 0;
                 }
                 continue;
-            } else if (candidate2 == INT32_MIN) {
+            } else if (candidate2 == std::numeric_limits<std::int32_t>::min()) {
                 candidate2 = nums[i];
                 times2 = 2;
                 --times1;
                 if (times1 < 0) {
-                    candidate1 = INT32_MIN;
+                    candidate1 = std::numeric_limits<std::int32_t>::min();
                     times1 = 0;
                 }
                 continue;
@@ -1862,7 +1863,7 @@ public:
                     candidate1 = nums[i];
                     times1 = 2;
                     if (times2 < 0) {
-                        candidate2 = INT32_MIN;
+                        candidate2 = std::numeric_limits<std::int32_t>::min();
                         times2 = 0;
                     }
                 } else if (times2 < 0) {
