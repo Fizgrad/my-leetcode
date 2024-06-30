@@ -2745,6 +2745,80 @@ public:
         }
         return res;
     }
+
+    int maxNumEdgesToRemove(int n, vector<vector<int>> &edges) {
+        int num_of_edges = edges.size();
+        vector<int> parent(n);
+        vector<int> size(n);
+        auto find = [&](int i) -> int {
+            int res = parent[i];
+            while (res != i) {
+                i = res;
+                res = parent[res];
+            }
+            return res;
+        };
+        auto uni = [&](int a, int b) -> void {
+            int pa = find(a);
+            int pb = find(b);
+            if (pa == pb) {
+                return;
+            }
+            if (size[pa] > size[pb]) {
+                size[pa] += size[pb];
+                parent[pb] = pa;
+            } else {
+                size[pb] += size[pa];
+                parent[pa] = pb;
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+        int num = 0;
+        for (auto &i: edges) {
+            if (i[0] == 3) {
+                if (find(i[1] - 1) != find(i[2] - 1)) {
+                    uni(i[1] - 1, i[2] - 1);
+                    ++num;
+                }
+            }
+        }
+        vector<int> parent_bak(parent);
+        vector<int> size_bak(size);
+        for (auto &i: edges) {
+            if (i[0] == 1) {
+                if (find(i[1] - 1) != find(i[2] - 1)) {
+                    uni(i[1] - 1, i[2] - 1);
+                    ++num;
+                }
+            }
+        }
+        int prev = find(0);
+        for (int i = 1; i < n; ++i) {
+            if (find(i) != prev) {
+                return -1;
+            }
+        }
+        parent = parent_bak;
+        size = size_bak;
+        for (auto &i: edges) {
+            if (i[0] == 2) {
+                if (find(i[1] - 1) != find(i[2] - 1)) {
+                    uni(i[1] - 1, i[2] - 1);
+                    ++num;
+                }
+            }
+        }
+        prev = find(0);
+        for (int i = 1; i < n; ++i) {
+            if (find(i) != prev) {
+                return -1;
+            }
+        }
+        return num_of_edges - num;
+    }
 };
 
 int main() {
