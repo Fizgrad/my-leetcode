@@ -2834,6 +2834,20 @@ public:
         }
         return false;
     }
+
+    vector<int> intersect(vector<int> &nums1, vector<int> &nums2) {
+        int times[1001] = {0};
+        vector<int> res;
+        for (auto i: nums1) {
+            ++times[i];
+        }
+        for (auto i: nums2) {
+            if (times[i]-- > 0) {
+                res.push_back(i);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
