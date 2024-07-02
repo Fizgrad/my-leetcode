@@ -2848,6 +2848,21 @@ public:
         }
         return res;
     }
+
+    TreeNode *bstToGst(TreeNode *root) {
+        int addend = 0;
+        auto dfs = [&](auto &&dfs, TreeNode *node) -> void {
+            if (node == nullptr) {
+                return;
+            }
+            dfs(dfs, node->right);
+            node->val += addend;
+            addend = node->val;
+            dfs(dfs, node->left);
+        };
+        dfs(dfs, root);
+        return root;
+    }
 };
 
 int main() {
