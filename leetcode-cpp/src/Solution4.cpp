@@ -2867,6 +2867,19 @@ public:
     int findCenter(vector<vector<int>> &edges) {
         return edges[0][1] == edges[1][1] || edges[0][1] == edges[1][0] ? edges[0][1] : edges[0][0];
     }
+
+    long long maximumImportance(int n, vector<vector<int>> &roads) {
+        long long res = 0;
+        long long value = 0;
+        vector<int> degrees(n, 0);
+        for (auto road: roads) {
+            degrees[road[0]]++;
+            degrees[road[1]]++;
+        }
+        std::sort(degrees.begin(), degrees.end());
+        for (auto degree: degrees) res += degree * (++value);
+        return res;
+    }
 };
 
 int main() {
