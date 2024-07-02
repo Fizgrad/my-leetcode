@@ -2819,6 +2819,21 @@ public:
         }
         return num_of_edges - num;
     }
+
+    bool threeConsecutiveOdds(vector<int> &arr) {
+        int prev = 0;
+        for (auto i: arr) {
+            if (i & 1) {
+                ++prev;
+                if (prev >= 3) {
+                    return true;
+                }
+            } else {
+                prev = 0;
+            }
+        }
+        return false;
+    }
 };
 
 int main() {
