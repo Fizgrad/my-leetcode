@@ -2889,6 +2889,42 @@ public:
         std::sort(nums.begin(), nums.end());
         return std::min(std::min(std::min(nums[n - 4] - nums[0], nums[n - 3] - nums[1]), nums[n - 2] - nums[2]), nums[n - 1] - nums[3]);
     }
+
+    vector<int> nodesBetweenCriticalPoints(ListNode *head) {
+        auto pt = head;
+        int prev = head->val;
+        int min_res = std::numeric_limits<int32_t>::max();
+        int first_index = -1;
+        int prev_index = -1;
+        int max_res = -1;
+        pt = pt->next;
+        int index = 1;
+        int prev_cmp = 0;// 1 greater, -1 smaller, 0 equal
+        while (pt != nullptr) {
+            int cmp = pt->val > prev ? 1 : (pt->val == prev ? 0 : -1);
+            if (cmp != 0 && prev_cmp != 0 && cmp == -prev_cmp) {
+                if (prev_index == -1) {
+                    prev_index = index;
+                } else {
+                    min_res = std::min(min_res, index - prev_index);
+                    prev_index = index;
+                }
+                if (first_index == -1) {
+                    first_index = index;
+                } else {
+                    max_res = index - first_index;
+                }
+            }
+            prev = pt->val;
+            prev_cmp = cmp;
+            pt = pt->next;
+            ++index;
+        }
+        if (min_res == std::numeric_limits<int32_t>::max()) {
+            return {-1, -1};
+        }
+        return {min_res, max_res};
+    }
 };
 
 int main() {
