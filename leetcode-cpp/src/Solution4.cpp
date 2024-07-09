@@ -2953,6 +2953,22 @@ public:
         if (n == 1) return 1;
         return (findTheWinner(n - 1, k) + (k - 1)) % n + 1;
     }
+
+    void flatten(TreeNode *root) {
+        TreeNode *pt = nullptr;
+        auto f = [&](auto &&f, TreeNode *node) -> void {
+            if (node == nullptr) return;
+            if (pt != nullptr) pt->right = node;
+            pt = node;
+            auto left = node->left;
+            auto right = node->right;
+            node->left = nullptr;
+            node->right = nullptr;
+            f(f, left);
+            f(f, right);
+        };
+        f(f, root);
+    }
 };
 
 int main() {
