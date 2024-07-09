@@ -2944,6 +2944,10 @@ public:
         int chunks = time / (n - 1);
         return chunks % 2 == 0 ? (time % (n - 1) + 1) : (n - time % (n - 1));
     }
+
+    int numWaterBottles(int numBottles, int numExchange) {
+        return (numBottles - 1) / (numExchange - 1) * numExchange + (numBottles - 1) % (numExchange - 1) + 1;
+    }
 };
 
 int main() {
