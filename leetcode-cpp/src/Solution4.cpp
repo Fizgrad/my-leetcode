@@ -2969,6 +2969,20 @@ public:
         };
         f(f, root);
     }
+
+    int minOperations(vector<string> &logs) {
+        int depth = 0;
+        for (auto &i: logs) {
+            if (i == "../") {
+                depth = depth - 1 >= 0 ? depth - 1 : 0;
+            } else if (i == "./") {
+                continue;
+            } else {
+                ++depth;
+            }
+        }
+        return depth;
+    }
 };
 
 int main() {
