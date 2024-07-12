@@ -2983,6 +2983,22 @@ public:
         }
         return depth;
     }
+
+    string reverseParentheses(const string &s) {
+        vector<char> res;
+        stack<int> indices;
+        for (int i = 0; i < s.size(); ++i) {
+            if (s[i] == '(') {
+                indices.push(res.size());
+            } else if (s[i] == ')') {
+                std::reverse(res.begin() + indices.top(), res.end());
+                indices.pop();
+            } else {
+                res.push_back(s[i]);
+            }
+        }
+        return {res.begin(), res.end()};
+    }
 };
 
 int main() {
