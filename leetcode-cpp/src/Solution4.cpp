@@ -27,6 +27,7 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include <sys/_types/_int32_t.h>
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
@@ -2998,6 +2999,52 @@ public:
             }
         }
         return {res.begin(), res.end()};
+    }
+
+    int findTheCity(int n, vector<vector<int>> &edges, int distanceThreshold) {
+        vector<pair<int, int>> cities(n);
+        vector<vector<int>> to(n, vector<int>(n, std::numeric_limits<int32_t>::max() >> 2));
+        for (int i = 0; i < n; ++i) {
+            to[i][i] = 0;
+        }
+        for (auto &i: edges) {
+            to[i[0]][i[1]] = i[2];
+            to[i[1]][i[0]] = i[2];
+        }
+
+        bool flag = true;
+        while (flag) {
+            flag = false;
+            for (int k = 0; k < n; ++k) {
+                for (int i = 0; i < n; ++i) {
+                    for (int j = 0; j < n; ++j) {
+                        if (to[i][j] > to[i][k] + to[k][j]) {
+                            flag = true;
+                            to[i][j] = to[i][k] + to[k][j];
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < n; ++i) {
+            cities[i].second = i;
+            for (int j = 0; j < n; ++j) {
+                if (to[i][j] <= distanceThreshold) {
+                    ++cities[i].first;
+                    // std::cout << i << " " << j << " " << cities[i].first << std::endl;
+                }
+            }
+        }
+
+        std::sort(cities.begin(), cities.end(), [](auto a, auto b) {
+            if (a.first != b.first) {
+                return a.first < b.first;
+            }
+            return a.second > b.second;
+        });
+
+        return cities.front().second;
     }
 };
 
