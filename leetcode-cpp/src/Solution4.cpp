@@ -3046,6 +3046,41 @@ public:
 
         return cities.front().second;
     }
+
+    int minHeightShelves(vector<vector<int>> &books, int shelfWidth) {
+        int n = books.size();
+        int result = std::numeric_limits<int32_t>::max();
+
+        vector<int> dp(n, -1);
+
+        auto dfs = [&](auto &&dfs, int index) {
+            if (index >= n || index < 0) {
+                return 0;
+            }
+            if (dp[index] != -1) {
+                return dp[index];
+            }
+
+            int curWidth = books[index][0];
+            int curHeight = books[index][1];
+            dp[index] = dfs(dfs, index + 1) + curHeight;
+            int i = index + 1;
+            while (i < n) {
+                int width = books[i][0];
+                int height = books[i][1];
+                if (width + curWidth <= shelfWidth) {
+                    curHeight = max(curHeight, height);
+                    curWidth += width;
+                    dp[index] = min(dp[index], curHeight + dfs(dfs, i + 1));
+                } else {
+                    break;
+                }
+                ++i;
+            }
+            return dp[index];
+        };
+        return dfs(dfs, 0);
+    }
 };
 
 int main() {
