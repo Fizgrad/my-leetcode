@@ -3081,6 +3081,15 @@ public:
         };
         return dfs(dfs, 0);
     }
+
+    int countSeniors(vector<string> &details) {
+        int result = 0;
+        for (auto &code: details) {
+            if (code[code.size() - 4] > '6' || (code[code.size() - 4] == '6' && code[code.size() - 3] > '0'))
+                ++result;
+        }
+        return result;
+    }
 };
 
 int main() {
