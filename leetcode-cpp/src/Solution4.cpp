@@ -3090,6 +3090,22 @@ public:
         }
         return result;
     }
+
+    string kthDistinct(vector<string> &arr, int k) {
+        unordered_map<string, int> times;
+        for (auto &i: arr) {
+            ++times[i];
+        }
+        for (auto &i: arr) {
+            if (times[i] == 1) {
+                --k;
+                if (k <= 0) {
+                    return i;
+                }
+            }
+        }
+        return "";
+    }
 };
 
 int main() {
