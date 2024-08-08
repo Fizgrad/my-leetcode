@@ -3108,7 +3108,7 @@ public:
     }
 
     string numberToWords(int num) {
-        
+
         auto numberToWordsHelper = [&](int num) {
             string digitString[] = {"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
             string teenString[] = {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
@@ -3144,6 +3144,50 @@ public:
             num /= 1000;
         }
         return result.empty() ? result : result.substr(0, result.size() - 1);// Trim trailing space
+    }
+
+    vector<vector<int>> spiralMatrixIII(int rows, int cols, int rStart, int cStart) {
+        int len = 1;
+        bool flag = false;
+        int x = rStart;
+        int y = cStart;
+        int k = 1;
+        int direction = 1;
+        vector<vector<int>> result;
+        result.push_back({x, y});
+        int remaining = rows * cols - 1;
+        while (remaining) {
+            switch (direction) {
+                case 0:
+                    --x;
+                    break;
+                case 1:
+                    ++y;
+                    break;
+                case 2:
+                    ++x;
+                    break;
+                case 3:
+                    --y;
+                    break;
+            };
+            --k;
+            if (k == 0) {
+                k = len;
+                direction = (direction + 1) % 4;
+                if (flag) {
+                    flag = false;
+                } else {
+                    flag = true;
+                    ++len;
+                }
+            }
+            if (x >= 0 && x < rows && y >= 0 && y < cols) {
+                --remaining;
+                result.push_back({x, y});
+            }
+        }
+        return result;
     }
 };
 
