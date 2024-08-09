@@ -3189,6 +3189,112 @@ public:
         }
         return result;
     }
+
+    int numMagicSquaresInside(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.begin()->size();
+        int result = 0;
+        vector<vector<int>> row_sums(n, vector<int>(m, -1));
+        vector<vector<int>> col_sums(n, vector<int>(m, -1));
+        vector<vector<int>> diag_sums(n, vector<int>(m, -1));
+        vector<vector<int>> diag2_sums(n, vector<int>(m, -1));
+
+        auto sum_row = [&](int x, int y) {
+            if (x < 0 || x >= n || y < 0 || y + 2 >= m)
+                return -1;
+            if (row_sums[x][y] != -1) {
+                return row_sums[x][y];
+            }
+            return row_sums[x][y] = (grid[x][y] + grid[x][y + 1] + grid[x][y + 2]);
+        };
+
+        auto sum_col = [&](int x, int y) {
+            if (x < 0 || x + 2 >= n || y < 0 || y >= m)
+                return -1;
+            if (col_sums[x][y] != -1) {
+                return col_sums[x][y];
+            }
+            return col_sums[x][y] = (grid[x][y] + grid[x + 1][y] + grid[x + 2][y]);
+        };
+
+        auto distinct = [&](int x, int y) {
+            unordered_set<int> hashset;
+
+            constexpr int dx[9] = {0, 0, 0, 1, 1, 1, 2, 2, 2};
+            constexpr int dy[9] = {0, 1, 2, 0, 1, 2, 0, 1, 2};
+
+            for (int i = 0; i < 9; ++i) {
+                int xx = x + dx[i];
+                int yy = y + dy[i];
+                if (hashset.count(grid[xx][yy])) {
+                    return false;
+                }
+                if (grid[xx][yy] >= 10 || grid[xx][yy] <= 0) {
+                    return false;
+                }
+                hashset.insert(grid[xx][yy]);
+            }
+            return true;
+        };
+
+        auto sum_diag = [&](int x, int y) {
+            constexpr int dx[3] = {0, 1, 2};
+            constexpr int dy[3] = {2, 1, 0};
+
+            int sum = 0;
+
+            for (int i = 0; i < 3; ++i) {
+                int xx = x + dx[i];
+                int yy = y + dy[i];
+                sum += grid[xx][yy];
+            }
+            if (diag_sums[x][y] != -1) {
+                return diag_sums[x][y];
+            }
+            return diag_sums[x][y] = sum;
+        };
+
+        auto sum_diag2 = [&](int x, int y) {
+            constexpr int dx[3] = {0, 1, 2};
+            constexpr int dy[3] = {0, 1, 2};
+
+            int sum = 0;
+
+            for (int i = 0; i < 3; ++i) {
+                int xx = x + dx[i];
+                int yy = y + dy[i];
+                sum += grid[xx][yy];
+            }
+
+            if (diag2_sums[x][y] != -1) {
+                return diag2_sums[x][y];
+            }
+
+            return diag2_sums[x][y] = sum;
+        };
+
+
+        for (int i = 0; i < n - 2; ++i) {
+            for (int j = 0; j < m - 2; ++j) {
+                if (!distinct(i, j)) {
+                    continue;
+                }
+                int sum = sum_diag(i, j);
+                if (sum_diag2(i, j) != sum) {
+                    continue;
+                }
+                if (sum_col(i, j) != sum || sum_col(i, j + 1) != sum || sum_col(i, j + 2) != sum) {
+                    continue;
+                }
+                if (sum_row(i, j) != sum || sum_row(i + 1, j) != sum || sum_row(i + 2, j) != sum) {
+                    continue;
+                }
+                ++result;
+            }
+        }
+
+        return result;
+    }
 };
 
 int main() {
