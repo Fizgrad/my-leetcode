@@ -3350,6 +3350,18 @@ public:
 
         return low;
     }
+
+    int minSteps(int n) {
+        if (n == 1) {
+            return 0;
+        }
+        for (int i = 2; i <= n; ++i) {
+            if (n / i * i == n) {
+                return i + minSteps(n / i);
+            }
+        }
+        return 0;
+    }
 };
 
 int main() {
