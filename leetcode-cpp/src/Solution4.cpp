@@ -3362,6 +3362,36 @@ public:
         }
         return 0;
     }
+
+    double maxProbability(int n, vector<vector<int>> &edges, vector<double> &succProb, int start_node, int end_node) {
+        vector<double> probs(n, 0);
+        vector<vector<pair<int, double>>> next(n);
+        int m = edges.size();
+        for (int i = 0; i < m; ++i) {
+            int from = edges[i][0];
+            int to = edges[i][1];
+            double prob = succProb[i];
+            next[from].emplace_back(to, prob);
+            next[to].emplace_back(from, prob);
+        }
+        priority_queue<pair<double, int>> pq;
+        pq.emplace(1, start_node);
+        while (pq.size()) {
+            auto [prob, node] = pq.top();
+            pq.pop();
+            if (node == end_node) {
+                return prob;
+            }
+            if (probs[node] >= prob) {
+                continue;
+            }
+            probs[node] = prob;
+            for (auto i: next[node]) {
+                pq.emplace(i.second * prob, i.first);
+            }
+        }
+        return 0;
+    }
 };
 
 int main() {
