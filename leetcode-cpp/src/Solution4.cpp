@@ -3392,6 +3392,57 @@ public:
         }
         return 0;
     }
+
+    int removeStones(vector<vector<int>> &stones) {
+        int n = stones.size();
+        unordered_map<int, vector<int>> x_hashmap;
+        unordered_map<int, vector<int>> y_hashmap;
+
+        for (int i = 0; i < n; ++i) {
+            x_hashmap[stones[i][0]].push_back(i);
+            y_hashmap[stones[i][1]].push_back(i);
+        }
+        vector<int> parents(n + 1, 0);
+        for (int i = 0; i < parents.size(); ++i) {
+            parents[i] = i;
+        }
+
+        auto uf_find = [&](int i) {
+            int next = parents[i];
+            while (next != i) {
+                i = next;
+                next = parents[i];
+            }
+            return i;
+        };
+
+        auto uf_union = [&](int a, int b) {
+            int pa = uf_find(a);
+            int pb = uf_find(b);
+            parents[max(pa, pb)] = min(pa, pb);
+        };
+
+        for (auto &k: x_hashmap) {
+            int s = k.second.size();
+            for (int i = 1; i < s; ++i) {
+                uf_union(k.second[0], k.second[i]);
+            }
+        }
+
+        for (auto &k: y_hashmap) {
+            int s = k.second.size();
+            for (int i = 1; i < s; ++i) {
+                uf_union(k.second[0], k.second[i]);
+            }
+        }
+
+        unordered_set<int> groups;
+        for (int i = 0; i < n; ++i) {
+            groups.insert(uf_find(i));
+        }
+
+        return n - groups.size();
+    }
 };
 
 int main() {
