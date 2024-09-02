@@ -3443,6 +3443,24 @@ public:
 
         return n - groups.size();
     }
+
+    int chalkReplacer(vector<int> &chalk, long long int k) {
+        int n = chalk.size();
+        long long int sum = chalk[0];
+        for (int i = 1; i < n; ++i) {
+            sum += chalk[i];
+        }
+        if (k > sum) {
+            k = k % sum;
+        }
+        for (int i = 0; i < n; ++i) {
+            k -= chalk[i];
+            if (k < 0) {
+                return i;
+            }
+        }
+        return 0;
+    }
 };
 
 int main() {
