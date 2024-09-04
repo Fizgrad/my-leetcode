@@ -3476,6 +3476,40 @@ public:
         }
         return stoi(number);
     }
+
+    int robotSim(vector<int> &commands, vector<vector<int>> &obstacles) {
+        int dx[4] = {0, 1, 0, -1};
+        int dy[4] = {1, 0, -1, 0};
+        int direction = 0;
+        int x = 0;
+        int y = 0;
+        int res = 0;
+
+        unordered_set<int> obstacle_set;
+        for (auto &i: obstacles) {
+            obstacle_set.emplace(i[0] * 40000 + i[1]);
+        }
+
+        for (auto i: commands) {
+            if (i == -1) {
+                direction = (direction + 1) % 4;
+            } else if (i == -2) {
+                direction = (direction + 3) % 4;
+            } else {
+                int remaining = i;
+                while (remaining--) {
+                    int xx = x + dx[direction];
+                    int yy = y + dy[direction];
+                    if (!obstacle_set.count(xx * 40000 + yy)) {
+                        x = xx;
+                        y = yy;
+                    }
+                    res = max(res, x * x + y * y);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
