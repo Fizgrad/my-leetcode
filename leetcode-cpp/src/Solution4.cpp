@@ -3510,6 +3510,26 @@ public:
         }
         return res;
     }
+
+    vector<int> missingRolls(vector<int> &rolls, int mean, int n) {
+        int m = rolls.size();
+        int sum = mean * (m + n);
+        for (int i = 0; i < m; ++i) {
+            sum -= rolls[i];
+        }
+        if (sum < n || sum > 6 * n) {
+            return {};
+        }
+        int initial = sum / n;
+        vector<int> res(n, initial);
+        sum -= n * initial;
+        int k = 0;
+        while (sum--) {
+            res[k++]++;
+            k = k % n;
+        }
+        return res;
+    }
 };
 
 int main() {
