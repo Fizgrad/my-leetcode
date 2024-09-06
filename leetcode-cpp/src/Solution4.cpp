@@ -3530,6 +3530,28 @@ public:
         }
         return res;
     }
+
+    ListNode *modifiedList(vector<int> &nums, ListNode *head) {
+        unordered_set<int> nums_set;
+        for (auto i: nums) {
+            nums_set.insert(i);
+        }
+        ListNode *vir = new ListNode(0);
+        vir->next = head;
+        auto pt = vir;
+        while (pt) {
+            if (pt->next == nullptr) {
+                break;
+            }
+            while (pt->next && nums_set.count(pt->next->val)) {
+                auto new_next = pt->next->next;
+                pt->next->next = nullptr;
+                pt->next = new_next;
+            }
+            pt = pt->next;
+        }
+        return vir->next;
+    }
 };
 
 int main() {
