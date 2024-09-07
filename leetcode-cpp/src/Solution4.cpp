@@ -3552,6 +3552,33 @@ public:
         }
         return vir->next;
     }
+
+    bool isSubPath(ListNode *head, TreeNode *root) {
+        auto dfs = [&](auto &&dfs, TreeNode *node, ListNode *now) -> bool {
+            if (node == nullptr && now != nullptr) {
+                return false;
+            }
+            if (now == nullptr) {
+                return true;
+            }
+            if (node->val == now->val) {
+                return dfs(dfs, node->left, now->next) || dfs(dfs, node->right, now->next);
+            } else {
+                return false;
+            }
+        };
+        auto f = [&](auto &&f, TreeNode *node) {
+            if (node == nullptr) {
+                return false;
+            }
+            if (dfs(dfs, node, head)) {
+                return true;
+            } else {
+                return f(f, node->left) || f(f, node->right);
+            }
+        };
+        return f(f, root);
+    }
 };
 
 int main() {
