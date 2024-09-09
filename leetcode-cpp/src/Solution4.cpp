@@ -3635,6 +3635,39 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> spiralMatrix(int m, int n, ListNode *head) {
+        vector<vector<int>> res(m, vector<int>(n, -1));
+        int dy[4] = {1, 0, -1, 0};
+        int dx[4] = {0, 1, 0, -1};
+        int direction = 0;
+        int x = 0;
+        int y = 0;
+
+        auto move = [&]() {
+            int xx = x + dx[direction];
+            int yy = y + dy[direction];
+            while (xx >= m || xx < 0 || yy >= n || yy < 0 || res[xx][yy] != -1) {
+                direction = (direction + 1) % 4;
+                xx = x + dx[direction];
+                yy = y + dy[direction];
+            }
+            x = xx;
+            y = yy;
+        };
+        if (head) {
+            res[0][0] = head->val;
+        } else {
+            return res;
+        }
+        auto pt = head->next;
+        while (pt) {
+            move();
+            res[x][y] = pt->val;
+            pt = pt->next;
+        }
+        return res;
+    }
 };
 
 int main() {
