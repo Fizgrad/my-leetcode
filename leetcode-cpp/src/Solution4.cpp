@@ -3579,6 +3579,62 @@ public:
         };
         return f(f, root);
     }
+
+    vector<ListNode *> splitListToParts(ListNode *head, int k) {
+        auto split = [&](ListNode *node) {
+            // split node node->next;
+            if (node == nullptr) {
+                return;
+            }
+            node->next = nullptr;
+        };
+
+        auto get_size = [&](ListNode *node) {
+            int len = 0;
+            auto pt = node;
+            while (pt) {
+                ++len;
+                pt = pt->next;
+            }
+            return len;
+        };
+
+        vector<ListNode *> res;
+
+        int len = get_size(head);
+
+        int sublen = len / k;
+
+        int more = len - sublen * k;
+        auto pt = head;
+        while (more--) {
+            res.push_back(pt);
+            int split_len = sublen + 1;
+            while (--split_len && pt) {
+                pt = pt->next;
+            }
+            auto next = pt->next;
+            split(pt);
+            pt = next;
+        }
+        int less = k - len + sublen * k;
+        while (--less) {
+            res.push_back(pt);
+            int split_len = sublen;
+            while (--split_len && pt) {
+                pt = pt->next;
+            }
+            if (pt) {
+                auto next = pt->next;
+                split(pt);
+                pt = next;
+            }
+        }
+        if (res.size() < k) {
+            res.push_back(pt);
+        }
+        return res;
+    }
 };
 
 int main() {
