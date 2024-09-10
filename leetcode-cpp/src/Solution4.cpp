@@ -3668,6 +3668,41 @@ public:
         }
         return res;
     }
+
+    ListNode *insertGreatestCommonDivisors(ListNode *head) {
+        auto gcd = [&](auto &&gcd, int a, int b) -> int {
+            if (a > b) {
+                return gcd(gcd, a - b, b);
+            } else if (a < b) {
+                return gcd(gcd, b, a);
+            } else
+                return a;
+        };
+
+        auto insert_gcd = [&](ListNode *node) {
+            if (node == nullptr || node->next == nullptr) {
+                return;
+            }
+
+            int val = gcd(gcd, node->val, node->next->val);
+            auto next = node->next;
+            node->next = new ListNode(val, next);
+        };
+
+        auto pt = head;
+        while (pt) {
+            insert_gcd(pt);
+            if (pt)
+                pt = pt->next;
+            else
+                return head;
+            if (pt)
+                pt = pt->next;
+            else
+                return head;
+        }
+        return head;
+    }
 };
 
 int main() {
