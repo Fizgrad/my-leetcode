@@ -3703,6 +3703,18 @@ public:
         }
         return head;
     }
+
+    int minBitFlips(int start, int goal) {
+        std::bitset<32> start_bit(start);
+        std::bitset<32> end_bit(goal);
+        int res = 0;
+        for (int i = 0; i < 32; ++i) {
+            if (start_bit[i] != end_bit[i]) {
+                ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
