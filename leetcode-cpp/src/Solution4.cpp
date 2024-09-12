@@ -3715,6 +3715,27 @@ public:
         }
         return res;
     }
+
+    int countConsistentStrings(const string &allowed, vector<string> &words) {
+        unordered_set<char> allowed_set;
+        for (auto i: allowed) {
+            allowed_set.insert(i);
+        }
+        int res = 0;
+        for (auto &i: words) {
+            bool flag = true;
+
+            for (auto k: i) {
+                if (!allowed_set.count(k)) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                res++;
+        }
+        return res;
+    }
 };
 
 int main() {
