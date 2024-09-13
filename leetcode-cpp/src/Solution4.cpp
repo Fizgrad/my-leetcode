@@ -3736,6 +3736,25 @@ public:
         }
         return res;
     }
+
+    vector<int> xorQueries(vector<int> &arr, vector<vector<int>> &queries) {
+        int n = arr.size();
+        vector<int> xorPrefix(n, 0);
+        xorPrefix[0] = arr[0];
+        for (int i = 1; i < n; ++i) {
+            xorPrefix[i] = xorPrefix[i - 1] ^ arr[i];
+        }
+        vector<int> res;
+        res.reserve(queries.size());
+        for (auto &i: queries) {
+            if (i[0] == 0)
+                res.push_back(xorPrefix[i[1]]);
+            else {
+                res.push_back(xorPrefix[i[1]] ^ xorPrefix[i[0] - 1]);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
