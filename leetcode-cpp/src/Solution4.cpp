@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <ctime>
 #include <deque>
 #include <functional>
 #include <iostream>
@@ -3753,6 +3754,34 @@ public:
                 res.push_back(xorPrefix[i[1]] ^ xorPrefix[i[0] - 1]);
             }
         }
+        return res;
+    }
+
+    int findMinDifference(vector<string> &timePoints) {
+        int n = timePoints.size();
+        auto convet2int = [&](const string &s) {
+            return stoi(s.substr(0, 2)) * 60 + stoi(s.substr(3, 2));
+        };
+        priority_queue<int> times;
+        for (auto &i: timePoints) {
+            times.push(convet2int(i));
+        }
+        int prev = -1;
+        int max_num = std::numeric_limits<int>::min();
+        int min_num = std::numeric_limits<int>::max();
+        int res = std::numeric_limits<int>::max();
+        while (times.size()) {
+            max_num = max(max_num, times.top());
+            min_num = min(min_num, times.top());
+            if (prev == -1) {
+                prev = times.top();
+            } else {
+                res = min(res, std::abs(prev - times.top()));
+                prev = times.top();
+            }
+            times.pop();
+        }
+        res = min(res, min_num + 24 * 60 - max_num);
         return res;
     }
 };
