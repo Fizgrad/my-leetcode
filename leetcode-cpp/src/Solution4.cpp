@@ -3784,6 +3784,41 @@ public:
         res = min(res, min_num + 24 * 60 - max_num);
         return res;
     }
+
+    vector<string> uncommonFromSentences(const string &s1, const string &s2) {
+        unordered_map<string, int> s1_times;
+        vector<string> res;
+        int index = 0;
+        while (index < s1.size()) {
+            auto next_ = std::find(s1.begin() + index + 1, s1.end(), ' ');
+            int next_index = next_ - s1.begin();
+            s1_times[s1.substr(index, next_index - index)]++;
+            index = next_index + 1;
+        }
+        unordered_map<string, int> s2_times;
+        index = 0;
+        while (index < s2.size()) {
+            auto next_ = std::find(s2.begin() + index + 1, s2.end(), ' ');
+            int next_index = next_ - s2.begin();
+            if (s1_times.count(s2.substr(index, next_index - index))) {
+                s1_times[s2.substr(index, next_index - index)] = -1;
+            } else {
+                s2_times[s2.substr(index, next_index - index)]++;
+            }
+            index = next_index + 1;
+        }
+        for (auto &i: s1_times) {
+            if (i.second == 1) {
+                res.emplace_back(i.first);
+            }
+        }
+        for (auto &i: s2_times) {
+            if (i.second == 1) {
+                res.emplace_back(i.first);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
