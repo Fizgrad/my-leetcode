@@ -12,11 +12,13 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <random>
 #include <regex>
 #include <set>
 #include <sstream>
 #include <stack>
 #include <string.h>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -5218,6 +5220,22 @@ public:
                 continue;
             }
             res.push_back(-1.0);
+        }
+        return res;
+    }
+
+    string largestNumber(vector<int> &nums) {
+        vector<string> numStrs;
+        for (auto num: nums) {
+            numStrs.push_back(to_string(num));
+        }
+        sort(numStrs.begin(), numStrs.end(), [&](const string &a, const string &b) -> bool {
+            return a + b > b + a;
+        });
+        if (numStrs[0] == "0") return "0";
+        string res = "";
+        for (auto s: numStrs) {
+            res += s;
         }
         return res;
     }
