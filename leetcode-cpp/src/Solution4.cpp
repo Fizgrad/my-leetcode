@@ -3841,6 +3841,25 @@ public:
         if (res.empty()) res.push_back(stoi(expression));
         return res;
     }
+
+    string shortestPalindrome(const string &s) {
+        if (s.empty()) return "";
+        string reverse_s(s.rbegin(), s.rend());
+        string combined = s + "#" + reverse_s;
+        vector<int> prefix(combined.size(), 0);
+        for (int i = 1; i < combined.size(); ++i) {
+            int j = prefix[i - 1];
+            while (j > 0 && combined[i] != combined[j]) {
+                j = prefix[j - 1];
+            }
+            if (combined[i] == combined[j]) {
+                ++j;
+            }
+            prefix[i] = j;
+        }
+        int longest_palindrome_len = prefix.back();
+        return reverse_s.substr(0, s.size() - longest_palindrome_len) + s;
+    }
 };
 
 int main() {
