@@ -3860,6 +3860,33 @@ public:
         int longest_palindrome_len = prefix.back();
         return reverse_s.substr(0, s.size() - longest_palindrome_len) + s;
     }
+
+    vector<int> lexicalOrder(int n) {
+        string ns = to_string(n);
+        string temp = "";
+        vector<int> res;
+        auto dfs = [&](auto &&dfs, int depth) -> void {
+            if (temp.size()) {
+                int num = stoi(temp);
+                if (num <= n) {
+                    res.push_back(num);
+                    for (char c = '0'; c <= '0' + 9; ++c) {
+                        temp.push_back(c);
+                        dfs(dfs, depth + 1);
+                        temp.pop_back();
+                    }
+                }
+            } else {
+                for (char c = '1'; c <= '0' + 9; ++c) {
+                    temp.push_back(c);
+                    dfs(dfs, depth + 1);
+                    temp.pop_back();
+                }
+            }
+        };
+        dfs(dfs, 0);
+        return res;
+    }
 };
 
 int main() {
