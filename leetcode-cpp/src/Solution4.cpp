@@ -3887,6 +3887,31 @@ public:
         dfs(dfs, 0);
         return res;
     }
+
+    int minExtraChar(const string &s, vector<string> &dictionary) {
+        Trie trie;
+        for (auto &i: dictionary) {
+            trie.add(i);
+        }
+        int n = s.size();
+        vector<int> dp(n, -1);
+        auto dfs = [&](auto &&dfs, int index) -> int {
+            if (index >= n || index < 0) {
+                return 0;
+            }
+            if (dp[index] != -1) {
+                return dp[index];
+            }
+            dp[index] = 1 + dfs(dfs, index + 1);
+            for (int len = 1; index + len <= n; ++len) {
+                if (trie.contains(s.substr(index, len))) {
+                    dp[index] = min(dp[index], dfs(dfs, index + len));
+                }
+            }
+            return dp[index];
+        };
+        return dfs(dfs, 0);
+    }
 };
 
 int main() {
