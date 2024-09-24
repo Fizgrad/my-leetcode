@@ -60,7 +60,7 @@ struct ListNode {
 };
 
 struct TrieNode {
-    TrieNode *next['z' - 'a' + 1] = {nullptr};
+    unordered_map<char, TrieNode *> next;
     bool isEnd = false;
 };
 
@@ -70,7 +70,7 @@ struct Trie {
     bool contains(const string &input) {
         auto temp = root;
         for (int i = 0; i < input.size(); ++i) {
-            temp = temp->next[input[i] - 'a'];
+            temp = temp->next[input[i]];
             if (temp == nullptr) {
                 return false;
             }
@@ -81,9 +81,40 @@ struct Trie {
     void add(const string &input) {
         auto temp = root;
         for (int i = 0; i < input.size(); ++i) {
-            if (temp->next[input[i] - 'a'] == nullptr)
-                temp->next[input[i] - 'a'] = new TrieNode();
-            temp = temp->next[input[i] - 'a'];
+            if (temp->next[input[i]] == nullptr)
+                temp->next[input[i]] = new TrieNode();
+            temp = temp->next[input[i]];
+        }
+        temp->isEnd = true;
+    }
+};
+
+struct PrefixTrieNode {
+    unordered_map<char, PrefixTrieNode *> next;
+    bool isEnd = false;
+};
+
+struct PrefixTrie {
+    PrefixTrieNode *root = new PrefixTrieNode();
+
+    bool contains(const string &input) {
+        auto temp = root;
+        for (int i = 0; i < input.size(); ++i) {
+            temp = temp->next[input[i]];
+            if (temp == nullptr) {
+                return false;
+            }
+        }
+        return temp->isEnd;
+    }
+
+    void add(const string &input) {
+        auto temp = root;
+        for (int i = 0; i < input.size(); ++i) {
+            if (temp->next[input[i]] == nullptr)
+                temp->next[input[i]] = new PrefixTrieNode();
+            temp->isEnd = true;
+            temp = temp->next[input[i]];
         }
         temp->isEnd = true;
     }
@@ -3911,6 +3942,33 @@ public:
             return dp[index];
         };
         return dfs(dfs, 0);
+    }
+
+    int longestCommonPrefix(vector<int> &arr1, vector<int> &arr2) {
+        PrefixTrie prefix_trie;
+        int res = 0;
+        for (auto i: arr2) {
+            prefix_trie.add(to_string(i));
+        }
+        for (auto i: arr1) {
+            string temp = to_string(i);
+            if (temp.size() <= res) {
+                continue;
+            }
+            string prefix = temp.substr(0, 1);
+            if (prefix_trie.contains(prefix)) {
+                res = max(res, 1);
+            }
+            for (int len = 1; len < temp.size(); ++len) {
+                prefix.push_back(temp[len]);
+                if (prefix_trie.contains(prefix)) {
+                    res = max(res, len + 1);
+                } else {
+                    break;
+                }
+            }
+        }
+        return res;
     }
 };
 
