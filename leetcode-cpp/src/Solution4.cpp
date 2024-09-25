@@ -3970,6 +3970,75 @@ public:
         }
         return res;
     }
+
+    template<char min_char, char max_char>
+    struct PrefixNumTrieNode {
+        PrefixNumTrieNode *next[max_char - min_char + 1] = {nullptr};
+        int isEnd = 0;
+        PrefixNumTrieNode() {
+            for (int i = 0; i <= max_char - min_char; ++i) {
+                next[i] = nullptr;
+            }
+        }
+    };
+
+    template<char min_char, char max_char>
+    struct PrefixNumTrie {
+        using Node = PrefixNumTrieNode<min_char, max_char>;
+        Node *root = new Node();
+        int contains(const string &input) {
+            auto temp = root;
+            for (char ch: input) {
+                int idx = ch - min_char;
+                temp = temp->next[idx];
+                if (temp == nullptr) {
+                    return false;
+                }
+            }
+            return temp->isEnd;
+        }
+
+        void add(const string &input) {
+            auto temp = root;
+            for (char ch: input) {
+                int idx = ch - min_char;
+                if (temp->next[idx] == nullptr)
+                    temp->next[idx] = new Node();
+                temp->isEnd += 1;
+                temp = temp->next[idx];
+            }
+            temp->isEnd += 1;
+        }
+
+        int sum(const string &input) {
+            int res = 0;
+            auto temp = root;
+            for (size_t i = 0; i < input.size(); ++i) {
+                int idx = input[i] - min_char;
+                if (temp->next[idx] == nullptr)
+                    return res;
+                if (i != 0)
+                    res += temp->isEnd;
+                temp = temp->next[idx];
+            }
+            res += temp->isEnd;
+            return res;
+        }
+    };
+
+    vector<int> sumPrefixScores(vector<string> &words) {
+        int n = words.size();
+        vector<int> res;
+        res.reserve(n);
+        PrefixNumTrie<'a', 'z'> prefix_trie;
+        for (auto &i: words) {
+            prefix_trie.add(i);
+        }
+        for (auto &i: words) {
+            res.push_back(prefix_trie.sum(i));
+        }
+        return res;
+    }
 };
 
 int main() {
