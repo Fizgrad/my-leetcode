@@ -30,3 +30,7 @@ public:
  * MyCalendarTwo* obj = new MyCalendarTwo();
  * bool param_1 = obj->book(start,end);
  */
+
+int main() {
+    return 0;
+}

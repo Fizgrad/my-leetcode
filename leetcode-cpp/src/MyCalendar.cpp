@@ -25,6 +25,9 @@ public:
     }
 };
 
+int main() {
+    return 0;
+}
 /**
  * Your MyCalendar object will be instantiated and called as such:
  * MyCalendar* obj = new MyCalendar();
