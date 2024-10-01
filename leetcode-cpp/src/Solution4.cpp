@@ -4039,6 +4039,22 @@ public:
         }
         return res;
     }
+
+    bool canArrange(vector<int> &arr, int k) {
+        vector<int> nums(k, 0);
+        for (auto i: arr) {
+            nums[(k + (i % k)) % k]++;
+        }
+        if (nums[0] & 1) {
+            return false;
+        }
+        for (int i = 1; i < k; ++i) {
+            if (nums[i] != nums[k - i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
