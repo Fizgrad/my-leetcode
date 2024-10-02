@@ -4055,6 +4055,22 @@ public:
         }
         return true;
     }
+
+    vector<int> arrayRankTransform(vector<int> &arr) {
+        unordered_map<int, int> to_rank;
+        set<int> number_set;
+        for (auto i: arr) {
+            number_set.insert(i);
+        }
+        int rank = 1;
+        for (auto i: number_set) {
+            to_rank[i] = rank++;
+        }
+        for (auto &i: arr) {
+            i = to_rank[i];
+        }
+        return arr;
+    }
 };
 
 int main() {
