@@ -4114,6 +4114,18 @@ public:
         }
         return stack.size();
     }
+
+    int minSwaps(const string &s) {
+        int num = 0;
+        for (auto &i: s) {
+            if (i == '[') {
+                ++num;
+            } else if (num > 0) {
+                --num;
+            }
+        }
+        return (num + 1) / 2;
+    }
 };
 
 int main() {
