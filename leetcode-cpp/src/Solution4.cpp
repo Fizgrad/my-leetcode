@@ -4126,6 +4126,21 @@ public:
         }
         return (num + 1) / 2;
     }
+
+    int minAddToMakeValid(const string &s) {
+        int num = 0;
+        int res = 0;
+        for (auto &i: s) {
+            if (i == '(') {
+                ++num;
+            } else if (num > 0) {
+                --num;
+            } else {
+                ++res;
+            }
+        }
+        return res + num;
+    }
 };
 
 int main() {
