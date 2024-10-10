@@ -4141,6 +4141,27 @@ public:
         }
         return res + num;
     }
+
+    int maxWidthRamp(vector<int> &nums) {
+        int res = 0;
+        vector<int> candidates;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (candidates.empty()) {
+                candidates.push_back(i);
+            } else {
+                if (nums[candidates.back()] > nums[i]) {
+                    candidates.push_back(i);
+                }
+            }
+        }
+        for (int i = nums.size() - 1; i >= 0; --i) {
+            while (candidates.size() && nums[candidates.back()] <= nums[i]) {
+                res = max(res, i - candidates.back());
+                candidates.pop_back();
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
