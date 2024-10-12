@@ -4162,6 +4162,22 @@ public:
         }
         return res;
     }
+
+    int minGroups(vector<vector<int>> &intervals) {
+        vector<pair<int, int>> events;
+        for (auto &interval: intervals) {
+            events.emplace_back(interval[0], 1);
+            events.emplace_back(interval[1] + 1, -1);
+        }
+        std::sort(events.begin(), events.end());
+        int activeGroups = 0;
+        int maxGroups = 0;
+        for (auto &event: events) {
+            activeGroups += event.second;
+            maxGroups = std::max(maxGroups, activeGroups);
+        }
+        return maxGroups;
+    }
 };
 
 int main() {
