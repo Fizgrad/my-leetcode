@@ -4178,6 +4178,21 @@ public:
         }
         return maxGroups;
     }
+
+    long long maxKelements(vector<int> &nums, int k) {
+        long long int res = 0;
+        priority_queue<int> pq;
+        for (auto i: nums) {
+            pq.push(i);
+        }
+        while (k--) {
+            int score = pq.top();
+            pq.pop();
+            res += score;
+            pq.push((score + 2) / 3);
+        }
+        return res;
+    }
 };
 
 int main() {
