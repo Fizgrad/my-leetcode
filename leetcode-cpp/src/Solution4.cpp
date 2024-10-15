@@ -4193,6 +4193,29 @@ public:
         }
         return res;
     }
+
+    long long minimumSteps(const string &s) {
+        int n = s.size();
+        int i = 0;
+        int j = n - 1;
+        long long res = 0;
+        while (i < j) {
+            while (i < j && s[i] == '0') {
+                ++i;
+            }
+            while (i < j && s[j] == '1') {
+                --j;
+            }
+            if (i != j) {
+                res += j - i;
+                ++i;
+                --j;
+            } else {
+                break;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
