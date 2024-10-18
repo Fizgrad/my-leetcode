@@ -4269,6 +4269,27 @@ public:
         dfs(dfs, 0, 0);
         return res;
     }
+
+    int maximumSwap(int num) {
+        int base[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+        if (num == 100000000) {
+            return num;
+        }
+        int res = 0;
+        for (int i = 0; num / base[i] >= 1; ++i) {
+            for (int j = 0; num / base[j] >= 1; ++j) {
+                if (i == j)
+                    continue;
+                int basei = base[i];
+                int basej = base[j];
+                int numi = (num / basei) % 10;
+                int numj = (num / basej) % 10;
+                int delta = numi * basej + numj * basei - numi * basei - numj * basej;
+                res = std::max(res, delta);
+            }
+        }
+        return res + num;
+    }
 };
 
 int main() {
