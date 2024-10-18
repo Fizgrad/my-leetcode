@@ -4245,6 +4245,30 @@ public:
         }
         return result;
     }
+
+    int countMaxOrSubsets(vector<int> &nums) {
+        int max_or = 0;
+        for (auto i: nums) {
+            max_or |= i;
+        }
+        int res = 0;
+        auto dfs = [&](auto &&dfs, int or_sum, int index) {
+            if (index >= nums.size()) {
+                if (or_sum == max_or) {
+                    ++res;
+                }
+                return;
+            }
+            dfs(dfs, or_sum, index + 1);
+            or_sum |= nums[index];
+            if (or_sum == max_or) {
+                res += (1 << (nums.size() - index - 1));
+            } else
+                dfs(dfs, or_sum, index + 1);
+        };
+        dfs(dfs, 0, 0);
+        return res;
+    }
 };
 
 int main() {
