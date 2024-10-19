@@ -4290,6 +4290,21 @@ public:
         }
         return res + num;
     }
+
+    char findKthBit(int n, int k) {
+        if (n == 1 && k == 1) {
+            return '0';
+        }
+        int len = (1 << n) - 1;
+        int mid = (len + 1) >> 1;
+        if (k == mid)
+            return '1';
+        if (k > mid) {
+            return '0' + '1' - findKthBit(n - 1, (1 << n) - k);
+        } else {
+            return findKthBit(n - 1, k);
+        }
+    }
 };
 
 int main() {
