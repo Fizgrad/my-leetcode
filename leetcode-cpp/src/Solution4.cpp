@@ -4305,6 +4305,41 @@ public:
             return findKthBit(n - 1, k);
         }
     }
+
+    int maxUniqueSplit(const string &s) {
+        set<string> strings;
+        string temp;
+        int res = 1;
+        auto dfs = [&](auto &&dfs, int index) {
+            if (index >= s.size()) {
+                if (temp.size()) {
+                    if (strings.count(temp)) {
+                        return;
+                    } else {
+                        strings.insert(temp);
+                    }
+                }
+                res = max(res, static_cast<int>(strings.size()));
+                if (temp.size()) {
+                    strings.erase(temp);
+                }
+                return;
+            }
+            temp.push_back(s[index]);
+            dfs(dfs, index + 1);
+            if (!strings.count(temp)) {
+                strings.insert(temp);
+                string backup;
+                backup.swap(temp);
+                dfs(dfs, index + 1);
+                strings.erase(backup);
+                backup.swap(temp);
+            }
+            temp.pop_back();
+        };
+        dfs(dfs, 0);
+        return res;
+    }
 };
 
 int main() {
