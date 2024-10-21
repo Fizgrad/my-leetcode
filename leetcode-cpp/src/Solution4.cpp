@@ -4340,6 +4340,52 @@ public:
         dfs(dfs, 0);
         return res;
     }
+
+    bool parseBoolExpr(string expression) {
+        stack<char> operators;
+        stack<char> operands;
+        for (auto i: expression) {
+            if (i == ')') {
+                char op = operators.top();
+                operators.pop();
+                bool res;
+                switch (op) {
+                    case '|':
+                        res = false;
+                        while (operands.size() && operands.top() != '(') {
+                            res |= (operands.top() == 't');
+                            operands.pop();
+                        }
+                        if (operands.top() == '(')
+                            operands.pop();
+                        operands.push((res ? 't' : 'f'));
+                        break;
+                    case '&':
+                        res = true;
+                        while (operands.size() && operands.top() != '(') {
+                            res &= (operands.top() == 't');
+                            operands.pop();
+                        }
+                        if (operands.top() == '(')
+                            operands.pop();
+                        operands.push((res ? 't' : 'f'));
+                        break;
+                    case '!':
+                        res = (operands.top() == 't' ? false : true);
+                        operands.pop();
+                        if (operands.top() == '(')
+                            operands.pop();
+                        operands.push((res ? 't' : 'f'));
+                        break;
+                }
+            } else if (i == '(' || i == 't' || i == 'f') {
+                operands.push(i);
+            } else if (i == '!' || i == '|' || i == '&') {
+                operators.push(i);
+            }
+        }
+        return operands.top() == 't' ? true : false;
+    }
 };
 
 int main() {
