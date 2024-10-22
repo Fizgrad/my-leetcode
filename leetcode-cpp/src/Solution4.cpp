@@ -4386,6 +4386,30 @@ public:
         }
         return operands.top() == 't' ? true : false;
     }
+
+    long long kthLargestLevelSum(TreeNode *root, int k) {
+        unordered_map<int, long long int> level_sums;
+        auto dfs = [&](auto &&dfs, TreeNode *node, int level) -> void {
+            if (node == nullptr) {
+                return;
+            }
+            level_sums[level] += node->val;
+            dfs(dfs, node->left, level + 1);
+            dfs(dfs, node->right, level + 1);
+        };
+        dfs(dfs, root, 0);
+        if (level_sums.size() < k) {
+            return -1;
+        }
+        priority_queue<long long int> pq;
+        for (auto i: level_sums) {
+            pq.push(-i.second);
+            while (pq.size() > k) {
+                pq.pop();
+            }
+        }
+        return -pq.top();
+    }
 };
 
 int main() {
