@@ -4453,6 +4453,22 @@ public:
             return false;
         }
     }
+
+    int countSquares(vector<vector<int>> &matrix) {
+        int n = matrix.size();
+        int m = matrix.begin()->size();
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+        auto f = [&](auto &&f, int i, int j) {
+            if (i < 0 || j < 0 || matrix[i][j] == 0) return 0;
+            if (dp[i][j] != -1) return dp[i][j];
+            return dp[i][j] = 1 + min({f(f, i - 1, j), f(f, i - 1, j - 1), f(f, i, j - 1)});
+        };
+        int res = 0;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                res += f(f, i, j);
+        return res;
+    }
 };
 
 int main() {
