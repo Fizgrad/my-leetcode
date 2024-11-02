@@ -4498,6 +4498,27 @@ public:
         }
         return res;
     }
+
+    bool isCircularSentence(const string &sentence) {
+        char c = *sentence.begin();
+        int index = 0;
+        while (index < sentence.size()) {
+            if (sentence[index] == ' ') {
+                if (index + 1 < sentence.size()) {
+                    if (sentence[index - 1] != sentence[index + 1]) {
+                        return false;
+                    }
+                }
+            }
+            if (index == sentence.size() - 1) {
+                if (c != sentence[index]) {
+                    return false;
+                }
+            }
+            ++index;
+        }
+        return true;
+    }
 };
 
 int main() {
