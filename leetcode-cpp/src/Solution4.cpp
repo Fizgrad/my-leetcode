@@ -4519,6 +4519,14 @@ public:
         }
         return true;
     }
+
+    bool rotateString(const string &s, const string &goal) {
+        if (s.size() != goal.size()) {
+            return false;
+        }
+        string tmp = s + s;
+        return tmp.find(goal) < s.size();
+    }
 };
 
 int main() {
