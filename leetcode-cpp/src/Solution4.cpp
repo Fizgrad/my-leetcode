@@ -4526,6 +4526,26 @@ public:
         string tmp = s + s;
         return tmp.find(goal) < s.size();
     }
+
+    string compressedString(const string &word) {
+        string res = "";
+        if (word.empty()) return res;
+        char c = word[0];
+        int times = 0;
+        for (int i = 0; i < word.size(); ++i) {
+            if (times < 9 && word[i] == c) {
+                ++times;
+            } else {
+                res.push_back('0' + times);
+                res.push_back(c);
+                times = 1;
+                c = word[i];
+            }
+        }
+        res.push_back('0' + times);
+        res.push_back(c);
+        return res;
+    }
 };
 
 int main() {
