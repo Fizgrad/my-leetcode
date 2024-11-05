@@ -4546,6 +4546,26 @@ public:
         res.push_back(c);
         return res;
     }
+
+    int minChanges(const string &s) {
+        char c = s[0];
+        int times = 1;
+        int res = 0;
+        for (int i = 1; i < s.size(); ++i) {
+            if (s[i] == c) {
+                ++times;
+            } else {
+                if (times & 1) {
+                    ++res;
+                    ++times;
+                } else {
+                    times = 1;
+                    c = s[i];
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
