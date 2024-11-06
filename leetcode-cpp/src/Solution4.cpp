@@ -4566,6 +4566,24 @@ public:
         }
         return res;
     }
+
+    bool canSortArray(vector<int> &nums) {
+        auto numberOfSetBits = [&](int num) {
+            bitset<32> bits(num);
+            return bits.count();
+        };
+        int n = nums.size();
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                if (nums[j] < nums[i]) {
+                    if (numberOfSetBits(nums[i]) != numberOfSetBits(nums[j])) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
