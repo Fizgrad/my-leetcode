@@ -4584,6 +4584,20 @@ public:
         }
         return true;
     }
+
+    int largestCombination(vector<int> &candidates) {
+        vector<int> hm(32, 0);
+        int res = 0;
+        for (auto i: candidates) {
+            bitset<32> bits(i);
+            for (int k = 0; k < 32; ++k) {
+                if (bits.test(k)) {
+                    hm[k]++;
+                }
+            }
+        }
+        return *std::max_element(hm.begin(), hm.end());
+    }
 };
 
 int main() {
