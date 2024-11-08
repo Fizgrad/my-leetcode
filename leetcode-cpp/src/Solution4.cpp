@@ -4598,6 +4598,20 @@ public:
         }
         return *std::max_element(hm.begin(), hm.end());
     }
+
+    vector<int> getMaximumXor(vector<int> &nums, int maximumBit) {
+        int n = nums.size();
+        vector<int> prefix_xor_sum(n, 0);
+        prefix_xor_sum[0] = nums[0];
+        for (int i = 1; i < n; ++i) {
+            prefix_xor_sum[i] = prefix_xor_sum[i - 1] ^ nums[i];
+        }
+        vector<int> res(n, (1 << maximumBit) - 1);
+        for (int i = 0; i < n; ++i) {
+            res[n - 1 - i] = (res[n - 1 - i] ^ prefix_xor_sum[i]) & ((1 << maximumBit) - 1);
+        }
+        return res;
+    }
 };
 
 int main() {
