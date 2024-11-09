@@ -4612,6 +4612,22 @@ public:
         }
         return res;
     }
+
+    long long minEnd(int n, int x) {
+        std::bitset<64> bits(x);
+        if (n == 1) {
+            return x;
+        }
+        std::bitset<64> n_bits(n - 1);
+        int index = 0;
+        for (int i = 0; i < 64; ++i) {
+            if (!bits.test(i)) {
+                if (n_bits.test(index++))
+                    bits.set(i);
+            }
+        }
+        return bits.to_ullong();
+    }
 };
 
 int main() {
