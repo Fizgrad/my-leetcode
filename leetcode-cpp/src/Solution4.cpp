@@ -4628,6 +4628,55 @@ public:
         }
         return bits.to_ullong();
     }
+
+    int minimumSubarrayLength(vector<int> &nums, int k) {
+        int res = std::numeric_limits<int>::max();
+        bitset<32> k_bits(k);
+        vector<int> bits(32, 0);
+        int left = 0;
+        int right = 0;
+        if (k == 0) return 1;
+        auto f = [&]() {
+            int sum = 0;
+            for (int i = 0; i < 32; ++i) {
+                sum |= bits[i] > 0 ? (1 << i) : 0;
+            }
+            return sum >= k;
+        };
+        while (right < nums.size()) {
+            if (left == right || !f()) {
+                for (int i = 0; i < 32; ++i) {
+                    if (nums[right] & (1 << i)) {
+                        bits[i]++;
+                    }
+                }
+                ++right;
+                if (f()) {
+                    res = min(res, right - left);
+                }
+            } else {
+                for (int i = 0; i < 32; ++i) {
+                    if (nums[left] & (1 << i)) {
+                        bits[i]--;
+                    }
+                }
+                ++left;
+                if (f()) {
+                    res = min(res, right - left);
+                }
+            }
+        }
+        while (left < right && f()) {
+            res = min(res, right - left);
+            for (int i = 0; i < 32; ++i) {
+                if (nums[left] & (1 << i)) {
+                    bits[i]--;
+                }
+            }
+            ++left;
+        }
+        return res == std::numeric_limits<int>::max() ? -1 : res;
+    }
 };
 
 int main() {
