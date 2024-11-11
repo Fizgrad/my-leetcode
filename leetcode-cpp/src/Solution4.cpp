@@ -4677,6 +4677,50 @@ public:
         }
         return res == std::numeric_limits<int>::max() ? -1 : res;
     }
+
+    bool primeSubOperation(vector<int> &nums) {
+        constexpr auto primes = [&]() {
+            std::array<int, 168> primes = {};
+            primes[0] = 2;
+            size_t count = 1;
+            for (int x = 3; x < 1000; x += 2) {
+                bool is_prime = true;
+                for (size_t i = 0; i < count; ++i) {
+                    if (primes[i] * primes[i] > x) break;
+                    if (x % primes[i] == 0) {
+                        is_prime = false;
+                        break;
+                    }
+                }
+                if (is_prime) {
+                    primes[count++] = x;
+                }
+            }
+            return primes;
+        }();
+
+        auto get_prime = [&](int index) {
+            if (index >= 0) {
+                return primes[index];
+            } else {
+                return 0;
+            }
+        };
+
+        auto find_prime = [&](int num) {
+            return std::lower_bound(primes.begin(), primes.end(), num) - primes.begin();
+        };
+
+        nums[0] -= get_prime(find_prime(nums[0]) - 1);
+        for (int i = 1; i < nums.size(); ++i) {
+            if (nums[i] <= nums[i - 1]) {
+                return false;
+            }
+            auto prime_index = find_prime(nums[i] - nums[i - 1]) - 1;
+            nums[i] -= get_prime(prime_index);
+        }
+        return true;
+    }
 };
 
 int main() {
