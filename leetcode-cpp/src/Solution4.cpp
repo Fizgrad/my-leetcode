@@ -4721,6 +4721,28 @@ public:
         }
         return true;
     }
+
+    vector<int> maximumBeauty(vector<vector<int>> &items, vector<int> &queries) {
+        std::sort(items.begin(), items.end(), [](const vector<int> &a, const vector<int> &b) {
+            return a[0] < b[0] || (a[0] == b[0] && a[1] < b[1]);
+        });
+        int n = queries.size();
+        vector<int> max_beauty(items.size());
+        max_beauty[0] = items[0][1];
+        for (int i = 1; i < items.size(); ++i) {
+            max_beauty[i] = max(max_beauty[i - 1], items[i][1]);
+        }
+        vector<int> res(n, 0);
+        for (auto i = 0; i < n; ++i) {
+            auto iter = std::lower_bound(items.begin(), items.end(), vector<int>{queries[i] + 1, 0});
+            if (iter == items.begin()) {
+                continue;
+            } else {
+                res[i] = max_beauty[iter - items.begin() - 1];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
