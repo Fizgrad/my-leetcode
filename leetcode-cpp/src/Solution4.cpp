@@ -4757,6 +4757,36 @@ public:
         }
         return res;
     }
+
+    int minimizedMaximum(int n, vector<int> &quantities) {
+        long long int res = std::numeric_limits<long long int>::max();
+
+        auto f = [&](long long int candidate) {
+            int _n = n;
+            for (int i = 0; i < quantities.size(); ++i) {
+                int quantity = quantities[i];
+                int num = (quantity + candidate - 1) / candidate;
+                _n -= num;
+                if (_n < 0) {
+                    return false;
+                }
+            }
+            res = min(res, candidate);
+            return true;
+        };
+
+        long long int left = 1;
+        long long int right = std::accumulate(quantities.begin(), quantities.end(), 0ll);
+        while (left <= right) {
+            long long int mid = (left + right) >> 1;
+            if (f(mid)) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
