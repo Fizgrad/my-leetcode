@@ -13,6 +13,7 @@
 #include <ctime>
 #include <deque>
 #include <functional>
+#include <ios>
 #include <iostream>
 #include <iterator>
 #include <limits>
@@ -4783,6 +4784,41 @@ public:
                 right = mid - 1;
             } else {
                 left = mid + 1;
+            }
+        }
+        return res;
+    }
+
+    int findLengthOfShortestSubarray(vector<int> &arr) {
+        int n = arr.size();
+        int left = 0;
+        for (int i = 1; i < n; ++i) {
+            if (arr[i] < arr[i - 1]) {
+                left = i;
+                break;
+            }
+        }
+        if (left == 0) return 0;
+        int right = n;
+        for (int i = n - 1; i > 0; --i) {
+            if (arr[i] < arr[i - 1]) {
+                right = i;
+                break;
+            }
+        }
+        int res = min(min(n - left, right), n - 1);
+        right = n - 1;
+        while (left--) {
+            if (arr[right] >= arr[left]) {
+                res = min(res, right - left - 1);
+            } else
+                continue;
+            while (right > left && arr[right] >= arr[right - 1]) {
+                --right;
+                if (arr[right] >= arr[left]) {
+                    res = min(res, right - left - 1);
+                } else
+                    break;
             }
         }
         return res;
