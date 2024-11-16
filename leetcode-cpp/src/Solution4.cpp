@@ -4823,6 +4823,32 @@ public:
         }
         return res;
     }
+
+    vector<int> resultsArray(vector<int> &nums, int k) {
+        int n = nums.size();
+        vector<int> res(n - k + 1);
+        deque<pair<int, int>> dq;
+        for (int i = 0; i < k; ++i) {
+            int num = nums[i];
+            while (dq.size() && num != dq.back().first + 1) {
+                dq.pop_back();
+            }
+            dq.emplace_back(num, i);
+        }
+        res[0] = (dq.size() == k ? dq.back().first : -1);
+        for (int i = k; i < n; ++i) {
+            int num = nums[i];
+            while (dq.size() && dq.front().second <= i - k) {
+                dq.pop_front();
+            }
+            while (dq.size() && num != dq.back().first + 1) {
+                dq.pop_back();
+            }
+            dq.emplace_back(num, i);
+            res[i - k + 1] = (dq.size() == k ? dq.back().first : -1);
+        }
+        return res;
+    }
 };
 
 int main() {
