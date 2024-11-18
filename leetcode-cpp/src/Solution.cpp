@@ -5239,6 +5239,39 @@ public:
         }
         return res;
     }
+
+    vector<int> decrypt(vector<int> &code, int k) {
+        int n = code.size();
+        vector<int> tmp(2 * n);
+        for (int i = 0; i < n; ++i) {
+            tmp[i] = tmp[i + n] = code[i];
+        }
+        vector<int> res(n, 0);
+        if (k == 0) return res;
+        else if (k > 0) {
+            int sum = 0;
+            for (int i = 1; i <= k; ++i) {
+                sum += code[i];
+            }
+            for (int i = 0; i < n; ++i) {
+                res[i] = sum;
+                sum -= tmp[i + 1];
+                sum += tmp[i + k + 1];
+            }
+            return res;
+        } else {
+            int sum = 0;
+            for (int i = k; i < 0; ++i) {
+                sum += tmp[i + n];
+            }
+            for (int i = 0; i < n; ++i) {
+                res[i] = sum;
+                sum -= tmp[i + k + n];
+                sum += tmp[i + n];
+            }
+            return res;
+        }
+    }
 };
 
 int main() {
