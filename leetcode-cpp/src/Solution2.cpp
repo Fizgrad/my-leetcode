@@ -6,6 +6,7 @@
 #include <cctype>
 #include <climits>
 #include <cmath>
+#include <cstdint>
 #include <deque>
 #include <iostream>
 #include <map>
@@ -13,10 +14,9 @@
 #include <queue>
 #include <regex>
 #include <set>
-#include <string.h>
-#include <cstdint>
 #include <sstream>
 #include <stack>
+#include <string.h>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -2014,6 +2014,32 @@ public:
         do {
             res.emplace_back(nums);
         } while (std::next_permutation(nums.begin(), nums.end()));
+        return res;
+    }
+
+    long long maximumSubarraySum(vector<int> &nums, int k) {
+        long long res = 0;
+        unordered_map<int, int> times;
+        long long sum = 0;
+        for (int i = 0; i < k; ++i) {
+            sum += nums[i];
+            ++times[nums[i]];
+        }
+        for (int i = k; i < nums.size(); ++i) {
+            if (times.size() == k) {
+                res = max(res, sum);
+            }
+            --times[nums[i - k]];
+            if (times[nums[i - k]] == 0) {
+                times.erase(nums[i - k]);
+            }
+            sum -= nums[i - k];
+            sum += nums[i];
+            ++times[nums[i]];
+        }
+        if (times.size() == k) {
+            res = max(res, sum);
+        }
         return res;
     }
 };
