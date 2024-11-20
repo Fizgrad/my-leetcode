@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bits/types/struct_timespec.h>
 #include <cctype>
 #include <climits>
 #include <cmath>
@@ -2039,6 +2040,33 @@ public:
         }
         if (times.size() == k) {
             res = max(res, sum);
+        }
+        return res;
+    }
+
+    int takeCharacters(const string &s, int k) {
+        std::array<int, 3> times = {0, 0, 0};
+        int n = s.size();
+        for_each(s.begin(), s.end(), [&times](auto i) {
+            times[i - 'a']++;
+        });
+        if (std::any_of(times.begin(), times.end(), [k](auto i) {
+                return i < k;
+            })) return -1;
+        int res = n;
+        int i = 0;
+        for (int j = 0; j < n; ++j) {
+            times[s[j] - 'a']--;
+            while (i < j && std::any_of(times.begin(), times.end(), [k](auto value) {
+                       return value < k;
+                   })) {
+                ++times[s[i] - 'a'];
+                ++i;
+            }
+            if (std::all_of(times.begin(), times.end(), [k](auto value) {
+                    return value >= k;
+                }))
+                res = min(res, n - (j - i + 1));
         }
         return res;
     }
