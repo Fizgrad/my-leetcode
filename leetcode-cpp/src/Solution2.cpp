@@ -3,7 +3,6 @@
 //
 #include <algorithm>
 #include <array>
-#include <bits/types/struct_timespec.h>
 #include <cctype>
 #include <climits>
 #include <cmath>
@@ -2057,9 +2056,7 @@ public:
         int i = 0;
         for (int j = 0; j < n; ++j) {
             times[s[j] - 'a']--;
-            while (i < j && std::any_of(times.begin(), times.end(), [k](auto value) {
-                       return value < k;
-                   })) {
+            while (i < j && std::any_of(times.begin(), times.end(), [k](auto value) { return value < k; })) {
                 ++times[s[i] - 'a'];
                 ++i;
             }
@@ -2069,6 +2066,88 @@ public:
                 res = min(res, n - (j - i + 1));
         }
         return res;
+    }
+
+    int countUnguarded(int m, int n, vector<vector<int>> &guards, vector<vector<int>> &walls) {
+        if (n != 1 && m != 1) {
+            vector<vector<char>> grid(m, vector<char>(n, ' '));
+            for (auto &i: walls) {
+                grid[i[0]][i[1]] = 'w';
+            }
+            constexpr int dx[4] = {0, 0, 1, -1};
+            constexpr int dy[4] = {1, -1, 0, 0};
+            for (auto &i: guards) {
+                int x = i.front();
+                int y = i.back();
+                grid[x][y] = 'g';
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + dx[k];
+                    int yy = y + dy[k];
+                    while (xx >= 0 && xx < m && yy >= 0 && yy < n) {
+                        if (grid[xx][yy] == 'w')
+                            break;
+                        grid[xx][yy] = 'g';
+                        xx = xx + dx[k];
+                        yy = yy + dy[k];
+                    }
+                }
+            }
+            int res = 0;
+            for (auto &i: grid) {
+                for (auto j: i) {
+                    res += (j == ' ' ? 1 : 0);
+                }
+            }
+            return res;
+        } else if (m == 1) {
+            vector<char> grid(n, ' ');
+            for (auto &i: walls) {
+                grid[i[1]] = 'w';
+            }
+            constexpr int dx[2] = {1, -1};
+            for (auto &i: guards) {
+                int x = i.back();
+                grid[x] = 'g';
+                for (int k = 0; k < 2; ++k) {
+                    int xx = x + dx[k];
+                    while (xx >= 0 && xx < n) {
+                        if (grid[xx] == 'w' || grid[xx] == 'g')
+                            break;
+                        grid[xx] = 'g';
+                        xx = xx + dx[k];
+                    }
+                }
+            }
+            int res = 0;
+            for (auto &i: grid) {
+                res += (i == ' ' ? 1 : 0);
+            }
+            return res;
+        } else {
+            vector<char> grid(m, ' ');
+            for (auto &i: walls) {
+                grid[i[0]] = 'w';
+            }
+            constexpr int dx[2] = {1, -1};
+            for (auto &i: guards) {
+                int x = i.front();
+                grid[x] = 'g';
+                for (int k = 0; k < 2; ++k) {
+                    int xx = x + dx[k];
+                    while (xx >= 0 && xx < m) {
+                        if (grid[xx] == 'w' || grid[xx] == 'g')
+                            break;
+                        grid[xx] = 'g';
+                        xx = xx + dx[k];
+                    }
+                }
+            }
+            int res = 0;
+            for (auto &i: grid) {
+                res += (i == ' ' ? 1 : 0);
+            }
+            return res;
+        }
     }
 };
 
