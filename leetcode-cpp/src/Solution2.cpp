@@ -2149,6 +2149,23 @@ public:
             return res;
         }
     }
+
+    int maxEqualRowsAfterFlips(vector<vector<int>> &matrix) {
+        int m = matrix.size();
+        int n = matrix.front().size();
+        int res = 0;
+        unordered_map<string, int> freq;
+        for (auto &i: matrix) {
+            string tmp(i.size(), '0');
+            for (int j = 0; j < i.size(); ++j) {
+                if (i[j] != i[0]) {
+                    tmp[j] = '1';
+                }
+            }
+            res = max(res, ++freq[tmp]);
+        }
+        return res;
+    }
 };
 
 int main() {
