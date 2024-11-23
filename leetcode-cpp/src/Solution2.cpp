@@ -2166,6 +2166,36 @@ public:
         }
         return res;
     }
+
+    vector<vector<char>> rotateTheBox(vector<vector<char>> &box) {
+        int n = box.size();
+        int m = box.begin()->size();
+        vector<vector<char>> res(m, vector<char>(n, '.'));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (box[i][j] == '*') {
+                    res[j][n - 1 - i] = '*';
+                }
+            }
+        }
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = m - 1; j >= 0; --j) {
+                if (box[i][j] == '#') {
+                    int y = n - 1 - i;
+                    int x = j;
+                    while (x < m) {
+                        if (x == m - 1 || res[x + 1][y] == '*' || res[x + 1][y] == '#') {
+                            break;
+                        } else {
+                            ++x;
+                        }
+                    }
+                    res[x][y] = '#';
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
