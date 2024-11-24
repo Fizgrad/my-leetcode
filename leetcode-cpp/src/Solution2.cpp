@@ -7,6 +7,7 @@
 #include <climits>
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <deque>
 #include <iostream>
 #include <map>
@@ -2195,6 +2196,57 @@ public:
             }
         }
         return res;
+    }
+
+    long long maxMatrixSum(vector<vector<int>> &matrix) {
+        int n = matrix.size();
+        int prev_i = -1;
+        int prev_j = -1;
+        long long sum = 0ll;
+        int min_pos_i = -1;
+        int min_pos_j = -1;
+        auto update_min_pos = [&](int x, int y) {
+            if (min_pos_i == -1) {
+                min_pos_i = x;
+                min_pos_j = y;
+            } else {
+                if (matrix[x][y] < matrix[min_pos_i][min_pos_j]) {
+                    min_pos_i = x;
+                    min_pos_j = y;
+                }
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (matrix[i][j] < 0) {
+                    if (prev_i == -1) {
+                        prev_i = i;
+                        prev_j = j;
+                    } else {
+                        matrix[i][j] = -matrix[i][j];
+                        matrix[prev_i][prev_j] = -matrix[prev_i][prev_j];
+                        update_min_pos(i, j);
+                        update_min_pos(prev_i, prev_j);
+                        sum += matrix[i][j] + matrix[prev_i][prev_j];
+                        prev_i = -1;
+                        prev_j = -1;
+                    }
+                } else {
+                    update_min_pos(i, j);
+                    sum += matrix[i][j];
+                }
+            }
+        }
+        if (prev_i != -1) {
+            if (matrix[prev_i][prev_j] + matrix[min_pos_i][min_pos_j] < 0) {
+                sum = sum - matrix[min_pos_i][min_pos_j];
+                matrix[prev_i][prev_j] = -matrix[prev_i][prev_j];
+                matrix[min_pos_i][min_pos_j] = -matrix[min_pos_i][min_pos_j];
+                sum += matrix[min_pos_i][min_pos_j];
+            }
+            sum += matrix[prev_i][prev_j];
+        }
+        return sum;
     }
 };
 
