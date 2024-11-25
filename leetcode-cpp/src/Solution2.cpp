@@ -10,16 +10,19 @@
 #include <cstdlib>
 #include <deque>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <numeric>
 #include <queue>
 #include <regex>
+#include <semaphore>
 #include <set>
 #include <sstream>
 #include <stack>
 #include <string.h>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 using namespace std;
@@ -2247,6 +2250,83 @@ public:
             sum += matrix[prev_i][prev_j];
         }
         return sum;
+    }
+
+    int slidingPuzzle(vector<vector<int>> &board) {
+        constexpr int directions[5] = {0, 1, 0, -1, 0};
+        constexpr int base[6] = {100000, 10000, 1000, 100, 10, 1};
+
+        auto encoding = [&]() {
+            int res = 0;
+            for (int i = 0; i < 2; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    res += board[i][j] * base[i * 3 + j];
+                }
+            }
+            return res;
+        };
+
+        auto decoding = [&](int num) {
+            for (int i = 0; i < 2; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    board[i][j] = (num / base[i * 3 + j]) % 10;
+                }
+            }
+        };
+        auto swapZeroNeighbors = [&](int num) {
+            int rows = 2, cols = 3;
+            decoding(num);
+            int x = -10;
+            int y = -10;
+            for (int i = 0; i < 2; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    if (board[i][j] == 0) {
+                        x = i;
+                        y = j;
+                        break;
+                    }
+                }
+            }
+            vector<int> results;
+            for (int i = 0; i < 4; ++i) {
+                int newX = x + directions[i];
+                int newY = y + directions[i + 1];
+                if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
+                    std::swap(board[x][y], board[newX][newY]);
+                    results.push_back(encoding());
+                    std::swap(board[x][y], board[newX][newY]);
+                }
+            }
+            return results;
+        };
+        queue<int> q;
+        queue<int> temp;
+        unordered_set<int> seen;
+        int res = 0;
+        if (encoding() == 123450) {
+            return 0;
+        }
+        q.emplace(encoding());
+        while (q.size()) {
+            temp.swap(q);
+            ++res;
+            while (temp.size()) {
+                int state = temp.front();
+                temp.pop();
+                seen.emplace(state);
+                for (auto i: swapZeroNeighbors(state)) {
+                    if (i == 123450) {
+                        return res;
+                    }
+                    if (seen.count(i)) {
+                        continue;
+                    } else {
+                        q.emplace(i);
+                    }
+                }
+            }
+        }
+        return -1;
     }
 };
 
