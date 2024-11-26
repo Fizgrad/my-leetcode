@@ -2328,6 +2328,22 @@ public:
         }
         return -1;
     }
+
+    int findChampion(int n, vector<vector<int>> &edges) {
+        vector<bool> is_defeated(n, false);
+        for (auto &i: edges) {
+            is_defeated[i[1]] = true;
+        }
+        int res = -1;
+        for (int i = 0; i < n; ++i) {
+            if (!is_defeated[i] && res == -1) {
+                res = i;
+            } else if (!is_defeated[i]) {
+                return -1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
