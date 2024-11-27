@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <deque>
 #include <iostream>
+#include <iterator>
 #include <limits>
 #include <map>
 #include <numeric>
@@ -2341,6 +2342,30 @@ public:
             } else if (!is_defeated[i]) {
                 return -1;
             }
+        }
+        return res;
+    }
+
+    vector<int> shortestDistanceAfterQueries(int n, vector<vector<int>> &queries) {
+        vector<vector<int>> next(n);
+        for (int i = 0; i < n - 1; ++i) {
+            next[i].push_back(i + 1);
+        }
+        vector<int> dp(n, -1);
+        auto f = [&](auto &&f, int index) {
+            int res = n - index;
+            if (index == n - 1) return 0;
+            if (dp[index] != -1) return dp[index];
+            for (auto i: next[index]) {
+                res = min(res, 1 + f(f, i));
+            }
+            return dp[index] = res;
+        };
+        vector<int> res;
+        for (auto &i: queries) {
+            next[i[0]].push_back(i[1]);
+            std::fill(begin(dp), end(dp), -1);
+            res.push_back(f(f, 0));
         }
         return res;
     }
