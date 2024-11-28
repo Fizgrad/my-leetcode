@@ -2369,6 +2369,40 @@ public:
         }
         return res;
     }
+
+    int minimumObstacles(vector<vector<int>> &grid) {
+        int m = grid.size();
+        int n = grid.front().size();
+        queue<pair<int, int>> q;
+        queue<pair<int, int>> tmp;
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        int res = 0;
+        q.emplace(0, 0);
+        constexpr int d[5] = {0, 1, 0, -1, 0};
+        while (q.size()) {
+            q.swap(tmp);
+            while (tmp.size()) {
+                auto [x, y] = tmp.front();
+                tmp.pop();
+                if (x == m - 1 && y == n - 1) return res;
+                visited[x][y] = true;
+                for (int i = 0; i < 4; ++i) {
+                    int xx = x + d[i];
+                    int yy = y + d[i + 1];
+                    if (xx < 0 || xx >= m || yy < 0 || yy >= n) continue;
+                    if (xx == m - 1 && yy == n - 1) return res;
+                    if (!visited[xx][yy]) {
+                        visited[xx][yy] = true;
+                        if (grid[xx][yy] == 1) q.emplace(xx, yy);
+                        else
+                            tmp.emplace(xx, yy);
+                    }
+                }
+            }
+            ++res;
+        }
+        return -1;
+    }
 };
 
 int main() {
