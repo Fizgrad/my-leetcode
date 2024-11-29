@@ -2403,6 +2403,36 @@ public:
         }
         return -1;
     }
+
+    int minimumTime(vector<vector<int>> &grid) {
+        int m = grid.size();
+        int n = grid.front().size();
+        priority_queue<pair<int, pair<int, int>>> q;
+        vector<vector<bool>> visited(m, vector<bool>(n, 0));
+        q.emplace(0, pair<int, int>{0, 0});
+        if (grid[0][1] > 1 && grid[1][0] > 1) return -1;
+        constexpr int d[5] = {0, 1, 0, -1, 0};
+        while (q.size()) {
+            auto [time, coordinates] = q.top();
+            auto [x, y] = coordinates;
+            time = -time;
+            q.pop();
+            if (x == m - 1 && y == n - 1) return time;
+            for (int i = 0; i < 4; ++i) {
+                int xx = x + d[i];
+                int yy = y + d[i + 1];
+                if (xx < 0 || xx >= m || yy < 0 || yy >= n) continue;
+                if (visited[xx][yy]) continue;
+                
+                visited[xx][yy] = true;
+                int new_time = time + 1;
+                if (grid[xx][yy] > time + 1)
+                    new_time = grid[xx][yy] + ((grid[xx][yy] -  time - 1 ) & 1);
+                q.emplace(-new_time, pair<int, int>({xx, yy}));
+            }
+        }
+        return -1;
+    }
 };
 
 int main() {
