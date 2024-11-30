@@ -2423,15 +2423,52 @@ public:
                 int yy = y + d[i + 1];
                 if (xx < 0 || xx >= m || yy < 0 || yy >= n) continue;
                 if (visited[xx][yy]) continue;
-                
                 visited[xx][yy] = true;
                 int new_time = time + 1;
                 if (grid[xx][yy] > time + 1)
-                    new_time = grid[xx][yy] + ((grid[xx][yy] -  time - 1 ) & 1);
+                    new_time = grid[xx][yy] + ((grid[xx][yy] - time - 1) & 1);
                 q.emplace(-new_time, pair<int, int>({xx, yy}));
             }
         }
         return -1;
+    }
+
+    vector<vector<int>> validArrangement(vector<vector<int>> &pairs) {
+        unordered_map<int, vector<int>> adj;          // 邻接表
+        unordered_map<int, int> in_degree, out_degree;// 入度和出度计数
+        // 构建邻接表和度数
+        for (auto &p: pairs) {
+            adj[p[0]].push_back(p[1]);
+            ++out_degree[p[0]];
+            ++in_degree[p[1]];
+        }
+        // 找到起点
+        int start = pairs[0][0];
+        for (auto &[node, out_d]: out_degree) {
+            if (out_d > in_degree[node]) {
+                start = node;
+                break;
+            }
+        }
+        // 欧拉路径构建
+        vector<vector<int>> result;
+        stack<int> stack;
+        stack.push(start);
+        while (!stack.empty()) {
+            int u = stack.top();
+            if (!adj[u].empty()) {
+                int v = adj[u].back();
+                adj[u].pop_back();
+                stack.push(v);
+            } else {
+                stack.pop();
+                if (!stack.empty()) {
+                    result.push_back({stack.top(), u});
+                }
+            }
+        }
+        reverse(result.begin(), result.end());
+        return result;
     }
 };
 
