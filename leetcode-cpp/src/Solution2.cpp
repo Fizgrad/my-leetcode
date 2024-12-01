@@ -2470,6 +2470,19 @@ public:
         reverse(result.begin(), result.end());
         return result;
     }
+
+    bool checkIfExist(vector<int> &arr) {
+        int n = arr.size();
+        unordered_set<int> prev;
+        for (auto i: arr) {
+            if (prev.count(2 * i)) {
+                return true;
+            }
+            prev.emplace(i);
+            prev.emplace(i * 4);
+        }
+        return false;
+    }
 };
 
 int main() {
