@@ -2483,6 +2483,30 @@ public:
         }
         return false;
     }
+
+    int isPrefixOfWord(const string &sentence, const string &searchWord) {
+        int index = 1;
+        int index_target = 0;
+        for (int i = 0; i < sentence.size(); ++i) {
+            if (sentence[i] == ' ') {
+                ++index;
+                index_target = 0;
+            } else {
+                if (index_target == -1) {
+                    continue;
+                }
+                if (searchWord[index_target] == sentence[i]) {
+                    ++index_target;
+                    if (index_target == searchWord.size()) {
+                        return index;
+                    }
+                } else {
+                    index_target = -1;
+                }
+            }
+        }
+        return -1;
+    }
 };
 
 int main() {
