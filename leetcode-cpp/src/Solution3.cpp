@@ -2038,6 +2038,20 @@ public:
         }
         return res;
     }
+
+    string addSpaces(const string &s, vector<int> &spaces) {
+        string res;
+        res.reserve(s.size() + spaces.size());
+        int index = 0;
+        for (int i = 0; i < s.size(); ++i) {
+            if (index < spaces.size() && i == spaces[index]) {
+                res.push_back(' ');
+                ++index;
+            }
+            res.push_back(s[i]);
+        }
+        return res;
+    }
 };
 
 int main() {
