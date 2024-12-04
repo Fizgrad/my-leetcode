@@ -2507,6 +2507,20 @@ public:
         }
         return -1;
     }
+
+    bool canMakeSubsequence(const string &str1, const string &str2) {
+        int index2 = 0;
+        int index1 = 0;
+        for (index1 = 0; index1 < str1.size(); ++index1) {
+            if (str1[index1] == str2[index2] || (str1[index1] - 'a' + 1) % ('z' - 'a' + 1) + 'a' == str2[index2]) {
+                ++index2;
+                if (index2 == str2.size()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 };
 
 int main() {
