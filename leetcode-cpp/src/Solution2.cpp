@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <cassert>
 #include <cctype>
 #include <climits>
 #include <cmath>
@@ -2520,6 +2521,36 @@ public:
             }
         }
         return false;
+    }
+
+    bool canChange(const string &start, const string &target) {
+        int index1 = 0;
+        int index2 = 0;
+        assert(start.size() == target.size());
+        int n = start.size();
+        while (index1 < n && index2 < n) {
+            while (index1 < n && start[index1] == '_')
+                ++index1;
+            while (index2 < n && target[index2] == '_')
+                ++index2;
+            if (start[index1] != target[index2])
+                return false;
+            if (start[index1] == 'L' && index1 < index2)
+                return false;
+            if (start[index1] == 'R' && index1 > index2)
+                return false;
+            ++index1;
+            ++index2;
+        }
+        while (index1 < n) {
+            if (start[index1++] != '_')
+                return false;
+        }
+        while (index2 < n) {
+            if (target[index2++] != '_')
+                return false;
+        }
+        return true;
     }
 };
 
