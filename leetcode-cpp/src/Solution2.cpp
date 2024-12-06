@@ -2552,6 +2552,26 @@ public:
         }
         return true;
     }
+
+    int maxCount(vector<int> &banned, int n, int maxSum) {
+        int sum = 0;
+        int res = 0;
+        int index_banned = 0;
+        std::sort(banned.begin(), banned.end());
+        auto new_end = std::unique(banned.begin(), banned.end());
+        for (int i = 1; i <= n; ++i) {
+            if (index_banned < banned.size() && i == banned[index_banned]) {
+                ++index_banned;
+                continue;
+            }
+            sum += i;
+            if (sum <= maxSum)
+                ++res;
+            else
+                return res;
+        }
+        return res;
+    }
 };
 
 int main() {
