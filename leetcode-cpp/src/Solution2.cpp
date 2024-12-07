@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bitset>
 #include <cassert>
 #include <cctype>
 #include <climits>
@@ -2569,6 +2570,33 @@ public:
                 ++res;
             else
                 return res;
+        }
+        return res;
+    }
+
+    int minimumSize(vector<int> &nums, int maxOperations) {
+        auto f = [&](int number) {
+            int k = maxOperations;
+            for (auto i: nums) {
+                if (i > number) {
+                    k -= (i - 1) / number;
+                    if (k < 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        int left = 1, right = *max_element(nums.begin(), nums.end());
+        int res = right;
+        while (left <= right) {
+            int mid = (left + right) >> 1;
+            if (f(mid)) {
+                res = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
         }
         return res;
     }
