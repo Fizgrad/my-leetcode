@@ -2600,6 +2600,37 @@ public:
         }
         return res;
     }
+
+    int maximumLength(const string &s) {
+        constexpr auto CHAR_NUM = 'z' - 'a' + 1;
+        auto f = [&](int len) {
+            vector<int> times(CHAR_NUM, 0);
+            int prev = 0;
+            int n = s.size();
+            for (int i = 0; i < n; ++i) {
+                while (s[i] != s[prev]) ++prev;
+                if (i - prev + 1 >= len)
+                    if (++times[s[i] - 'a'] >= 3) {
+                        return true;
+                    }
+            }
+            return false;
+        };
+        if (!f(1)) return -1;
+        int left = 1;
+        int res = 1;
+        int right = s.size() - 1;
+        while (left <= right) {
+            int mid = (left + right) >> 1;
+            if (f(mid)) {
+                res = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
