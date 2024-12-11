@@ -2631,6 +2631,18 @@ public:
         }
         return res;
     }
+
+    int maximumBeauty(vector<int> &nums, int k) {
+        std::sort(nums.begin(), nums.end());
+        if (nums.back() - nums.front() <= 2 * k) return nums.size();
+        int right = 0, n = nums.size();
+        int res = 1;
+        for (int left = 0; left < n; ++left) {
+            while (std::abs(nums[right] - nums[left]) > 2 * k) ++right;
+            res = max(res, left - right + 1);
+        }
+        return res;
+    }
 };
 
 int main() {
