@@ -2663,6 +2663,43 @@ public:
         }
         return res;
     }
+
+    vector<bool> isArraySpecial(vector<int> &nums, vector<vector<int>> &queries) {
+        int n = nums.size();
+        if (n == 1) {
+            return vector<bool>(queries.size(), true);
+        }
+        vector<bool> is_special(n, true);
+        for (int i = 1; i < n; ++i) {
+            int a = i - 1;
+            int b = i;
+            if (!((nums[a] + nums[b]) & 1)) {
+                is_special[a] = false;
+                is_special[b] = false;
+            }
+        }
+        vector<int> prefix(n, 0);
+        prefix[0] = is_special[0];
+        for (int i = 1; i < n; ++i) {
+            prefix[i] = prefix[i - 1];
+            if (is_special[i])
+                ++prefix[i];
+        }
+        vector<bool> res;
+        res.reserve(queries.size());
+        for (auto &i: queries) {
+            int start = i[0];
+            int end = i[1];
+            if (start == end) {
+                res.push_back(true);
+            } else if (start == end - 1) {
+                res.push_back(static_cast<bool>((nums[start] + nums[end]) & 1));
+            } else {
+                res.push_back(prefix[end - 1] - prefix[start] == end - start - 1);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
