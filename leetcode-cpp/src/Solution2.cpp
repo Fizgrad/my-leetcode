@@ -23,6 +23,7 @@
 #include <sstream>
 #include <stack>
 #include <string.h>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -2696,6 +2697,27 @@ public:
                 res.push_back(static_cast<bool>((nums[start] + nums[end]) & 1));
             } else {
                 res.push_back(prefix[end - 1] - prefix[start] == end - start - 1);
+            }
+        }
+        return res;
+    }
+
+    int maxTwoEvents(vector<vector<int>> &events) {
+        using info = tuple<int, bool, int>;
+        vector<info> times;
+        times.reserve(events.size());
+        for (auto &i: events) {
+            times.emplace_back(i[0], false, i[2]);
+            times.emplace_back(i[1], true, i[2]);
+        }
+        std::sort(times.begin(), times.end());
+        int maxV = 0;
+        int res = 0;
+        for (auto [t, is_end, v]: times) {
+            if (is_end) {
+                maxV = max(maxV, v);
+            } else {
+                res = max(res, maxV + v);
             }
         }
         return res;
