@@ -2643,6 +2643,26 @@ public:
         }
         return res;
     }
+
+    long long pickGifts(vector<int> &gifts, int k) {
+        priority_queue<int> pq(gifts.begin(), gifts.end());
+        while (k--) {
+            int top = pq.top();
+            pq.pop();
+            if (top == 1) {
+                pq.push(1);
+                break;
+            } else {
+                pq.push(sqrt(top));
+            }
+        }
+        long long res = 0;
+        while (pq.size()) {
+            res += pq.top();
+            pq.pop();
+        }
+        return res;
+    }
 };
 
 int main() {
