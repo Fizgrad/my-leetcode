@@ -2722,6 +2722,32 @@ public:
         }
         return res;
     }
+
+    long long findScore(vector<int> &nums) {
+        int n = nums.size();
+        vector<bool> marked(n, false);
+        priority_queue<pair<int, int>> pq;
+        for (auto i = 0; i < nums.size(); ++i) {
+            pq.emplace(-nums[i], -i);
+        }
+        long long res = 0;
+        while (pq.size()) {
+            auto [v, i] = pq.top();
+            v = -v, i = -i;
+            pq.pop();
+            if (marked[i]) {
+                continue;
+            } else {
+                res += v;
+                marked[i] = true;
+                if (i + 1 < n)
+                    marked[i + 1] = true;
+                if (i - 1 >= 0)
+                    marked[i - 1] = true;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
