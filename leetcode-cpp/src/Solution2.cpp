@@ -2748,6 +2748,31 @@ public:
         }
         return res;
     }
+
+    long long continuousSubarrays(vector<int> &nums) {
+        int left = 0;
+        long long res = 0;
+        priority_queue<pair<int, int>> maxs;
+        priority_queue<pair<int, int>> mins;
+        for (int right = 0; right < nums.size(); ++right) {
+            int num = nums[right];
+            maxs.emplace(num, -right);
+            mins.emplace(-num, -right);
+            while (maxs.top().first + mins.top().first > 2) {
+                auto index_max = -maxs.top().second;
+                auto index_min = -mins.top().second;
+                left = min(index_max, index_min) + 1;
+                while (-maxs.top().second < left) {
+                    maxs.pop();
+                }
+                while (-mins.top().second < left) {
+                    mins.pop();
+                }
+            }
+            res += (right - left + 1);
+        }
+        return res;
+    }
 };
 
 int main() {
