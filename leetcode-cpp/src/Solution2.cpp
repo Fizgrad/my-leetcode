@@ -2773,6 +2773,31 @@ public:
         }
         return res;
     }
+
+    double maxAverageRatio(vector<vector<int>> &classes, int extraStudents) {
+        int n = classes.size();
+        auto cmp = [](const pair<int, int> &left, const pair<int, int> &right) {
+            double a = left.first, b = left.second;
+            double c = right.first, d = right.second;
+            return (a + 1) / (b + 1) - a / b < (c + 1) / (d + 1) - c / d;
+        };
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)> mins(cmp);
+        for (auto &i: classes) {
+            mins.emplace(i[0], i[1]);
+        }
+        while (extraStudents--) {
+            auto top = mins.top();
+            mins.pop();
+            mins.emplace(top.first + 1, top.second + 1);
+        }
+        double res = 0;
+        while (mins.size()) {
+            auto [upper, lower] = mins.top();
+            mins.pop();
+            res += static_cast<double>(upper) / lower;
+        }
+        return res / n;
+    }
 };
 
 int main() {
