@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <deque>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <limits>
@@ -2797,6 +2798,24 @@ public:
             res += static_cast<double>(upper) / lower;
         }
         return res / n;
+    }
+
+    vector<int> getFinalState(vector<int> &nums, int k, int multiplier) {
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+        for (int i = 0; i < nums.size(); ++i) {
+            pq.emplace(nums[i], i);
+        }
+        while (k--) {
+            auto [v, index] = pq.top();
+            pq.pop();
+            pq.emplace(v * multiplier, index);
+        }
+        while (pq.size()) {
+            auto [v, index] = pq.top();
+            pq.pop();
+            nums[index] = v;
+        }
+        return nums;
     }
 };
 
