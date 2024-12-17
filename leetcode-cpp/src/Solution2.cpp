@@ -24,6 +24,7 @@
 #include <sstream>
 #include <stack>
 #include <string.h>
+#include <string>
 #include <tuple>
 #include <unordered_map>
 #include <unordered_set>
@@ -2816,6 +2817,53 @@ public:
             nums[index] = v;
         }
         return nums;
+    }
+
+    string repeatLimitedString(const string &s, int repeatLimit) {
+        constexpr int CHAR_NUM = 'z' - 'a' + 1;
+        vector<int> times(CHAR_NUM, 0);
+        for (auto c: s) {
+            times[c - 'a']++;
+        }
+        string res;
+        int index = 'z' - 'a';
+        auto find_next_index = [&]() {
+            int res = index - 1;
+            if (res < 0) {
+                return -1;
+            } else {
+                while (res >= 0 && times[res] == 0) {
+                    --res;
+                }
+                return res >= 0 ? res : -1;
+            }
+        };
+        while (index >= 0) {
+            int repeat = 0;
+            while (times[index]) {
+                int prev_len = 0;
+                for (auto i = res.rbegin(); i != res.rend(); ++i) {
+                    if (*i == index + 'a') {
+                        ++prev_len;
+                    } else
+                        break;
+                }
+                int len = min(repeatLimit - prev_len, times[index]);
+                times[index] -= len;
+                res.append(string(len, 'a' + index));
+                if (len + prev_len == repeatLimit) {
+                    auto next_index = find_next_index();
+                    if (next_index == -1) {
+                        return res;
+                    } else {
+                        times[next_index]--;
+                        res.push_back('a' + next_index);
+                    }
+                }
+            }
+            index = find_next_index();
+        }
+        return res;
     }
 };
 
