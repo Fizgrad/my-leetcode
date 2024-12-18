@@ -2865,6 +2865,19 @@ public:
         }
         return res;
     }
+
+    vector<int> finalPrices(vector<int> &prices) {
+        int n = prices.size();
+        vector<pair<int, int>> q;
+        for (int i = 0; i < n; ++i) {
+            while (q.size() && q.back().first >= prices[i]) {
+                prices[q.back().second] -= prices[i];
+                q.pop_back();
+            }
+            q.emplace_back(prices[i], i);
+        }
+        return prices;
+    }
 };
 
 int main() {
