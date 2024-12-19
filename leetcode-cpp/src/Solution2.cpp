@@ -2878,6 +2878,19 @@ public:
         }
         return prices;
     }
+
+    int maxChunksToSorted(vector<int> &arr) {
+        int count = 0;
+        int max_index = 0;
+        for (int i = 0; i < arr.size(); ++i) {
+            max_index = max(max_index, arr[i]);
+            if (max_index == i) {
+                ++count;
+                max_index++;
+            }
+        }
+        return count;
+    }
 };
 
 int main() {
