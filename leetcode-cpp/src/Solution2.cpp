@@ -18,6 +18,7 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <ratio>
 #include <regex>
 #include <semaphore>
 #include <set>
@@ -2890,6 +2891,47 @@ public:
             }
         }
         return count;
+    }
+
+    TreeNode *reverseOddLevels(TreeNode *root) {
+        stack<int> vs;
+        queue<TreeNode *> nodes;
+        nodes.push(root);
+        bool flag = true;
+        queue<TreeNode *> tmp;
+        while (nodes.size()) {
+            auto front = nodes.front();
+            if (!front->left) {
+                return root;
+            }
+            if (flag) {
+                while (nodes.size()) {
+                    auto front = nodes.front();
+                    nodes.pop();
+                    vs.push(front->left->val);
+                    tmp.push(front->left);
+                    vs.push(front->right->val);
+                    tmp.push(front->right);
+                }
+                while (tmp.size()) {
+                    auto front = tmp.front();
+                    tmp.pop();
+                    nodes.push(front);
+                    front->val = vs.top();
+                    vs.pop();
+                }
+            } else {
+                while (nodes.size()) {
+                    auto front = nodes.front();
+                    nodes.pop();
+                    tmp.push(front->left);
+                    tmp.push(front->right);
+                }
+                nodes.swap(tmp);
+            }
+            flag = !flag;
+        }
+        return root;
     }
 };
 
