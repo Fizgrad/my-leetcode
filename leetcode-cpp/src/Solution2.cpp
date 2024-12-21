@@ -10,6 +10,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <ctime>
 #include <deque>
 #include <functional>
 #include <iostream>
@@ -2932,6 +2933,34 @@ public:
             flag = !flag;
         }
         return root;
+    }
+
+    int maxKDivisibleComponents(int n, vector<vector<int>> &edges, vector<int> &values, int k) {
+        long long res = 0;
+        vector<vector<int>> next(n);
+        vector<bool> visited(n, false);
+        visited[0] = true;
+        for (auto &i: edges) {
+            next[i[0]].push_back(i[1]);
+            next[i[1]].push_back(i[0]);
+        }
+        auto dfs = [&](auto &&dfs, int node) -> long long {
+            auto &subtree = next[node];
+            long long sum = values[node];
+            for (auto i: subtree) {
+                if (visited[i])
+                    continue;
+                visited[i] = true;
+                long long subtree_sum = dfs(dfs, i);
+                if (subtree_sum % k == 0) {
+                    ++res;
+                } else
+                    sum += subtree_sum;
+            }
+            return sum;
+        };
+        res += dfs(dfs, 0) % k == 0;
+        return res;
     }
 };
 
