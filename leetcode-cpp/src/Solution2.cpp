@@ -17,6 +17,7 @@
 #include <iterator>
 #include <limits>
 #include <map>
+#include <new>
 #include <numeric>
 #include <queue>
 #include <ratio>
@@ -2960,6 +2961,51 @@ public:
             return sum;
         };
         res += dfs(dfs, 0) % k == 0;
+        return res;
+    }
+
+    int minimumOperations(TreeNode *root) {
+        int res = 0;
+        deque<TreeNode *> q;
+        deque<TreeNode *> tmp;
+        vector<int> vals;
+        q.push_back(root);
+        while (q.size()) {
+            while (q.size()) {
+                auto node = q.front();
+                q.pop_front();
+                vals.push_back(node->val);
+                if (node->left) {
+                    tmp.push_back(node->left);
+                }
+                if (node->right) {
+                    tmp.push_back(node->right);
+                }
+            }
+            vector<pair<int, int>> sorted;
+            for (int i = 0; i < vals.size(); ++i) {
+                sorted.emplace_back(vals[i], i);
+            }
+            std::sort(sorted.begin(), sorted.end());
+            vector<bool> visited(vals.size(), false);
+            for (int i = 0; i < vals.size(); ++i) {
+                if (visited[i]) continue;
+                visited[i] = true;
+                int start = i;
+                int next = sorted[start].second;
+                visited[next] = true;
+                while (start != next) {
+                    ++res;
+                    start = next;
+                    next = sorted[start].second;
+                    if (visited[next])
+                        break;
+                    visited[next] = true;
+                }
+            }
+            tmp.swap(q);
+            vals.clear();
+        }
         return res;
     }
 };
