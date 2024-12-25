@@ -3008,6 +3008,23 @@ public:
         }
         return res;
     }
+
+    vector<int> largestValues(TreeNode *root) {
+        vector<int> res;
+        auto dfs = [&](auto &&dfs, TreeNode *node, int level) -> void {
+            if (node) {
+                if (res.size() < level + 1) {
+                    res.push_back(node->val);
+                } else {
+                    res[level] = max(res[level], node->val);
+                }
+                dfs(dfs, node->left, level + 1);
+                dfs(dfs, node->right, level + 1);
+            }
+        };
+        dfs(dfs, root, 0);
+        return res;
+    }
 };
 
 int main() {
