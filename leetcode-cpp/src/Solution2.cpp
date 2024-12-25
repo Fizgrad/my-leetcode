@@ -3025,6 +3025,77 @@ public:
         dfs(dfs, root, 0);
         return res;
     }
+
+    int minimumDiameterAfterMerge(vector<vector<int>> &edges1, vector<vector<int>> &edges2) {
+        auto bfs = [&](int start, const vector<vector<int>> &adj) -> pair<int, int> {
+            int n = adj.size();
+            vector<int> dist(n, -1);
+            queue<int> q;
+            q.push(start);
+            dist[start] = 0;
+            int farthest_node = start;
+            int max_dist = 0;
+
+            while (!q.empty()) {
+                int node = q.front();
+                q.pop();
+                for (auto &neighbor: adj[node]) {
+                    if (dist[neighbor] == -1) {
+                        dist[neighbor] = dist[node] + 1;
+                        q.push(neighbor);
+                        if (dist[neighbor] > max_dist) {
+                            max_dist = dist[neighbor];
+                            farthest_node = neighbor;
+                        }
+                    }
+                }
+            }
+            return {farthest_node, max_dist};
+        };
+        // Function to compute the diameter of a tree using double BFS
+        auto treeDiameter = [&](const vector<vector<int>> &adj) -> int {
+            // First BFS to find one end of the diameter
+            pair<int, int> first = bfs(0, adj);
+            // Second BFS from the farthest node found in the first BFS
+            pair<int, int> second = bfs(first.first, adj);
+            return second.second;
+        };
+        // Number of nodes in each tree
+        int n = edges1.size() + 1;
+        int m = edges2.size() + 1;
+
+        // Build adjacency lists
+        vector<vector<int>> adj1(n, vector<int>());
+        vector<vector<int>> adj2(m, vector<int>());
+        for (auto &edge: edges1) {
+            adj1[edge[0]].push_back(edge[1]);
+            adj1[edge[1]].push_back(edge[0]);
+        }
+        for (auto &edge: edges2) {
+            adj2[edge[0]].push_back(edge[1]);
+            adj2[edge[1]].push_back(edge[0]);
+        }
+
+        // Compute diameters of both trees
+        int diameter1 = treeDiameter(adj1);
+        int diameter2 = treeDiameter(adj2);
+
+        // To minimize the diameter after merging, connect the centers of both trees
+        // However, for simplicity, we can consider that the new diameter is the maximum of:
+        // - diameter1
+        // - diameter2
+        // - (ceil(diameter1/2) + ceil(diameter2/2) + 1)
+        // This is based on the property that connecting two trees via their centers minimizes the diameter.
+
+        // Find the radius (ceil(diameter / 2)) of both trees
+        int radius1 = (diameter1 + 1) / 2;
+        int radius2 = (diameter2 + 1) / 2;
+
+        // The new diameter after merging
+        int new_diameter = max({diameter1, diameter2, radius1 + radius2 + 1});
+
+        return new_diameter;
+    }
 };
 
 int main() {
