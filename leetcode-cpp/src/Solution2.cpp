@@ -3096,6 +3096,26 @@ public:
 
         return new_diameter;
     }
+
+    int findTargetSumWays(vector<int> &nums, int target) {
+        int n = nums.size();
+        int res = 0;
+        int sum = std::accumulate(nums.begin(), nums.end(), 0);
+        if ((sum + target) % 2 != 0) return 0;
+        if (abs(target) > abs(sum)) return 0;
+        unordered_map<int, int> results_times;
+        unordered_map<int, int> tmp;
+        results_times[0] = 1;
+        for (auto i: nums) {
+            for (auto &k: results_times) {
+                tmp[k.first + i] += k.second;
+                tmp[k.first - i] += k.second;
+            }
+            results_times.swap(tmp);
+            tmp.clear();
+        }
+        return results_times[target];
+    }
 };
 
 int main() {
