@@ -3116,6 +3116,17 @@ public:
         }
         return results_times[target];
     }
+
+    int maxScoreSightseeingPair(vector<int> &values) {
+        auto n = values.size();
+        int max_prev = values[0];
+        int res = 0;
+        for (int i = 1; i < n; ++i) {
+            res = max(res, max_prev + values[i] - i);
+            max_prev = max(max_prev, values[i] + i);
+        };
+        return res;
+    }
 };
 
 int main() {
