@@ -3127,6 +3127,49 @@ public:
         };
         return res;
     }
+
+    vector<int> leftmostBuildingQueries(vector<int> &heights, vector<vector<int>> &queries) {
+        auto numberOfHeights = heights.size();
+        auto numberOfQueries = queries.size();
+        vector<int> indices;
+        vector<int> res(numberOfQueries);
+        for (auto i = 0; i < numberOfQueries; ++i) {
+            auto &a = queries[i][0];
+            auto &b = queries[i][1];
+            if (a > b) std::swap(a, b);
+            if (a == b || heights[b] > heights[a]) {
+                res[i] = b;
+                continue;
+            }
+            indices.emplace_back(i);
+        }
+        std::sort(indices.begin(), indices.end(), [&](auto a, auto b) {
+            return queries[a][1] < queries[b][1];
+        });
+        vector<int> s;
+        int right = heights.size() - 1;
+        for (int i = indices.size() - 1; i >= 0; --i) {
+            auto index = indices[i];
+            auto a = queries[index][0];
+            auto b = queries[index][1];
+            while (right > b) {
+                while (s.size() && heights[s.back()] <= heights[right]) {
+                    s.pop_back();
+                }
+                s.emplace_back(right);
+                --right;
+            }
+            auto iter = std::upper_bound(s.rbegin(), s.rend(), a, [&](auto x, auto y) {
+                return heights[x] < heights[y];
+            });
+            if (iter == s.rend()) {
+                res[index] = -1;
+            } else {
+                res[index] = *iter;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
