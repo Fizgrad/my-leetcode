@@ -3170,6 +3170,41 @@ public:
         }
         return res;
     }
+
+    int numWays(vector<string> &words, const string &target) {
+        int numberOfWords = words.size();
+        int lengthOfTarget = target.size();
+        int lengthOfWord = words.back().size();
+        constexpr int MOD = 1e9 + 7;
+        constexpr int CHAR_NUM = 'z' - 'a' + 1;
+        int res = 0;
+        vector<vector<int>> chars(lengthOfWord, vector<int>(CHAR_NUM, 0));
+        for (auto &i: words) {
+            for (auto j = 0; j < i.size(); ++j) {
+                chars[j][i[j] - 'a']++;
+            }
+        }
+        vector<vector<int>> dp(lengthOfWord, vector<int>(lengthOfTarget, -1));
+        auto dfs = [&](auto &&dfs, int k, int i) -> long long {
+            if (i >= lengthOfTarget) {
+                return 1;
+            }
+            if (k == lengthOfWord || lengthOfTarget - i > lengthOfWord - k) {
+                // No valid solution, we should return 0 not -1;
+                return 0;
+            }
+            if (dp[k][i] != -1)
+                return dp[k][i];
+            dp[k][i] = dfs(dfs, k + 1, i) % MOD;
+            char c = target[i];
+            if (chars[k][c - 'a'] > 0) {
+                auto tmp = dfs(dfs, k + 1, i + 1);
+                dp[k][i] = (dp[k][i] + chars[k][c - 'a'] * tmp % MOD) % MOD;
+            }
+            return dp[k][i] % MOD;
+        };
+        return dfs(dfs, 0, 0);
+    }
 };
 
 int main() {
