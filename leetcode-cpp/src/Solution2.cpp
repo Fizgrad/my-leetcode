@@ -3205,6 +3205,23 @@ public:
         };
         return dfs(dfs, 0, 0);
     }
+
+    int countGoodStrings(int low, int high, int zero, int one) {
+        vector<int> dp(high + 1, -1);
+        int res = 0;
+        dp[0] = 1;
+        constexpr int MOD = 1e9 + 7;
+        auto f = [&](auto &&f, int len) -> long long {
+            if (len > high || len < 0) return 0;
+            if (dp[len] != -1)
+                return dp[len];
+            return dp[len] = (f(f, len - zero) + f(f, len - one)) % MOD;
+        };
+        for (int i = low; i <= high; ++i) {
+            res = (f(f, i) + res) % MOD;
+        }
+        return res;
+    }
 };
 
 int main() {
