@@ -3222,6 +3222,26 @@ public:
         }
         return res;
     }
+
+    int mincostTickets(vector<int> &days, vector<int> &costs) {
+        int n = days.size();
+        vector<int> dp(n + 1, std::numeric_limits<int>::max());
+        constexpr int len[3] = {1, 7, 30};
+        dp[0] = 0;
+        for (int i = 0; i < n; ++i) {
+            for (int k = 0; k < 3; ++k) {
+                int cost = dp[i] + costs[k];
+                dp[i + 1] = min(dp[i + 1], cost);
+                for (int j = i + 1; j < n; ++j) {
+                    if (days[j] < days[i] + len[k]) {
+                        dp[j + 1] = min(dp[j + 1], cost);
+                    } else
+                        break;
+                }
+            }
+        }
+        return dp.back();
+    }
 };
 
 int main() {
