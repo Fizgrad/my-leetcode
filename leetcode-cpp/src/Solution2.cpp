@@ -3242,6 +3242,24 @@ public:
         }
         return dp.back();
     }
+
+    int maxScore(const string &s) {
+        int n = s.size();
+        int ones = 0;
+        int zeros = 0;
+        for (auto i: s) {
+            if (i == '1') ++ones;
+        }
+        int res = ones - 1;
+        for (int i = 0; i < n - 1; ++i) {
+            if (s[i] == '1') {
+                --ones;
+            } else
+                ++zeros;
+            res = max(res, zeros + ones);
+        }
+        return res;
+    }
 };
 
 int main() {
