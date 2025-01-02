@@ -3260,6 +3260,27 @@ public:
         }
         return res;
     }
+
+    vector<int> vowelStrings(vector<string> &words, vector<vector<int>> &queries) {
+        int n = words.size();
+        vector<int> prefix(n + 1, 0);
+        auto is_vowel = [&](char c) {
+            return (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u');
+        };
+        for (int i = 0; i < n; ++i) {
+            auto &s = words[i];
+            if (is_vowel(s.front()) && is_vowel(s.back())) {
+                prefix[i + 1] = prefix[i] + 1;
+            } else {
+                prefix[i + 1] = prefix[i];
+            }
+        }
+        vector<int> res(queries.size());
+        for (int i = 0; i < queries.size(); ++i) {
+            res[i] = prefix[queries[i].back() + 1] - prefix[queries[i].front()];
+        }
+        return res;
+    }
 };
 
 int main() {
