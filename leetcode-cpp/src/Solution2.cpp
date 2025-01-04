@@ -3297,6 +3297,33 @@ public:
         }
         return res;
     }
+
+    int countPalindromicSubsequence(const string &s) {
+        int n = s.size();
+        constexpr int CHAR_NUM = 'z' - 'a' + 1;
+        vector<vector<int>> prefix(CHAR_NUM);
+        vector<std::bitset<CHAR_NUM>> result(CHAR_NUM, 0);
+        vector<int> nums(CHAR_NUM, 0);
+        for (int i = 0; i < s.size(); ++i) {
+            int char_index = s[i] - 'a';
+            if (prefix[char_index].empty()) {
+                ++nums[char_index];
+                prefix[char_index] = nums;
+                continue;
+            } else {
+                for (int k = 0; k < CHAR_NUM; ++k) {
+                    if (nums[k] - prefix[char_index][k] > 0) {
+                        result[char_index].set(k);
+                    }
+                }
+            }
+            ++nums[char_index];
+        }
+        int res = 0;
+        for (auto &i: result)
+            res += i.count();
+        return res;
+    }
 };
 
 int main() {
