@@ -3324,6 +3324,28 @@ public:
             res += i.count();
         return res;
     }
+
+    string shiftingLetters(const string &s, vector<vector<int>> &shifts) {
+        int n = s.size();
+        constexpr int CHAR_NUM = 'z' - 'a' + 1;
+        vector<int> delta(n + 1);
+        for (auto &i: shifts) {
+            if (i[2] == 1) {
+                ++delta[i[0]];
+                delta[i[1] + 1] = (CHAR_NUM + delta[i[1] + 1] - 1) % CHAR_NUM;
+            } else {
+                delta[i[0]] = (CHAR_NUM + delta[i[0]] - 1) % CHAR_NUM;
+                ++delta[i[1] + 1];
+            }
+        }
+        string res(n, ' ');
+        int delta_sum = 0;
+        for (int i = 0; i < n; ++i) {
+            delta_sum = (delta_sum + delta[i]) % CHAR_NUM;
+            res[i] = (s[i] - 'a' + delta_sum) % CHAR_NUM + 'a';
+        }
+        return res;
+    }
 };
 
 int main() {
