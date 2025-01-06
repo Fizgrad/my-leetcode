@@ -3346,6 +3346,28 @@ public:
         }
         return res;
     }
+
+    vector<int> minOperations(const string &boxes) {
+        int n = boxes.size();
+        int prefix = (boxes[0] == '1');
+        int sum = 0;
+        for (int i = 0; i < boxes.size(); ++i) {
+            sum += (boxes[i] == '1');
+        }
+        vector<int> res(n);
+        int initial = 0;
+        for (int i = 1; i < n; ++i) {
+            if (boxes[i] == '1') {
+                initial += i;
+            }
+        }
+        res[0] = initial;
+        for (int i = 1; i < n; ++i) {
+            res[i] = (initial = (initial - (sum - prefix) + prefix));
+            prefix += (boxes[i] == '1');
+        }
+        return std::move(res);
+    }
 };
 
 int main() {
