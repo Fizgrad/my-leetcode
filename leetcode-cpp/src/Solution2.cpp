@@ -8,6 +8,7 @@
 #include <cctype>
 #include <climits>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <ctime>
@@ -3389,6 +3390,53 @@ public:
                     if (is_prefix_suffix(words[i], words[j])) ++res;
                 }
             }
+        }
+        return res;
+    }
+
+    vector<string> stringMatching(vector<string> &words) {
+        constexpr int CHAR_NUM = 'z' - 'a' + 1;
+        struct TrieNode {
+            int times = 0;
+            vector<TrieNode *> nexts;
+        } root;
+        root.nexts = vector<TrieNode *>(CHAR_NUM);
+        for (auto &i: words) {
+            vector<TrieNode *> tmp;
+            vector<TrieNode *> next;
+            tmp.push_back(&root);
+            for (auto c: i) {
+                int char_index = c - 'a';
+                for (auto node: tmp) {
+                    if (node->nexts[char_index] != nullptr) {
+                        node->nexts[char_index]->times++;
+                        next.push_back(node->nexts[char_index]);
+                    } else {
+                        node->nexts[char_index] = new TrieNode;
+                        node->nexts[char_index]->nexts = vector<TrieNode *>(CHAR_NUM);
+                        node->nexts[char_index]->times++;
+                        next.push_back(node->nexts[char_index]);
+                    }
+                }
+                tmp.swap(next);
+                next.clear();
+                tmp.push_back(&root);
+            }
+        }
+        vector<string> res;
+        for (auto &i: words) {
+            auto node = &root;
+            bool flag = true;
+            for (auto c: i) {
+                int char_index = c - 'a';
+                if (node->nexts[char_index] && node->nexts[char_index]->times > 1)
+                    node = node->nexts[char_index];
+                else {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) res.push_back(i);
         }
         return res;
     }
