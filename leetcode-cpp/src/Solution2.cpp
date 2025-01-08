@@ -3368,6 +3368,30 @@ public:
         }
         return std::move(res);
     }
+
+    int countPrefixSuffixPairs(vector<string> &words) {
+        int n = words.size();
+        auto is_prefix_suffix = [](const string &a, const string &b) {
+            auto bi = b.begin();
+            for (auto i = a.begin(); i != a.end(); ++i) {
+                if (*i != *(bi++)) return false;
+            }
+            auto rbi = b.rbegin();
+            for (auto i = a.rbegin(); i != a.rend(); ++i) {
+                if (*i != *(rbi++)) return false;
+            }
+            return true;
+        };
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                if (words[i].size() <= words[j].size()) {
+                    if (is_prefix_suffix(words[i], words[j])) ++res;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
