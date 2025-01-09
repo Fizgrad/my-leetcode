@@ -3440,6 +3440,21 @@ public:
         }
         return res;
     }
+
+    int prefixCount(vector<string> &words, const string &pref) {
+        int res = 0;
+        auto is_pref = [](const string &a, const string &b) {
+            auto bi = b.begin();
+            for (auto iter = a.begin(); iter != a.end(); ++iter) {
+                if (*(bi++) != *iter) return false;
+            }
+            return true;
+        };
+        for (auto &i: words) {
+            if (is_pref(pref, i)) ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
