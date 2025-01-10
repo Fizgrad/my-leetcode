@@ -3455,6 +3455,38 @@ public:
         }
         return res;
     }
+
+    vector<string> wordSubsets(vector<string> &words1, vector<string> &words2) {
+        constexpr int CHAR_NUM = 'z' - 'a' + 1;
+        vector<int> minimum(CHAR_NUM, 0);
+        vector<int> tmp(CHAR_NUM, 0);
+        for (auto &i: words2) {
+            std::fill(tmp.begin(), tmp.end(), 0);
+            for (auto c: i) {
+                ++tmp[c - 'a'];
+            }
+            for (int k = 0; k < CHAR_NUM; ++k) {
+                minimum[k] = max(minimum[k], tmp[k]);
+            }
+        }
+        vector<string> res;
+        for (auto &i: words1) {
+            std::fill(tmp.begin(), tmp.end(), 0);
+            for (auto c: i) {
+                ++tmp[c - 'a'];
+            }
+            bool flag = true;
+            for (int k = 0; k < CHAR_NUM; ++k) {
+                if (tmp[k] < minimum[k]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                res.emplace_back(i);
+        }
+        return res;
+    }
 };
 
 int main() {
