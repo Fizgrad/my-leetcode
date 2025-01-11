@@ -3487,6 +3487,24 @@ public:
         }
         return res;
     }
+
+    bool canConstruct(const string &s, int k) {
+        if (s.size() < k) return false;
+        constexpr int CHAR_NUM = 'z' - 'a' + 1;
+        vector<int> nums(CHAR_NUM, 0);
+        for (auto c: s) {
+            int char_index = c - 'a';
+            ++nums[char_index];
+        }
+        int odd_num = 0;
+        for (auto i: nums) {
+            if (i & 1) {
+                ++odd_num;
+            }
+        };
+        if (odd_num > k) return false;
+        return true;
+    }
 };
 
 int main() {
