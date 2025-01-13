@@ -3518,6 +3518,41 @@ public:
         }
         return std::accumulate(nums.begin(), nums.end(), 0);
     }
+
+    bool canBeValid(const string &s, const string &locked) {
+        //从左到右，从右到左，2次遍历，分别检查'('、')'是否满足要求。
+        int remains = 0;
+        int n = s.size();
+        if (n & 1) return false;
+        for (int i = 0; i < n; ++i) {
+            if (locked[i] == '1') {
+                if (s[i] == '(') {
+                    ++remains;
+                } else {
+                    --remains;
+                    if (remains < 0)
+                        return false;
+                }
+            } else {
+                ++remains;
+            }
+        }
+        remains = 0;
+        for (int i = n - 1; i >= 0; --i) {
+            if (locked[i] == '1') {
+                if (s[i] == ')') {
+                    ++remains;
+                } else {
+                    --remains;
+                    if (remains < 0)
+                        return false;
+                }
+            } else {
+                ++remains;
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
