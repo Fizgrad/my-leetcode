@@ -3505,6 +3505,19 @@ public:
         if (odd_num > k) return false;
         return true;
     }
+
+    int minimumLength(const string &s) {
+        constexpr int CHAR_NUM = 'z' - 'a' + 1;
+        vector<int> nums(CHAR_NUM, 0);
+        for (auto i: s) {
+            int char_index = i - 'a';
+            ++nums[char_index];
+            if (nums[char_index] == 3) {
+                nums[char_index] = 1;
+            }
+        }
+        return std::accumulate(nums.begin(), nums.end(), 0);
+    }
 };
 
 int main() {
