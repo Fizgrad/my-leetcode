@@ -3553,6 +3553,26 @@ public:
         }
         return true;
     }
+
+    vector<int> findThePrefixCommonArray(vector<int> &A, vector<int> &B) {
+        int n = A.size();
+        constexpr int SIZE = 51;
+        std::bitset<SIZE> a_bit(0);
+        std::bitset<SIZE> b_bit(0);
+        vector<int> res;
+        for (int i = 0; i < n; ++i) {
+            a_bit.set(A[i]);
+            b_bit.set(B[i]);
+            std::bitset<SIZE> c_bit(0);
+            for (int k = 0; k < SIZE; ++k) {
+                if (a_bit.test(k) && b_bit.test(k)) {
+                    c_bit.set(k);
+                }
+            }
+            res.push_back(c_bit.count());
+        }
+        return res;
+    }
 };
 
 int main() {
