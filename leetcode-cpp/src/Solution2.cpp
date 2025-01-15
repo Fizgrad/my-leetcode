@@ -3573,6 +3573,44 @@ public:
         }
         return res;
     }
+
+    int minimizeXor(int num1, int num2) {
+        constexpr int SIZE = 32;
+        std::bitset<SIZE> num2_bits(num2);
+        std::bitset<SIZE> num1_bits(num1);
+        int set_bit_num = num2_bits.count();
+        int num1_set_bit_num = num1_bits.count();
+        if (num1_set_bit_num == set_bit_num) return num1;
+        if (num1_set_bit_num > set_bit_num) {
+            int remains = set_bit_num;
+            for (int k = SIZE - 1; k >= 0; --k) {
+                if (num1_bits.test(k)) {
+                    --remains;
+                    num1_bits.flip(k);
+                    if (remains <= 0) return num1_bits.to_ulong() ^ num1;
+                }
+            }
+        } else {
+            vector<bool> flipped(SIZE, false);
+            int remains = set_bit_num;
+            for (int k = SIZE - 1; k >= 0; --k) {
+                if (num1_bits.test(k)) {
+                    --remains;
+                    num1_bits.flip(k);
+                    flipped[k] = true;
+                }
+            }
+            for (int k = 0; k < SIZE; ++k) {
+                if (!flipped[k]) {
+                    num1_bits.flip(k);
+                    --remains;
+                    flipped[k] = true;
+                    if (remains <= 0) return num1_bits.to_ulong() ^ num1;
+                }
+            }
+        }
+        return num1_bits.to_ulong() ^ num1;
+    }
 };
 
 int main() {
