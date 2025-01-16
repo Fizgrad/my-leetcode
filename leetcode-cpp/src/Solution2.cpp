@@ -3611,6 +3611,23 @@ public:
         }
         return num1_bits.to_ulong() ^ num1;
     }
+
+    int xorAllNums(vector<int> &nums1, vector<int> &nums2) {
+        int res = 0;
+        int n2 = nums2.size();
+        int n1 = nums1.size();
+        if (n1 & 1) {
+            for (auto i: nums2) {
+                res ^= i;
+            }
+        }
+        if (n2 & 1) {
+            for (auto i: nums1) {
+                res ^= i;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
