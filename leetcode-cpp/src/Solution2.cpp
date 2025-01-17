@@ -3628,6 +3628,12 @@ public:
         }
         return res;
     }
+
+    bool doesValidArrayExist(vector<int> &derived) {
+        return [res = true](vector<int> &array) mutable {std::for_each(array.begin(), array.end(), [&](auto i){
+            res ^= i;
+        });return res; }(derived);
+    }
 };
 
 int main() {
