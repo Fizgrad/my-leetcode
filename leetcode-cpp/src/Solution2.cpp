@@ -3634,6 +3634,47 @@ public:
             res ^= i;
         });return res; }(derived);
     }
+
+    int minCost(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        vector<vector<bool>> visited(n, vector<bool>(m, 0));
+        int cost = 0;
+        stack<pair<int, int>> next;
+        stack<pair<int, int>> now;
+        constexpr int dx[4] = {0, 0, 1, -1};
+        constexpr int dy[4] = {1, -1, 0, 0};
+        auto add_next = [&](int x, int y) {
+            if (visited[x][y]) {
+                return;
+            } else {
+                visited[x][y] = true;
+            }
+            for (int k = 0; k < 4; ++k) {
+                int xx = x + dx[k];
+                int yy = y + dy[k];
+                if (xx < 0 || yy < 0 || xx >= n || yy >= m) continue;
+                if (visited[xx][yy]) continue;
+                if (k + 1 == grid[x][y]) {
+                    now.emplace(xx, yy);
+                } else {
+                    next.emplace(xx, yy);
+                }
+            }
+        };
+        now.emplace(0, 0);
+        while (!now.empty()) {
+            while (!now.empty()) {
+                auto [x, y] = now.top();
+                now.pop();
+                if (x == n - 1 && y == m - 1) return cost;
+                add_next(x, y);
+            }
+            ++cost;
+            now.swap(next);
+        }
+        return cost;
+    }
 };
 
 int main() {
