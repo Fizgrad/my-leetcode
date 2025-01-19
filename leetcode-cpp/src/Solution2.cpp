@@ -3675,6 +3675,44 @@ public:
         }
         return cost;
     }
+
+    int trapRainWater(vector<vector<int>> &heightMap) {
+        int n = heightMap.size();
+        int m = heightMap.front().size();
+        int res = 0;
+        constexpr int dx[4] = {0, 0, 1, -1};
+        constexpr int dy[4] = {1, -1, 0, 0};
+        vector<vector<bool>> visited(n, vector<bool>(m, 0));
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>> pq;
+        auto push = [&](int height, int x, int y) {
+            pq.emplace(height, std::make_pair(x, y));
+            visited[x][y] = true;
+        };
+        for (int i = 0; i < n; ++i) {
+            push(heightMap[i][0], i, 0);
+            push(heightMap[i][m - 1], i, m - 1);
+        }
+        for (int j = 0; j < m; ++j) {
+            push(heightMap[0][j], 0, j);
+            push(heightMap[n - 1][j], n - 1, j);
+        }
+        int curHeight = 0;
+        while (pq.size()) {
+            curHeight = max(curHeight, pq.top().first);
+            auto [x, y] = pq.top().second;
+            pq.pop();
+            for (int k = 0; k < 4; ++k) {
+                int xx = x + dx[k];
+                int yy = y + dy[k];
+                if (xx < 0 || yy < 0 || xx >= n || yy >= m) continue;
+                if (visited[xx][yy]) continue;
+                visited[xx][yy] = true;
+                res += max(0, curHeight - heightMap[xx][yy]);
+                push(max(curHeight, heightMap[xx][yy]), xx, yy);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
