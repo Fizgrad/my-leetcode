@@ -3713,6 +3713,31 @@ public:
         }
         return res;
     }
+
+    int firstCompleteIndex(vector<int> &arr, vector<vector<int>> &mat) {
+        int n = mat.size();
+        int m = mat.front().size();
+        int res = std::numeric_limits<int>::max();
+        vector<int> sorted_array(arr.size() + 5);
+        for (int i = 0; i < arr.size(); ++i) {
+            sorted_array[arr[i]] = i;
+        }
+        for (int i = 0; i < n; ++i) {
+            int tmp = sorted_array[mat[i][0]];
+            for (int j = 0; j < m; ++j) {
+                tmp = max(tmp, sorted_array[mat[i][j]]);
+            }
+            res = min(res, tmp);
+        }
+        for (int j = 0; j < m; ++j) {
+            int tmp = sorted_array[mat[0][j]];
+            for (int i = 0; i < n; ++i) {
+                tmp = max(tmp, sorted_array[mat[i][j]]);
+            }
+            res = min(res, tmp);
+        }
+        return res;
+    }
 };
 
 int main() {
