@@ -3738,6 +3738,20 @@ public:
         }
         return res;
     }
+
+    long long gridGame(vector<vector<int>> &grid) {
+        int m = grid.front().size();
+        long long res = std::numeric_limits<decltype(res)>::max();
+        long long prefix1 = 0;
+        long long prefix2 = 0;
+        long long row1sum = std::accumulate(grid.front().begin(), grid.front().end(), 0ll);
+        for (int i = 0; i < m; ++i) {
+            prefix1 += grid[0][i];
+            res = min(res, max(row1sum - prefix1, prefix2));
+            prefix2 += grid[1][i];
+        }
+        return res;
+    }
 };
 
 int main() {
