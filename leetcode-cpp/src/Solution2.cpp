@@ -3752,6 +3752,39 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> highestPeak(vector<vector<int>> &isWater) {
+        vector<pair<int, int>> next;
+        vector<vector<int>> res(isWater.size(), vector<int>(isWater.front().size(), -1));
+        for (int i = 0; i < isWater.size(); ++i) {
+            for (int j = 0; j < isWater.front().size(); ++j) {
+                if (isWater[i][j] == 1) {
+                    res[i][j] = 0;
+                    next.emplace_back(i, j);
+                }
+            }
+        }
+        constexpr int dx[4] = {0, 0, 1, -1};
+        constexpr int dy[4] = {1, -1, 0, 0};
+        int height = 1;
+        vector<pair<int, int>> tmp;
+        while (next.size()) {
+            for (auto [i, j]: next) {
+                for (int k = 0; k < 4; ++k) {
+                    int x = i + dx[k];
+                    int y = j + dy[k];
+                    if (x < 0 || y < 0 || x >= isWater.size() || y >= isWater.front().size()) continue;
+                    if (res[x][y] != -1) continue;
+                    tmp.emplace_back(x, y);
+                    res[x][y] = height;
+                }
+            }
+            next.clear();
+            next.swap(tmp);
+            ++height;
+        }
+        return res;
+    }
 };
 
 int main() {
