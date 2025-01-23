@@ -3785,6 +3785,37 @@ public:
         }
         return res;
     }
+
+    int countServers(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int res = 0;
+        vector<int> rows;
+        vector<int> cols(m, 0);
+        for (int i = 0; i < n; ++i) {
+            int tmp = 0;
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 1) {
+                    ++tmp;
+                    ++cols[j];
+                }
+            }
+            if (tmp > 1) {
+                res += tmp;
+            } else if (tmp == 1) {
+                rows.emplace_back(i);
+            }
+        }
+        for (auto i: rows) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 1 && cols[j] > 1) {
+                    ++res;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
