@@ -2052,6 +2052,26 @@ public:
         }
         return res;
     }
+
+    vector<int> eventualSafeNodes(vector<vector<int>> &graph) {
+        int n = graph.size();
+        vector<int> res;
+        vector<int> dp(n, -1);
+        auto dfs = [&](auto &&dfs, int node) {
+            if (dp[node] != -1) return dp[node];
+            dp[node] = 0;
+            for (auto i: graph[node]) {
+                if (dfs(dfs, i) == 0) {
+                    return dp[node] = 0;
+                }
+            }
+            return dp[node] = 1;
+        };
+        for (int i = 0; i < n; ++i) {
+            if (dfs(dfs, i)) res.push_back(i);
+        }
+        return res;
+    }
 };
 
 int main() {
