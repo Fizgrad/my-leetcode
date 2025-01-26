@@ -12,12 +12,14 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <ranges>
 #include <regex>
 #include <set>
 #include <sstream>
 #include <stack>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 using namespace std;
@@ -2071,6 +2073,50 @@ public:
             if (dfs(dfs, i)) res.push_back(i);
         }
         return res;
+    }
+
+    int maximumInvitations(vector<int> &favorites) {
+        int n = favorites.size();
+        vector<int> indegree(n);
+        for (auto i: favorites) {
+            ++indegree[i];
+        }
+        vector<bool> visited(n, false);
+        vector<int> chains(n, 0);
+        queue<int> q;
+        for (int i = 0; i < n; ++i) {
+            if (indegree[i] == 0) {
+                q.emplace(i);
+            }
+        }
+        while (q.size()) {
+            int front = q.front();
+            q.pop();
+            int next = favorites[front];
+            visited[front] = true;
+            chains[next] = chains[front] + 1;
+            if (--indegree[next] == 0) {
+                q.push(next);
+            }
+        }
+        int maxCycle = 0;
+        int totalChains = 0;
+        for (int i = 0; i < n; ++i) {
+            if (!visited[i]) {
+                int current = i, cycleLength = 0;
+                while (!visited[current]) {
+                    visited[current] = true;
+                    current = favorites[current];
+                    cycleLength++;
+                }
+                if (cycleLength == 2) {
+                    totalChains += 2 + chains[i] + chains[favorites[i]];
+                } else {
+                    maxCycle = max(maxCycle, cycleLength);
+                }
+            }
+        }
+        return max(maxCycle, totalChains);
     }
 };
 
