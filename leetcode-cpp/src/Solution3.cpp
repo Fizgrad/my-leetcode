@@ -2118,6 +2118,34 @@ public:
         }
         return max(maxCycle, totalChains);
     }
+
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>> &prerequisites, vector<vector<int>> &queries) {
+        vector<vector<bool>> graph(numCourses, vector<bool>(numCourses));
+        for (auto &i: prerequisites) {
+            graph[i[0]][i[1]] = true;
+        }
+        bool flag = true;
+        while (flag) {
+            flag = false;
+            for (int i = 0; i < numCourses; ++i) {
+                for (int j = 0; j < numCourses; ++j) {
+                    if (i == j || graph[i][j]) continue;
+                    for (int k = 0; k < numCourses; ++k) {
+                        if (k == i || k == j) continue;
+                        if (graph[i][k] && graph[k][j]) {
+                            graph[i][j] = true;
+                            flag = true;
+                        }
+                    }
+                }
+            }
+        }
+        vector<bool> res(queries.size());
+        for (int i = 0; i < queries.size(); ++i) {
+            res[i] = graph[queries[i][0]][queries[i][1]];
+        }
+        return res;
+    }
 };
 
 int main() {
