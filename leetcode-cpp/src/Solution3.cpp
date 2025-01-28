@@ -20,6 +20,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
+#include <variant>
 #include <vector>
 
 using namespace std;
@@ -2143,6 +2144,41 @@ public:
         vector<bool> res(queries.size());
         for (int i = 0; i < queries.size(); ++i) {
             res[i] = graph[queries[i][0]][queries[i][1]];
+        }
+        return res;
+    }
+
+    int findMaxFish(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int res = 0;
+        int sum = 0;
+        vector<vector<bool>> visited(n, vector<bool>(m, false));
+        auto dfs = [&](auto &&dfs, int x, int y) -> void {
+            visited[x][y] = true;
+            res = max(res, sum);
+            if (grid[x][y] == 0)
+                return;
+            sum += grid[x][y];
+            res = max(res, sum);
+            constexpr int dx[4] = {0, 0, 1, -1};
+            constexpr int dy[4] = {1, -1, 0, 0};
+            for (int k = 0; k < 4; ++k) {
+                int xx = x + dx[k];
+                int yy = y + dy[k];
+                if (xx < 0 || yy < 0 || xx >= n || yy >= m) continue;
+                if (!visited[xx][yy]) {
+                    dfs(dfs, xx, yy);
+                }
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (!visited[i][j]) {
+                    sum = 0;
+                    dfs(dfs, i, j);
+                }
+            }
         }
         return res;
     }
