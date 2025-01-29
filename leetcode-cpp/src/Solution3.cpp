@@ -2182,6 +2182,41 @@ public:
         }
         return res;
     }
+
+    vector<int> findRedundantConnection(vector<vector<int>> &edges) {
+        int n = edges.size();
+        vector<int> parent(n + 1);
+        vector<int> size(n + 1, 1);
+        for (int i = 0; i < n + 1; ++i) {
+            parent[i] = i;
+        }
+        auto uf_find = [&](int index) {
+            int next = parent[index];
+            while (next != parent[next]) {
+                next = parent[next];
+            }
+            return next;
+        };
+        auto uf_union = [&](int a, int b) {
+            int pa = uf_find(a);
+            int pb = uf_find(b);
+            if (size[pa] > size[pb]) {
+                parent[pb] = pa;
+                size[pa] += size[pb];
+            } else {
+                parent[pa] = pb;
+                size[pb] += size[pa];
+            }
+        };
+        for (auto &i: edges) {
+            int pa = uf_find(i[0]);
+            int pb = uf_find(i[1]);
+            if (pa == pb) return i;
+            else
+                uf_union(pa, pb);
+        }
+        return {};
+    }
 };
 
 int main() {
