@@ -2227,6 +2227,25 @@ public:
         }
         return true;
     }
+
+    bool check(vector<int> &nums) {
+        bool isOriginBegin = false;
+        for (int i = 0; i < nums.size() - 1; ++i) {
+            if (isOriginBegin) {
+                if (nums[i + 1] > nums.front())
+                    return false;
+                if (nums[i + 1] < nums[i])
+                    return false;
+            } else {
+                if (nums[i] <= nums[i + 1]) continue;
+                else {
+                    if (nums[i + 1] > nums.front()) return false;
+                    isOriginBegin = true;
+                }
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
