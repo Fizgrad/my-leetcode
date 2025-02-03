@@ -2246,6 +2246,35 @@ public:
         }
         return true;
     }
+
+    int longestMonotonicSubarray(vector<int> &nums) {
+        int n = nums.size();
+        if (n == 1) return 1;
+        int res = (nums[0] == nums[1] ? 1 : 2);
+        int op = (nums[0] > nums[1] ? -1 : (nums[0] == nums[1] ? 0 : 1));
+        int len = (nums[0] == nums[1] ? 1 : 2);
+        for (int i = 1; i < n - 1; ++i) {
+            if (nums[i] < nums[i + 1]) {
+                if (op == 1) {
+                    res = max(res, ++len);
+                } else {
+                    res = max(res, len = 2);
+                    op = 1;
+                }
+            } else if (nums[i] > nums[i + 1]) {
+                if (op == -1) {
+                    res = max(res, ++len);
+                } else {
+                    res = max(res, len = 2);
+                    op = -1;
+                }
+            } else {
+                op = 0;
+                len = 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
