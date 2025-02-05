@@ -2289,6 +2289,29 @@ public:
         }
         return res;
     }
+
+    bool areAlmostEqual(const string &s1, const string &s2) {
+        char s1c = 0;
+        char s2c = 0;
+        int n = s1.size();
+        bool flag = false;
+        for (int i = 0; i < n; ++i) {
+            if (s1[i] == s2[i]) continue;
+            else {
+                if (flag) return false;
+                if (s1c == 0) {
+                    s1c = s1[i];
+                    s2c = s2[i];
+                } else {
+                    if (s1c == s2[i] && s2c == s1[i]) {
+                        flag = true;
+                    } else
+                        return false;
+                }
+            }
+        }
+        return s1c == 0 || flag;
+    }
 };
 
 int main() {
