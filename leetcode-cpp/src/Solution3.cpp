@@ -2312,6 +2312,18 @@ public:
         }
         return s1c == 0 || flag;
     }
+
+    int tupleSameProduct(vector<int> &nums) {
+        int n = nums.size();
+        int res = 0;
+        unordered_map<int, int> times;
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                res += times[nums[i] * nums[j]]++;
+            }
+        }
+        return 8 * res;
+    }
 };
 
 int main() {
