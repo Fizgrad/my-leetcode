@@ -3816,6 +3816,15 @@ public:
         }
         return res;
     }
+
+    long long countBadPairs(vector<int> &nums) {
+        unordered_map<int, long long> diff2nums;
+        long long res = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            res += diff2nums[nums[i] - i]++;
+        }
+        return static_cast<long long>(nums.size()) * (nums.size() - 1) / 2 - res;
+    }
 };
 
 int main() {
