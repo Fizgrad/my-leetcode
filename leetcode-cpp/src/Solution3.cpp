@@ -2345,6 +2345,38 @@ public:
         }
         return res;
     }
+
+    vector<int> lexicographicallySmallestArray(vector<int> &nums, int limit) {
+        int n = nums.size();
+        using vi = pair<int, int>;
+        vector<vi> vis;
+        vis.reserve(n);
+        for (int i = 0; i < n; ++i) {
+            vis.emplace_back(nums[i], i);
+        }
+        std::sort(vis.begin(), vis.end());
+        vector<vector<vi>> groups;
+        groups.push_back({vis[0]});
+        for (int i = 1; i < n; ++i) {
+            if (vis[i].first - vis[i - 1].first <= limit) {
+                groups.back().emplace_back(vis[i]);
+            } else {
+                groups.push_back({vis[i]});
+            }
+        }
+        for (int i = 0; i < groups.size(); ++i) {
+            vector<int> indices;
+            indices.reserve(groups[i].size());
+            for (auto [_, i]: groups[i]) {
+                indices.emplace_back(i);
+            }
+            std::sort(indices.begin(), indices.end());
+            for (int k = 0; k < indices.size(); ++k) {
+                nums[indices[k]] = groups[i][k].first;
+            }
+        }
+        return nums;
+    }
 };
 
 int main() {
