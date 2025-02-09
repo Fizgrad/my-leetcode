@@ -2324,6 +2324,27 @@ public:
         }
         return 8 * res;
     }
+
+    vector<int> queryResults(int limit, vector<vector<int>> &queries) {
+        vector<int> res(queries.size());
+        unordered_map<int, int> colors;
+        unordered_map<int, int> balls;
+        int kinds = 0;
+        for (int i = 0; i < queries.size(); ++i) {
+            auto ball = queries[i][0];
+            auto newColor = queries[i][1];
+            if (colors.contains(ball)) {
+                auto oldColor = colors[ball];
+                if (--balls[oldColor] == 0)
+                    --kinds;
+            }
+            if (++balls[newColor] == 1)
+                ++kinds;
+            colors[ball] = newColor;
+            res[i] = kinds;
+        }
+        return res;
+    }
 };
 
 int main() {
