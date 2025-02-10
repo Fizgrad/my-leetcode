@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <deque>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <numeric>
 #include <queue>
@@ -2390,6 +2391,62 @@ public:
             }
         }
         return {st.begin(), st.end()};
+    }
+
+    int largestIsland(vector<vector<int>> &grid) {
+        constexpr int dx[4] = {0, 0, 1, -1};
+        constexpr int dy[4] = {1, -1, 0, 0};
+        int n = grid.size();
+        int res = 0;
+        vector<vector<int>> groupID(n, vector<int>(n, 0));
+        unordered_map<int, int> groupSizes;
+        auto dfs = [&](auto &&dfs, int x, int y) -> void {
+            for (int k = 0; k < 4; ++k) {
+                int xx = x + dx[k];
+                int yy = y + dy[k];
+                if (xx >= n || yy >= n || xx < 0 || yy < 0)
+                    continue;
+                if (groupID[xx][yy] != 0)
+                    continue;
+                if (grid[xx][yy] == 0)
+                    continue;
+                groupID[xx][yy] = groupID[x][y];
+                res = max(res, ++groupSizes[groupID[x][y]]);
+                dfs(dfs, xx, yy);
+            }
+        };
+        int groupIndex = 1;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 1 && groupID[i][j] == 0) {
+                    groupID[i][j] = groupIndex++;
+                    res = max(res, ++groupSizes[groupID[i][j]]);
+                    dfs(dfs, i, j);
+                }
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 0) {
+                    int newSize = 1;
+                    set<int> groups;
+                    for (int k = 0; k < 4; ++k) {
+                        int xx = i + dx[k];
+                        int yy = j + dy[k];
+                        if (xx >= n || yy >= n || xx < 0 || yy < 0)
+                            continue;
+                        if (grid[xx][yy] == 0)
+                            continue;
+                        if (groups.contains(groupID[xx][yy]))
+                            continue;
+                        newSize += groupSizes[groupID[xx][yy]];
+                        groups.emplace(groupID[xx][yy]);
+                    }
+                    res = max(res, newSize);
+                }
+            }
+        }
+        return res;
     }
 };
 
