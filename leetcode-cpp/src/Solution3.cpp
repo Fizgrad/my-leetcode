@@ -2377,6 +2377,20 @@ public:
         }
         return nums;
     }
+
+    string clearDigits(const string &s) {
+        vector<char> st;
+        st.reserve(s.size());
+        for (auto i: s) {
+            if (isdigit(i)) {
+                if (st.size())
+                    st.pop_back();
+            } else {
+                st.push_back(i);
+            }
+        }
+        return {st.begin(), st.end()};
+    }
 };
 
 int main() {
