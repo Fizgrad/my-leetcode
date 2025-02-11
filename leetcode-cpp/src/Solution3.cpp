@@ -3,11 +3,13 @@
 //
 #include <algorithm>
 #include <array>
+#include <bitset>
 #include <cctype>
 #include <climits>
 #include <cmath>
 #include <cstdint>
 #include <deque>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <map>
@@ -2443,6 +2445,27 @@ public:
                         groups.emplace(groupID[xx][yy]);
                     }
                     res = max(res, newSize);
+                }
+            }
+        }
+        return res;
+    }
+
+    string removeOccurrences(const string &s, const string &part) {
+        string res;
+        for (auto c: s) {
+            res.push_back(c);
+            if (c == part.back() && res.size() >= part.size()) {
+                bool flag = true;
+                for (auto partIter = part.crbegin(), resIter = res.crbegin(); flag && partIter != part.crend(); ++partIter, ++resIter) {
+                    if (*partIter != *resIter) {
+                        flag = false;
+                    }
+                }
+                if (flag) {
+                    for (auto _: part) {
+                        res.pop_back();
+                    }
                 }
             }
         }
