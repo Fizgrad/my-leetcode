@@ -2471,6 +2471,24 @@ public:
         }
         return res;
     }
+
+    // At any point, if the next item in the array is greater than (sum of all previous elements plus 1)
+    // then add (sum of all previous elements plus 1) in the array.
+    int minPatches(vector<int> &nums, int n) {
+        long long presum = 0;
+        int res = 0;
+        int index = 0;
+        while (presum < n) {
+            if (index >= nums.size() || presum + 1 < nums[index]) {
+                ++res;
+                presum += presum + 1;
+            } else {
+                presum += nums[index];
+                ++index;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
