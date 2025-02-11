@@ -2489,6 +2489,59 @@ public:
         }
         return res;
     }
+
+    // 2493. Divide Nodes Into the Maximum Number of Groups
+    int magnificentSets(int n, vector<vector<int>> &edges) {
+        vector<vector<int>> graph(n + 1);
+        vector<int> visited(n + 1, -1);
+        for (const auto &edge: edges) {
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
+        }
+        int maxGroups = 0;
+        unordered_set<int> componentNodes;
+        auto findConnectedComponent = [&](auto &&findConnectedComponent, int node) -> void {
+            componentNodes.insert(node);
+            for (int neighbor: graph[node]) {
+                if (!componentNodes.contains(neighbor)) {
+                    findConnectedComponent(findConnectedComponent, neighbor);
+                }
+            }
+        };
+        auto getMaxDepth = [&](int start) {
+            for (int node: componentNodes) visited[node] = -1;
+            queue<int> q;
+            int depth = 1;
+            q.push(start);
+            visited[start] = 1;
+            while (!q.empty()) {
+                int cur = q.front();
+                q.pop();
+                for (int neighbor: graph[cur]) {
+                    if (visited[neighbor] == -1) {
+                        visited[neighbor] = visited[cur] + 1;
+                        depth = max(depth, visited[neighbor]);
+                        q.push(neighbor);
+                    } else if (abs(visited[cur] - visited[neighbor]) != 1) {
+                        return -1;
+                    }
+                }
+            }
+            return depth;
+        };
+        for (int i = 1; i <= n; i++) {
+            if (visited[i] != -1) continue;
+            componentNodes.clear();
+            findConnectedComponent(findConnectedComponent, i);
+            int maxDepth = -1;
+            for (int node: componentNodes) {
+                maxDepth = max(maxDepth, getMaxDepth(node));
+            }
+            if (maxDepth == -1) return -1;
+            maxGroups += maxDepth;
+        }
+        return maxGroups;
+    }
 };
 
 int main() {
