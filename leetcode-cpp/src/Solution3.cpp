@@ -2542,6 +2542,28 @@ public:
         }
         return maxGroups;
     }
+
+    int maximumSum(vector<int> &nums) {
+        auto calSumDigit = [](int num) {
+            int res = 0;
+            while (num >= 1) {
+                res += (num % 10);
+                num /= 10;
+            }
+            return res;
+        };
+        int res = -1;
+        vector<int> digitSumMaxNum(100, -1);
+        for (auto i: nums) {
+            int digitSum = calSumDigit(i);
+            if (digitSumMaxNum[digitSum] != -1) {
+                res = max(res, i + digitSumMaxNum[digitSum]);
+                digitSumMaxNum[digitSum] = max(digitSumMaxNum[digitSum], i);
+            } else
+                digitSumMaxNum[digitSum] = i;
+        }
+        return res;
+    }
 };
 
 int main() {
