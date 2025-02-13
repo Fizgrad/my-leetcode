@@ -2564,6 +2564,24 @@ public:
         }
         return res;
     }
+
+    int minOperations(vector<int> &nums, int k) {
+        priority_queue<int, vector<int>, greater<>> pq(nums.begin(), nums.end());
+        int res = 0;
+        while (pq.size() >= 2 && pq.top() < k) {
+            long long x = pq.top();
+            pq.pop();
+            long long y = pq.top();
+            pq.pop();
+            long long newNum = min(x, y) * 2 + max(x, y);
+            if (newNum < k)
+                pq.emplace(newNum);
+            else
+                pq.emplace(k);
+            ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
