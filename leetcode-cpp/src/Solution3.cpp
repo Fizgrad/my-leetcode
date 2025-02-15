@@ -20,6 +20,7 @@
 #include <set>
 #include <sstream>
 #include <stack>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -2579,6 +2580,28 @@ public:
             else
                 pq.emplace(k);
             ++res;
+        }
+        return res;
+    }
+
+    int punishmentNumber(int n) {
+        auto dfs = [&](auto &&dfs, long long int num, long long int target) -> bool {
+            if (num == target) return true;
+            for (int i = 10; i < num; i *= 10) {
+                if (num / i + num % i == target) return true;
+                if (target - num % i > 0 && dfs(dfs, num / i, target - num % i))
+                    return true;
+                if (target - num / i > 0 && dfs(dfs, num % i, target - num / i))
+                    return true;
+            }
+            return false;
+        };
+        auto f = [&](long long num) -> bool {
+            return dfs(dfs, num * num, num);
+        };
+        int res = 0;
+        for (int i = 1; i <= n; ++i) {
+            if (f(i)) res += i * i;
         }
         return res;
     }
