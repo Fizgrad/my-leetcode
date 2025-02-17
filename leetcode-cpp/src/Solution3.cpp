@@ -2605,6 +2605,36 @@ public:
         }
         return res;
     }
+
+    int numTilePossibilities(const std::string &tiles) {
+        int n = tiles.length();
+        constexpr int SIZE = 'Z' - 'A' + 1;
+        std::vector<int> counts(SIZE, 0);
+        std::vector<int> fac(n + 1, 1);
+        for (int i = 1; i <= n; i++) {
+            fac[i] = i * fac[i - 1];
+        }
+        for (char c: tiles) {
+            counts[c - 'A']++;
+        }
+        std::vector<int> lengthcounts(n + 1, 0);
+        lengthcounts[0] = 1;
+        for (int i = 0; i < SIZE; i++) {
+            if (counts[i] > 0) {
+                std::vector<int> temp(n + 1, 0);
+                for (int j = 0; j <= n && lengthcounts[j] > 0; j++) {
+                    for (int k = 1; k <= counts[i]; k++) {
+                        int totallength = j + k;
+                        temp[totallength] += lengthcounts[j] * fac[totallength] / (fac[k] * fac[j]);
+                    }
+                }
+                for (int j = 0; j <= n; j++) {
+                    lengthcounts[j] += temp[j];
+                }
+            }
+        }
+        return std::accumulate(lengthcounts.begin() + 1, lengthcounts.end(), 0);
+    }
 };
 
 int main() {
