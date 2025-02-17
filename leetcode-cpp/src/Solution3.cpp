@@ -21,6 +21,7 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -2603,6 +2604,36 @@ public:
         for (int i = 1; i <= n; ++i) {
             if (f(i)) res += i * i;
         }
+        return res;
+    }
+
+    vector<int> constructDistancedSequence(int n) {
+        int len = n * 2 - 1;
+        vector<int> res(len, 0);
+        vector<bool> placed(n + 1, false);
+        auto dfs = [&](auto &&dfs, int i) -> bool {
+            if (i >= len) return true;
+            if (res[i] != 0) return dfs(dfs, i + 1);
+            for (int k = n; k >= 1; --k) {
+                if (placed[k]) continue;
+                if (k == 1) {
+                    res[i] = k;
+                    placed[k] = true;
+                    if (dfs(dfs, i + 1)) return true;
+                    res[i] = 0;
+                    placed[k] = false;
+
+                } else if (i + k < len && res[i] == 0 && res[i + k] == 0) {
+                    res[i] = res[i + k] = k;
+                    placed[k] = true;
+                    if (dfs(dfs, i + 1)) return true;
+                    placed[k] = false;
+                    res[i] = res[i + k] = 0;
+                }
+            }
+            return false;
+        };
+        dfs(dfs, 0);
         return res;
     }
 
