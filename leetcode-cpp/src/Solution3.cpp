@@ -2666,6 +2666,48 @@ public:
         }
         return std::accumulate(lengthcounts.begin() + 1, lengthcounts.end(), 0);
     }
+
+    string smallestNumber(const string &pattern) {
+        string res;
+        vector<bool> used(10, false);
+        auto push = [&](char i) {
+            used[i - '0'] = true;
+            res.push_back(i);
+        };
+        auto pop = [&](char i) {
+            res.pop_back();
+            used[i - '0'] = false;
+        };
+        auto dfs = [&](auto &&dfs, int index) -> bool {
+            if (index >= pattern.size()) return true;
+            auto last = res.back();
+            if (pattern[index] == 'I') {
+                for (auto i = last + 1; i <= '9'; ++i) {
+                    if (used[i - '0']) continue;
+                    push(i);
+                    if (dfs(dfs, index + 1))
+                        return true;
+                    pop(i);
+                }
+            } else {
+                for (auto i = '1'; i < last; ++i) {
+                    if (used[i - '0']) continue;
+                    push(i);
+                    if (dfs(dfs, index + 1))
+                        return true;
+                    pop(i);
+                }
+            }
+            return false;
+        };
+        for (auto i = '1'; i <= '9'; ++i) {
+            push(i);
+            if (dfs(dfs, 0))
+                return res;
+            pop(i);
+        }
+        return res;
+    }
 };
 
 int main() {
