@@ -2708,6 +2708,33 @@ public:
         }
         return res;
     }
+
+    string getHappyString(int n, int k) {
+        int nums = 3 * (1 << (n - 1));
+        if (k > nums) return "";
+        std::bitset<32> bits(k - 1);
+        string res;
+        res.push_back('a');
+        if (bits.test(n))
+            res.back() += 'c' - 'a';
+        else if (bits.test(n - 1))
+            res.back() += 'b' - 'a';
+        for (int i = n - 2; i >= 0; --i) {
+            auto c = res.back();
+            auto append = 'a';
+            if (append == c)
+                ++append;
+            while (bits.test(i)) {
+                if (append != c)
+                    bits.flip(i);
+                ++append;
+            }
+            if (append == c)
+                ++append;
+            res.push_back(append);
+        }
+        return res;
+    }
 };
 
 int main() {
