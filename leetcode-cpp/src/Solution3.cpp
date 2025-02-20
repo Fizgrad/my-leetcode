@@ -2735,6 +2735,18 @@ public:
         }
         return res;
     }
+
+    string findDifferentBinaryString(vector<string> &nums) {
+        // Because there are only n strings of length n,
+        // ensuring that each string differs by at least one bit
+        // will guarantee uniqueness.
+        int n = nums.size();
+        string res(n, '0');
+        for (int i = 0; i < n; ++i) {
+            res[i] = (res[i] == nums[i][i]) ? '1' : '0';
+        }
+        return res;
+    }
 };
 
 int main() {
