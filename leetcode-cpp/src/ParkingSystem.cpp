@@ -2,7 +2,6 @@
 // Created by David Chen on 5/29/23.
 //
 
-using namespace std;
 
 class ParkingSystem {
 public:

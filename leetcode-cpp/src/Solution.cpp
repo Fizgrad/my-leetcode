@@ -4595,16 +4595,16 @@ public:
         //接下来的四个循环是基数排序的核心。它们将 nums 数组的整数按照每个字节的值重新排列。每次循环处理一个字节，并在 nums 和 nums2 之间交替进行排序。
         int *src = &nums[0] + N - 1, *dst = &nums2[0];
         for (c = e1 - 4; c >= st1; c -= 4, --src)
-            *(dst + (--counts[0][*c])) = move(*src);
+            *(dst + (--counts[0][*c])) = std::move(*src);
         src = dst + N - 1, dst = &nums[0];
         for (c = e2 - 3; c >= st2; c -= 4, --src)
-            *(dst + (--counts[1][*c])) = move(*src);
+            *(dst + (--counts[1][*c])) = std::move(*src);
         src = dst + N - 1, dst = &nums2[0];
         for (c = e1 - 2; c >= st1; c -= 4, --src)
-            *(dst + (--counts[2][*c])) = move(*src);
+            *(dst + (--counts[2][*c])) = std::move(*src);
         src = dst + N - 1, dst = &nums[0];
         for (c = e2 - 1; c >= st2; c -= 4, --src)
-            *(dst + (--counts[3][*c])) = move(*src);
+            *(dst + (--counts[3][*c])) = std::move(*src);
         int res = 0;
         for (int i = 1; i < N; ++i)
             res = max(res, nums[i] - nums[i - 1]);
@@ -4769,8 +4769,7 @@ public:
         int xy[5] = {0, 1, 0, -1, 0};
         int px, py;
         int bx, by;
-        bool visited[21][21][21][21];
-        ::memset(visited, 0, sizeof(visited) * sizeof(bool));
+        bool visited[21][21][21][21] = {{{{false}}}};
         vector<vector<bool>> canReach(n, vector<bool>(m, false));
 
         auto check = [&]() {

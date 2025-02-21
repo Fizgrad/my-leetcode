@@ -49,7 +49,7 @@ public:
                 bool flag;
                 Node *new_next;
                 auto i = umap.end();
-                if (flag = ((i = umap.find(next->val)) == umap.end())) {
+                if ((flag = ((i = umap.find(next->val)) == umap.end()))) {
                     umap[next->val] = (new_next = new Node(next->val));
                 } else {
                     new_next = i->second;
