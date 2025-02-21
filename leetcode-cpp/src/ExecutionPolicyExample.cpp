@@ -6,7 +6,7 @@
 #include <random>
 #include <vector>
 
-void measureSimpleOperation(auto policy, std::vector<uint64_t> v) {
+void measureSimpleOperation(auto &&policy, std::vector<uint64_t> v) {
     auto start = std::chrono::steady_clock::now();
     std::for_each(policy, v.begin(), v.end(), [](auto i) {
         auto b = i >> 1;
@@ -18,7 +18,7 @@ void measureSimpleOperation(auto policy, std::vector<uint64_t> v) {
 }
 
 
-void measureComplexOperation(auto policy, std::vector<uint64_t> v) {
+void measureComplexOperation(auto &&policy, std::vector<uint64_t> v) {
     auto start = std::chrono::steady_clock::now();
     std::for_each(policy, v.begin(), v.end(), [](auto i) {
         int64_t sum = 0;
