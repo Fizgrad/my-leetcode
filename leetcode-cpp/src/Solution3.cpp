@@ -2747,6 +2747,55 @@ public:
         }
         return res;
     }
+
+    TreeNode *recoverFromPreorder(const string &traversal) {
+        TreeNode *virtualNode = new TreeNode();
+        int index = 0;
+        int n = traversal.size();
+        int level = 0;
+        auto nextInt = [&]() -> int {
+            int lastDigit = index;
+            for (int i = index + 1; i < n; ++i) {
+                if (std::isdigit(traversal[i])) {
+                    lastDigit = i;
+                } else
+                    break;
+            }
+            int res = stoi(traversal.substr(index, lastDigit - index + 1));
+            index = lastDigit + 1;
+            return res;
+        };
+
+        auto numDash = [&]() -> int {
+            if (index >= n) return -1;
+            int res = 0;
+            for (int i = index; i < n; ++i) {
+                if (traversal[i] == '-') ++res;
+                else
+                    break;
+            }
+            index += res;
+            return res;
+        };
+
+        auto preorder = [&](auto &&preorder, TreeNode *par, int depth) -> void {
+            while (index < n && level == depth) {
+                int num = nextInt();
+                auto node = new TreeNode(num);
+                if (par->left == nullptr) {
+                    par->left = node;
+                } else {
+                    par->right = node;
+                }
+                level = numDash();
+                if (level == depth + 1) {
+                    preorder(preorder, node, depth + 1);
+                }
+            }
+        };
+        preorder(preorder, virtualNode, 0);
+        return virtualNode->left;
+    }
 };
 
 int main() {
