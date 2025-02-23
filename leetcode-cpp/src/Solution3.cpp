@@ -2796,6 +2796,28 @@ public:
         preorder(preorder, virtualNode, 0);
         return virtualNode->left;
     }
+
+    TreeNode *constructFromPrePost(vector<int> &preorder, vector<int> &postorder) {
+        using viIter = decltype(preorder.begin());
+        auto f = [](auto &&f, viIter preorderBegin, viIter preorderEnd, viIter postorderBegin, viIter postorderEnd) -> TreeNode * {
+            if (preorderBegin == preorderEnd || postorderBegin == postorderEnd) return nullptr;
+            auto size = preorderEnd - preorderBegin;
+            auto rootNode = new TreeNode(*preorderBegin);
+            if (size == 1) return rootNode;
+            int leftNum = *(preorderBegin + 1);
+            int rightNum = *(postorderBegin + size - 2);
+            if (leftNum == rightNum) {
+                rootNode->left = f(f, preorderBegin + 1, preorderEnd, postorderBegin, postorderEnd - 1);
+            } else {
+                auto newPostorderEnd = std::find(postorderBegin, postorderEnd, leftNum);
+                auto newPreorderEnd = std::find(preorderBegin, preorderEnd, rightNum);
+                rootNode->left = f(f, preorderBegin + 1, newPreorderEnd, postorderBegin, newPostorderEnd + 1);
+                rootNode->right = f(f, newPreorderEnd, preorderEnd, newPostorderEnd + 1, postorderEnd);
+            }
+            return rootNode;
+        };
+        return f(f, preorder.begin(), preorder.end(), postorder.begin(), postorder.end());
+    }
 };
 
 int main() {
