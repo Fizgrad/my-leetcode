@@ -12,8 +12,10 @@
 #include <functional>
 #include <iostream>
 #include <iterator>
+#include <limits>
 #include <map>
 #include <numeric>
+#include <ostream>
 #include <queue>
 #include <ranges>
 #include <regex>
@@ -2817,6 +2819,57 @@ public:
             return rootNode;
         };
         return f(f, preorder.begin(), preorder.end(), postorder.begin(), postorder.end());
+    }
+
+    int mostProfitablePath(vector<vector<int>> &edges, int bob, vector<int> &amount) {
+        int n = edges.size() + 1;
+        vector<vector<int>> adjacentList(n);
+        vector<vector<int>> treeNext(n);
+        vector<bool> visited(n, false);
+        for (auto &i: edges) {
+            adjacentList[i[0]].emplace_back(i[1]);
+            adjacentList[i[1]].emplace_back(i[0]);
+        }
+        vector<int> bobPath;
+        auto constructTree = [&](auto &&constructTree, int node) -> bool {
+            bool flag = false;
+            for (auto next: adjacentList[node]) {
+                if (visited[next]) continue;
+                visited[next] = true;
+                treeNext[node].emplace_back(next);
+                flag = constructTree(constructTree, next) || flag;// note: short circuit!
+            }
+            flag = (node == bob || flag);
+            if (flag)
+                bobPath.emplace_back(node);
+            return flag;
+        };
+        visited[0] = true;
+        constructTree(constructTree, 0);
+
+        auto bfs = [&](auto &&bfs, int time, int alice) -> int {
+            if (treeNext[alice].empty()) return amount[alice];
+            int res = std::numeric_limits<int>::min();
+            if (time >= bobPath.size()) {
+                for (auto next: treeNext[alice]) {
+                    res = max(res, amount[alice] + bfs(bfs, time + 1, next));
+                }
+            } else {
+                int bob = bobPath[time];
+                auto back = amount[bob];
+                if (alice == bob) {
+                    amount[alice] = (amount[alice] >> 1);
+                } else {
+                    amount[bob] = 0;
+                }
+                for (auto next: treeNext[alice]) {
+                    res = max(res, amount[alice] + bfs(bfs, time + 1, next));
+                }
+                amount[bob] = back;
+            }
+            return res;
+        };
+        return bfs(bfs, 0, 0);
     }
 };
 
