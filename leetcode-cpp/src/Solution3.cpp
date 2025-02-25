@@ -2871,6 +2871,26 @@ public:
         };
         return bfs(bfs, 0, 0);
     }
+
+    int numOfSubarrays(vector<int> &arr) {
+        int n = arr.size();
+        int prefixSum = 0;
+        int res = 0;
+        constexpr int MOD = 1e9 + 7;
+        long long odd = 0;
+        long long even = 1;
+        for (int i = 0; i < n; ++i) {
+            prefixSum += arr[i];
+            if (prefixSum & 1) {
+                res = (res + even) % MOD;
+                ++odd;
+            } else {
+                res = (res + odd) % MOD;
+                ++even;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
