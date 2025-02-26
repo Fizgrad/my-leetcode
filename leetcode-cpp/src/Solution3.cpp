@@ -8,6 +8,7 @@
 #include <climits>
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <deque>
 #include <functional>
 #include <iostream>
@@ -2888,6 +2889,23 @@ public:
                 res = (res + odd) % MOD;
                 ++even;
             }
+        }
+        return res;
+    }
+
+    int maxAbsoluteSum(vector<int> &nums) {
+        int n = nums.size();
+        int minPrefixSum = std::numeric_limits<int>::max();
+        int maxPrefixSum = std::numeric_limits<int>::min();
+        int res = 0;
+        int prefixSum = 0;
+        for (auto i: nums) {
+            prefixSum += i;
+            res = std::max(res, std::abs(prefixSum));
+            minPrefixSum = std::min(minPrefixSum, prefixSum);
+            maxPrefixSum = std::max(maxPrefixSum, prefixSum);
+            res = std::max(res, std::abs(prefixSum - maxPrefixSum));
+            res = std::max(res, std::abs(prefixSum - minPrefixSum));
         }
         return res;
     }
