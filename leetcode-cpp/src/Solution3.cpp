@@ -2909,6 +2909,23 @@ public:
         }
         return res;
     }
+
+    int lenLongestFibSubseq(vector<int> &arr) {
+        int n = arr.size();
+        int res = 0;
+        auto dfs = [&](auto &&dfs, int a, int b, int len) -> void {
+            res = max(res, len);
+            auto iter = lower_bound(arr.begin(), arr.end(), a + b);
+            if (iter == arr.end() || *iter != a + b) return;
+            dfs(dfs, b, a + b, len + 1);
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                dfs(dfs, arr[i], arr[j], 2);
+            }
+        }
+        return res >= 3 ? res : 0;
+    }
 };
 
 int main() {
