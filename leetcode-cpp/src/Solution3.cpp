@@ -2926,6 +2926,72 @@ public:
         }
         return res >= 3 ? res : 0;
     }
+
+    string shortestCommonSupersequence(string str1, string str2) {
+        int n = str1.size();
+        int m = str2.size();
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j]);
+                if (str1[i] == str2[j]) {
+                    dp[i + 1][j + 1] = max(dp[i + 1][j + 1], dp[i][j] + 1);
+                }
+            }
+        }
+        string longestCommonSubsequence;
+        int x = n;
+        int y = m;
+        while (x > 0 && y > 0) {
+            if (dp[x][y] > dp[x][y - 1] && dp[x][y] > dp[x - 1][y]) {
+                longestCommonSubsequence.push_back(str1[x - 1]);
+                --x;
+                --y;
+            } else if (dp[x][y] == dp[x][y - 1]) {
+                --y;
+            } else if (dp[x][y] == dp[x - 1][y])
+                --x;
+        }
+        string res;
+        int index1 = 0;
+        int index2 = 0;
+        int indexCommonSubsequence = longestCommonSubsequence.size() - 1;
+        while (index1 < n || index2 < m) {
+            if (indexCommonSubsequence >= 0) {
+                if (longestCommonSubsequence[indexCommonSubsequence] == str1[index1] && str1[index1] == str2[index2]) {
+                    res.push_back(str1[index1]);
+                    ++index1;
+                    ++index2;
+                    --indexCommonSubsequence;
+                } else if (longestCommonSubsequence[indexCommonSubsequence] == str1[index1]) {
+                    res.push_back(str2[index2]);
+                    ++index2;
+                } else if (longestCommonSubsequence[indexCommonSubsequence] == str2[index2]) {
+                    res.push_back(str1[index1]);
+                    ++index1;
+                } else {
+                    res.push_back(str1[index1]);
+                    res.push_back(str2[index2]);
+                    ++index1;
+                    ++index2;
+                }
+            } else {
+                if (index1 >= n) {
+                    res.push_back(str2[index2]);
+                    ++index2;
+                } else if (index2 >= m) {
+                    res.push_back(str1[index1]);
+                    ++index1;
+                } else {
+                    res.push_back(str1[index1]);
+                    res.push_back(str2[index2]);
+                    ++index1;
+                    ++index2;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
