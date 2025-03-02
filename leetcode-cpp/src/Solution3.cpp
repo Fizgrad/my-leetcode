@@ -3009,6 +3009,32 @@ public:
         }
         return nums;
     }
+
+    vector<vector<int>> mergeArrays(vector<vector<int>> &nums1, vector<vector<int>> &nums2) {
+        int index1 = 0;
+        int index2 = 0;
+        int n = nums1.size();
+        int m = nums2.size();
+        vector<vector<int>> res;
+        while (index1 < n || index2 < m) {
+            if (index1 >= n) {
+                res.push_back(nums2[index2++]);
+            } else if (index2 >= m) {
+                res.push_back(nums1[index1++]);
+            } else {
+                if (nums1[index1][0] == nums2[index2][0]) {
+                    res.push_back({nums1[index1][0], nums1[index1][1] + nums2[index2][1]});
+                    ++index1;
+                    ++index2;
+                } else if (nums1[index1][0] > nums2[index2][0]) {
+                    res.push_back(nums2[index2++]);
+                } else {
+                    res.push_back(nums1[index1++]);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
