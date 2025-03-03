@@ -3035,6 +3035,27 @@ public:
         }
         return res;
     }
+
+    vector<int> pivotArray(vector<int> &nums, int pivot) {
+        vector<vector<int>> index(3, vector<int>());
+        for (int i = 0; i < nums.size(); ++i) {
+            if (nums[i] == pivot) {
+                index[1].push_back(i);
+            } else if (nums[i] < pivot) {
+                index[0].push_back(i);
+            } else {
+                index[2].push_back(i);
+            }
+        }
+        vector<int> res;
+        res.reserve(nums.size());
+        for (auto &arr: index) {
+            for (auto i: arr) {
+                res.push_back(nums[i]);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
