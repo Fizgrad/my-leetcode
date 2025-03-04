@@ -3056,6 +3056,21 @@ public:
         }
         return res;
     }
+
+    bool checkPowersOfThree(int n) {
+        int temp = n;
+        while (temp > 1) {
+            if (temp % 3 == 0) {
+                temp /= 3;
+            } else {
+                if ((temp - 1) % 3 == 0) {
+                    temp = (temp - 1) / 3;
+                } else
+                    return false;
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
