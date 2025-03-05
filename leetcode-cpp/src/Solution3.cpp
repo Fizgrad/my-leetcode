@@ -3071,6 +3071,13 @@ public:
         }
         return true;
     }
+
+    long long coloredCells(int n) {
+        auto f = [](long long n) -> long long {
+            return n * n;
+        };
+        return f(n) + f(n - 1);
+    }
 };
 
 int main() {
