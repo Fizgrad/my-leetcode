@@ -3078,6 +3078,26 @@ public:
         };
         return f(n) + f(n - 1);
     }
+
+    vector<int> findMissingAndRepeatedValues(vector<vector<int>> &grid) {
+        int xorSum = 0;
+        int n = grid.size();
+        std::bitset<2501> visited;
+        int repeat = -1;
+        for (auto &arr: grid) {
+            for (auto i: arr) {
+                xorSum ^= i;
+                if (visited.test(i)) {
+                    repeat = i;
+                } else
+                    visited.set(i);
+            }
+        }
+        for (int i = 1; i <= n * n; ++i) {
+            xorSum ^= i;
+        }
+        return {repeat, xorSum ^ repeat};
+    }
 };
 
 int main() {
