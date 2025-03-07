@@ -3098,6 +3098,39 @@ public:
         }
         return {repeat, xorSum ^ repeat};
     }
+
+    vector<int> closestPrimes(int left, int right) {
+        constexpr int SIZE = 1e6 + 1;
+        std::bitset<SIZE> isPrime;
+        isPrime.set(1);
+        for (int i = 2; i < SIZE; ++i) {
+            if (isPrime.test(i))
+                continue;
+            for (int k = 2; k * i < SIZE; ++k) {
+                isPrime.set(k * i);
+            }
+        }
+        int res = right - left + 1;
+        vector<int> resArr = {-1, -1};
+        for (int i = left; i <= right;) {
+            int j = i + 1;
+            if (isPrime.test(i)) {
+                i = j;
+                continue;
+            }
+            for (; j <= right; ++j) {
+                if (isPrime.test(j))
+                    continue;
+                if (j - i < res) {
+                    res = min(res, j - i);
+                    resArr = {i, j};
+                }
+                break;
+            }
+            i = j;
+        }
+        return resArr;
+    }
 };
 
 int main() {
