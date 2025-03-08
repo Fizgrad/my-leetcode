@@ -3131,6 +3131,17 @@ public:
         }
         return resArr;
     }
+
+    int minimumRecolors(const string &blocks, int k) {
+        const int n = blocks.size();
+        int whiteNums = std::count(blocks.begin(), blocks.begin() + k, 'W');
+        int res = whiteNums;
+        for (int l = 0, r = k; r < n; r++, l++) {
+            whiteNums += (blocks[r] == 'W') - (blocks[l] == 'W');
+            res = min(res, whiteNums);
+        }
+        return res;
+    }
 };
 
 int main() {
