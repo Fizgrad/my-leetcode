@@ -3163,6 +3163,87 @@ public:
         }
         return res;
     }
+
+    long long countOfSubstrings(const string &word, int k) {
+        long long res = 0;
+        int n = word.size();
+        auto vowelIndex = [&](char c) {
+            switch (c) {
+                case 'a':
+                    return 1;
+                case 'e':
+                    return 2;
+                case 'i':
+                    return 3;
+                case 'o':
+                    return 4;
+                case 'u':
+                    return 5;
+                default:
+                    return 0;
+            }
+        };
+        vector<int> times(6, 0);
+        vector<vector<int>> indexTimes(n + 1, vector<int>(6, 0));
+        for (int i = 0; i < n; ++i) {
+            ++times[vowelIndex(word[i])];
+            indexTimes[i + 1] = times;
+        }
+        for (int i = 0; i < n; ++i) {
+            if (indexTimes[i + 1][0] < k) {
+                continue;
+            }
+            if (std::any_of(indexTimes[i + 1].begin() + 1, indexTimes[i + 1].end(), [](auto c) {
+                    return c < 1;
+                })) {
+                continue;
+            }
+            int left = 0;
+            int right = i + 1;
+            int exactK = -1;
+            while (left <= right) {
+                int mid = (left + right) >> 1;
+                if (indexTimes[i + 1][0] - indexTimes[mid][0] < k) {
+                    right = mid - 1;
+                } else if (indexTimes[i + 1][0] == k + indexTimes[mid][0]) {
+                    auto isOK = [&]() {
+                        for (int k = 1; k < 6; ++k) {
+                            if (indexTimes[i + 1][k] - indexTimes[mid][k] < 1)
+                                return false;
+                        }
+                        return true;
+                    };
+                    if (isOK()) {
+                        exactK = mid;
+                        left = mid + 1;
+                    } else {
+                        right = mid - 1;
+                    }
+                } else {
+                    left = mid + 1;
+                }
+            }
+            if (exactK == -1) continue;
+            else {
+                int left = 0;
+                int right = exactK + 1;
+                int beginK = exactK;
+                while (left <= right) {
+                    int mid = (left + right) >> 1;
+                    if (indexTimes[i + 1][0] - indexTimes[mid][0] < k) {
+                        right = mid - 1;
+                    } else if (indexTimes[i + 1][0] == k + indexTimes[mid][0]) {
+                        beginK = mid;
+                        right = mid - 1;
+                    } else {
+                        left = mid + 1;
+                    }
+                }
+                res += exactK - beginK + 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
