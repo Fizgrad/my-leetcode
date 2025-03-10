@@ -3142,6 +3142,27 @@ public:
         }
         return res;
     }
+
+    int numberOfAlternatingGroups(vector<int> &colors, int k) {
+        int n = colors.size();
+        int equal = 0;
+        int res = 0;
+
+        auto get = [&](int index) {
+            return colors[(index + n) % n];
+        };
+
+        for (int i = 1; i < k; ++i) {
+            if (get(i) == get(i - 1)) ++equal;
+        }
+        if (equal == 0) ++res;
+        for (int i = 1; i < n; ++i) {
+            if (get(i) == get(i - 1)) --equal;
+            if (get(i + k - 1) == get(i + k - 2)) ++equal;
+            if (equal == 0) ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
