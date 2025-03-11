@@ -3244,6 +3244,25 @@ public:
         }
         return res;
     }
+
+    int numberOfSubstrings(const string &s) {
+        int i = 0;
+        int j = 0;
+        vector<int> times(3, 0);
+        int res = 0;
+        while (j < s.size()) {
+            ++times[s[j] - 'a'];
+            while (std::all_of(times.begin(), times.end(), [](auto i) {
+                return i >= 1;
+            })) {
+                --times[s[i] - 'a'];
+                ++i;
+            }
+            res += i;
+            ++j;
+        }
+        return res;
+    }
 };
 
 int main() {
