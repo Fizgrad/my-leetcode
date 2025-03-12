@@ -3263,6 +3263,12 @@ public:
         }
         return res;
     }
+
+    int maximumCount(vector<int> &nums) {
+        return std::max(
+                std::ranges::count_if(nums, [](int x) { return x > 0; }),
+                std::ranges::count_if(nums, [](int x) { return x < 0; }));
+    }
 };
 
 int main() {
