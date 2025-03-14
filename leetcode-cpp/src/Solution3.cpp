@@ -3269,6 +3269,31 @@ public:
                 std::ranges::count_if(nums, [](int x) { return x > 0; }),
                 std::ranges::count_if(nums, [](int x) { return x < 0; }));
     }
+
+    // 3356. Zero Array Transformation II
+    // difference array
+    int minZeroArray(vector<int> &nums, vector<vector<int>> &queries) {
+        int n = nums.size();
+        vector<int> diffArray(n + 1, 0);
+        int sum = 0;
+        int queriesIndex = 0;
+        for (int i = 0; i < n; ++i) {
+            sum += diffArray[i];
+            while (nums[i] + sum > 0) {
+                if (queriesIndex >= queries.size()) return -1;
+                int left = queries[queriesIndex][0];
+                int right = queries[queriesIndex][1];
+                int value = queries[queriesIndex][2];
+                diffArray[left] -= value;
+                diffArray[right + 1] += value;
+                if (i >= left && i <= right) {
+                    sum -= value;
+                }
+                ++queriesIndex;
+            }
+        }
+        return queriesIndex;
+    }
 };
 
 int main() {
