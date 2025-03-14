@@ -3294,6 +3294,31 @@ public:
         }
         return queriesIndex;
     }
+
+    // 2226. Maximum Candies Allocated to K Children
+    int maximumCandies(vector<int> &candies, long long k) {
+        // add suffix 'l' to std::accumulate's parameter 'init'
+        long long maxNum = std::accumulate(candies.begin(), candies.end(), 0l) / k;
+        long long minNum = 0;
+        int res = 0;
+        while (maxNum >= minNum) {
+            long long mid = (maxNum + minNum) >> 1;
+            if ([&]() -> bool {
+                    if (mid == 0) return true;
+                    long long remains = k;
+                    for (auto i: candies) {
+                        remains -= (i / mid);
+                        if (remains <= 0) return true;
+                    }
+                    return false;
+                }()) {
+                res = mid;
+                minNum = mid + 1;
+            } else
+                maxNum = mid - 1;
+        }
+        return res;
+    }
 };
 
 int main() {
