@@ -3319,6 +3319,32 @@ public:
         }
         return res;
     }
+
+    int minCapability(vector<int> &nums, int k) {
+        int n = nums.size();
+        int res = -1;
+        int right = std::ranges::max(nums);
+        int left = std::ranges::min(nums);
+        while (left <= right) {
+            int mid = (right + left) >> 1;
+            if ([&]() -> bool {
+                    int robbed = 0;
+                    for (int i = 0; i < n; ++i) {
+                        if (nums[i] <= mid) {
+                            ++robbed;
+                            ++i;
+                        }
+                    }
+                    return robbed >= k ? true : false;
+                }()) {
+                res = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
