@@ -3367,6 +3367,15 @@ public:
         }
         return res;
     }
+
+    bool divideArray(vector<int> &nums) {
+        constexpr int SIZE = 500 + 5;
+        vector<bool> times(SIZE, false);
+        for (auto i: nums) {
+            times[i] = !times[i];
+        }
+        return !std::ranges::any_of(times, [](auto i) -> bool { return i; });
+    }
 };
 
 int main() {
