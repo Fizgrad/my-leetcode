@@ -3376,6 +3376,23 @@ public:
         }
         return !std::ranges::any_of(times, [](auto i) -> bool { return i; });
     }
+
+    int longestNiceSubarray(vector<int> &nums) {
+        int n = nums.size();
+        int res = 1;
+        int andSum = 0;
+        int i = 0;
+        int j = 0;
+        while (j < n) {
+            while (nums[j] & andSum) {
+                andSum = andSum & (~nums[i++]);
+            }
+            andSum |= nums[j];
+            ++j;
+            res = max(res, j - i);
+        }
+        return res;
+    }
 };
 
 int main() {
