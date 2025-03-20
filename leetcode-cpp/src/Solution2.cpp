@@ -3842,6 +3842,64 @@ public:
         }
         return res;
     }
+
+    vector<int> minimumCost(int n, vector<vector<int>> &edges, vector<vector<int>> &queries) {
+        const int SIZE = n + 1;
+        vector<int> parents(SIZE, 0);
+        vector<int> sizes(SIZE, 1);
+        vector<int> andSums(SIZE, std::numeric_limits<int>::max());
+        std::iota(parents.begin(), parents.end(), 0);
+        auto uf_find = [&](int node) {
+            int tmp = node;
+            int parent = parents[node];
+            while (parent != node) {
+                node = parent;
+                parent = parents[parent];
+            }
+            // simplify the query path
+            while (parent != tmp) {
+                int new_temp = parents[tmp];
+                parents[tmp] = parent;
+                tmp = new_temp;
+            }
+            return parent;
+        };
+        auto uf_union = [&](int a, int b) {
+            int a_p = uf_find(a);
+            int b_p = uf_find(b);
+            // note if a and b are already in the same group
+            if (a_p == b_p)
+                return;
+            if (sizes[a] > sizes[b]) {
+                parents[b_p] = a_p;
+                sizes[a_p] += sizes[b_p];
+            } else {
+                parents[a_p] = b_p;
+                sizes[b_p] += sizes[a_p];
+            }
+        };
+        for (auto &edge: edges) {
+            int a = edge[0];
+            int b = edge[1];
+            int w = edge[2];
+            int a_andSum = andSums[uf_find(a)];
+            int b_andSum = andSums[uf_find(b)];
+            uf_union(a, b);
+            andSums[uf_find(a)] &= w & a_andSum & b_andSum;
+        }
+        vector<int> res(queries.size(), -1);
+        for (int i = 0; i < queries.size(); ++i) {
+            auto &query = queries[i];
+            int a = query[0];
+            int b = query[1];
+            if (uf_find(a) != uf_find(b))
+                continue;
+            else {
+                res[i] = andSums[uf_find(a)];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
