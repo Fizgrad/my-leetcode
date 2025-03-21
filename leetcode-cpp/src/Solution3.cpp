@@ -3393,6 +3393,31 @@ public:
         }
         return res;
     }
+
+    vector<string> findAllRecipes(vector<string> &recipes, vector<vector<string>> &ingredients, vector<string> &supplies) {
+        int n = recipes.size();
+        vector<string> res;
+        vector<int> indegree(n, 0);
+        unordered_map<string, vector<int>> next;
+        for (int i = 0; i < n; ++i) {
+            indegree[i] = ingredients[i].size();
+            for (auto &s: ingredients[i]) {
+                next[s].emplace_back(i);
+            }
+        }
+        while (!supplies.empty()) {
+            auto i = supplies.back();
+            supplies.pop_back();
+            for (auto &k: next[i]) {
+                --indegree[k];
+                if (indegree[k] == 0) {
+                    supplies.emplace_back(recipes[k]);
+                    res.emplace_back(recipes[k]);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
