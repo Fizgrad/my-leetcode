@@ -3418,6 +3418,47 @@ public:
         }
         return res;
     }
+
+    int countCompleteComponents(int n, vector<vector<int>> &edges) {
+        vector<int> parents(n, 0);
+        std::iota(parents.begin(), parents.end(), 0);
+        auto uf_find = [&](int node) {
+            int iter = node;
+            while (iter != parents[iter]) {
+                iter = parents[iter];
+            }
+            while (node != iter) {
+                auto next = parents[node];
+                parents[node] = iter;
+                node = next;
+            }
+            return iter;
+        };
+
+        auto uf_union = [&](int a, int b) {
+            int pa = uf_find(a);
+            int pb = uf_find(b);
+            parents[pb] = pa;
+        };
+
+        for (auto &i: edges) {
+            uf_union(i[0], i[1]);
+        }
+
+        std::unordered_map<int, int> vertexNum;
+        std::unordered_map<int, int> edgeNum;
+        for (int i = 0; i < n; ++i) {
+            ++vertexNum[uf_find(i)];
+        }
+        for (auto &i: edges) {
+            ++edgeNum[uf_find(i[0])];
+        }
+        int res = 0;
+        for (auto &i: vertexNum) {
+            if ((i.second * (i.second - 1) >> 1) == edgeNum[i.first]) ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
