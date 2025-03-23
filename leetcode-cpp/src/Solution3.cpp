@@ -3459,6 +3459,38 @@ public:
         }
         return res;
     }
+
+    int countPaths(int n, vector<vector<int>> &roads) {
+        using TimeNode = pair<long long, int>;
+        priority_queue<TimeNode, deque<TimeNode>, greater<>> pq;
+        vector<vector<TimeNode>> graph(n);
+        vector<int> visitedNums(n, 0);
+        vector<long long> visitedTimes(n, std::numeric_limits<long long>::max());
+        for (auto &i: roads) {
+            graph[i[0]].emplace_back(i[2], i[1]);
+            graph[i[1]].emplace_back(i[2], i[0]);
+        }
+        pq.emplace(0, 0);
+        visitedNums[0] = 1;
+        visitedTimes[0] = 0;
+        constexpr int MOD = 1e9 + 7;
+        while (pq.size()) {
+            auto top = pq.top();
+            pq.pop();
+            if (top.first > visitedTimes[top.second]) continue;
+            for (auto &i: graph[top.second]) {
+                auto newTime = i.first + top.first;
+                if (newTime < visitedTimes[i.second]) {
+                    pq.emplace(newTime, i.second);
+                    visitedNums[i.second] = visitedNums[top.second];
+                    visitedTimes[i.second] = newTime;
+                } else if (newTime == visitedTimes[i.second]) {
+                    visitedNums[i.second] = (visitedNums[i.second] + visitedNums[top.second]) % MOD;
+                }
+            }
+        }
+        return visitedNums[n - 1];
+    }
 };
 
 int main() {
