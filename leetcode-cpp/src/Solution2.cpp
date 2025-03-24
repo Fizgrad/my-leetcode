@@ -3900,6 +3900,24 @@ public:
         }
         return res;
     }
+
+    int countDays(int days, vector<vector<int>> &meetings) {
+        std::sort(meetings.begin(), meetings.end(), [](const auto &a, const auto &b) {
+            return a[0] < b[0] || (a[0] == b[0] && a[1] < b[1]);
+        });
+        int res = 0;
+        int current = 1;
+        for (auto &i: meetings) {
+            if (i[0] > current) {
+                res += i[0] - current;
+                current = i[1] + 1;
+            } else {
+                current = max(current, i[1] + 1);
+            }
+        }
+        res += days - current + 1;
+        return res;
+    }
 };
 
 int main() {
