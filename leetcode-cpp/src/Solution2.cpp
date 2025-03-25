@@ -3918,6 +3918,38 @@ public:
         res += days - current + 1;
         return res;
     }
+
+    bool checkValidCuts(int n, vector<vector<int>> &rectangles) {
+        std::sort(rectangles.begin(), rectangles.end(), [](const auto &a, const auto &b) {
+            return a[0] < b[0] || (a[0] == b[0] && a[2] < b[2]);
+        });
+        int gap = 0;
+        int current = rectangles[0][2];
+        for (int i = 1; i < rectangles.size(); ++i) {
+            if (rectangles[i][0] >= current) {
+                ++gap;
+                current = rectangles[i][2];
+                if (gap >= 2) return true;
+            } else {
+                current = max(rectangles[i][2], current);
+            }
+        }
+        std::sort(rectangles.begin(), rectangles.end(), [](const auto &a, const auto &b) {
+            return a[1] < b[1] || (a[1] == b[1] && a[3] < b[3]);
+        });
+        gap = 0;
+        current = rectangles[0][3];
+        for (int i = 1; i < rectangles.size(); ++i) {
+            if (rectangles[i][1] >= current) {
+                ++gap;
+                current = rectangles[i][3];
+                if (gap >= 2) return true;
+            } else {
+                current = max(rectangles[i][3], current);
+            }
+        }
+        return false;
+    }
 };
 
 int main() {
