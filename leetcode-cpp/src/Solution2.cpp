@@ -3950,6 +3950,32 @@ public:
         }
         return false;
     }
+
+    int minOperations(vector<vector<int>> &grid, int x) {
+        int reminder = grid.front().front() % x;
+        int m = grid.size();
+        int n = grid.front().size();
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if ((grid[i][j] - reminder) % x != 0)
+                    return -1;
+                grid[i][j] = (grid[i][j] - reminder) / x;
+            }
+        }
+        vector<int> nums;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                nums.emplace_back(grid[i][j]);
+            }
+        }
+        std::sort(nums.begin(), nums.end());
+        int mid = nums[m * n / 2];
+        int res = 0;
+        for (auto i: nums) {
+            res += std::abs(i - mid);
+        }
+        return res;
+    }
 };
 
 int main() {
