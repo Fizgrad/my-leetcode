@@ -3995,7 +3995,7 @@ public:
         int count = std::count(nums.begin(), nums.end(), num);
         for (int i = 0; i + 1 < n; ++i) {
             times += (nums[i] == num);
-            if ((i + 1) < 2 * times && n - (i+1) < (count - times) * 2){
+            if ((i + 1) < 2 * times && n - (i + 1) < (count - times) * 2) {
                 return i;
             }
         }
