@@ -20,6 +20,7 @@
 #include <map>
 #include <new>
 #include <numeric>
+#include <pthread.h>
 #include <queue>
 #include <ratio>
 #include <regex>
@@ -4000,6 +4001,51 @@ public:
             }
         }
         return -1;
+    }
+
+    vector<int> maxPoints(vector<vector<int>> &grid, vector<int> &queries) {
+        int m = grid.size();
+        int n = grid.front().size();
+        map<int, int> res;
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        int size = 0;
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>> pq;
+        stack<pair<int, int>> next;
+        constexpr int dx[4] = {0, 0, 1, -1};
+        constexpr int dy[4] = {1, -1, 0, 0};
+        pq.emplace(make_pair(grid[0][0], make_pair(0, 0)));
+        visited[0][0] = true;
+        res[0] = 0;
+        int now = 0;
+        while (!pq.empty()) {
+            auto [point, coordinate] = pq.top();
+            pq.pop();
+            now = point;
+            next.emplace(coordinate);
+            while (!next.empty()) {
+                auto [x, y] = next.top();
+                next.pop();
+                ++size;
+                for (int i = 0; i < 4; ++i) {
+                    int xx = dx[i] + x;
+                    int yy = dy[i] + y;
+                    if (xx < 0 || xx >= m || yy < 0 || yy >= n) continue;
+                    if (visited[xx][yy]) continue;
+                    visited[xx][yy] = true;
+                    if (grid[xx][yy] > point)
+                        pq.emplace(make_pair(grid[xx][yy], make_pair(xx, yy)));
+                    else {
+                        next.push(make_pair(xx, yy));
+                    }
+                }
+            }
+            res[now] = size;
+        }
+        vector<int> ans(queries.size(), 0);
+        for (int i = 0; i < queries.size(); ++i) {
+            ans[i] = std::prev(res.lower_bound(queries[i]))->second;
+        }
+        return ans;
     }
 };
 
