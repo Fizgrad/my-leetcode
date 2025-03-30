@@ -3491,6 +3491,27 @@ public:
         }
         return visitedNums[n - 1];
     }
+
+    vector<int> partitionLabels(const string &s) {
+        constexpr int SIZE = 'z' - 'a' + 1;
+        vector<int> last(SIZE, std::numeric_limits<int>::min());
+        for (int i = 0; i < s.size(); ++i) {
+            last[s[i] - 'a'] = max(last[s[i] - 'a'], i);
+        }
+        vector<int> res;
+        int end = 0;
+        int len = 0;
+        for (int i = 0; i < s.size(); ++i) {
+            if (i > end) {
+                res.push_back(len);
+                len = 0;
+            }
+            end = max(end, last[s[i] - 'a']);
+            ++len;
+        }
+        res.push_back(len);
+        return res;
+    }
 };
 
 int main() {
