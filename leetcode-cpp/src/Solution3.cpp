@@ -3512,6 +3512,20 @@ public:
         res.push_back(len);
         return res;
     }
+
+    long long putMarbles(vector<int> &weights, int k) {
+        int n = weights.size();
+        vector<long long> splits;
+        for (int i = 1; i < weights.size(); ++i) {
+            splits.emplace_back(weights[i - 1] + weights[i]);
+        }
+        std::sort(splits.begin(), splits.end());
+        long long res = 0;
+        for (int i = 0; i < k - 1; ++i) {
+            res += splits[splits.size() - 1 - i] - splits[i];
+        }
+        return res;
+    }
 };
 
 int main() {
