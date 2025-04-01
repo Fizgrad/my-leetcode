@@ -3526,6 +3526,17 @@ public:
         }
         return res;
     }
+
+    long long mostPoints(vector<vector<int>> &questions) {
+        vector<long long> dp(questions.size(), -1);
+        for (int i = questions.size() - 1; i >= 0; --i) {
+            dp[i] = questions[i][0];
+            if (i + questions[i][1] + 1 < questions.size())
+                dp[i] = max(dp[i], dp[i + questions[i][1] + 1] + questions[i][0]);
+            if (i + 1 < questions.size()) dp[i] = max(dp[i], dp[i + 1]);
+        }
+        return dp[0];
+    }
 };
 
 int main() {
