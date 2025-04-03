@@ -4872,6 +4872,19 @@ public:
         }
         return res == n + 1 ? -1 : res;
     }
+
+    long long maximumTripletValue(vector<int> &nums) {
+        long long res = 0;
+        long long maxAB = 0;
+        long long maxA = std::numeric_limits<int>::min();
+        int n = nums.size();
+        for (int i = 0; i < n; ++i) {
+            res = max(res, maxAB * nums[i]);
+            maxAB = max(maxAB, maxA - nums[i]);
+            maxA = max(maxA, static_cast<long long>(nums[i]));
+        }
+        return res;
+    }
 };
 
 int main() {
