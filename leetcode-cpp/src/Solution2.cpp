@@ -4047,6 +4047,39 @@ public:
         }
         return ans;
     }
+
+    TreeNode *lcaDeepestLeaves(TreeNode *root) {
+        int maxDepth = 0;
+        int num = 0;
+        auto dfs = [&](auto &&dfs, TreeNode *node, int depth) {
+            if (node == nullptr) return;
+            if (node->left) dfs(dfs, node->left, depth + 1);
+            if (node->right) dfs(dfs, node->right, depth + 1);
+            if (maxDepth == depth) {
+                ++num;
+            } else if (depth > maxDepth) {
+                maxDepth = depth;
+                num = 1;
+            }
+        };
+        dfs(dfs, root, 0);
+        TreeNode *res = nullptr;
+        auto f = [&](auto &&f, TreeNode *node, int depth) -> int {
+            if (node == nullptr) return 0;
+            int sum = 0;
+            if (depth == maxDepth) {
+                sum = 1;
+            } else {
+                sum = f(f, node->left, depth + 1) + f(f, node->right, depth + 1);
+            }
+            if (res == nullptr && sum == num) {
+                res = node;
+            }
+            return sum;
+        };
+        f(f, root, 0);
+        return res;
+    }
 };
 
 int main() {
