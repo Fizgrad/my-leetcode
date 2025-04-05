@@ -4080,6 +4080,24 @@ public:
         f(f, root, 0);
         return res;
     }
+
+    int subsetXORSum(vector<int> &nums) {
+        int sum = 0;
+        int xorSum = 0;
+        vector<int> xorSums;
+        vector<int> next;
+        xorSums.emplace_back(0);
+        for (int i = 0; i < nums.size(); ++i) {
+            for (auto xorSum: xorSums) {
+                next.push_back(xorSum);
+                next.push_back(xorSum ^ nums[i]);
+                sum += xorSum ^ nums[i];
+            }
+            next.swap(xorSums);
+            next.clear();
+        }
+        return sum;
+    }
 };
 
 int main() {
