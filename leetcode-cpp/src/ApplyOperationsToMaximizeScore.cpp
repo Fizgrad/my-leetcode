@@ -1,6 +1,8 @@
 #include <array>
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <stack>
 using namespace std;
 
 constexpr int MAX_N = 1e5 + 5;
