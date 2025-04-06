@@ -4098,6 +4098,32 @@ public:
         }
         return sum;
     }
+
+    vector<int> largestDivisibleSubset(vector<int> &nums) {
+        std::sort(nums.begin(), nums.end());
+        vector<int> dp(nums.size(), 1);
+        vector<int> prev(nums.size(), -1);
+        vector<int> res;
+        int maxI = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (nums[i] % nums[j] == 0) {
+                    if (dp[i] < dp[j] + 1) {
+                        prev[i] = j;
+                        dp[i] = dp[j] + 1;
+                    }
+                }
+            }
+            if (dp[i] > dp[maxI]) {
+                maxI = i;
+            }
+        }
+        do {
+            res.push_back(nums[maxI]);
+            maxI = prev[maxI];
+        } while (maxI != -1);
+        return res;
+    }
 };
 
 int main() {
