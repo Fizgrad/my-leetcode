@@ -4124,6 +4124,21 @@ public:
         } while (maxI != -1);
         return res;
     }
+
+    bool canPartition(vector<int> &nums) {
+        int sum = std::accumulate(nums.begin(), nums.end(), 0);
+        if (sum % 2 != 0) return false;
+        int targetSum = (sum >> 1);
+        vector<bool> dp(targetSum + 1, false);
+        dp[0] = true;
+        for (int num: nums) {
+            for (int currSum = targetSum; currSum >= num; --currSum) {
+                dp[currSum] = dp[currSum] || dp[currSum - num];
+                if (dp[targetSum]) return true;
+            }
+        }
+        return dp[targetSum];
+    }
 };
 
 int main() {
