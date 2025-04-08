@@ -4139,6 +4139,22 @@ public:
         }
         return dp[targetSum];
     }
+
+    int minimumOperations(vector<int> &nums) {
+        unordered_set<int> sets;
+        int last = -1;
+        for (int i = nums.size() - 1; i >= 0; --i) {
+            if (sets.contains(nums[i])) {
+                last = i;
+                break;
+            }
+            sets.emplace(nums[i]);
+        }
+        if (last == -1) {
+            return 0;
+        } else
+            return (last + 3) / 3;
+    }
 };
 
 int main() {
