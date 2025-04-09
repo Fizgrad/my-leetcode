@@ -4155,6 +4155,15 @@ public:
         } else
             return (last + 3) / 3;
     }
+
+    int minOperations(vector<int> &nums, int k) {
+        if (std::any_of(nums.begin(), nums.end(), [&](auto i) {
+                return i < k;
+            })) return -1;
+        unordered_set<int> nums_set(nums.begin(), nums.end());
+        nums_set.emplace(k);
+        return nums_set.size() - 1;
+    }
 };
 
 int main() {
