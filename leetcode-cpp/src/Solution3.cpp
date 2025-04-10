@@ -3550,6 +3550,72 @@ public:
         }
         return res;
     }
+
+    long long numberOfPowerfulInt(long long start, long long finish, long long limit, const string &s) {
+        long long s_num = stoll(s);
+        if (finish < s_num) return 0;
+        long long start_biased = std::max(0ll, start - s_num);
+        long long finish_biased = std::max(0ll, finish - s_num);
+        int s_len = s.size();
+        auto pow = [](long long a, long long b) {
+            long long res = 1;
+            if (b & 1) {
+                res *= a;
+            }
+            b >>= 1;
+            while (b >= 1) {
+                a *= a;
+                if (b & 1) {
+                    res *= a;
+                }
+                b >>= 1;
+            }
+            return res;
+        };
+        long long factor = pow(10, s_len);
+        long long finish_trimed = finish_biased / factor;
+        long long start_trimed = (start_biased + factor - 1) / factor;
+        if (start_trimed > finish_trimed) return 0;
+        auto count = [&](auto &&self, long long x) -> long long {
+            if (x < 0) return 0;
+            vector<int> digits;
+            {
+                long long tmp = x;
+                if (tmp == 0) {
+                    digits.push_back(0);
+                } else {
+                    while (tmp > 0) {
+                        digits.push_back(tmp % 10);
+                        tmp /= 10;
+                    }
+                    reverse(digits.begin(), digits.end());
+                }
+            }
+
+            vector<vector<long long>> dp(digits.size(), vector<long long>(2, -1));
+            function<long long(int, bool)> dfs = [&](int pos, bool isTight) -> long long {
+                if (pos == (int) digits.size()) {
+                    return 1LL;
+                }
+                if (dp[pos][isTight ? 1 : 0] != -1) {
+                    return dp[pos][isTight ? 1 : 0];
+                }
+                int up = isTight ? digits[pos] : limit;
+
+                long long res = 0;
+                for (int dig = 0; dig <= up; dig++) {
+                    bool nextTight = (isTight && (dig == up));
+                    if (dig <= limit) {
+                        res += dfs(pos + 1, nextTight);
+                    }
+                }
+                dp[pos][isTight ? 1 : 0] = res;
+                return res;
+            };
+            return dfs(0, true);
+        };
+        return count(count, finish_trimed) - (start_trimed > 0 ? count(count, start_trimed - 1) : 0);
+    }
 };
 
 int main() {
