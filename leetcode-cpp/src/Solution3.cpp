@@ -3616,6 +3616,25 @@ public:
         };
         return count(count, finish_trimed) - (start_trimed > 0 ? count(count, start_trimed - 1) : 0);
     }
+
+    int countSymmetricIntegers(int low, int high) {
+        int res = 0;
+        if (low <= 99) {
+            for (int i = max(10, low); i <= min(high, 99); ++i) {
+                if (i / 10 == i % 10) ++res;
+            }
+        }
+        if (high >= 1000) {
+            vector<int> sum_of_digits(100, 0);
+            for (int i = 0; i < sum_of_digits.size(); ++i) {
+                sum_of_digits[i] = i / 10 + i % 10;
+            }
+            for (int i = max(1000, low); i <= min(9999, high); ++i) {
+                if (sum_of_digits[i / 100] == sum_of_digits[i % 100]) ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
