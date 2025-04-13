@@ -4885,6 +4885,29 @@ public:
         }
         return res;
     }
+
+    int countGoodNumbers(long long n) {
+        int prime_num = 4;
+        int even_num = 5;
+        constexpr int MOD = 1e9 + 7;
+        auto fast_pow = [&](long long a, long long b) -> long long {
+            long long res = 1;
+            while (b >= 1) {
+                if (b % 2 == 1) {
+                    res = res * a % MOD;
+                }
+                b >>= 1;
+                a = a * a % MOD;
+            }
+            return res;
+        };
+        int res = 1;
+        long long odds = (n + 1) >> 1;
+        long long evens = (n) >> 1;
+        res = res * fast_pow(5, odds) % MOD;
+        res = res * fast_pow(4, evens) % MOD;
+        return res;
+    }
 };
 
 int main() {
