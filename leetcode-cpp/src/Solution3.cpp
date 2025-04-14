@@ -3635,6 +3635,27 @@ public:
         }
         return res;
     }
+
+    int countGoodTriplets(vector<int> &arr, int a, int b, int c) {
+        int res = 0;
+        vector<int> indices;
+        for (int i = 0; i < arr.size(); ++i) {
+            indices.clear();
+            for (int k = i + 1; k < arr.size(); ++k) {
+                int diff = std::abs(arr[k] - arr[i]);
+                if (diff <= c) {
+                    for (auto j: indices) {
+                        if (std::abs(arr[j] - arr[k]) <= b)
+                            ++res;
+                    }
+                }
+                if (diff <= a) {
+                    indices.emplace_back(k);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
