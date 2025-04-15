@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bits/ranges_algobase.h>
 #include <bitset>
 #include <cctype>
 #include <climits>
@@ -4906,6 +4907,53 @@ public:
         long long evens = (n) >> 1;
         res = res * fast_pow(5, odds) % MOD;
         res = res * fast_pow(4, evens) % MOD;
+        return res;
+    }
+
+    long long goodTriplets(vector<int> &nums1, vector<int> &nums2) {
+        long long res = 0;
+        int n = nums1.size();
+        vector<int> indices_nums2(n, 0);
+        for (int i = 0; i < n; ++i) {
+            indices_nums2[nums2[i]] = i;
+        }
+        for (int i = 0; i < n; ++i) {
+            nums1[i] = indices_nums2[nums1[i]];
+        }
+        vector<int> left(n, 0);
+        vector<int> right(n, 0);
+
+        vector<int> tree(n + 1, 0);
+        auto update = [&](int idx, int val) {
+            while (idx < tree.size()) {
+                tree[idx] += val;
+                idx += idx & -idx;
+            }
+        };
+
+        auto query = [&](int idx) {
+            int sum = 0;
+            while (idx > 0) {
+                sum += tree[idx];
+                idx -= idx & -idx;
+            }
+            return sum;
+        };
+
+        for (int i = 0; i < n; ++i) {
+            left[i] = query(nums1[i]);
+            update(nums1[i] + 1, 1);
+        }
+
+        std::ranges::fill(tree, 0);
+        for (int i = n - 1; i >= 0; --i) {
+            right[i] = query(n) - query(nums1[i]);
+            update(nums1[i] + 1, 1);
+        }
+
+        for (int i = 0; i < n; ++i) {
+            res += static_cast<long long>(left[i]) * right[i];
+        }
         return res;
     }
 };
