@@ -14,6 +14,8 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused")
 endif()
 
+find_package(TBB REQUIRED)  # 关键：查找 TBB 库
+
 # 自动为 src 目录中的每个 cpp 文件创建一个可执行目标
 file(GLOB CPP_SOURCES src/*.cpp)
 foreach(CPP_SOURCE ${CPP_SOURCES})
@@ -21,4 +23,5 @@ foreach(CPP_SOURCE ${CPP_SOURCES})
     get_filename_component(SOURCE_NAME ${CPP_SOURCE} NAME_WE)
     # 添加可执行文件
     add_executable(${SOURCE_NAME} ${CPP_SOURCE})
+    target_link_libraries(${SOURCE_NAME}  PRIVATE TBB::tbb)  # 关键：链接 TBB
 endforeach()
