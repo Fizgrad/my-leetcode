@@ -3656,6 +3656,20 @@ public:
         }
         return res;
     }
+
+    long long countGood(vector<int> &nums, int k) {
+        constexpr int N = 1e5 + 1;
+        int n = nums.size();
+        long long res = 0;
+        int left = 0;
+        unordered_map<int, int> times;
+        for (int i = 0; i < n; ++i) {
+            k -= times[nums[i]]++;
+            while (k <= 0) { k += --times[nums[left++]]; }
+            res += left;
+        }
+        return res;
+    }
 };
 
 int main() {
