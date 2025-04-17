@@ -3670,6 +3670,20 @@ public:
         }
         return res;
     }
+
+    int countPairs(vector<int> &nums, int k) {
+        int n = nums.size();
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (nums[i] != nums[j])
+                    continue;
+                if (i * j % k == 0)
+                    ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
