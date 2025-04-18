@@ -3684,6 +3684,29 @@ public:
         }
         return res;
     }
+
+    string countAndSay(int n) {
+        string res = "1";
+        for (int i = 1; i < n; ++i) {
+            char prev = res[0];
+            string temp;
+            int times = 1;
+            for (int k = 1; k < res.size(); ++k) {
+                if (res[k] == prev) {
+                    ++times;
+                } else {
+                    temp.push_back('0' + times);
+                    temp.push_back(prev);
+                    times = 1;
+                    prev = res[k];
+                }
+            }
+            temp.push_back('0' + times);
+            temp.push_back(prev);
+            res.swap(temp);
+        }
+        return res;
+    }
 };
 
 int main() {
