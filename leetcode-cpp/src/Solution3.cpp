@@ -3707,6 +3707,20 @@ public:
         }
         return res;
     }
+
+    long long countFairPairs(vector<int> &nums, int lower, int upper) {
+        int n = nums.size();
+        std::sort(nums.begin(), nums.end());
+        long long res = 0;
+        for (int i = 1; i < n; ++i) {
+            auto _begin = nums.begin();
+            auto _end = nums.begin() + i;
+            auto lower_iter = std::lower_bound(_begin, _end, lower - nums[i]);
+            auto upper_iter = std::upper_bound(_begin, _end, upper - nums[i]);
+            res += upper_iter - lower_iter;
+        }
+        return res;
+    }
 };
 
 int main() {
