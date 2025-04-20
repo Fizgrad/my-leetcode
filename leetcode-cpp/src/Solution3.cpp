@@ -3721,6 +3721,20 @@ public:
         }
         return res;
     }
+
+    int numRabbits(vector<int> &answers) {
+        unordered_map<int, int> remains;
+        int res = 0;
+        for (auto i: answers) {
+            if (remains[i] == 0) {
+                res += i + 1;
+                remains[i] = i;
+            } else {
+                --remains[i];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
