@@ -4164,6 +4164,20 @@ public:
         nums_set.emplace(k);
         return nums_set.size() - 1;
     }
+
+    int numberOfArrays(vector<int> &differences, int lower, int upper) {
+        int n = differences.size();
+        int min_delta = 0;
+        int max_delta = 0;
+        int delta = 0;
+        for (int i = 0; i < n; ++i) {
+            delta += differences[i];
+            min_delta = min(delta, min_delta);
+            max_delta = max(delta, max_delta);
+            if (upper - max_delta - lower + min_delta + 1 <= 0) return 0;
+        }
+        return upper - max_delta - lower + min_delta + 1;
+    }
 };
 
 int main() {
