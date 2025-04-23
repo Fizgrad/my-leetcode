@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bits/ranges_algo.h>
 #include <bitset>
 #include <cctype>
 #include <climits>
@@ -3731,6 +3732,32 @@ public:
                 remains[i] = i;
             } else {
                 --remains[i];
+            }
+        }
+        return res;
+    }
+
+    int countLargestGroup(int n) {
+        vector<int> sizes(50, 0);
+        for (int i = 1; i <= n; ++i) {
+            if (i <= 9) {
+                sizes[i]++;
+            } else {
+                int sum = 0;
+                int iter = i;
+                while (iter >= 1) {
+                    sum += iter % 10;
+                    iter /= 10;
+                }
+                sizes[sum]++;
+            }
+        }
+        std::ranges::sort(sizes);
+        int max = sizes.back();
+        int res = 0;
+        for (int i = sizes.size() - 1; i >= 0; --i) {
+            if (sizes[i] == max) {
+                ++res;
             }
         }
         return res;
