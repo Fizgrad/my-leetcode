@@ -3762,6 +3762,35 @@ public:
         }
         return res;
     }
+
+    int countCompleteSubarrays(vector<int> &nums) {
+        constexpr int N = 2000 + 1;
+        vector<int> indices(N, -1);
+        int index = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (indices[nums[i]] == -1)
+                indices[nums[i]] = index++;
+            nums[i] = indices[nums[i]];
+        }
+        vector<int> times(index, 0);
+        int left = 0;
+        int right = 0;
+        int res = 0;
+        while (right < nums.size()) {
+            ++times[nums[right]];
+            if (std::ranges::all_of(times, [](auto element) {
+                    return element > 0;
+                })) {
+                while (left < right && times[nums[left]] > 1) {
+                    --times[nums[left]];
+                    ++left;
+                }
+                res += left + 1;
+            }
+            ++right;
+        }
+        return res;
+    }
 };
 
 int main() {
