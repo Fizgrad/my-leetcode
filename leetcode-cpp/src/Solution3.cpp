@@ -3791,6 +3791,20 @@ public:
         }
         return res;
     }
+
+    long long countInterestingSubarrays(vector<int> &nums, int modulo, int k) {
+        int n = nums.size();
+        long long res = 0;
+        int prefix = 0;
+        unordered_map<int, int> times;
+        times[0]++;
+        for (int i = 0; i < n; ++i) {
+            prefix = (prefix + ((nums[i] % modulo == k) ? 1 : 0)) % modulo;
+            res += times[(prefix - k + modulo) % modulo];
+            ++times[prefix % modulo];
+        }
+        return res;
+    }
 };
 
 int main() {
