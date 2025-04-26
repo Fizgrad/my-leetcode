@@ -3805,6 +3805,21 @@ public:
         }
         return res;
     }
+
+    long long countSubarrays(vector<int> &nums, int minK, int maxK) {
+        int max_idx = -1;
+        int min_idx = -1;
+        int bad_idx = -1;
+        long long res = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            int num = nums[i];
+            if (num < minK || num > maxK) bad_idx = i;
+            if (minK == num) min_idx = i;
+            if (maxK == num) max_idx = i;
+            res += max(0, min(max_idx, min_idx) - bad_idx);
+        }
+        return res;
+    }
 };
 
 int main() {
