@@ -3846,6 +3846,38 @@ public:
         }
         return res;
     }
+
+    long long countSubarrays(vector<int> &nums, int k) {
+        int maxNum = 0;
+        int iterStart = 0;
+        for (int i = nums.size() - 1; i >= 0; --i) {
+            if (nums[i] >= maxNum) {
+                iterStart = i;
+                maxNum = nums[i];
+            }
+        }
+        int startIndex = iterStart;
+        int times = 0;
+        long long res = 0;
+        for (int i = iterStart; i < nums.size(); ++i) {
+            if (nums[i] == maxNum) {
+                ++times;
+            }
+            while (times > k) {
+                if (nums[startIndex] == maxNum)
+                    --times;
+                ++startIndex;
+            }
+            while (times == k) {
+                if (nums[startIndex] == maxNum) {
+                    res += startIndex + 1;
+                    break;
+                }
+                ++startIndex;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
