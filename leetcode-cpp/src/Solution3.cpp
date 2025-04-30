@@ -3878,6 +3878,24 @@ public:
         }
         return res;
     }
+
+    int findNumbers(vector<int> &nums) {
+        auto f = [](int num) -> bool {
+            int temp = num;
+            int len = 0;
+            while (temp >= 1) {
+                ++len;
+                temp /= 10;
+            }
+            return (len & 1);
+        };
+        int res = 0;
+        for (auto i: nums) {
+            if (!f(i))
+                ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
