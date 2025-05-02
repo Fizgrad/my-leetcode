@@ -3896,6 +3896,52 @@ public:
         }
         return res;
     }
+
+    int maxTaskAssign(vector<int> &tasks, vector<int> &workers, int pills, int strength) {
+        int n = tasks.size();
+        int m = workers.size();
+        int res = 0;
+        int left = 0;
+        int right = min(n, m);
+        std::ranges::sort(tasks);
+        std::ranges::sort(workers);
+        while (left <= right) {
+            int mid = (left + right) >> 1;
+            if ([&](int k) -> bool {
+                    int taskID = 0;
+                    int pillsRemain = pills;
+                    deque<int> canCompleteTasks;
+                    for (int workerID = m - k; workerID < m; ++workerID) {
+                        while (taskID < k) {
+                            if (tasks[taskID] <= workers[workerID] + strength) {
+                                canCompleteTasks.emplace_back(taskID);
+                                ++taskID;
+                            } else
+                                break;
+                        }
+                        if (canCompleteTasks.empty()) return false;
+                        if (tasks[canCompleteTasks.front()] <= workers[workerID]) {
+                            canCompleteTasks.pop_front();
+                            continue;
+                        }
+                        if (tasks[canCompleteTasks.back()] <= workers[workerID] + strength) {
+                            if (pillsRemain > 0) {
+                                canCompleteTasks.pop_back();
+                                --pillsRemain;
+                            } else
+                                return false;
+                        }
+                    }
+                    return true;
+                }(mid)) {
+                res = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
