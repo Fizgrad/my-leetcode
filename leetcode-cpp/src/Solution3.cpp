@@ -3942,6 +3942,65 @@ public:
         }
         return res;
     }
+
+    string pushDominoes(const string &dominoes) {
+        int n = dominoes.size();
+        string res(dominoes);
+        int i = 0;
+        while (i < n) {
+            auto c = res[i];
+            if (c == 'L') {
+                for (int k = i - 1; k >= 0; --k) {
+                    if (res[k] == '.')
+                        res[k] = 'L';
+                    else
+                        break;
+                }
+                ++i;
+                continue;
+            } else if (c == 'R') {
+                int nextIndex = n;
+                char nextState = ' ';
+                for (int k = i + 1; k < n; ++k) {
+                    if (res[k] == 'L') {
+                        nextIndex = k;
+                        nextState = 'L';
+                        break;
+                    } else if (res[k] == 'R') {
+                        nextIndex = k;
+                        nextState = 'R';
+                        break;
+                    }
+                }
+                if (nextIndex == n) {
+                    for (int k = i + 1; k < n; ++k) {
+                        res[k] = 'R';
+                    }
+                    break;
+                } else {
+                    if (nextState == 'R') {
+                        for (int k = i + 1; k < nextIndex; ++k) {
+                            res[k] = 'R';
+                        }
+                        i = nextIndex;
+                        continue;
+                    } else {
+                        int rightIndex = nextIndex - 1;
+                        int leftIndex = i + 1;
+                        while (leftIndex < rightIndex) {
+                            res[rightIndex] = 'L';
+                            res[leftIndex] = 'R';
+                            ++leftIndex;
+                            --rightIndex;
+                        }
+                        i = nextIndex + 1;
+                    }
+                }
+            } else
+                ++i;
+        }
+        return res;
+    }
 };
 
 int main() {
