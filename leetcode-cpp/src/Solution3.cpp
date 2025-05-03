@@ -4001,6 +4001,47 @@ public:
         }
         return res;
     }
+
+    int minDominoRotations(vector<int> &tops, vector<int> &bottoms) {
+        int n = tops.size();
+        int a = tops.front();
+        int b = bottoms.front();
+        for (int i = 1; i < n; ++i) {
+            if (tops[i] != a && bottoms[i] != a) {
+                a = -1;
+            }
+            if (tops[i] != b && bottoms[i] != b) {
+                b = -1;
+            }
+        }
+        if (a == -1 && b == -1) return -1;
+        int res = n;
+        if (a != -1) {
+            int temp = 0;
+            for (int i = 0; i < n; ++i) {
+                temp += (tops[i] == a ? 0 : 1);
+            }
+            res = min(temp, res);
+            temp = 0;
+            for (int i = 0; i < n; ++i) {
+                temp += (bottoms[i] == a ? 0 : 1);
+            }
+            res = min(temp, res);
+        }
+        if (b != -1) {
+            int temp = 0;
+            for (int i = 0; i < n; ++i) {
+                temp += (tops[i] == b ? 0 : 1);
+            }
+            res = min(temp, res);
+            temp = 0;
+            for (int i = 0; i < n; ++i) {
+                temp += (bottoms[i] == b ? 0 : 1);
+            }
+            res = min(temp, res);
+        }
+        return res;
+    }
 };
 
 int main() {
