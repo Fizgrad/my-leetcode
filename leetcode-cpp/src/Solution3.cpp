@@ -4042,6 +4042,15 @@ public:
         }
         return res;
     }
+
+    int numEquivDominoPairs(vector<vector<int>> &dominoes) {
+        map<pair<int, int>, int> nums;
+        int res = 0;
+        for (auto &i: dominoes) {
+            res += nums[std::make_pair(max(i[0], i[1]), min(i[0], i[1]))]++;
+        }
+        return res;
+    }
 };
 
 int main() {
