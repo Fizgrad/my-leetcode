@@ -4178,6 +4178,22 @@ public:
         }
         return upper - max_delta - lower + min_delta + 1;
     }
+
+    int numTilings(int n) {
+        constexpr int MOD = 1e9 + 7;
+        vector<int> dp = {0, 1, 2, 5};
+        vector<int> temp(4, 0);
+        int idx = 4;
+        while (idx <= n) {
+            temp[0] = ((2ll * dp[3] + dp[1]) % (MOD));
+            temp[1] = ((2ll * temp[0] + dp[2]) % (MOD));
+            temp[2] = ((2ll * temp[1] + dp[3]) % (MOD));
+            temp[3] = ((2ll * temp[2] + temp[0]) % (MOD));
+            idx += 4;
+            temp.swap(dp);
+        }
+        return dp[n % 4];
+    }
 };
 
 int main() {
