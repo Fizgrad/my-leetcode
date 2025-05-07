@@ -4059,6 +4059,37 @@ public:
         }
         return res;
     }
+
+    int minTimeToReach(vector<vector<int>> &moveTime) {
+        using TimeCoordinate = pair<int, pair<int, int>>;
+        priority_queue<TimeCoordinate, vector<TimeCoordinate>, greater<>> pq;
+        int n = moveTime.size();
+        int m = moveTime.front().size();
+        constexpr int dd[5] = {0, 1, 0, -1, 0};
+        pq.emplace(std::make_pair(0, std::make_pair(0, 0)));
+        vector<vector<bool>> visited(n, vector<bool>(m, false));
+        while (pq.size()) {
+            auto [time, coordinate] = pq.top();
+            auto [x, y] = coordinate;
+            pq.pop();
+            if (x == n - 1 && y == m - 1) return time;
+            if (visited[x][y]) continue;
+            visited[x][y] = true;
+            for (int i = 0; i < 4; ++i) {
+                int xx = x + dd[i];
+                int yy = y + dd[i + 1];
+                if (xx < 0 || yy < 0 || xx >= n || yy >= m) continue;
+                if (visited[xx][yy]) continue;
+                auto newTime = time + 1;
+                if (newTime <= moveTime[xx][yy]) {
+                    pq.emplace(moveTime[xx][yy] + 1, std::make_pair(xx, yy));
+                } else {
+                    pq.emplace(newTime, std::make_pair(xx, yy));
+                }
+            }
+        }
+        return -1;
+    }
 };
 
 int main() {
