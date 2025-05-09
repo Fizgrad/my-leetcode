@@ -4090,6 +4090,56 @@ public:
         }
         return -1;
     }
+
+    int countBalancedPermutations(const string &num) {
+        constexpr int MOD = 1e9 + 7;
+        constexpr int MAX_FACT = 81;// 根据最大可能值调整
+        vector<long long> fact(MAX_FACT, 0), inv_fact(MAX_FACT, 0);
+        auto pow_mod = [&](long long base, long long exp, long long mod) -> long long {
+            long long result = 1;
+            while (exp > 0) {
+                if (exp % 2 == 1) {
+                    result = (result * base) % mod;
+                }
+                base = (base * base) % mod;
+                exp /= 2;
+            }
+            return result;
+        };
+        auto precompute = [&]() {
+            fact[0] = 1;
+            for (int i = 1; i < MAX_FACT; ++i) {
+                fact[i] = fact[i - 1] * i % MOD;
+            }
+            inv_fact[MAX_FACT - 1] = pow_mod(fact[MAX_FACT - 1], MOD - 2, MOD);
+            for (int i = MAX_FACT - 2; i >= 0; --i) {
+                inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD;
+            }
+        };
+        precompute();
+        int n = num.size(), sum = 0;
+        for (char c: num) sum += c - '0';
+        if (sum % 2 == 1) return 0;
+
+        int halfSum = sum / 2, halfLen = n / 2;
+        vector<vector<int>> dp(halfSum + 1, vector<int>(halfLen + 1));
+        dp[0][0] = 1;
+
+        vector<int> digits(10);
+        for (char c: num) {
+            int d = c - '0';
+            digits[d]++;
+            for (int i = halfSum; i >= d; i--)
+                for (int j = halfLen; j > 0; j--)
+                    dp[i][j] = (dp[i][j] + dp[i - d][j - 1]) % MOD;
+        }
+
+        long long res = dp[halfSum][halfLen];
+        res = res * fact[halfLen] % MOD * fact[n - halfLen] % MOD;
+        for (int i: digits)
+            res = res * inv_fact[i] % MOD;
+        return res;
+    }
 };
 
 int main() {
