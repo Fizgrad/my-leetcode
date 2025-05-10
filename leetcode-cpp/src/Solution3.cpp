@@ -4140,6 +4140,40 @@ public:
             res = res * inv_fact[i] % MOD;
         return res;
     }
+
+    long long minSum(vector<int> &nums1, vector<int> &nums2) {
+        long long min_sum1 = 0;
+        bool has_zero1 = false;
+        long long min_sum2 = 0;
+        bool has_zero2 = false;
+        for (auto i: nums1) {
+            if (i == 0) {
+                has_zero1 = true;
+                min_sum1 += 1;
+            }
+            min_sum1 += i;
+        }
+        for (auto i: nums2) {
+            if (i == 0) {
+                has_zero2 = true;
+                min_sum2 += 1;
+            }
+            min_sum2 += i;
+        }
+        if (has_zero1 && has_zero2) {
+            return max(min_sum1, min_sum2);
+        }
+        if (has_zero1) {
+            if (min_sum1 > min_sum2) return -1;
+            return min_sum2;
+        }
+        if (has_zero2) {
+            if (min_sum2 > min_sum1) return -1;
+            return min_sum1;
+        }
+        if (min_sum1 == min_sum2) return min_sum1;
+        return -1;
+    }
 };
 
 int main() {
