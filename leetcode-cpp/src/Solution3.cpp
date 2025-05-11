@@ -4174,6 +4174,19 @@ public:
         if (min_sum1 == min_sum2) return min_sum1;
         return -1;
     }
+
+    bool threeConsecutiveOdds(vector<int> &arr) {
+        int consecutive = 0;
+        for (auto i: arr) {
+            if (i & 1) {
+                if (++consecutive >= 3) {
+                    return true;
+                }
+            } else
+                consecutive = 0;
+        }
+        return false;
+    }
 };
 
 int main() {
