@@ -4225,6 +4225,31 @@ public:
         }
         return -1;
     }
+
+    vector<int> findEvenNumbers(vector<int> &digits) {
+        vector<int> numberOfDigits(10, 0);
+        for (auto i: digits) {
+            numberOfDigits[i]++;
+        }
+        vector<int> res;
+        constexpr int power[3] = {1, 10, 100};
+        for (int i = 100; i <= 999; i += 2) {
+            bool can = true;
+            for (int k = 0; k < 3; ++k) {
+                auto d = (i / power[k]) % 10;
+                if (numberOfDigits[d] <= 0) {
+                    can = false;
+                }
+                --numberOfDigits[d];
+            }
+            if (can) res.emplace_back(i);
+            for (int k = 0; k < 3; ++k) {
+                auto d = (i / power[k]) % 10;
+                ++numberOfDigits[d];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
