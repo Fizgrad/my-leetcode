@@ -4187,6 +4187,25 @@ public:
         }
         return false;
     }
+
+    int lengthAfterTransformations(const string &s, int t) {
+        constexpr char CHAR_BEGIN = 'a';
+        constexpr char CHAR_END = 'z';
+        constexpr int CHAR_NUM = CHAR_END - CHAR_BEGIN + 1;
+        constexpr int MOD = 1e9 + 7;
+        vector<long long int> chars(CHAR_NUM, 0);
+        for (auto c: s) {
+            ++chars[c - CHAR_BEGIN];
+        }
+        int indexZ = CHAR_END - CHAR_BEGIN;
+        for (int k = 0; k < t; ++k) {
+            int nextIndexZ = (CHAR_NUM + indexZ - 1) % CHAR_NUM;
+            int nextIndexB = (CHAR_NUM + nextIndexZ + 2) % CHAR_NUM;
+            chars[nextIndexB] = (chars[nextIndexB] + chars[indexZ]) % MOD;
+            indexZ = nextIndexZ;
+        }
+        return std::accumulate(chars.begin(), chars.end(), 0l) % MOD;
+    }
 };
 
 int main() {
