@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bits/ranges_algobase.h>
 #include <bitset>
 #include <cassert>
 #include <cctype>
@@ -4250,6 +4251,75 @@ public:
         }
         return res;
     }
+
+    int lengthAfterTransformations(const string &s, int t, vector<int> &nums) {
+        using Vector26 = array<long long, 26>;
+        using Matrix26 = array<Vector26, 26>;
+        constexpr long long MOD = 1e9 + 7;
+        auto zerosVector26 = []() {
+            Vector26 a = {};
+            std::fill(a.begin(), a.end(), 0);
+            return a;
+        };
+        auto zerosMatrix26 = [zerosVector26]() {
+            Matrix26 a = {{}};
+            std::fill(a.begin(), a.end(), zerosVector26());
+            return a;
+        };
+        auto multiply = [MOD, zerosMatrix26](Matrix26 a, Matrix26 b) -> Matrix26 {
+            Matrix26 c = zerosMatrix26();
+            auto len = a.size();
+            for (int i = 0; i < len; ++i) {
+                for (int k = 0; k < len; ++k) {
+                    if (a[i][k] == 0) continue;
+                    for (int j = 0; j < len; ++j)
+                        c[i][j] = (c[i][j] + a[i][k] * b[k][j]) % MOD;
+                }
+            }
+            return c;
+        };
+        auto multiplyVectorMatrix26 = [MOD, zerosVector26](Vector26 v, Matrix26 m) -> Vector26 {
+            Vector26 c = zerosVector26();
+            for (int i = 0; i < 26; i++) {
+                for (int j = 0; j < 26; ++j) {
+                    c[i] = (c[i] + v[j] * m[j][i]) % MOD;
+                }
+            }
+            return c;
+        };
+        auto identity = [zerosMatrix26]() -> Matrix26 {
+            Matrix26 c = zerosMatrix26();
+            auto len = c.size();
+            for (int i = 0; i < len; ++i)
+                c[i][i] = 1;
+            return c;
+        };
+        auto pow = [MOD, identity, multiply](Matrix26 a, int b) -> Matrix26 {
+            Matrix26 c = identity();
+            Matrix26 temp = a;
+            while (b >= 1) {
+                if (b & 1) {
+                    c = multiply(c, temp);
+                }
+                temp = multiply(temp, temp);
+                b >>= 1;
+            }
+            return c;
+        };
+        auto I = identity();
+        Vector26 freq = zerosVector26();
+        for (char c: s)
+            freq[c - 'a']++;
+
+        Matrix26 a = zerosMatrix26();
+        for (int i = 0; i < 26; i++) {
+            for (int k = 1; k <= nums[i]; ++k)
+                a[i][(i + k) % 26] = 1;
+        }
+        Matrix26 b = pow(a, t);
+        Vector26 c = multiplyVectorMatrix26(freq, b);
+        return std::accumulate(c.begin(), c.end(), 0ll) % MOD;
+    }
 };
 
 int main() {
@@ -4257,5 +4327,7 @@ int main() {
     vector<int> a = {18, 64, 12, 21, 21, 78, 36, 58, 88, 58, 99, 26, 92, 91, 53, 10, 24, 25, 20, 92, 73, 63, 51, 65, 87,
                      6, 17, 32, 14, 42, 46, 65, 43, 9, 75};
     cout << s.totalCost(a, 13, 23) << endl;
+    vector<int> nums{2, 2, 1, 1, 2, 1, 2, 3, 2, 1, 1, 2, 2, 1, 3, 3, 2, 1, 2, 2, 2, 2, 2, 2, 3, 2};
+    cout << s.lengthAfterTransformations("tk", 9, nums) << endl;
     return 0;
 }
