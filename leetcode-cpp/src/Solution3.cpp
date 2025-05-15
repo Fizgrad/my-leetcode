@@ -3,7 +3,6 @@
 //
 #include <algorithm>
 #include <array>
-#include <bits/ranges_algo.h>
 #include <bitset>
 #include <cctype>
 #include <climits>
@@ -4205,6 +4204,40 @@ public:
             indexZ = nextIndexZ;
         }
         return std::accumulate(chars.begin(), chars.end(), 0l) % MOD;
+    }
+
+    vector<string> getLongestSubsequence(vector<string> &words, vector<int> &groups) {
+        int n = words.size();
+        vector<int> prevIndices(n, -1);
+        vector<int> dp(n, -1);
+        auto f = [&](auto &&f, int index) -> int {
+            if (index >= n || index < 0) return 0;
+            if (dp[index] != -1) return dp[index];
+            int maxPrevIndex = -1;
+            int maxPrevLen = 0;
+            for (int i = 0; i < index; ++i) {
+                if (groups[i] != groups[index]) {
+                    int newLen = f(f, i) + 1;
+                    if (maxPrevLen < newLen) {
+                        maxPrevLen = newLen;
+                        maxPrevIndex = i;
+                    }
+                }
+            }
+            prevIndices[index] = maxPrevIndex;
+            return dp[index] = maxPrevLen;
+        };
+        for (int i = 0; i < n; ++i) {
+            f(f, i);
+        }
+        vector<string> reverse_res;
+        auto index = std::ranges::max_element(dp) - dp.begin();
+        while (index != -1) {
+            reverse_res.emplace_back(words[index]);
+            index = prevIndices[index];
+        }
+        std::reverse(reverse_res.begin(), reverse_res.end());
+        return reverse_res;
     }
 };
 
