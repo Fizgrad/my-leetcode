@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bits/ranges_algo.h>
 #include <bitset>
 #include <cassert>
 #include <cctype>
@@ -4318,6 +4319,47 @@ public:
         Matrix26 b = pow(a, t);
         Vector26 c = multiplyVectorMatrix26(freq, b);
         return std::accumulate(c.begin(), c.end(), 0ll) % MOD;
+    }
+
+    vector<string> getWordsInLongestSubsequence(vector<string> &words, vector<int> &groups) {
+        int n = words.size();
+        vector<int> dp(n, -1);
+        vector<int> prevIndices(n, -1);
+        auto f = [&](auto &&f, int index) {
+            if (index < 0 || index >= n) return 0;
+            if (dp[index] != -1) return dp[index];
+            int maxLen = 0;
+            int prevIndex = -1;
+            for (int i = index - 1; i >= 0; --i) {
+                if (groups[index] == groups[i]) continue;
+                if (words[index].size() != words[i].size()) continue;
+                int hamming = 0;
+                for (int k = 0; k < words[index].size(); ++k) {
+                    if (words[index][k] != words[i][k]) {
+                        ++hamming;
+                    }
+                }
+                if (hamming != 1) continue;
+                int newLen = f(f, i) + 1;
+                if (newLen > maxLen) {
+                    maxLen = newLen;
+                    prevIndex = i;
+                }
+            }
+            prevIndices[index] = prevIndex;
+            return dp[index] = maxLen;
+        };
+        for (int i = 0; i < words.size(); ++i) {
+            f(f, i);
+        }
+        vector<string> res;
+        int start = std::ranges::max_element(dp) - dp.begin();
+        while (start != -1) {
+            res.emplace_back(words[start]);
+            start = prevIndices[start];
+        }
+        std::ranges::reverse(res);
+        return res;
     }
 };
 
