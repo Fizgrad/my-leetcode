@@ -4239,6 +4239,51 @@ public:
         std::reverse(reverse_res.begin(), reverse_res.end());
         return reverse_res;
     }
+
+    void sortColors(vector<int> &nums) {
+        int n = nums.size();
+        int right = nums.size() - 1;
+        int left = 0;
+        int lastTwo = n;
+        while (left <= right) {
+            while (right >= 0 && nums[right] == 2) {
+                --right;
+            }
+            while (left < n && nums[left] != 2) {
+                ++left;
+            }
+            if (left >= right) {
+                break;
+            } else {
+                std::swap(nums[left], nums[right]);
+                ++left;
+                --right;
+            }
+        }
+        for (int i = n - 1; i >= 0; --i) {
+            if (nums[i] == 2) {
+                lastTwo = i;
+            } else
+                break;
+        }
+        right = lastTwo - 1;
+        left = 0;
+        while (left < right) {
+            while (right >= 0 && nums[right] == 1) {
+                --right;
+            }
+            while (left < n && nums[left] == 0) {
+                ++left;
+            }
+            if (left >= right) {
+                break;
+            } else {
+                std::swap(nums[left], nums[right]);
+                ++left;
+                --right;
+            }
+        }
+    }
 };
 
 int main() {
