@@ -4284,6 +4284,55 @@ public:
             }
         }
     }
+
+    int colorTheGrid(int m, int n) {
+        constexpr int MOD = 1e9 + 7;
+        vector<int> patterns;
+        auto generatePattern = [&](auto &&generatePattern, int index, int pattern) -> void {
+            if (index == m) {
+                patterns.emplace_back(pattern);
+                return;
+            }
+            for (int k = 1; k <= 3; ++k) {
+                if (pattern % 10 == k) {
+                    continue;
+                }
+                generatePattern(generatePattern, index + 1, pattern * 10 + k);
+            }
+        };
+        generatePattern(generatePattern, 0, 0);
+        int patternsCount = patterns.size();
+        unordered_map<int, vector<int>> canConcate;
+        for (int i = 0; i < patternsCount; ++i) {
+            for (int j = i + 1; j < patternsCount; ++j) {
+                bool flag = true;
+                auto patternI = patterns[i];
+                auto patternJ = patterns[j];
+                for (int k = 0; flag && k < m; ++k) {
+                    if (patternI % 10 == patternJ % 10)
+                        flag = false;
+                    patternI /= 10;
+                    patternJ /= 10;
+                }
+                if (flag) {
+                    canConcate[i].emplace_back(j);
+                    canConcate[j].emplace_back(i);
+                }
+            }
+        }
+        vector<int> counts(patternsCount, 1);
+        vector<int> temp(patternsCount);
+        for (int i = 1; i < n; ++i) {
+            for (int k = 0; k < patternsCount; ++k) {
+                temp[k] = 0;
+                for (int next: canConcate[k]) {
+                    temp[k] = (temp[k] + counts[next]) % MOD;
+                }
+            }
+            temp.swap(counts);
+        }
+        return std::accumulate(counts.begin(), counts.end(), 0ll) % MOD;
+    }
 };
 
 int main() {
