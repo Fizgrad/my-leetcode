@@ -32,6 +32,7 @@
 #include <string.h>
 #include <string>
 #include <tuple>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -4360,6 +4361,16 @@ public:
         }
         std::ranges::reverse(res);
         return res;
+    }
+
+    string triangleType(vector<int> &nums) {
+        if (nums[0] == nums[1] && nums[1] == nums[2]) return "equilateral";
+        if (nums[0] > nums[1]) std::swap(nums[0], nums[1]);
+        if (nums[1] > nums[2]) std::swap(nums[1], nums[2]);
+        if (nums[0] > nums[1]) std::swap(nums[0], nums[1]);
+        if (nums[2] >= nums[0] + nums[1]) return "none";
+        if (nums[1] == nums[0] || nums[1] == nums[2]) return "isosceles";
+        return "scalene";
     }
 };
 
