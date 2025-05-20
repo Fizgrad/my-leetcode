@@ -4372,6 +4372,25 @@ public:
         if (nums[1] == nums[0] || nums[1] == nums[2]) return "isosceles";
         return "scalene";
     }
+
+    bool isZeroArray(vector<int> &nums, vector<vector<int>> &queries) {
+        int n = nums.size();
+        vector<int> prefix(n + 1, 0);
+        for (auto &query: queries) {
+            int l = query[0];
+            int r = query[1];
+            ++prefix[l];
+            --prefix[r + 1];
+        }
+        int accumulation = 0;
+        for (int i = 0; i < n; ++i) {
+            accumulation += prefix[i];
+            if (nums[i] > accumulation) {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
