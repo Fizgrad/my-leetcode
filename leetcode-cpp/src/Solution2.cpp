@@ -3,7 +3,6 @@
 //
 #include <algorithm>
 #include <array>
-#include <bits/ranges_algo.h>
 #include <bitset>
 #include <cassert>
 #include <cctype>
