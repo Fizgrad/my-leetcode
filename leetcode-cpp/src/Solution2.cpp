@@ -4391,6 +4391,47 @@ public:
         }
         return true;
     }
+
+    int maxRemoval(vector<int> &nums, vector<vector<int>> &queries) {
+        int n = nums.size();
+        int queriesSize = queries.size();
+        vector<int> prefix(n + 1, 0);
+        std::sort(queries.begin(), queries.end(), [](const auto &a, const auto &b) {
+            return a[0] < b[0] || (a[0] == b[0] && a[1] > b[1]);
+        });
+        auto cmp = [&](const auto &a, const auto &b) {
+            return queries[a][1] < queries[b][1];
+        };
+        priority_queue<int, vector<int>, decltype(cmp)> pq(cmp);
+        int queriesIndex = 0;
+        int accumulation = 0;
+        for (int i = 0; i < n; ++i) {
+            while (queriesIndex < queriesSize && queries[queriesIndex][0] <= i) {
+                pq.emplace(queriesIndex);
+                ++queriesIndex;
+            }
+            accumulation += prefix[i];
+            if (accumulation >= nums[i]) {
+                continue;
+            } else {
+                while (accumulation < nums[i]) {
+                    if (pq.empty()) return -1;
+                    while (accumulation < nums[i] && pq.size()) {
+                        auto top = pq.top();
+                        if (queries[top][1] < i) {
+                            return -1;
+                        } else {
+                            ++prefix[queries[top][0]];
+                            --prefix[queries[top][1] + 1];
+                            ++accumulation;
+                        }
+                        pq.pop();
+                    }
+                }
+            }
+        }
+        return pq.size();
+    }
 };
 
 int main() {
