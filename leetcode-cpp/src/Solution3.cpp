@@ -4385,6 +4385,56 @@ public:
             }
         }
     }
+
+    long long maximumValueSum(vector<int> &nums, int k, vector<vector<int>> &edges) {
+        long long res = 0;
+        res = std::accumulate(nums.begin(), nums.end(), 0ll);
+        bool hasZero = false;
+        for (auto &i: nums) {
+            i = (i ^ k) - i;
+            if (i == 0) hasZero = true;
+        }
+        if (hasZero) {
+            for (int i = 0; i < nums.size(); ++i) {
+                if (nums[i] >= 0) { res += nums[i]; }
+            }
+            return res;
+        } else {
+            int prev = -1;
+            int maxNeg = std::numeric_limits<int>::min();
+            int minPos = -1;
+            for (int i = 0; i < nums.size(); ++i) {
+                if (nums[i] < 0) {
+                    if (maxNeg < nums[i]) {
+                        maxNeg = nums[i];
+                    }
+                } else if (nums[i] > 0) {
+                    if (minPos == -1) minPos = nums[i];
+                    else if (minPos > nums[i]) {
+                        if (prev == -1) {
+                            prev = minPos;
+                            minPos = nums[i];
+                        } else {
+                            res += minPos + prev;
+                            prev = -1;
+                            minPos = nums[i];
+                        }
+                    } else {
+                        if (prev == -1) {
+                            prev = nums[i];
+                        } else {
+                            res += nums[i] + prev;
+                            prev = -1;
+                        }
+                    }
+                }
+            }
+            if (prev != -1) res += minPos + prev;
+            else if (minPos + maxNeg > 0)
+                res += minPos + maxNeg;
+            return res;
+        }
+    }
 };
 
 int main() {
