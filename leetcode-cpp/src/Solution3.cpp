@@ -4435,6 +4435,16 @@ public:
             return res;
         }
     }
+
+    vector<int> findWordsContaining(vector<string> &words, char x) {
+        vector<int> res;
+        for (int i = 0; i < words.size(); ++i) {
+            if (std::find(words[i].begin(), words[i].end(), x) != words[i].end()) {
+                res.emplace_back(i);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
