@@ -4445,6 +4445,83 @@ public:
         }
         return res;
     }
+
+    int longestPalindrome(vector<string> &words) {
+        struct TrieNode {
+            TrieNode *next['z' - 'a' + 1] = {nullptr};
+            vector<int> indices;
+        };
+
+        TrieNode *root = new TrieNode();
+
+        auto contains = [&](const auto &&begin, const auto &&end) {
+            auto temp = root;
+            for (auto i = begin; i != end; ++i) {
+                temp = temp->next[*i - 'a'];
+                if (temp == nullptr) {
+                    return false;
+                }
+            }
+            return !temp->indices.empty();
+        };
+
+        auto add = [&](const string &input, int index) {
+            auto temp = root;
+            for (int i = 0; i < input.size(); ++i) {
+                if (temp->next[input[i] - 'a'] == nullptr)
+                    temp->next[input[i] - 'a'] = new TrieNode();
+                temp = temp->next[input[i] - 'a'];
+            }
+            temp->indices.emplace_back(index);
+        };
+
+        auto remove = [&](const auto &&begin, const auto &&end) {
+            auto temp = root;
+            for (auto i = begin; i != end; ++i) {
+                if (temp->next[*i - 'a'] == nullptr)
+                    temp->next[*i - 'a'] = new TrieNode();
+                temp = temp->next[*i - 'a'];
+            }
+            auto res = temp->indices.back();
+            temp->indices.pop_back();
+            return res;
+        };
+
+        int res = 0;
+        auto checkIsPalindrome = [](const auto &word) {
+            int j = word.size() - 1;
+            int i = 0;
+            while (i < j) {
+                if (word[i] == word[j]) {
+                    ++i;
+                    --j;
+                } else
+                    return false;
+            }
+            return true;
+        };
+        int maxPalindrome = 0;
+        vector<int> canUseInMid(words.size(), true);
+        for (int i = 0; i < words.size(); ++i) {
+            auto &s = words[i];
+            if (contains(s.rbegin(), s.rend())) {
+                res += s.size() * 2;
+                canUseInMid[i] = false;
+                canUseInMid[remove(s.rbegin(), s.rend())] = false;
+            } else {
+                if (!checkIsPalindrome(s))
+                    canUseInMid[i] = false;
+                add(s, i);
+            }
+        }
+        auto maxMid = static_cast<decltype(words.front().size())>(0);
+        for (int i = 0; i < words.size(); ++i) {
+            if (canUseInMid[i]) {
+                maxMid = max(maxMid, words[i].size());
+            }
+        }
+        return res + maxMid;
+    }
 };
 
 int main() {
