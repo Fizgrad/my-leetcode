@@ -4522,6 +4522,51 @@ public:
         }
         return res + maxMid;
     }
+
+    int largestPathValue(const string &colors, vector<vector<int>> &edges) {
+        auto colorMin = std::ranges::min(colors);
+        auto colorMax = std::ranges::max(colors);
+        int colorNum = colorMax - colorMin + 1;
+        int n = colors.size();
+        int m = edges.size();
+        vector<vector<int>> dp(n, vector<int>(colorNum, 0));
+        vector<int> indegree(n, 0);
+        vector<vector<int>> graph(n);
+        for (auto i = 0; i < m; ++i) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            indegree[v]++;
+            graph[u].emplace_back(v);
+        }
+        stack<int> zeroInDegreeNodes;
+        int visited = 0;
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            if (indegree[i] == 0) {
+                zeroInDegreeNodes.emplace(i);
+                res = max(res, dp[i][colors[i] - colorMin] = 1);
+                ++visited;
+            }
+        }
+        while (!zeroInDegreeNodes.empty()) {
+            auto top = zeroInDegreeNodes.top();
+            zeroInDegreeNodes.pop();
+            for (auto next: graph[top]) {
+                for (auto i = 0; i < colorNum; ++i) {
+                    res = max(res, dp[next][i] = max(dp[next][i], dp[top][i] + (i == (colors[next] - colorMin) ? 1 : 0)));
+                }
+                --indegree[next];
+                if (indegree[next] == 0) {
+                    ++visited;
+                    zeroInDegreeNodes.emplace(next);
+                }
+            }
+        }
+        if (visited < n) {
+            return -1;
+        }
+        return res;
+    }
 };
 
 int main() {
