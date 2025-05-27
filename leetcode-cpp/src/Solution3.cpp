@@ -4567,6 +4567,10 @@ public:
         }
         return res;
     }
+
+    int differenceOfSums(int n, int m) {
+        return (((1 + n) * n) >> 1) - (1 + n / m) * m * (n / m);
+    }
 };
 
 int main() {
