@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bits/ranges_algobase.h>
 #include <bitset>
 #include <cctype>
 #include <climits>
@@ -4570,6 +4571,54 @@ public:
 
     int differenceOfSums(int n, int m) {
         return (((1 + n) * n) >> 1) - (1 + n / m) * m * (n / m);
+    }
+
+    vector<int> maxTargetNodes(vector<vector<int>> &edges1, vector<vector<int>> &edges2, int k) {
+        int n = edges1.size() + 1;
+        int m = edges2.size() + 1;
+
+        auto constructGraph = [](vector<vector<int>> &graph, int nodeNum, vector<vector<int>> &edges) {
+            graph.resize(nodeNum);
+            for (auto &i: graph) graph.clear();
+            for (auto &edge: edges) {
+                graph[edge[0]].emplace_back(edge[1]);
+                graph[edge[1]].emplace_back(edge[0]);
+            }
+            return graph;
+        };
+        vector<vector<int>> graph;
+
+        auto dfs = [&](auto &&dfs, vector<vector<int>> &graph, vector<bool> &visited, int node, int dis) -> int {
+            int res = 1;
+            if (dis <= 0) return res;
+            for (auto next: graph[node]) {
+                if (!visited[next]) {
+                    visited[next] = true;
+                    res += dfs(dfs, graph, visited, next, dis - 1);
+                }
+            }
+            return res;
+        };
+        vector<bool> visited(m, false);
+
+        int maxTree2 = 0;
+        if (k > 0) {
+            constructGraph(graph, m, edges2);
+            for (int i = 0; i < m; ++i) {
+                std::fill(visited.begin(), visited.end(), false);
+                visited[i] = true;
+                maxTree2 = max(maxTree2, dfs(dfs, graph, visited, i, k - 1));
+            }
+        }
+        constructGraph(graph, n, edges1);
+        visited.resize(n);
+        vector<int> res(n, 0);
+        for (int i = 0; i < n; ++i) {
+            std::fill(visited.begin(), visited.end(), false);
+            visited[i] = true;
+            res[i] = maxTree2 + dfs(dfs, graph, visited, i, k);
+        }
+        return res;
     }
 };
 
