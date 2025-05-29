@@ -4431,6 +4431,73 @@ public:
         }
         return pq.size();
     }
+
+    vector<int> maxTargetNodes(vector<vector<int>> &edges1, vector<vector<int>> &edges2) {
+        int n = edges1.size() + 1;
+        int m = edges2.size() + 1;
+
+        auto constructGraph = [](vector<vector<int>> &graph, int nodeNum, vector<vector<int>> &edges) {
+            graph.resize(nodeNum);
+            for (auto &i: graph) graph.clear();
+            for (auto &edge: edges) {
+                graph[edge[0]].emplace_back(edge[1]);
+                graph[edge[1]].emplace_back(edge[0]);
+            }
+            return graph;
+        };
+        vector<vector<int>> graph;
+        int group2 = 0;
+        auto dfs = [&](auto &&dfs, vector<vector<int>> &graph, vector<bool> &visited, int node, bool flag) -> int {
+            int res = 0;
+            if (flag)
+                res = 1;
+            for (auto next: graph[node]) {
+                if (!visited[next]) {
+                    visited[next] = true;
+                    res += dfs(dfs, graph, visited, next, !flag);
+                }
+            }
+            return res;
+        };
+        vector<bool> visited(m, false);
+
+        int maxTree2 = 0;
+        constructGraph(graph, m, edges2);
+        std::fill(visited.begin(), visited.end(), false);
+        visited[0] = true;
+        group2 = dfs(dfs, graph, visited, 0, 0);
+        group2 = max(group2, m - group2);
+
+        constructGraph(graph, n, edges1);
+        vector<bool> groups(n, false);
+        visited.resize(n);
+        std::fill(visited.begin(), visited.end(), false);
+        vector<int> res(n, 0);
+        auto dfs2 = [&](auto &&dfs2, vector<vector<int>> &graph, vector<bool> &visited, vector<bool> &groups, int node, bool flag) -> int {
+            int res = 0;
+            if (flag)
+                res = 1;
+            groups[node] = flag;
+            for (auto next: graph[node]) {
+                if (!visited[next]) {
+                    visited[next] = true;
+                    res += dfs2(dfs2, graph, visited, groups, next, !flag);
+                }
+            }
+            return res;
+        };
+        visited[0] = true;
+        int groupFalse = dfs2(dfs2, graph, visited, groups, 0, 0);
+        int groupTrue = n - groupFalse;
+        for (int i = 0; i < n; ++i) {
+            if (!groups[i]) {
+                res[i] = groupTrue + group2;
+            } else {
+                res[i] = groupFalse + group2;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
