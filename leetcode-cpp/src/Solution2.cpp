@@ -18,6 +18,7 @@
 #include <iterator>
 #include <limits>
 #include <map>
+#include <math.h>
 #include <new>
 #include <numeric>
 #include <pthread.h>
@@ -4497,6 +4498,32 @@ public:
             }
         }
         return res;
+    }
+
+    int closestMeetingNode(vector<int> &edges, int node1, int node2) {
+        if (node1 == node2) return node1;
+        int n = edges.size(), next1 = node1, next2 = node2;
+        vector<int> visited(n, 0);
+        while (true) {
+            int res = n + 1;
+            if (visited[next1] == 2 || next1 == next2) {
+                res = min(res, next1);
+            }
+            if (visited[next2] == 1 || next1 == next2) {
+                res = min(res, next2);
+            }
+            if (res != n + 1) return res;
+            if ((visited[next1] == 1) && (visited[next2] == 2)) {
+                return -1;
+            }
+            visited[next1] = 1;
+            visited[next2] = 2;
+            if (edges[next1] != -1)
+                next1 = edges[next1];
+            if (edges[next2] != -1)
+                next2 = edges[next2];
+        }
+        return -1;
     }
 };
 
