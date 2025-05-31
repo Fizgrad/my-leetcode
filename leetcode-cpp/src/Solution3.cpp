@@ -4619,6 +4619,38 @@ public:
         }
         return res;
     }
+
+    int snakesAndLadders(vector<vector<int>> &board) {
+        int n = board.size();
+        vector<bool> visited(n * n, false);
+        auto convertToXY = [&](int index) {
+            --index;
+            return std::make_pair((n - 1 - index / n), ((index / n) % 2 == 0) ? index % n : n - 1 - index % n);
+        };
+        vector<int> next;
+        vector<int> now;
+        int time = 0;
+        now.emplace_back(1);
+        while (now.size()) {
+            while (now.size()) {
+                int index = now.back();
+                now.pop_back();
+                if (visited[index - 1]) continue;
+                if (index == n * n) return time;
+                visited[index - 1] = true;
+                for (int i = index + 1; i <= index + 6 && i <= n * n; ++i) {
+                    auto [x, y] = convertToXY(i);
+                    if (board[x][y] != -1) {
+                        next.emplace_back(board[x][y]);
+                    } else
+                        next.emplace_back(i);
+                }
+            }
+            next.swap(now);
+            ++time;
+        }
+        return -1;
+    }
 };
 
 int main() {
