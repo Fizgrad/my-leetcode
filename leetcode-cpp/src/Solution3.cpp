@@ -4651,6 +4651,14 @@ public:
         }
         return -1;
     }
+
+    long long distributeCandies(int n, int limit) {
+        long long res = 0;
+        for (int i = 0; i <= min(n, limit); ++i) {
+            res += max(0, 1 + min(n - i, limit) - max(0, n - i - limit));
+        }
+        return res;
+    }
 };
 
 int main() {
