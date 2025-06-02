@@ -4525,6 +4525,51 @@ public:
         }
         return -1;
     }
+
+    int candy(vector<int> &ratings) {
+        int n = ratings.size();
+        if (n == 1) return ratings.size();
+        if (n == 2) return ratings[0] == ratings[1] ? 2 : 3;
+        vector<int> res(n, 0);
+        int startIndex = 0;
+        auto cmp = [&](int a, int b) {
+            return ratings[a] == ratings[b] ? 0 : (ratings[a] > ratings[b] ? 1 : -1);
+        };
+        for (int i = 1; i < n - 1; ++i) {
+            if (cmp(i, i + 1) == 0 || cmp(i - 1, i) != cmp(i, i + 1)) {
+                if (cmp(i - 1, i) == 1) {
+                    for (int k = i; k >= startIndex; --k) {
+                        res[k] = max(res[k], i - k + 1);
+                    }
+                    startIndex = i;
+                } else if (cmp(i - 1, i) == -1) {
+                    res[startIndex] = max(1, res[startIndex]);
+                    for (int k = startIndex + 1; k <= i; ++k) {
+                        res[k] = max(res[k], res[k - 1] + 1);
+                    }
+                    startIndex = i;
+                } else {
+                    res[i - 1] = max(res[i - 1], 1);
+                    startIndex = i;
+                }
+            }
+        }
+        if (cmp(startIndex, n - 1) == 0) {
+            for (int i = startIndex; i <= n - 1; ++i) {
+                res[i] = max(res[i], 1);
+            }
+        } else if (cmp(startIndex, n - 1) == 1) {
+            for (int k = n - 1; k >= startIndex; --k) {
+                res[k] = max(res[k], n - k);
+            }
+        } else {
+            res[startIndex] = max(1, res[startIndex]);
+            for (int k = startIndex + 1; k <= n - 1; ++k) {
+                res[k] = max(res[k], res[k - 1] + 1);
+            }
+        }
+        return std::accumulate(res.begin(), res.end(), 0);
+    }
 };
 
 int main() {
