@@ -4570,6 +4570,34 @@ public:
         }
         return std::accumulate(res.begin(), res.end(), 0);
     }
+
+    int maxCandies(vector<int> &status, vector<int> &candies, vector<vector<int>> &keys, vector<vector<int>> &containedBoxes, vector<int> &initialBoxes) {
+        int n = status.size();
+        int res = 0;
+        vector<int> gottenBox;
+        bool flag = true;
+        while (initialBoxes.size() && flag) {
+            flag = false;
+            while (initialBoxes.size()) {
+                auto i = initialBoxes.back();
+                initialBoxes.pop_back();
+                if (status[i] == 1) {
+                    flag = true;
+                    for (auto key: keys[i]) {
+                        status[key] = 1;
+                    }
+                    for (auto b: containedBoxes[i]) {
+                        gottenBox.emplace_back(b);
+                    }
+                    res += candies[i];
+                } else {
+                    gottenBox.emplace_back(i);
+                }
+            }
+            gottenBox.swap(initialBoxes);
+        }
+        return res;
+    }
 };
 
 int main() {
