@@ -2168,8 +2168,6 @@ public:
     }
 
     int maxEqualRowsAfterFlips(vector<vector<int>> &matrix) {
-        int m = matrix.size();
-        int n = matrix.front().size();
         int res = 0;
         unordered_map<string, int> freq;
         for (auto &i: matrix) {
@@ -4598,6 +4596,48 @@ public:
         }
         return res;
     }
+
+    string lastSubstring(const string &s) {
+        int n = s.size();
+        auto start = std::max_element(s.begin(), s.end()) - s.begin();
+        int i = start;
+        int j = 1;
+        while (i + j < n) {
+            while (i + j < n && s[i + j] < s[i]) {
+                ++j;
+            }
+            if (i + j >= n)
+                return s.substr(i);
+            int k = 1;
+            while (i + j + k < n && s[i + j + k] == s[i + k] && k < j) {
+                ++k;
+            }
+            if (i + j + k >= n) {
+                return s.substr(i);
+            }
+            if (s[i + j + k] > s[i + k]) {
+                i = i + j;
+                j = 1;
+                continue;
+            }
+            j = j + k;
+        }
+        return s.substr(i);
+    }
+
+    string answerString(const string &word, int numFriends) {
+        int n = word.size();
+        if (numFriends == 1) return word;
+        char maxChar = std::ranges::max(word);
+        int maxLen = n - numFriends + 1;
+        string res;
+        res.push_back(maxChar);
+        for (int i = 0; i < n; ++i)
+            if (maxChar == word[i]) {
+                res = max(res, word.substr(i, min(n - i, maxLen)));
+            }
+        return res;
+    }
 };
 
 int main() {
@@ -4607,5 +4647,6 @@ int main() {
     cout << s.totalCost(a, 13, 23) << endl;
     vector<int> nums{2, 2, 1, 1, 2, 1, 2, 3, 2, 1, 1, 2, 2, 1, 3, 3, 2, 1, 2, 2, 2, 2, 2, 2, 3, 2};
     cout << s.lengthAfterTransformations("tk", 9, nums) << endl;
+    cout << s.lastSubstring("zaazaabcdezaazb") << endl;
     return 0;
 }
