@@ -4638,6 +4638,54 @@ public:
             }
         return res;
     }
+
+    string smallestEquivalentString(const string &s1, const string &s2, const string &baseStr) {
+        int num = 'z' - 'a' + 1;
+        vector<int> parents(num + 1);
+        vector<int> sizes(num + 1);
+        for (int i = 0; i <= num; ++i) {
+            parents[i] = i;
+            sizes[i] = 1;
+        }
+        auto uf_find = [&](int node) {
+            int next = parents[node];
+            while (next != parents[next]) {
+                next = parents[next];
+            }
+            return next;
+        };
+        auto uf_union = [&](int a, int b) {
+            if (a == b) return;
+            int pa = uf_find(a);
+            int pb = uf_find(b);
+            if (pa == pb) return;
+            if (sizes[a] < sizes[b]) {
+                parents[pa] = pb;
+                sizes[b] += sizes[a];
+            } else {
+                parents[pb] = pa;
+                sizes[a] += sizes[b];
+            }
+        };
+        for (int i = 0; i < s1.size(); ++i) {
+            uf_union(s1[i] - 'a' + 1, s2[i] - 'a' + 1);
+        }
+        unordered_map<int, char> groups;
+        for (int i = 0; i < num; ++i) {
+            char c = 'a' + i;
+            int groupID = uf_find(i + 1);
+            if (groups.contains(uf_find(i + 1))) {
+                groups[groupID] = min(groups[groupID], c);
+            } else {
+                groups[groupID] = c;
+            }
+        }
+        string res;
+        for (auto i: baseStr) {
+            res.push_back(groups[uf_find(i - 'a' + 1)]);
+        }
+        return res;
+    }
 };
 
 int main() {
