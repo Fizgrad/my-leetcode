@@ -23,6 +23,7 @@
 #include <numeric>
 #include <pthread.h>
 #include <queue>
+#include <ranges>
 #include <ratio>
 #include <regex>
 #include <semaphore>
@@ -4683,6 +4684,41 @@ public:
         string res;
         for (auto i: baseStr) {
             res.push_back(groups[uf_find(i - 'a' + 1)]);
+        }
+        return res;
+    }
+
+    string robotWithString(const string &s) {
+        string t;
+        string res;
+        int i = 0;
+        int n = s.size();
+        res.reserve(n);
+        vector<int> suffixMinChar;
+        suffixMinChar.emplace_back(n - 1);
+        for (int i = n - 1; i >= 0; --i) {
+            if (s[i] < s[suffixMinChar.back()]) {
+                suffixMinChar.emplace_back(i);
+            }
+        }
+        while (i < n) {
+            while (suffixMinChar.size() && suffixMinChar.back() < i) {
+                suffixMinChar.pop_back();
+            }
+            char minSChar = s[suffixMinChar.back()];
+            while (t.size() && t.back() <= minSChar) {
+                res.push_back(t.back());
+                t.pop_back();
+            }
+            if (s[i] > minSChar) {
+                t.push_back(s[i]);
+            } else
+                res.push_back(s[i]);
+            ++i;
+        }
+        while (t.size()) {
+            res.push_back(t.back());
+            t.pop_back();
         }
         return res;
     }
