@@ -4722,6 +4722,27 @@ public:
         }
         return res;
     }
+
+    string clearStars(string &s) {
+        if (std::find(s.begin(), s.end(), '*') == s.end()) return s;
+        string res;
+        auto cmp = [&](int a, int b) {
+            return s[a] > s[b] || (s[a] == s[b] && a < b);
+        };
+        priority_queue<int, vector<int>, decltype(cmp)> pq(cmp);
+        for (int i = 0; i < s.size(); ++i) {
+            if (s[i] == '*') {
+                s[pq.top()] = '*';
+                pq.pop();
+            } else {
+                pq.emplace(i);
+            }
+        }
+        for (int i = 0; i < s.size(); ++i) {
+            if (s[i] != '*') res.push_back(s[i]);
+        }
+        return res;
+    }
 };
 
 int main() {
