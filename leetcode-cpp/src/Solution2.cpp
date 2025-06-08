@@ -4743,6 +4743,29 @@ public:
         }
         return res;
     }
+
+    vector<int> lexicalOrder(int n) {
+        vector<int> res;
+        res.reserve(n);
+        auto dfs = [&](auto &&dfs, int tmp) -> void {
+            tmp *= 10;
+            if (tmp > 0) {
+                if (tmp <= n) {
+                    res.emplace_back(tmp);
+                    dfs(dfs, tmp);
+                }
+            }
+            for (int i = 1; i < 10; ++i) {
+                if (tmp + i <= n) {
+                    res.emplace_back(tmp + i);
+                    dfs(dfs, tmp + i);
+                } else
+                    return;
+            }
+        };
+        dfs(dfs, 0);
+        return res;
+    }
 };
 
 int main() {
