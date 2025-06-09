@@ -4766,6 +4766,33 @@ public:
         dfs(dfs, 0);
         return res;
     }
+
+    int findKthNumber(int n, int k) {
+        int prefix = 1;
+        auto countPrefixNum = [&](auto &&countPrefixNum, int num) {
+            int count = 0;
+            long long current = prefix;
+            long long next = prefix + 1;
+            while (current <= n) {
+                count += std::min(n + 1ll, next) - current;
+                current *= 10;
+                next *= 10;
+            }
+            return count;
+        };
+        --k;
+        while (k) {
+            auto count = countPrefixNum(countPrefixNum, prefix);
+            if (count <= k) {
+                ++prefix;
+                k -= count;
+            } else {
+                prefix *= 10;
+                --k;
+            }
+        }
+        return prefix;
+    }
 };
 
 int main() {
