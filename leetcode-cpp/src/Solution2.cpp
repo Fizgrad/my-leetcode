@@ -4793,6 +4793,23 @@ public:
         }
         return prefix;
     }
+
+    int maxDifference(const string &s) {
+        vector<int> freq('z' - 'a' + 1, 0);
+        for (auto c: s) {
+            freq[c - 'a']++;
+        }
+        auto maxOdd = 0;
+        auto minEven = 10000000;
+        for (auto i: freq) {
+            if (i == 0) continue;
+            if (i % 2 == 0) {
+                minEven = min(minEven, i);
+            } else
+                maxOdd = max(maxOdd, i);
+        }
+        return maxOdd - minEven;
+    }
 };
 
 int main() {
