@@ -4810,6 +4810,42 @@ public:
         }
         return maxOdd - minEven;
     }
+
+    int maxDifference(const string &s, int k) {
+        constexpr int MAX = std::numeric_limits<int>::max() >> 1;
+        constexpr int MIN = std::numeric_limits<int>::min() >> 1;
+        int n = s.size();
+        int res = MIN;
+        vector<vector<int>> prefix(5, vector<int>(n + 1, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int k = 0; k < 5; ++k) {
+                prefix[k][i + 1] = prefix[k][i];
+            }
+            ++prefix[s[i] - '0'][i + 1];
+        }
+        for (int i = 0; i <= 4; ++i) {
+            if (prefix[i][n] == 0) continue;
+            for (int j = 0; j <= 4; j++) {
+                if (i == j || prefix[j][n] == 0) continue;
+                int count = MIN;
+                int minPrefix[2][2] = {{MAX, MAX}, {MAX, MAX}};// even == 0, odd == 1
+                int left = 0;
+                int right = 0 + k;// exclusive
+                while (right <= n) {
+                    int rightPrefixI = prefix[i][right];
+                    int rightPrefixJ = prefix[j][right];
+                    while (left <= right - k && rightPrefixJ - prefix[j][left] >= 2) {
+                        minPrefix[prefix[i][left] & 1][prefix[j][left] & 1] = min(minPrefix[prefix[i][left] & 1][prefix[j][left] & 1], prefix[i][left] - prefix[j][left]);
+                        ++left;
+                    }
+                    count = max(count, rightPrefixI - rightPrefixJ - minPrefix[1 - rightPrefixI & 1][rightPrefixJ & 1]);
+                    ++right;
+                }
+                res = max(count, res);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
