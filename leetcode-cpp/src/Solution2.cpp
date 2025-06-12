@@ -4846,6 +4846,17 @@ public:
         }
         return res;
     }
+
+    int maxAdjacentDistance(vector<int> &nums) {
+        int res = std::numeric_limits<int>::min();
+        int n = nums.size();
+        for (int i = 0; i < n; ++i) {
+            if (std::abs(nums[i] - nums[(i + 1) % n]) > res) {
+                res = std::abs(nums[i] - nums[(i + 1) % n]);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
