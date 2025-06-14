@@ -4885,6 +4885,41 @@ public:
         }
         return res;
     }
+
+    int minMaxDifference(int num) {
+        int res = 0;
+        string tmp = to_string(num);
+        char prev = 'A';
+        for (auto &i: tmp) {
+            if (prev == 'A') {
+                if (i == '9')
+                    continue;
+                else {
+                    prev = i;
+                    i = '9';
+                }
+            } else if (i == prev) {
+                i = '9';
+            }
+        }
+        res = stoi(tmp);
+        tmp = to_string(num);
+        prev = 'A';
+        for (auto &i: tmp) {
+            if (prev == 'A') {
+                if (i == '0')
+                    continue;
+                else {
+                    prev = i;
+                    i = '0';
+                }
+            } else if (i == prev) {
+                i = '0';
+            }
+        }
+        res -= stoi(tmp);
+        return res;
+    }
 };
 
 int main() {
