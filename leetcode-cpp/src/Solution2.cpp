@@ -4920,6 +4920,53 @@ public:
         res -= stoi(tmp);
         return res;
     }
+
+    int maxDiff(int num) {
+        string tmp = to_string(num);
+        int max = 0;
+        char c = 'A';
+        for (int i = 0; i < tmp.size(); ++i) {
+            if (c != 'A') {
+                if (tmp[i] == c) {
+                    tmp[i] = '9';
+                }
+            } else {
+                if (tmp[i] == '9') {
+                    continue;
+                } else {
+                    c = tmp[i];
+                    tmp[i] = '9';
+                }
+            }
+        }
+        max = stoi(tmp);
+        c = 'A';
+        char toC = '0';
+        tmp = to_string(num);
+        if (tmp[0] != '1') {
+            c = tmp[0];
+            tmp[0] = '1';
+            toC = '1';
+        }
+        for (int i = 1; i < tmp.size(); ++i) {
+            if (c != 'A') {
+                if (tmp[i] == c) {
+                    tmp[i] = toC;
+                }
+            } else {
+                if (tmp[i] == '0') {
+                    continue;
+                } else {
+                    if (tmp[i] == '1') {
+                        continue;
+                    }
+                    c = tmp[i];
+                    tmp[i] = toC;
+                }
+            }
+        }
+        return max - stoi(tmp);
+    }
 };
 
 int main() {
