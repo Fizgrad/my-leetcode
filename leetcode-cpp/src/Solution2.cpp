@@ -4967,6 +4967,19 @@ public:
         }
         return max - stoi(tmp);
     }
+
+    int maximumDifference(vector<int> &nums) {
+        int n = nums.size();
+        int res = -1;
+        int minNum = nums[0];
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] > minNum) {
+                res = max(nums[i] - minNum, res);
+            }
+            minNum = min(minNum, nums[i]);
+        }
+        return res;
+    }
 };
 
 int main() {
