@@ -4980,6 +4980,36 @@ public:
         }
         return res;
     }
+
+    int countGoodArrays(int n, int m, int k) {
+        constexpr int MOD = 1e9 + 7;
+        auto fastPow = [&](long long a, long long b) {
+            long long res = 1;
+            if (a == 1) return res;
+            while (b >= 1) {
+                if (b & 1) {
+                    res = (res * a) % MOD;
+                }
+                b >>= 1;
+                a = (a * a) % MOD;
+            }
+            return res;
+        };
+        long long res = m;
+        auto modInverse = [&](long long i) {
+            return fastPow(i, MOD - 2) % MOD;
+        };
+        res = (res * fastPow(m - 1, n - 1 - k)) % MOD;
+        for (int i = n - k; i <= n - 1; ++i) {
+            res = (res * i) % MOD;
+        }
+        long long tmp = 1;
+        for (int i = 2; i <= k; ++i) {
+            tmp = (tmp * i) % MOD;
+        }
+        res = (res * modInverse(tmp)) % MOD;
+        return res;
+    }
 };
 
 int main() {
