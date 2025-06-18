@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bits/ranges_algo.h>
 #include <bitset>
 #include <cctype>
 #include <climits>
@@ -4952,6 +4953,17 @@ public:
 
         for (int i = 0; i < n; ++i) {
             res += static_cast<long long>(left[i]) * right[i];
+        }
+        return res;
+    }
+
+    vector<vector<int>> divideArray(vector<int> &nums, int k) {
+        std::ranges::sort(nums);
+        vector<vector<int>> res;
+        for (int i = 0; i < nums.size(); i += 3) {
+            if (nums[i + 2] - nums[i] > k)
+                return {};
+            res.push_back({nums[i], nums[i + 1], nums[i + 2]});
         }
         return res;
     }
