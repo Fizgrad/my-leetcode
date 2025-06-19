@@ -4967,6 +4967,20 @@ public:
         }
         return res;
     }
+
+    int partitionArray(vector<int> &nums, int k) {
+        int n = nums.size();
+        std::ranges::sort(nums);
+        int res = 1;
+        int start = nums.front();
+        for (int i = 1; i < n; ++i) {
+            if (nums[i] - start > k) {
+                ++res;
+                start = nums[i];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
