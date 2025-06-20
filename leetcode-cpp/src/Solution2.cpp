@@ -5010,6 +5010,55 @@ public:
         res = (res * modInverse(tmp)) % MOD;
         return res;
     }
+
+    int maxDistance(const string &s, int k) {
+        int ENum = 0;
+        int SNum = 0;
+        int WNum = 0;
+        int NNum = 0;
+        int x = 0;
+        int y = 0;
+        int res = 0;
+        for (auto c: s) {
+            switch (c) {
+                case 'W':
+                    ++WNum;
+                    --x;
+                    break;
+                case 'E':
+                    ++x;
+                    ++ENum;
+                    break;
+                case 'N':
+                    ++y;
+                    ++NNum;
+                    break;
+                case 'S':
+                    --y;
+                    ++SNum;
+                    break;
+                default:
+                    return -1;
+            }
+            int remainingK = k;
+            int tempX = x;
+            int tempY = y;
+            if (x > 0) {
+                remainingK -= min(remainingK, WNum);
+                tempX += 2 * (k - remainingK);
+            } else {
+                remainingK -= min(remainingK, ENum);
+                tempX -= 2 * (k - remainingK);
+            }
+            if (y > 0) {
+                tempY += 2 * min(remainingK, SNum);
+            } else {
+                tempY -= 2 * min(remainingK, NNum);
+            }
+            res = max(res, std::abs(tempX) + std::abs(tempY));
+        }
+        return res;
+    }
 };
 
 int main() {
