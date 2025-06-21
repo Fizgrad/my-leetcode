@@ -5059,6 +5059,34 @@ public:
         }
         return res;
     }
+
+    int minimumDeletions(const string &word, int k) {
+        constexpr char CHAR_BEGIN = 'a';
+        constexpr char CHAR_END = 'z';
+        constexpr int NUM = CHAR_END - CHAR_BEGIN + 1;
+        vector<int> freqs(NUM, 0);
+        for (auto c: word) {
+            ++freqs[c - CHAR_BEGIN];
+        }
+        std::ranges::sort(freqs);
+        int sum = std::accumulate(freqs.begin(), freqs.end(), 0);
+        int left = 0;
+        while (left < NUM && freqs[left] == 0) {
+            ++left;
+        }
+        int right = left;
+        int base = 0;
+        int res = std::numeric_limits<int>::max();
+        while (left < NUM) {
+            while (right + 1 < NUM && freqs[right + 1] - freqs[left] <= k) {
+                ++right;
+            }
+            res = min(res, base + std::accumulate(freqs.begin() + right + 1, freqs.end(), -(NUM - right - 1) * (freqs[left] + k)));
+            base += freqs[left];
+            ++left;
+        }
+        return res;
+    }
 };
 
 int main() {
