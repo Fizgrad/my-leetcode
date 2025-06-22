@@ -5087,6 +5087,24 @@ public:
         }
         return res;
     }
+
+    vector<string> divideString(const string &s, int k, char fill) {
+        vector<string> res;
+        res.reserve((s.size() + k - 1) / k);
+        int count = 0;
+        for (auto c: s) {
+            if (count == 0) {
+                res.push_back("");
+                res.back().reserve(k);
+            }
+            res.back().push_back(c);
+            count = (count + 1) % k;
+        }
+        while (res.back().size() < k) {
+            res.back().push_back(fill);
+        }
+        return res;
+    }
 };
 
 int main() {
