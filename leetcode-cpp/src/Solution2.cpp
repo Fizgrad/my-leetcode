@@ -8,6 +8,7 @@
 #include <cctype>
 #include <climits>
 #include <cmath>
+#include <compare>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
@@ -5104,6 +5105,48 @@ public:
             res.back().push_back(fill);
         }
         return res;
+    }
+
+    long long kMirror(int k, int n) {
+        auto isKPal = [&](long long x, int k) {
+            int digs[64], sz = 0;
+            while (x > 0) {
+                digs[sz++] = x % k;
+                x /= k;
+            }
+            for (int i = 0, j = sz - 1; i < j; ++i, --j) {
+                if (digs[i] != digs[j]) return false;
+            }
+            return true;
+        };
+        auto makePal = [&](long long half, int len, const vector<long long> &pow10) {
+            long long rev = 0, tmp = half;
+            if (len & 1) tmp /= 10;
+            while (tmp > 0) {
+                rev = rev * 10 + (tmp % 10);
+                tmp /= 10;
+            }
+            return half * pow10[len / 2] + rev;
+        };
+        vector<long long>
+                pow10(19, 1);
+        for (int i = 1; i < 19; ++i) pow10[i] = pow10[i - 1] * 10;
+
+        long long ans = 0;
+        int found = 0;
+        for (int len = 1; found < n; ++len) {
+            int halfLen = (len + 1) / 2;
+            long long start = pow10[halfLen - 1];
+            long long end = pow10[halfLen];
+            for (long long half = start; half < end && found < n; ++half) {
+                long long pal = makePal(half, len, pow10);
+                if (isKPal(pal, k)) {
+                    ans += pal;
+                    ++found;
+                }
+            }
+        }
+        return ans;
     }
 };
 
