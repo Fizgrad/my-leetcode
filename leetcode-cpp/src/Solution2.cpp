@@ -5148,6 +5148,28 @@ public:
         }
         return ans;
     }
+
+    vector<int> findKDistantIndices(vector<int> &nums, int key, int k) {
+        int n = nums.size();
+        vector<int> res;
+        res.reserve(n >> 1);
+        int lastIndex = -1;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] == key) {
+                lastIndex = i + k;
+                int fromIndex = i;
+                while (fromIndex > 0 && i - fromIndex < k && (res.empty() || fromIndex > res.back() + 1))
+                    --fromIndex;
+                for (int j = fromIndex; j < i; ++j) {
+                    res.push_back(j);
+                }
+            }
+            if (lastIndex >= i) {
+                res.push_back(i);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
