@@ -5231,6 +5231,26 @@ public:
         }
         return ans;
     }
+
+    int longestSubsequence(const string &s, int k) {
+        long long num = 0;
+        long long base = 1;
+        int i = s.size() - 1;
+        for (; i >= 0; --i) {
+            if (s[i] == '1') {
+                num += base;
+            }
+            if (base > k || num > k) {
+                break;
+            }
+            base <<= 1;
+        }
+        int remove = 0;
+        for (int j = i; j >= 0; --j) {
+            if (s[j] == '1') ++remove;
+        }
+        return s.size() - remove;
+    }
 };
 
 int main() {
