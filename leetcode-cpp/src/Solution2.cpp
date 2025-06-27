@@ -5251,6 +5251,73 @@ public:
         }
         return s.size() - remove;
     }
+
+    string longestSubsequenceRepeatedK(const string &s, int k) {
+        auto countTimes = [&](string &subsequence) {
+            int index = 0;
+            int count = 0;
+            if (subsequence.empty()) return false;
+            for (auto c: s) {
+                if (c == subsequence[index]) {
+                    if (index == subsequence.size() - 1) {
+                        ++count;
+                        if (count >= k) return true;
+                    }
+                    index = (index + 1) % subsequence.size();
+                }
+            }
+            return false;
+        };
+        vector<int> charNum('z' - 'a' + 1, 0);
+        for (auto c: s) {
+            ++charNum[c - 'a'];
+        }
+        vector<char> greaterThanKChars;
+        for (int i = 'z'; i >= 'a'; --i) {
+            if (charNum[i - 'a'] >= k) {
+                greaterThanKChars.push_back(i);
+            }
+        }
+        if (greaterThanKChars.empty()) return "";
+        if (greaterThanKChars.size() == 1) {
+            auto i = greaterThanKChars.front();
+            return string(charNum[i - 'a'] / k, i);
+        }
+        string subsequence = "";
+        string res;
+        string current;
+        auto dfs = [&](auto &&dfs, int pos, int len) -> bool {
+            if (pos == len) {
+                if (countTimes(current)) {
+                    res = current;
+                    return true;
+                }
+                return false;
+            }
+            for (char c: greaterThanKChars) {
+                int cnt_in_current = 0;
+                if (charNum[c - 'a'] < k) {
+                    continue;
+                }
+                charNum[c - 'a'] -= k;
+                current.push_back(c);
+                if (dfs(dfs, pos + 1, len)) {
+                    return true;
+                }
+                charNum[c - 'a'] += k;
+                current.pop_back();
+            }
+            return false;
+        };
+        int max_len = s.size() / k;
+        int bound = min(max_len, 8);
+        for (int len = bound; len >= 1; len--) {
+            if (dfs(dfs, 0, len)) {
+                return res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
