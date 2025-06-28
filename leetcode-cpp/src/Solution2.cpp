@@ -33,6 +33,7 @@
 #include <stack>
 #include <string.h>
 #include <string>
+#include <strings.h>
 #include <tuple>
 #include <type_traits>
 #include <unordered_map>
@@ -5313,6 +5314,26 @@ public:
         int bound = min(max_len, 8);
         for (int len = bound; len >= 1; len--) {
             if (dfs(dfs, 0, len)) {
+                return res;
+            }
+        }
+        return res;
+    }
+
+    vector<int> maxSubsequence(vector<int> &nums, int k) {
+        auto cmp = [&](int a, int b) {
+            return nums[a] > nums[b];
+        };
+        vector<int> indices(nums.size(), 0);
+        std::iota(indices.begin(), indices.end(), 0);
+        std::sort(indices.begin(), indices.end(), cmp);
+        std::sort(indices.begin(), indices.begin() + k);
+        vector<int> res;
+        res.reserve(k);
+        for (auto i: indices) {
+            if (k-- > 0)
+                res.emplace_back(nums[i]);
+            else {
                 return res;
             }
         }
