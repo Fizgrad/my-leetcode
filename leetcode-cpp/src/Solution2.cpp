@@ -5339,6 +5339,45 @@ public:
         }
         return res;
     }
+
+    int numSubseq(vector<int> &nums, int target) {
+        const long long int mod = 1e9 + 7;
+        int n = nums.size();
+        long long int res = 0;
+        std::sort(nums.begin(), nums.end());
+        unordered_map<int, int> cache;
+        auto fastPow = [&](int index) {
+            if (cache.contains(index)) {
+                return cache[index];
+            } else {
+                long long base = 2;
+                int res = 1;
+                int i = index;
+                while (index >= 1) {
+                    if (index & 1) {
+                        res = (res * base) % mod;
+                    }
+                    base = (base * base) % mod;
+                    index >>= 1;
+                }
+                return cache[i] = res;
+            }
+        };
+        int l = 0;
+        int r = n - 1;
+        while (l <= r) {
+            if (nums[l] + nums[r] > target) {
+                r = std::upper_bound(nums.begin(), nums.begin() + r + 1, target - nums[l]) - nums.begin();
+                if (nums[l] + nums[r] > target) {
+                    --r;
+                }
+            } else {
+                res = (res + fastPow(r - l)) % mod;
+                ++l;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
