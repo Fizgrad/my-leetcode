@@ -5378,6 +5378,27 @@ public:
         }
         return res;
     }
+
+    int findLHS(vector<int> &nums) {
+        std::ranges::sort(nums);
+        int begin = 0;
+        int mid = 0;
+        int res = 0;
+        int n = nums.size();
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] != nums[mid]) {
+                if (nums[mid] == nums[begin] + 1) {
+                    res = max(res, i - begin);
+                }
+                begin = mid;
+                mid = i;
+            }
+        }
+        if (nums[begin] + 1 == nums.back()) {
+            res = max(res, n - begin);
+        }
+        return res;
+    }
 };
 
 int main() {
