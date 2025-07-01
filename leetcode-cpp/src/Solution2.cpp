@@ -5399,6 +5399,23 @@ public:
         }
         return res;
     }
+
+    int possibleStringCount(const string &word) {
+        int res = 1;
+        char prev = word.front();
+        int count = 0;
+        for (auto c: word) {
+            if (c == prev) {
+                ++count;
+            } else {
+                res += (count - 1);
+                prev = c;
+                count = 1;
+            }
+        }
+        res += (count - 1);
+        return res;
+    }
 };
 
 int main() {
