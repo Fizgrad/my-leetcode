@@ -5416,6 +5416,50 @@ public:
         res += (count - 1);
         return res;
     }
+
+    int possibleStringCount(const string &word, int k) {
+        char prev = word.front();
+        vector<int> count;
+        count.emplace_back(0);
+        for (auto c: word) {
+            if (c == prev) {
+                ++count.back();
+            } else {
+                prev = c;
+                count.emplace_back(1);
+            }
+        }
+        constexpr int mod = 1e9 + 7;
+        long long res = 1;
+        for (auto i: count) {
+            res = (res * i) % mod;
+        }
+        int remains = k - count.size();
+        if (remains <= 0) return res;
+        vector<int> dp(k, 0);
+        vector<int> newDp(k, 0);
+        vector<int> prefix(k + 1, 0);
+        for (int j = 1; j <= min(k - 1, count[0]); ++j) {
+            dp[j] = 1;
+        }
+        for (int i = 1; i < count.size(); ++i) {
+            int num = count[i];
+            for (int j = i - 1; j < k; ++j) {
+                prefix[j + 1] = (prefix[j] + dp[j]) % mod;
+                newDp[j] = prefix[j];
+                if (j - num >= 0) {
+                    newDp[j] = (newDp[j] - prefix[j - num] + mod) % mod;
+                }
+            }
+            memset(prefix.data(), 0, prefix.size() * sizeof(decltype(prefix.front())));
+            dp.swap(newDp);
+        }
+        int sum = 0;
+        for (int i = 0; i < k; ++i) {
+            sum = (sum + dp[i]) % mod;
+        }
+        return (res - sum + mod) % mod;
+    }
 };
 
 int main() {
