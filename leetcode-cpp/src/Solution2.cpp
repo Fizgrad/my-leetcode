@@ -3,6 +3,7 @@
 //
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <bitset>
 #include <cassert>
 #include <cctype>
@@ -5459,6 +5460,10 @@ public:
             sum = (sum + dp[i]) % mod;
         }
         return (res - sum + mod) % mod;
+    }
+
+    char kthCharacter(int k) {
+        return 'a' + __popcount(k - 1);
     }
 };
 
