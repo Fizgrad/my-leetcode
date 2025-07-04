@@ -5465,6 +5465,22 @@ public:
     char kthCharacter(int k) {
         return 'a' + __popcount(k - 1);
     }
+
+    char kthCharacter(long long k, vector<int> &operations) {
+        auto dfs = [&](auto &&dfs, long long k) -> char {
+            if (k == 1) return 'a';
+            long long log2k = log2(k - 1);
+            long long pow2 = (1ll << log2k);
+            long long newK = k - pow2;
+            char prev = dfs(dfs, newK);
+            if (operations[log2k] == 1) {
+                if (prev == 'z') return 'a';
+                return prev + 1;
+            } else
+                return prev;
+        };
+        return dfs(dfs, k);
+    }
 };
 
 int main() {
