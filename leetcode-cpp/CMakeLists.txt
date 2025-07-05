@@ -4,6 +4,17 @@ project(LeetCodeSolutions)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_COMPILER "clang++")
+
+
+# Set the build type to Debug for retaining debugging information
+# You can also set this via the command line when configuring CMake:
+# cmake -DCMAKE_BUILD_TYPE=Debug ..
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
+
 # 包含 src 目录
 include_directories(src)
 

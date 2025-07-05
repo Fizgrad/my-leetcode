@@ -5467,19 +5467,15 @@ public:
     }
 
     char kthCharacter(long long k, vector<int> &operations) {
-        auto dfs = [&](auto &&dfs, long long k) -> char {
-            if (k == 1) return 'a';
-            long long log2k = log2(k - 1);
-            long long pow2 = (1ll << log2k);
-            long long newK = k - pow2;
-            char prev = dfs(dfs, newK);
-            if (operations[log2k] == 1) {
-                if (prev == 'z') return 'a';
-                return prev + 1;
-            } else
-                return prev;
-        };
-        return dfs(dfs, k);
+        long long bits = 0;
+        for (int i = 0; i < min(64ul, operations.size()); ++i) {
+            if (operations[i] == 1) {
+                bits |= (1ll << i);
+            }
+        }
+        // no __builtin_popcount here, because its parameter is uint32, it cannot
+        // calculate the popcount of long long.
+        return 'a' + std::bitset<64>((k - 1) & bits).count() % 26;
     }
 
     int findLucky(vector<int> &arr) {
@@ -5502,5 +5498,8 @@ int main() {
     vector<int> nums{2, 2, 1, 1, 2, 1, 2, 3, 2, 1, 1, 2, 2, 1, 3, 3, 2, 1, 2, 2, 2, 2, 2, 2, 3, 2};
     cout << s.lengthAfterTransformations("tk", 9, nums) << endl;
     cout << s.lastSubstring("zaazaabcdezaazb") << endl;
+    vector<int> operations = {0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1};
+    long long k = 12145134613;
+    cout << s.kthCharacter(k, operations) << endl;
     return 0;
 }
