@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <array>
 #include <bit>
+#include <bits/iterator_concepts.h>
 #include <bitset>
 #include <cassert>
 #include <cctype>
@@ -5487,6 +5488,49 @@ public:
             if (count[i] == i) return i;
         }
         return -1;
+    }
+
+    int maxEvents(vector<vector<int>> &events) {
+        std::sort(events.begin(), events.end());
+        auto cmp = [&](const auto &a, const auto &b) {
+            return events[a][1] > events[b][1];
+        };
+        std::priority_queue<int, vector<int>, decltype(cmp)> pq(cmp);
+        int time = 0;
+        int res = 0;
+        int indexOfEvents = 0;
+        while (indexOfEvents < events.size()) {
+            if (events[indexOfEvents][0] <= time) {
+                pq.emplace(indexOfEvents);
+                ++indexOfEvents;
+                continue;
+            }
+            if (pq.empty()) {
+                time = events[indexOfEvents][0];
+                continue;
+            }
+            while (pq.size()) {
+                if (events[pq.top()][1] < time) {
+                    pq.pop();
+                } else
+                    break;
+            }
+            if (pq.size()) {
+                ++res;
+                ++time;
+                pq.pop();
+            }
+        }
+        while (pq.size()) {
+            if (events[pq.top()][1] < time) {
+                pq.pop();
+            } else {
+                ++res;
+                ++time;
+                pq.pop();
+            }
+        }
+        return res;
     }
 };
 
