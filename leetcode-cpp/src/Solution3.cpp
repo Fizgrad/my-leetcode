@@ -4659,6 +4659,43 @@ public:
         }
         return res;
     }
+
+    int maxValue(vector<vector<int>> &events, int k) {
+        int n = events.size();
+        std::sort(events.begin(), events.end());
+        auto findNext = [&](auto index) {
+            int end = events[index][1];
+            int low = index + 1;
+            int high = n - 1;
+            int next = n;
+            while (low <= high) {
+                int mid = (low + high) >> 1;
+                if (events[mid][0] > end) {
+                    next = mid;
+                    high = mid - 1;
+                } else {
+                    low = mid + 1;
+                }
+            }
+            return next;
+        };
+
+        vector<vector<int>> dp(n, vector<int>(k + 1, -1));
+
+        auto dfs = [&](auto &&dfs, int index, int k) {
+            if (index >= n || k <= 0) {
+                return 0;
+            }
+            if (dp[index][k] != -1) {
+                return dp[index][k];
+            }
+            int next = findNext(index);
+            int maxValue = dfs(dfs, next, k - 1) + events[index][2];
+            maxValue = max(maxValue, dfs(dfs, index + 1, k));
+            return dp[index][k] = maxValue;
+        };
+        return dfs(dfs, 0, k);
+    }
 };
 
 int main() {
