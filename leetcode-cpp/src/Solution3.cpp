@@ -4696,6 +4696,36 @@ public:
         };
         return dfs(dfs, 0, k);
     }
+
+    int maxFreeTime(int eventTime, int k, vector<int> &startTime, vector<int> &endTime) {
+        int n = startTime.size();
+        if (k >= n) {
+            int res = eventTime;
+            for (int i = 0; i < n; ++i) {
+                res -= endTime[i] - startTime[i];
+            }
+            return res;
+        }
+        auto duration = [&](auto i) {
+            return endTime[i] - startTime[i];
+        };
+        int sum = 0;
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            int start = 0;
+            if (i - k >= 0) {
+                start = endTime[i - k];
+                sum -= duration(i - k);
+            }
+            sum += duration(i);
+            int end = eventTime;
+            if (i + 1 < n) {
+                end = startTime[i + 1];
+            }
+            res = max(res, end - start - sum);
+        }
+        return res;
+    }
 };
 
 int main() {
