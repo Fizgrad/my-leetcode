@@ -29,7 +29,6 @@
 #include <ranges>
 #include <ratio>
 #include <regex>
-#include <semaphore>
 #include <set>
 #include <sstream>
 #include <stack>

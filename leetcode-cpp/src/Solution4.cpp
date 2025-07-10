@@ -3,7 +3,6 @@
 //
 #include <algorithm>
 #include <array>
-#include <bits/ranges_algo.h>
 #include <bitset>
 #include <cctype>
 #include <climits>
@@ -4977,6 +4976,50 @@ public:
             if (nums[i] - start > k) {
                 ++res;
                 start = nums[i];
+            }
+        }
+        return res;
+    }
+
+    int maxFreeTime(int eventTime, vector<int> &startTime, vector<int> &endTime) {
+        int n = startTime.size();
+        int res = 0;
+        vector<int> freeChunk;
+        freeChunk.reserve(n + 1);
+        freeChunk.emplace_back(startTime.front() - 0);
+        std::priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> maxFreeChunk;
+        maxFreeChunk.emplace(startTime.front(), 0);
+        for (int i = 1; i < n; ++i) {
+            res = max(res, freeChunk.back() + startTime[i] - endTime[i - 1]);
+            freeChunk.emplace_back(startTime[i] - endTime[i - 1]);
+            maxFreeChunk.emplace(freeChunk.back(), i);
+            if (maxFreeChunk.size() > 3) {
+                maxFreeChunk.pop();
+            }
+        }
+        res = max(res, freeChunk.back() + eventTime - endTime.back());
+        freeChunk.emplace_back(eventTime - endTime.back());
+        maxFreeChunk.emplace(freeChunk.back(), n);
+        vector<pair<int, int>> topThreeFreeChunks;
+        topThreeFreeChunks.reserve(3);
+        while (maxFreeChunk.size()) {
+            topThreeFreeChunks.emplace_back(maxFreeChunk.top());
+            maxFreeChunk.pop();
+        }
+        auto canMoveAway = [&](int index) {
+            auto duration = endTime[index] - startTime[index];
+            auto chunkBeforeIndex = index;
+            auto chunkAfterIndex = index + 1;
+            for (auto i = topThreeFreeChunks.rbegin(); i != topThreeFreeChunks.rend(); ++i) {
+                if (i->second == chunkBeforeIndex || i->second == chunkAfterIndex) continue;
+                if (i->first >= duration) return true;
+            }
+            return false;
+        };
+        std::sort(topThreeFreeChunks.begin(), topThreeFreeChunks.end());
+        for (int index = 0; index < n; ++index) {
+            if (canMoveAway(index)) {
+                res = max(res, endTime[index] - startTime[index] + freeChunk[index] + freeChunk[index + 1]);
             }
         }
         return res;
