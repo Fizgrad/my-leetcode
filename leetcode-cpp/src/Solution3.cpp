@@ -19,6 +19,7 @@
 #include <ostream>
 #include <queue>
 #include <ranges>
+#include <ratio>
 #include <regex>
 #include <set>
 #include <sstream>
@@ -4725,6 +4726,37 @@ public:
             res = max(res, end - start - sum);
         }
         return res;
+    }
+
+    int mostBooked(int n, vector<vector<int>> &meetings) {
+        vector<int> count(n, 0);
+        std::sort(meetings.begin(), meetings.end());
+        long long time = 0;
+        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> rooms;
+        priority_queue<int, vector<int>, greater<>> freeRooms;
+        for (int i = 0; i < n; ++i) {
+            freeRooms.emplace(i);
+        }
+        int meetingIndex = 0;
+        while (meetingIndex < meetings.size()) {
+            if (time < meetings[meetingIndex][0]) {
+                time = meetings[meetingIndex][0];
+            }
+            while (rooms.size() && rooms.top().first <= time) {
+                freeRooms.emplace(rooms.top().second);
+                rooms.pop();
+            }
+            if (freeRooms.empty()) {
+                time = rooms.top().first;
+            } else {
+                int chosenRoom = freeRooms.top();
+                freeRooms.pop();
+                rooms.emplace(time + meetings[meetingIndex][1] - meetings[meetingIndex][0], chosenRoom);
+                ++count[chosenRoom];
+                ++meetingIndex;
+            }
+        }
+        return std::max_element(count.begin(), count.end()) - count.begin();
     }
 };
 
