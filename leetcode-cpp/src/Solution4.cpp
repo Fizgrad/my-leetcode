@@ -5076,6 +5076,24 @@ public:
         }
         return {minRound, maxRound};
     }
+
+    int matchPlayersAndTrainers(vector<int> &players, vector<int> &trainers) {
+        std::ranges::sort(players);
+        std::ranges::sort(trainers);
+        int indexOfPlayers = 0;
+        int indexOfTrainers = 0;
+        int res = 0;
+        while (indexOfPlayers < players.size() && indexOfTrainers < trainers.size()) {
+            if (players[indexOfPlayers] <= trainers[indexOfTrainers]) {
+                ++res;
+                ++indexOfPlayers;
+                ++indexOfTrainers;
+            } else {
+                ++indexOfTrainers;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
