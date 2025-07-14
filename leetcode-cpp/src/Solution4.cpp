@@ -5094,6 +5094,17 @@ public:
         }
         return res;
     }
+
+    int getDecimalValue(ListNode *head) {
+        auto p = head;
+        int res = 0;
+        while (p != nullptr) {
+            res <<= 1;
+            res += p->val;
+            p = p->next;
+        }
+        return res;
+    }
 };
 
 int main() {
