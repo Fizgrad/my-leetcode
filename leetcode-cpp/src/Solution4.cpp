@@ -5105,6 +5105,28 @@ public:
         }
         return res;
     }
+
+    bool isValid(const string &word) {
+        if (word.size() < 3) return false;
+        string vowels = "aeiouAEIOU";
+        bool hasVowel = false;
+        bool hasConsonant = false;
+        for (auto c: word) {
+            if (isalpha(c)) {
+                if (!hasConsonant || !hasVowel) {
+                    if (vowels.find(c) != std::string::npos) {
+                        hasVowel = true;
+                    } else {
+                        hasConsonant = true;
+                    }
+                }
+            } else if (isdigit(c)) {
+                continue;
+            } else
+                return false;
+        }
+        return hasConsonant && hasVowel;
+    }
 };
 
 int main() {
