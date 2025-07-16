@@ -5127,6 +5127,28 @@ public:
         }
         return hasConsonant && hasVowel;
     }
+
+    int maximumLength(vector<int> &nums) {
+        decltype(nums.size()) ones = 0;
+        for (auto &i: nums) {
+            i = (i % 2);
+            if (i == 1) {
+                ++ones;
+            }
+        }
+        int res = max(ones, nums.size() - ones);
+        int oneBegin = 0;
+        int zeroBegin = 0;
+        for (auto &i: nums) {
+            if (oneBegin % 2 == 1 - i) {
+                ++oneBegin;
+            }
+            if (zeroBegin % 2 == i) {
+                ++zeroBegin;
+            }
+        }
+        return max(res, max(oneBegin, zeroBegin));
+    }
 };
 
 int main() {
