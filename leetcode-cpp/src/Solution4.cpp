@@ -5149,6 +5149,22 @@ public:
         }
         return max(res, max(oneBegin, zeroBegin));
     }
+    
+    int maximumLength(vector<int> &nums, int k) {
+        int n = nums.size();
+        int res = 0;
+        for (auto &i: nums) {
+            i = i % k;
+        }
+        vector<vector<int>> dp(n, vector<int>(k, 0));
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                int remainder = (nums[i] + nums[j]) % k;
+                res = max(res, dp[i][remainder] = max(dp[i][remainder], dp[j][remainder] + 1));
+            }
+        }
+        return 1 + res;
+    }
 };
 
 int main() {
