@@ -5,6 +5,7 @@
 #include <array>
 #include <bit>
 #include <bits/iterator_concepts.h>
+#include <bits/ranges_algo.h>
 #include <bitset>
 #include <cassert>
 #include <cctype>
@@ -5527,6 +5528,21 @@ public:
                 ++res;
                 ++time;
                 pq.pop();
+            }
+        }
+        return res;
+    }
+
+    vector<string> removeSubfolders(vector<string> &folder) {
+        std::ranges::sort(folder);
+        vector<string> res;
+        string &parent = folder.front();
+        for (auto &s: folder) {
+            if (s.starts_with(parent + '/')) {
+                continue;
+            } else {
+                res.emplace_back(s);
+                parent = s;
             }
         }
         return res;
