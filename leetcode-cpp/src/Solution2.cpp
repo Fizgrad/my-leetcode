@@ -5573,6 +5573,25 @@ public:
         }
         return *min_element(diff.begin(), diff.end());
     }
+
+    string makeFancyString(const string &s) {
+        string res;
+        res.reserve(s.size());
+        int time = 0;
+        char prev = 'a';
+        for (auto c: s) {
+            if (c == prev) {
+                ++time;
+            } else {
+                prev = c;
+                time = 1;
+            }
+            if (time <= 2) {
+                res.push_back(c);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
