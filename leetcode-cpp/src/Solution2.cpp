@@ -5592,6 +5592,30 @@ public:
         }
         return res;
     }
+
+    int maximumUniqueSubarray(vector<int> &nums) {
+        int n = nums.size();
+        int l = 0;
+        int r = 1;
+        int res = nums.front();
+        int sum = nums.front();
+        vector<int> ValueIndex(10000 + 1, -1);
+        ValueIndex[nums.front()] = 0;
+        while (r < n) {
+            if (ValueIndex[nums[r]] >= l) {
+                auto end = ValueIndex[nums[r]];
+                while (l <= end) {
+                    sum -= nums[l];
+                    ++l;
+                }
+            }
+            sum += nums[r];
+            ValueIndex[nums[r]] = r;
+            res = max(res, sum);
+            ++r;
+        }
+        return res;
+    }
 };
 
 int main() {
