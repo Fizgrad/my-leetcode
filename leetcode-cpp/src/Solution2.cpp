@@ -5616,6 +5616,54 @@ public:
         }
         return res;
     }
+
+    int maximumGain(const string &s, int x, int y) {
+        int res = 0;
+        int prevA = 0;
+        int prevB = 0;
+        if (x > y) {
+            for (auto c: s) {
+                if (c != 'a' && c != 'b') {
+                    res += min(prevA, prevB) * y;
+                    prevB = prevA = 0;
+                } else if (c == 'a') {
+                    ++prevA;
+                } else {
+                    if (prevA > 0) {
+                        --prevA;
+                        res += x;
+                    } else {
+                        ++prevB;
+                    }
+                }
+            }
+            if (min(prevA, prevB) > 0) {
+                res += min(prevA, prevB) * y;
+                prevB = prevA = 0;
+            }
+        } else {
+            for (auto c: s) {
+                if (c != 'a' && c != 'b') {
+                    res += min(prevA, prevB) * x;
+                    prevB = prevA = 0;
+                } else if (c == 'a') {
+                    if (prevB == 0)
+                        ++prevA;
+                    else {
+                        --prevB;
+                        res += y;
+                    }
+                } else {
+                    ++prevB;
+                }
+            }
+            if (min(prevA, prevB) > 0) {
+                res += min(prevA, prevB) * x;
+                prevB = prevA = 0;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
