@@ -5664,6 +5664,52 @@ public:
         }
         return res;
     }
+
+    int minimumScore(vector<int> &nums, vector<vector<int>> &edges) {
+        int n = nums.size();
+        int res = std::numeric_limits<int>::max();
+        vector<vector<int>> adjacency(n, vector<int>());
+        vector<bool> visited(n, false);
+        vector<int> subtreeXorSum(n, -1);
+        vector<int> in(n, 0);
+        vector<int> out(n, 0);
+        for (auto &i: edges) {
+            adjacency[i[0]].emplace_back(i[1]);
+            adjacency[i[1]].emplace_back(i[0]);
+        }
+        int count = 1;
+        auto dfs = [&](auto &&dfs, int node) -> int {
+            int xorSum = nums[node];
+            in[node] = count++;
+            for (auto next: adjacency[node]) {
+                if (!visited[next]) {
+                    visited[next] = true;
+                    subtreeXorSum[next] = dfs(dfs, next);
+                    xorSum ^= subtreeXorSum[next];
+                }
+            }
+            out[node] = count;
+            return xorSum;
+        };
+        std::fill(visited.begin(), visited.end(), false);
+        visited[0] = true;
+        int xorAllNums = dfs(dfs, 0);
+        auto calculate = [&](int num1, int num2) {
+            res = min(res, max(max(num1, num2), xorAllNums ^ num1 ^ num2) - min(min(num1, num2), xorAllNums ^ num1 ^ num2));
+        };
+        for (int i = 1; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                if (in[j] < in[i] && out[j] >= out[i]) {
+                    calculate(subtreeXorSum[i], subtreeXorSum[j] ^ subtreeXorSum[i]);
+                } else if (in[i] < in[j] && out[i] >= out[j]) {
+                    calculate(subtreeXorSum[j], subtreeXorSum[j] ^ subtreeXorSum[i]);
+                } else {
+                    calculate(subtreeXorSum[j], subtreeXorSum[i]);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
