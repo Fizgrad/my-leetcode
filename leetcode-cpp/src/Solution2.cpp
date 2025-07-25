@@ -5710,6 +5710,23 @@ public:
         }
         return res;
     }
+
+    int maxSum(vector<int> &nums) {
+        vector<bool> exists(101, false);
+        int res = std::numeric_limits<int>::min();
+        int sum = 0;
+        for (auto i: nums) {
+            res = max(res, i);
+            if (i >= 0 && !exists[i]) {
+                exists[i] = true;
+                sum += i;
+            }
+        }
+        if (sum > 0 || exists[0]) {
+            res = max(res, sum);
+        }
+        return res;
+    }
 };
 
 int main() {
