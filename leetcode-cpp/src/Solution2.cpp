@@ -5727,6 +5727,24 @@ public:
         }
         return res;
     }
+
+    int countHillValley(vector<int> &nums) {
+        int n = nums.size();
+        int prev = nums[0];
+        int cmp = 0;
+        int res = 0;
+        for (int i = 1; i < n; ++i) {
+            if (nums[i] > prev) {
+                if (cmp == -1) ++res;
+                cmp = 1;
+            } else if (nums[i] < prev) {
+                if (cmp == 1) ++res;
+                cmp = -1;
+            }
+            prev = nums[i];
+        }
+        return res;
+    }
 };
 
 int main() {
