@@ -5745,6 +5745,30 @@ public:
         }
         return res;
     }
+
+    int countMaxOrSubsets(vector<int> &nums) {
+        int maxOrSum = 0;
+        for (auto i: nums) {
+            maxOrSum |= i;
+        }
+        int res = 0;
+        auto dfs = [&](auto &&dfs, int orSum, int index) {
+            if (index >= nums.size()) {
+                if (orSum == maxOrSum) {
+                    ++res;
+                }
+                return;
+            }
+            dfs(dfs, orSum, index + 1);
+            orSum |= nums[index];
+            if (orSum == maxOrSum) {
+                res += (1 << (nums.size() - index - 1));
+            } else
+                dfs(dfs, orSum, index + 1);
+        };
+        dfs(dfs, 0, 0);
+        return res;
+    }
 };
 
 int main() {
