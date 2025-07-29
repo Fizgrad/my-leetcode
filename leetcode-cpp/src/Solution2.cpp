@@ -5769,6 +5769,44 @@ public:
         dfs(dfs, 0, 0);
         return res;
     }
+
+    vector<int> smallestSubarrays(vector<int> &nums) {
+        int n = nums.size();
+        vector<int> AllOrSum(32, 0);
+        auto addToSum = [&](int index, vector<int> &sum) {
+            for (int j = 0; j < 32; ++j) {
+                if (nums[index] & (1 << j)) {
+                    ++sum[j];
+                }
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            addToSum(i, AllOrSum);
+        }
+        vector<int> leftPreOrSum(32, 0);
+        vector<int> rightOrSum(32, 0);
+        vector<int> res(n, n);
+        int left = 0;
+        int right = 0;
+        addToSum(0, rightOrSum);
+        while (left < n) {
+            while (right < left || right + 1 < n && ![&]() {
+                for (int k = 0; k < 32; ++k) {
+                    if (AllOrSum[k] - leftPreOrSum[k] > 0) {
+                        if (rightOrSum[k] - leftPreOrSum[k] <= 0) return false;
+                    }
+                }
+                return true;
+            }()) {
+                ++right;
+                addToSum(right, rightOrSum);
+            }
+            res[left] = right - left + 1;
+            addToSum(left, leftPreOrSum);
+            ++left;
+        }
+        return res;
+    }
 };
 
 int main() {
