@@ -5149,7 +5149,7 @@ public:
         }
         return max(res, max(oneBegin, zeroBegin));
     }
-    
+
     int maximumLength(vector<int> &nums, int k) {
         int n = nums.size();
         int res = 0;
@@ -5164,6 +5164,26 @@ public:
             }
         }
         return 1 + res;
+    }
+
+    int longestSubarray(vector<int> &nums) {
+        auto maxElementIter = std::max_element(nums.begin(), nums.end());
+        int res = 1;
+        int len = 1;
+        int maxNum = *maxElementIter;
+        while (maxElementIter != nums.end()) {
+            ++maxElementIter;
+            if (maxElementIter == nums.end()) return res;
+            if (*maxElementIter == maxNum) {
+                ++len;
+                res = max(res, len);
+            } else {
+                maxElementIter = std::max_element(maxElementIter + 1, nums.end());
+                if (maxElementIter == nums.end() || *maxElementIter < maxNum) return res;
+                len = 1;
+            }
+        }
+        return res;
     }
 };
 
