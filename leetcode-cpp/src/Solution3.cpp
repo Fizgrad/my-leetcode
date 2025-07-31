@@ -4758,6 +4758,21 @@ public:
         }
         return std::max_element(count.begin(), count.end()) - count.begin();
     }
+
+    int subarrayBitwiseORs(vector<int> &arr) {
+        unordered_set<int> res;
+        for (int i = 0; i < arr.size(); ++i) {
+            res.insert(arr[i]);
+            for (int j = i - 1; j >= 0; --j) {
+                if ((arr[j] | arr[i]) == arr[j]) {
+                    break;
+                }
+                arr[j] |= arr[i];
+                res.insert(arr[j]);
+            }
+        }
+        return res.size();
+    }
 };
 
 int main() {
