@@ -4773,6 +4773,19 @@ public:
         }
         return res.size();
     }
+
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> res(1, vector<int>(1, 1));
+        for (int i = 1; i < numRows; ++i) {
+            vector<int> back = res.back();
+            for (int k = back.size() - 1; k > 0; --k) {
+                back[k] += back[k - 1];
+            }
+            back.emplace_back(1);
+            res.emplace_back(back);
+        }
+        return res;
+    }
 };
 
 int main() {
