@@ -5185,6 +5185,42 @@ public:
         }
         return res;
     }
+
+    long long minCost(vector<int> &basket1, vector<int> &basket2) {
+        unordered_map<int, int> freq;
+        long long res = 0;
+        for (auto i: basket1) {
+            freq[i]++;
+        }
+        for (auto i: basket2) {
+            freq[i]--;
+        }
+        vector<pair<int, int>> one2two;
+        vector<pair<int, int>> two2one;
+        int minElement = std::numeric_limits<int>::max();
+        for (auto &i: freq) {
+            minElement = min(minElement, i.first);
+            if ((i.second & 1) == 1) return -1;
+            if (i.second > 0) {
+                one2two.push_back({i.first, i.second});
+            } else if (i.second < 0) {
+                two2one.push_back({i.first, -i.second});
+            }
+        }
+        std::ranges::sort(one2two);
+        std::ranges::sort(two2one);
+        auto indexOfOne2Two = 0;
+        auto indexOfTwo2One = two2one.size() - 1;
+        while (indexOfOne2Two < one2two.size()) {
+            long long swap = min(one2two[indexOfOne2Two].second / 2, two2one[indexOfTwo2One].second / 2);
+            res += swap * min(2 * minElement, min(one2two[indexOfOne2Two].first, two2one[indexOfTwo2One].first));
+            one2two[indexOfOne2Two].second -= swap * 2;
+            two2one[indexOfTwo2One].second -= swap * 2;
+            if (one2two[indexOfOne2Two].second == 0) ++indexOfOne2Two;
+            if (two2one[indexOfTwo2One].second == 0) --indexOfTwo2One;
+        }
+        return res;
+    }
 };
 
 int main() {
