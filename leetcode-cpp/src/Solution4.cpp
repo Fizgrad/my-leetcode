@@ -5221,6 +5221,90 @@ public:
         }
         return res;
     }
+
+    int maxTotalFruits(vector<vector<int>> &fruits, int startPos, int k) {
+        int n = fruits.size();
+        vector<int> prefix(n + 1, 0);
+        for (int i = 0; i < n; ++i) {
+            prefix[i + 1] = prefix[i] + fruits[i][1];
+        }
+        auto find_right_of = [&](int pos) {
+            int left = 0;
+            int right = fruits.size() - 1;
+            int res = -1;
+            while (left <= right) {
+                int mid = (left + right) >> 1;
+                if (fruits[mid][0] >= pos) {
+                    res = mid;
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            return res;
+        };
+        auto find_left_of = [&](int pos) {
+            int left = 0;
+            int right = fruits.size() - 1;
+            int res = -1;
+            while (left <= right) {
+                int mid = (left + right) >> 1;
+                if (fruits[mid][0] <= pos) {
+                    res = mid;
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+            return res;
+        };
+
+        auto getSumFromIndexX2IndexY = [&](int indexX, int indexY) {
+            if (indexX == -1 || indexY == -1) return 0;
+            return prefix[indexY + 1] - prefix[indexX];
+        };
+
+        int res = 0;
+        for (int i = startPos; i <= startPos + k;) {
+            int rightmostIndex = find_left_of(i);
+            int firstPickIndex = find_right_of(startPos);
+            int toRight = getSumFromIndexX2IndexY(firstPickIndex, rightmostIndex);
+            int remainingK = k - i + startPos;
+            int endPos = i - remainingK;
+            int toLeft = 0;
+            if (endPos < startPos) {
+                int leftmostIndex = find_right_of(endPos);
+                int lastPickIndex = find_left_of(startPos - 1);
+                toLeft = getSumFromIndexX2IndexY(leftmostIndex, lastPickIndex);
+            }
+            // cout << i << " " << toRight << " " << endPos << " " << toLeft << endl;
+            res = max(res, toLeft + toRight);
+            int nextI = find_right_of(i + 1);
+            if (nextI == -1) break;
+            else
+                i = fruits[nextI][0];
+        }
+        for (int i = startPos; i >= startPos - k;) {
+            int firstPickIndex = find_left_of(startPos);
+            int leftmostIndex = find_right_of(i);
+            int toLeft = getSumFromIndexX2IndexY(leftmostIndex, firstPickIndex);
+            int remainingK = k - startPos + i;
+            int endPos = i + remainingK;
+            int toRight = 0;
+            if (endPos > startPos) {
+                int lastPickIndex = find_right_of(startPos + 1);
+                int rightmostIndex = find_left_of(endPos);
+                toRight = getSumFromIndexX2IndexY(lastPickIndex, rightmostIndex);
+            }
+            // cout << i << " " << toLeft << " " << endPos << " " << toLeft << endl;
+            res = max(res, toLeft + toRight);
+            int nextI = find_left_of(i - 1);
+            if (nextI == -1) break;
+            else
+                i = fruits[nextI][0];
+        }
+        return res;
+    }
 };
 
 int main() {
