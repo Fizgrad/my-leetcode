@@ -5305,6 +5305,48 @@ public:
         }
         return res;
     }
+
+    int totalFruit(vector<int> &fruits) {
+        int n = fruits.size();
+        int res = 1;
+        int kind1 = fruits[0];
+        int kind2 = -1;
+        int num1 = 1;
+        int num2 = 0;
+        int left = 0;
+        int right = 1;
+        while (right < n) {
+            if (fruits[right] == kind1) {
+                ++num1;
+            } else {
+                if (kind2 == -1) {
+                    kind2 = fruits[right];
+                    ++num2;
+                } else if (kind2 == fruits[right]) {
+                    ++num2;
+                } else {
+                    while (num1 > 0 && num2 > 0) {
+                        if (fruits[left] == kind1) {
+                            --num1;
+                        } else {
+                            --num2;
+                        }
+                        ++left;
+                    }
+                    if (num1 == 0) {
+                        kind1 = fruits[right];
+                        num1 = 1;
+                    } else {
+                        kind2 = fruits[right];
+                        num2 = 1;
+                    }
+                }
+            }
+            ++right;
+            res = max(num1 + num2, res);
+        }
+        return res;
+    }
 };
 
 int main() {
