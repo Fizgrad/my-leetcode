@@ -140,6 +140,40 @@ public:
         }
         return fruits.size() - place;
     }
+
+    int maxCollectedFruits(vector<vector<int>> &fruits) {
+        int n = fruits.size();
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            res += fruits[i][i];
+            fruits[i][i] = 0;
+        }
+        vector<vector<int>> dp(n, vector<int>(n, -1));
+        dp[0][n - 1] = fruits[0][n - 1];
+        for (int i = 1; i < n; ++i) {
+            for (int j = i; j < n; ++j) {
+                for (int k = -1; k <= 1; ++k) {
+                    if (j + k >= n || j + k < 0 || dp[i - 1][j + k] == -1) continue;
+                    dp[i][j] = max(dp[i][j], fruits[i][j] + dp[i - 1][j + k]);
+                }
+            }
+        }
+        res += dp[n - 1][n - 1];
+        for (int i = 0; i < n; ++i) {
+            dp[i][i] = 0;
+        }
+        dp[n - 1][0] = fruits[n - 1][0];
+        for (int i = 1; i < n; ++i) {
+            for (int j = i; j < n; ++j) {
+                for (int k = -1; k <= 1; ++k) {
+                    if (j + k >= n || j + k < 0 || dp[j + k][i - 1] == -1) continue;
+                    dp[j][i] = max(dp[j][i], fruits[j][i] + dp[j + k][i - 1]);
+                }
+            }
+        }
+        res += dp[n - 1][n - 1];
+        return res;
+    }
 };
 
 int main() {
