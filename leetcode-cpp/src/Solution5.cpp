@@ -27,6 +27,7 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include <tuple>
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
@@ -177,6 +178,27 @@ public:
 
     bool isPowerOfTwo(int n) {
         return n != -2147483648 && __builtin_popcount(n) == 1;
+    }
+
+    bool reorderedPowerOf2(int n) {
+        set<long long int> sets;
+        long long int powerOfTen[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000000};
+        for (long long int i = 1; i < std::numeric_limits<int>::max(); i <<= 1) {
+            long long int tmp = i;
+            long long int res = 0;
+            while (tmp >= 1) {
+                res += powerOfTen[tmp % 10];
+                tmp /= 10;
+            }
+            sets.insert(res);
+        }
+        long long int tmp = n;
+        long long int res = 0;
+        while (tmp >= 1) {
+            res += powerOfTen[tmp % 10];
+            tmp /= 10;
+        }
+        return sets.contains(res);
     }
 };
 
