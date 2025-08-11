@@ -200,6 +200,35 @@ public:
         }
         return sets.contains(res);
     }
+
+    vector<int> productQueries(int n, vector<vector<int>> &queries) {
+        const int MOD = 1e9 + 7;
+        vector<int> powers;
+        for (int i = 0; (1ll << i) <= n; ++i) {
+            if ((1ll << i) & n)
+                powers.emplace_back(i);
+        }
+        vector<int> prefix(powers.size() + 1, 0);
+        for (int i = 0; i < powers.size(); ++i) {
+            prefix[i + 1] = prefix[i] + powers[i];
+        }
+        vector<int> res(queries.size());
+        auto fast_pow = [&](long long a, long long b) -> long long {
+            long long res = 1;
+            while (b >= 1) {
+                if (b % 2 == 1) {
+                    res = res * a % MOD;
+                }
+                b >>= 1;
+                a = a * a % MOD;
+            }
+            return res;
+        };
+        for (int i = 0; i < queries.size(); ++i) {
+            res[i] = fast_pow(2, prefix[queries[i][1] + 1] - prefix[queries[i][0]]);
+        }
+        return res;
+    }
 };
 
 int main() {
