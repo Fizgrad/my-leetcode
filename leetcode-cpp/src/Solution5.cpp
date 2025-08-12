@@ -229,6 +229,34 @@ public:
         }
         return res;
     }
+
+    int numberOfWays(int n, int x) {
+        constexpr int mod = 1e9 + 7;
+        vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
+        vector<long long int> powers(n + 1, 0);
+        for (int i = 0; i <= n; ++i) {
+            long long int num = 1;
+            for (int k = 0; k < x; ++k) {
+                num *= i;
+            }
+            powers[i] = num;
+        }
+
+        dp[0][0] = 1;
+        for (int i = 0; i <= n; ++i) {
+            int prefix = 0;
+            for (int k = 1; k <= n; ++k) {
+                prefix = (prefix + dp[i][k - 1]) % mod;
+                long long int num = powers[k];
+                if (i + num <= n) {
+                    dp[i + num][k] = prefix;
+                } else {
+                    break;
+                }
+            }
+        }
+        return std::accumulate(dp[n].begin(), dp[n].end(), 0ll) % mod;
+    }
 };
 
 int main() {
