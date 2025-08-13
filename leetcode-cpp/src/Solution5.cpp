@@ -257,6 +257,10 @@ public:
         }
         return std::accumulate(dp[n].begin(), dp[n].end(), 0ll) % mod;
     }
+
+    bool isPowerOfThree(int n) {
+        return n > 0 ? !(1162261467 % n) : false;
+    }
 };
 
 int main() {
