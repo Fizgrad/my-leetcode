@@ -261,6 +261,24 @@ public:
     bool isPowerOfThree(int n) {
         return n > 0 ? !(1162261467 % n) : false;
     }
+
+    string largestGoodInteger(const string &num) {
+        char prev = ' ';
+        int time = 0;
+        string res = "";
+        for (auto c: num) {
+            if (c == prev) {
+                ++time;
+                if (time == 3) {
+                    res = max(res, string(3, c));
+                }
+            } else {
+                time = 1;
+            }
+            prev = c;
+        }
+        return res;
+    }
 };
 
 int main() {
