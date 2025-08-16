@@ -283,6 +283,16 @@ public:
     bool isPowerOfFour(int n) {
         return n > 0 && __builtin_popcount(n) == 1 && (n - 1) % 3 == 0;
     }
+
+    int maximum69Number(int num) {
+        int res = num;
+        for (int i = 1; i <= num; i *= 10) {
+            if (num / i % 10 == 6) {
+                res = max(res, num + 3 * i);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
