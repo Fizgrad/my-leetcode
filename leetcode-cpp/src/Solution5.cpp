@@ -293,6 +293,30 @@ public:
         }
         return res;
     }
+
+    double new21Game(int n, int k, int maxPts) {
+        if (k == 0) return 1;
+        if (k - 1 + maxPts <= n) return 1;
+        if (n < k) return 0;
+
+        vector<double> dp(k + maxPts, 0);
+        double prefix = 0;
+        double prob = 1.0 / maxPts;
+        dp[0] = 1;
+        for (int i = 1; i < k + maxPts; ++i) {
+            if (i <= k)
+                prefix += dp[i - 1];
+            if (i - maxPts > 0) {
+                prefix -= dp[i - maxPts - 1];
+            }
+            dp[i] = prefix * prob;
+        }
+        double res = 0;
+        for (int i = k; i <= n; ++i) {
+            res += dp[i];
+        }
+        return res;
+    }
 };
 
 int main() {
