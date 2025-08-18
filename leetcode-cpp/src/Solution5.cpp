@@ -317,6 +317,65 @@ public:
         }
         return res;
     }
+
+    bool judgePoint24(vector<int> &cards) {
+        constexpr double delta = 1e-5;
+        auto judgePoint24Double = [&](auto &&judgePoint24Double, vector<double> &cards) {
+            if (cards.size() == 1) return cards.front() < 24 + delta && cards.front() > 24 - delta;
+            for (int i = 0; i < cards.size(); ++i) {
+                for (int j = i + 1; j < cards.size(); ++j) {
+                    vector<double> newCards;
+                    for (int k = 0; k < cards.size(); ++k) {
+                        if (k != i && k != j) {
+                            newCards.emplace_back(cards[k]);
+                        }
+                    }
+                    double a = cards[i];
+                    double b = cards[j];
+                    newCards.emplace_back(a - b);
+                    if (judgePoint24Double(judgePoint24Double, newCards)) {
+                        return true;
+                    }
+                    newCards.pop_back();
+                    newCards.emplace_back(a + b);
+                    if (judgePoint24Double(judgePoint24Double, newCards)) {
+                        return true;
+                    }
+                    newCards.pop_back();
+                    newCards.emplace_back(b - a);
+                    if (judgePoint24Double(judgePoint24Double, newCards)) {
+                        return true;
+                    }
+                    newCards.pop_back();
+                    newCards.emplace_back(a * b);
+                    if (judgePoint24Double(judgePoint24Double, newCards)) {
+                        return true;
+                    }
+                    newCards.pop_back();
+                    if (b != 0) {
+                        newCards.emplace_back(a / b);
+                        if (judgePoint24Double(judgePoint24Double, newCards)) {
+                            return true;
+                        }
+                        newCards.pop_back();
+                    }
+                    if (a != 0) {
+                        newCards.emplace_back(b / a);
+                        if (judgePoint24Double(judgePoint24Double, newCards)) {
+                            return true;
+                        }
+                        newCards.pop_back();
+                    }
+                }
+            }
+            return false;
+        };
+        vector<double> newCards;
+        for (auto i: cards) {
+            newCards.emplace_back(i);
+        }
+        return judgePoint24Double(judgePoint24Double, newCards);
+    }
 };
 
 int main() {
