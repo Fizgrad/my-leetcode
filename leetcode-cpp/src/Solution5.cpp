@@ -376,6 +376,19 @@ public:
         }
         return judgePoint24Double(judgePoint24Double, newCards);
     }
+
+    long long zeroFilledSubarray(vector<int> &nums) {
+        long long res = 0;
+        int prev = 0;
+        for (auto i: nums) {
+            if (i == 0) {
+                res += (++prev);
+            } else {
+                prev = 0;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
