@@ -405,6 +405,40 @@ public:
         }
         return res;
     }
+
+    int numSubmat(vector<vector<int>> &mat) {
+        int res = 0;
+        int n = mat.size();
+        int m = mat.front().size();
+        vector<vector<int>> up(n + 1, vector<int>(m + 1, 0));
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= m; ++j) {
+                if (mat[i - 1][j - 1] == 1) {
+                    up[i][j] = up[i - 1][j] + 1;
+                } else {
+                    up[i][j] = 0;
+                }
+            }
+        }
+        vector<vector<int>> left(n + 1, vector<int>(m + 1, 0));
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= m; ++j) {
+                if (mat[i - 1][j - 1] == 1) {
+                    left[i][j] = left[i][j - 1] + 1;
+                    int minLeft = left[i][j];
+                    for (int k = 0; k < up[i][j]; ++k) {
+                        int x = i - k;
+                        int y = j;
+                        minLeft = min(minLeft, left[x][y]);
+                        res += minLeft;
+                    }
+                } else {
+                    left[i][j] = 0;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
