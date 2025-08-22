@@ -439,6 +439,26 @@ public:
         }
         return res;
     }
+
+    int minimumArea(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int maxI = 0;
+        int minI = n;
+        int maxJ = 0;
+        int minJ = m;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 1) {
+                    maxI = max(maxI, i);
+                    maxJ = max(j, maxJ);
+                    minI = min(minI, i);
+                    minJ = min(j, minJ);
+                }
+            }
+        }
+        return (maxI - minI + 1) * (maxJ - minJ + 1);
+    }
 };
 
 int main() {
