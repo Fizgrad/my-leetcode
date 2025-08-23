@@ -459,6 +459,75 @@ public:
         }
         return (maxI - minI + 1) * (maxJ - minJ + 1);
     }
+
+    int minimumSum(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int ans = m * n;
+        auto calMinRect = [&](int x1, int y1, int x2, int y2) {
+            if (x1 >= n || x1 < 0 || y1 >= m || y1 < 0 || x2 >= n || x2 < 0 || y2 >= m || y2 < 0) {
+                return 0;
+            }
+            bool flag = false;
+            int maxI = x1;
+            int minI = x2;
+            int maxJ = y1;
+            int minJ = y2;
+            for (int i = x1; i <= x2; ++i) {
+                for (int j = y1; j <= y2; ++j) {
+                    if (grid[i][j] == 1) {
+                        flag = true;
+                        maxI = max(maxI, i);
+                        maxJ = max(j, maxJ);
+                        minI = min(minI, i);
+                        minJ = min(j, minJ);
+                    }
+                }
+            }
+            if (flag) {
+                return (maxI - minI + 1) * (maxJ - minJ + 1);
+            } else {
+                return 0;
+            }
+        };
+        auto splitVertically = [&](int x1, int y1, int x2, int y2) {
+            int res = (y2 - y1 + 1) * (x2 - x1 + 1);
+            for (int i = y1; i < y2; ++i) {
+                res = min(res, calMinRect(x1, y1, x2, i) + calMinRect(x1, i + 1, x2, y2));
+            }
+            return res;
+        };
+        auto splitHorizontally = [&](int x1, int y1, int x2, int y2) {
+            int res = (y2 - y1 + 1) * (x2 - x1 + 1);
+            for (int i = x1; i < x2; ++i) {
+                res = min(res, calMinRect(x1, y1, i, y2) + calMinRect(i + 1, y1, x2, y2));
+            }
+            return res;
+        };
+
+        for (int i = 0; i < n - 1; ++i) {
+            for (int j = i + 1; j < n - 1; ++j) {
+                ans = min(ans, calMinRect(0, 0, i, m - 1) + calMinRect(i + 1, 0, j, m - 1) + calMinRect(j + 1, 0, n - 1, m - 1));
+            }
+        }
+
+        for (int i = 0; i < m - 1; ++i) {
+            for (int j = i + 1; j < m - 1; ++j) {
+                ans = min(ans, calMinRect(0, 0, n - 1, i) + calMinRect(0, i + 1, n - 1, j) + calMinRect(0, j + 1, n - 1, m - 1));
+            }
+        }
+
+        for (int i = 0; i < n - 1; ++i) {
+            ans = min(ans, calMinRect(0, 0, i, m - 1) + splitVertically(i + 1, 0, n - 1, m - 1));
+            ans = min(ans, calMinRect(i + 1, 0, n - 1, m - 1) + splitVertically(0, 0, i, m - 1));
+        }
+
+        for (int i = 0; i < m - 1; ++i) {
+            ans = min(ans, calMinRect(0, 0, n - 1, i) + splitHorizontally(0, i + 1, n - 1, m - 1));
+            ans = min(ans, calMinRect(0, i + 1, n - 1, m - 1) + splitHorizontally(0, 0, n - 1, i));
+        }
+        return ans;
+    }
 };
 
 int main() {
