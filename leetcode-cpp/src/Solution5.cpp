@@ -528,6 +528,27 @@ public:
         }
         return ans;
     }
+
+    int longestSubarray(vector<int> &nums) {
+        int n = nums.size();
+        int res = 0;
+        int prev = 0;
+        int len = 0;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] == 1) {
+                ++len;
+                res = max(res, len + prev);
+            } else {
+                if (len > 0) {
+                    prev = len;
+                    len = 0;
+                } else {
+                    prev = 0;
+                }
+            }
+        }
+        return res == n ? n - 1 : res;
+    }
 };
 
 int main() {
