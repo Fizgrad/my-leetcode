@@ -549,6 +549,58 @@ public:
         }
         return res == n ? n - 1 : res;
     }
+
+    vector<int> findDiagonalOrder(vector<vector<int>> &mat) {
+        int dx[2] = {-1, 1};
+        int dy[2] = {1, -1};
+        int x = 0;
+        int y = 0;
+        int n = mat.size();
+        int m = mat.front().size();
+        vector<int> res;
+        res.reserve(m * n);
+        int direction = 0;
+        int count = 0;
+        if (n == 1) {
+            return mat.front();
+        }
+        if (m == 1) {
+            for (int i = 0; i < n; ++i) {
+                res.emplace_back(mat[i][0]);
+            }
+            return res;
+        }
+        while (count < m * n) {
+            res.emplace_back(mat[x][y]);
+            x += dx[direction];
+            y += dy[direction];
+            ++count;
+            if (x < 0 && y < m) {
+                x = 0;
+                direction = 1 - direction;
+            } else if (y < 0 && x < n) {
+                y = 0;
+                direction = 1 - direction;
+            } else if (x < 0 && y >= m) {
+                x = 1;
+                y = m - 1;
+                direction = 1 - direction;
+            } else if (x >= n && y < 0) {
+                y = 1;
+                x = n - 1;
+                direction = 1 - direction;
+            } else if (x >= n && y >= 0 && y < m) {
+                y += 2;
+                x = n - 1;
+                direction = 1 - direction;
+            } else if (y >= m && x >= 0 && x < n) {
+                x += 2;
+                y = m - 1;
+                direction = 1 - direction;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
