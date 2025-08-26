@@ -601,6 +601,21 @@ public:
         }
         return res;
     }
+
+    int areaOfMaxDiagonal(vector<vector<int>> &dimensions) {
+        long long int maxDiagSquare = 0;
+        long long int res = 0;
+        for (auto &i: dimensions) {
+            auto diagSquare = 1ll * i[0] * i[0] + 1ll + i[1] * i[1];
+            if (diagSquare > maxDiagSquare) {
+                maxDiagSquare = diagSquare;
+                res = 1ll * i[0] * i[1];
+            } else if (diagSquare == maxDiagSquare) {
+                res = max(res, 1ll * i[0] * i[1]);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
