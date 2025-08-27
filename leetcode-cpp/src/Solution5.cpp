@@ -616,6 +616,91 @@ public:
         }
         return res;
     }
+
+    int lenOfVDiagonal(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int dx[4] = {1, 1, -1, -1};
+        int dy[4] = {1, -1, -1, 1};
+        vector<vector<vector<int>>> maxLen(4, vector<vector<int>>(n + 2, vector<int>(m + 2, 0)));
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            maxLen[2][i][0] = ((grid[i][0] == 0 || grid[i][0] == 2) ? 1 : 0);
+            maxLen[1][i][0] = ((grid[i][0] == 0 || grid[i][0] == 2) ? 1 : 0);
+            maxLen[3][i][m - 1] = ((grid[i][m - 1] == 0 || grid[i][m - 1] == 2) ? 1 : 0);
+            maxLen[0][i][m - 1] = ((grid[i][m - 1] == 0 || grid[i][m - 1] == 2) ? 1 : 0);
+        }
+        for (int j = 0; j < m; ++j) {
+            maxLen[2][0][j] = ((grid[0][j] == 0 || grid[0][j] == 2) ? 1 : 0);
+            maxLen[1][n - 1][j] = ((grid[n - 1][j] == 0 || grid[n - 1][j] == 2) ? 1 : 0);
+            maxLen[3][0][j] = ((grid[0][j] == 0 || grid[0][j] == 2) ? 1 : 0);
+            maxLen[0][n - 1][j] = ((grid[n - 1][j] == 0 || grid[n - 1][j] == 2) ? 1 : 0);
+        }
+        for (int i = 1; i < n; ++i) {
+            for (int j = 1; j < m; ++j) {
+                if (grid[i][j] == 0 && grid[i - 1][j - 1] == 2 || grid[i][j] == 2 && grid[i - 1][j - 1] == 0) {
+                    maxLen[2][i][j] = maxLen[2][i - 1][j - 1] + 1;
+                } else if (grid[i][j] == 2 || grid[i][j] == 0) {
+                    maxLen[2][i][j] = 1;
+                }
+            }
+        }
+
+        for (int i = n - 2; i >= 0; --i) {
+            for (int j = 1; j < m; ++j) {
+                if (grid[i][j] == 0 && grid[i + 1][j - 1] == 2 || grid[i][j] == 2 && grid[i + 1][j - 1] == 0) {
+                    maxLen[1][i][j] = maxLen[1][i + 1][j - 1] + 1;
+                } else if (grid[i][j] == 2 || grid[i][j] == 0) {
+                    maxLen[1][i][j] = 1;
+                }
+            }
+        }
+        for (int i = 1; i < n; ++i) {
+            for (int j = m - 2; j >= 0; --j) {
+                if (grid[i][j] == 0 && grid[i - 1][j + 1] == 2 || grid[i][j] == 2 && grid[i - 1][j + 1] == 0) {
+                    maxLen[3][i][j] = maxLen[3][i - 1][j + 1] + 1;
+                } else if (grid[i][j] == 2 || grid[i][j] == 0) {
+                    maxLen[3][i][j] = 1;
+                }
+            }
+        }
+        for (int i = n - 2; i >= 0; --i) {
+            for (int j = m - 2; j >= 0; --j) {
+                if (grid[i][j] == 0 && grid[i + 1][j + 1] == 2 || grid[i][j] == 2 && grid[i + 1][j + 1] == 0) {
+                    maxLen[0][i][j] = maxLen[0][i + 1][j + 1] + 1;
+                } else if (grid[i][j] == 2 || grid[i][j] == 0) {
+                    maxLen[0][i][j] = 1;
+                }
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 1) {
+                    res = max(1, res);
+                    for (int k = 0; k < 4; ++k) {
+                        int x = i + dx[k];
+                        int y = j + dy[k];
+                        int temp = 0;
+                        int last = 1;
+                        while (true) {
+                            if (x < 0 || x >= n || y < 0 || y >= m) {
+                                break;
+                            }
+                            if (last == 1 && grid[x][y] != 2 || last == 2 && grid[x][y] != 0 || last == 0 && grid[x][y] != 2) {
+                                break;
+                            }
+                            res = max(res, ++temp);
+                            res = max(res, temp + maxLen[(k + 1) % 4][x][y]);
+                            last = grid[x][y];
+                            x = x + dx[k];
+                            y = y + dy[k];
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
