@@ -701,6 +701,41 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> sortMatrix(vector<vector<int>> &grid) {
+        int n = grid.size();
+        for (int i = 0; i < n; ++i) {
+            int x = i;
+            int y = 0;
+            while (x >= 0 && x < n && y >= 0 && y < n) {
+                int num = grid[x][y];
+                for (int p = x, q = y; p >= 0 && p < n && q >= 0 && q < n; ++p, ++q) {
+                    if (grid[p][q] > num) {
+                        num = grid[p][q];
+                        std::swap(grid[x][y], grid[p][q]);
+                    }
+                }
+                ++x;
+                ++y;
+            }
+        }
+        for (int i = 1; i < n; ++i) {
+            int x = 0;
+            int y = i;
+            while (x >= 0 && x < n && y >= 0 && y < n) {
+                int num = grid[x][y];
+                for (int p = x, q = y; p >= 0 && p < n && q >= 0 && q < n; ++p, ++q) {
+                    if (grid[p][q] < num) {
+                        num = grid[p][q];
+                        std::swap(grid[x][y], grid[p][q]);
+                    }
+                }
+                ++x;
+                ++y;
+            }
+        }
+        return grid;
+    }
 };
 
 int main() {
