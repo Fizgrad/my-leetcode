@@ -736,6 +736,18 @@ public:
         }
         return grid;
     }
+
+    long long flowerGame(long long int n, long long m) {
+        if (m & 1 && n & 1) {
+            return ((1ll + n) >> 1) * ((m - 1) >> 1) + ((n - 1ll) >> 1) * ((m + 1) >> 1);
+        } else if (n & 1) {
+            return ((1ll + n) >> 1) * ((m) >> 1) + ((n - 1ll) >> 1) * ((m) >> 1);
+        } else if (m & 1) {
+            return ((n) >> 1ll) * ((m - 1) >> 1) + ((n) >> 1ll) * ((m + 1) >> 1);
+        } else {
+            return ((n) >> 1ll) * ((m) >> 1ll) + ((n) >> 1ll) * ((m) >> 1ll);
+        }
+    }
 };
 
 int main() {
