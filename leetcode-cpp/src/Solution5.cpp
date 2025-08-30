@@ -748,6 +748,46 @@ public:
             return ((n) >> 1ll) * ((m) >> 1ll) + ((n) >> 1ll) * ((m) >> 1ll);
         }
     }
+
+    bool isValidSudoku(vector<vector<char>> &board) {
+        int n = board.size();
+        vector<int> count(9, 0);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (isdigit(board[i][j])) {
+                    if (++count[board[i][j] - '1'] > 1) {
+                        return false;
+                    }
+                }
+            }
+            std::fill(count.begin(), count.end(), 0);
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (isdigit(board[j][i])) {
+                    if (++count[board[j][i] - '1'] > 1) {
+                        return false;
+                    }
+                }
+            }
+            std::fill(count.begin(), count.end(), 0);
+        }
+        for (int i = 0; i < n; i += 3) {
+            for (int j = 0; j < n; j += 3) {
+                for (int k = 0; k < 3; ++k) {
+                    for (int l = 0; l < 3; ++l) {
+                        if (isdigit(board[j + k][i + l])) {
+                            if (++count[board[j + k][i + l] - '1'] > 1) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                std::fill(count.begin(), count.end(), 0);
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
