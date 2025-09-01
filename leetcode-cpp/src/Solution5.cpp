@@ -788,6 +788,27 @@ public:
         }
         return true;
     }
+
+    double maxAverageRatio(vector<vector<int>> &classes, int extraStudents) {
+        int n = classes.size();
+        auto cmp = [](const vector<int> &left, const vector<int> &right) {
+            int a = left[0], b = left[1];
+            int c = right[0], d = right[1];
+            return (b - a) * (d + 1ll) * d < (d - c) * (b + 1ll) * b;
+        };
+        std::make_heap(classes.begin(), classes.end(), cmp);
+        while (extraStudents--) {
+            std::pop_heap(classes.begin(), classes.end(), cmp);
+            ++classes.back().front();
+            ++classes.back().back();
+            std::push_heap(classes.begin(), classes.end(), cmp);
+        }
+        double res = 0;
+        for (auto &i: classes) {
+            res += static_cast<double>(i[0]) / i[1];
+        }
+        return res / n;
+    }
 };
 
 int main() {
