@@ -809,6 +809,31 @@ public:
         }
         return res / n;
     }
+
+    int numberOfPairs(vector<vector<int>> &points) {
+        int n = points.size();
+        auto cmp = [&](auto &a, auto &b) {
+            return a.front() < b.front() || (a.front() == b.front() && a.back() > b.back());
+        };
+        std::sort(points.begin(), points.end(), cmp);
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            int closest = -1;
+            for (int j = i + 1; j < n; ++j) {
+                if (points[j][1] > points[i][1]) {
+                    continue;
+                } else {
+                    if (closest == -1 || closest < points[j][1]) {
+                        ++res;
+                        closest = points[j][1];
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
