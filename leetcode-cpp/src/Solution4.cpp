@@ -5361,6 +5361,31 @@ public:
         }
         return fruits.size() - place;
     }
+
+    int numberOfPairs(vector<vector<int>> &points) {
+        int n = points.size();
+        auto cmp = [&](auto &a, auto &b) {
+            return a.front() < b.front() || (a.front() == b.front() && a.back() > b.back());
+        };
+        std::sort(points.begin(), points.end(), cmp);
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            int closest = std::numeric_limits<int>::min();
+            for (int j = i + 1; j < n; ++j) {
+                if (points[j][1] > points[i][1]) {
+                    continue;
+                } else {
+                    if (closest == std::numeric_limits<int>::min() || closest < points[j][1]) {
+                        ++res;
+                        closest = points[j][1];
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
