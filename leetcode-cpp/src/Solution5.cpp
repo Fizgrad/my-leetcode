@@ -834,6 +834,12 @@ public:
         }
         return res;
     }
+
+    int findClosest(int x, int y, int z) {
+        int xz = std::abs(z - x);
+        int yz = std::abs(z - y);
+        return xz == yz ? 0 : (xz > yz ? 2 : 1);
+    }
 };
 
 int main() {
