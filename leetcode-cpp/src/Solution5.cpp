@@ -840,6 +840,27 @@ public:
         int yz = std::abs(z - y);
         return xz == yz ? 0 : (xz > yz ? 2 : 1);
     }
+
+    int makeTheIntegerZero(int num1, int num2) {
+        int i = 0;
+        while (true) {
+            long long rest = num1 - 1ll * i * num2;
+            if (rest < 0) {
+                return -1;
+            }
+            if (rest == 1) {
+                if (i == 1) {
+                    return 1;
+                }
+            } else {
+                int oneCount = __builtin_popcountll(rest);
+                if (oneCount != 0 && oneCount <= i) {
+                    return i;
+                }
+            }
+            ++i;
+        }
+    }
 };
 
 int main() {
