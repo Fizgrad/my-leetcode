@@ -1,6 +1,7 @@
 
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <bitset>
 #include <cctype>
 #include <climits>
@@ -860,6 +861,28 @@ public:
             }
             ++i;
         }
+    }
+
+    long long minOperations(vector<vector<int>> &queries) {
+        long long res = 0;
+        auto log4 = [](auto x) {
+            return (31 - std::countl_zero(x)) / 2;
+        };
+        vector<long long> expSum4(18, 1);
+        for (int i = 1; i < 18; i++) {
+            expSum4[i] = expSum4[i - 1] + 3LL * i * (1LL << (2 * (i - 1))) + 1;
+        }
+        auto expSum = [&](unsigned x) -> long long {
+            if (x == 0) return 0;
+            int log4x = log4(x);
+            int r = x - (1 << (2 * log4x));
+            return expSum4[log4x] + r * (log4x + 1LL);
+        };
+        for (auto &q: queries) {
+            int l = q[0] - 1, r = q[1];
+            res += (expSum(r) - expSum(l) + 1) / 2;
+        }
+        return res;
     }
 };
 
