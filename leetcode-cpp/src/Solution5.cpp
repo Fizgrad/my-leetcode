@@ -884,6 +884,18 @@ public:
         }
         return res;
     }
+
+    vector<int> sumZero(int n) {
+        vector<int> res(n, 0);
+        for (int i = 0; 2 * i + 1 < n; ++i) {
+            res[2 * i] = (i + 1);
+            res[2 * i + 1] = -(i + 1);
+        }
+        if (n & 1) {
+            res.back() = 0;
+        }
+        return res;
+    }
 };
 
 int main() {
