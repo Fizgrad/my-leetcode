@@ -896,6 +896,42 @@ public:
         }
         return res;
     }
+
+    vector<int> getNoZeroIntegers(int n) {
+        int powerOfTen[6] = {1, 10, 100, 1000, 10000, 100000};
+        vector<int> digits;
+        int remain = n;
+        while (remain > 0) {
+            digits.emplace_back(remain % 10);
+            remain /= 10;
+        }
+        bool minus = false;
+        int num1 = 0;
+        for (int i = 0; i < digits.size(); ++i) {
+            if (minus && i + 1 == digits.size() - 1 && digits[digits.size() - 1] == 1) {
+                num1 += 9 * powerOfTen[i];
+                break;
+            }
+            if (minus && i == digits.size() - 1 && digits[i] == 1) {
+                break;
+            }
+            if (minus) {
+                --digits[i];
+                minus = false;
+            }
+            if (digits[i] == 0 || digits[i] == 1) {
+                if (i != digits.size() - 1) {
+                    minus = true;
+                    num1 += 9 * powerOfTen[i];
+                } else {
+                    num1 += digits[i] * powerOfTen[i];
+                }
+            } else {
+                num1 += (digits[i] - 1) * powerOfTen[i];
+            }
+        }
+        return {num1, n - num1};
+    }
 };
 
 int main() {
