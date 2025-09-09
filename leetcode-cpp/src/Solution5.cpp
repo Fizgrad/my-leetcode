@@ -932,6 +932,27 @@ public:
         }
         return {num1, n - num1};
     }
+
+    int peopleAwareOfSecret(int n, int delay, int forget) {
+        constexpr int mod = 1e9 + 7;
+        vector<int> dp(n + 1, 0);
+        dp[1] = 1;
+        int prefix = 0;
+        for (int i = 2; i <= n; ++i) {
+            if (i - forget >= 1) {
+                prefix = (prefix - dp[i - forget] + mod) % mod;
+            }
+            if (i - delay >= 1) {
+                prefix = (prefix + dp[i - delay]) % mod;
+            }
+            dp[i] = prefix;
+        }
+        int res = 0;
+        for (int i = n - forget + 1; i <= n; ++i) {
+            res = (res + dp[i]) % mod;
+        }
+        return res;
+    }
 };
 
 int main() {
