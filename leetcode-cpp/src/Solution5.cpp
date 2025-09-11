@@ -980,6 +980,30 @@ public:
 
         return ans;
     }
+
+    string sortVowels(const string &s) {
+        const string vowels = "AEIOUaeiou";
+        vector<int> vowelsCount(vowels.size(), 0);
+        for (int i = 0; i < s.size(); ++i) {
+            auto iter = vowels.find(s[i]);
+            if (iter != string::npos) {
+                vowelsCount[iter]++;
+            }
+        }
+        int index = 0;
+        string res = s;
+        for (int i = 0; i < s.size(); ++i) {
+            auto iter = vowels.find(s[i]);
+            if (iter != string::npos) {
+                while (index < vowelsCount.size() && vowelsCount[index] == 0) {
+                    ++index;
+                }
+                res[i] = vowels[index];
+                --vowelsCount[index];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
