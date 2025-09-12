@@ -1004,6 +1004,21 @@ public:
         }
         return res;
     }
+
+    bool doesAliceWin(const string &s) {
+        int n = s.size();
+        auto isVowel = [](char c) {
+            return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+        };
+        int vowelsCount = 0;
+        for (int i = 0; i < n; ++i) {
+            vowelsCount += (isVowel(s[i]) ? 1 : 0);
+        }
+        if (vowelsCount == 0) {
+            return false;
+        }
+        return true;
+    }
 };
 
 int main() {
