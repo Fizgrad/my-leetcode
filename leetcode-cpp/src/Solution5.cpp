@@ -1019,6 +1019,27 @@ public:
         }
         return true;
     }
+
+    int maxFreqSum(const string &s) {
+        int n = s.size();
+        const string vowels = "aeiou";
+        vector<int> freq(26, 0);
+        for (int i = 0; i < n; ++i) {
+            freq[s[i] - 'a']++;
+        }
+        int maxVowels = 0;
+        int maxConsonants = 0;
+        int maxFreq = 0;
+        for (int i = 0; i < 26; ++i) {
+            auto iter = vowels.find('a' + i);
+            if (iter != string::npos) {
+                maxVowels = max(maxVowels, freq[i]);
+            } else {
+                maxConsonants = max(maxConsonants, freq[i]);
+            }
+        }
+        return maxVowels + maxConsonants;
+    }
 };
 
 int main() {
