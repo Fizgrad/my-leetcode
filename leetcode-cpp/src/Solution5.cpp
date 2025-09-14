@@ -1040,6 +1040,54 @@ public:
         }
         return maxVowels + maxConsonants;
     }
+
+    vector<string> spellchecker(vector<string> &wordlist, vector<string> &queries) {
+        unordered_set<string> wordSet;
+        unordered_map<string, string> lowerMap;
+        unordered_map<string, string> vowelMap;
+        auto devowel = [](const string &s) {
+            string res = s;
+            for (auto &c: res) {
+                if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+                    c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+                    c = '*';
+                }
+            }
+            return res;
+        };
+        for (const auto &word: wordlist) {
+            wordSet.insert(word);
+            string lowerWord = word;
+            std::transform(lowerWord.begin(), lowerWord.end(), lowerWord.begin(), ::tolower);
+            if (lowerMap.find(lowerWord) == lowerMap.end()) {
+                lowerMap[lowerWord] = word;
+            }
+            string devowelWord = devowel(lowerWord);
+            if (vowelMap.find(devowelWord) == vowelMap.end()) {
+                vowelMap[devowelWord] = word;
+            }
+        }
+        vector<string> res;
+        for (const auto &query: queries) {
+            if (wordSet.find(query) != wordSet.end()) {
+                res.emplace_back(query);
+                continue;
+            }
+            string lowerQuery = query;
+            std::transform(lowerQuery.begin(), lowerQuery.end(), lowerQuery.begin(), ::tolower);
+            if (lowerMap.find(lowerQuery) != lowerMap.end()) {
+                res.emplace_back(lowerMap[lowerQuery]);
+                continue;
+            }
+            string devowelQuery = devowel(lowerQuery);
+            if (vowelMap.find(devowelQuery) != vowelMap.end()) {
+                res.emplace_back(vowelMap[devowelQuery]);
+                continue;
+            }
+            res.emplace_back("");
+        }
+        return res;
+    }
 };
 
 int main() {
