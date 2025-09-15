@@ -1088,6 +1088,38 @@ public:
         }
         return res;
     }
+
+    int canBeTypedWords(const string &text, const string &brokenLetters) {
+        if (brokenLetters.size() == 26) return 0;
+        int res = 0;
+        auto space = text.find(' ');
+        decltype(space) index = 0;
+        while (space != std::string::npos) {
+            bool flag = true;
+            for (auto c: brokenLetters) {
+                if (std::find(text.begin() + index, text.begin() + space, c) != text.begin() + space) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                ++res;
+            index = space + 1;
+            space = text.find(' ', space + 1);
+        }
+        if (index < text.size()) {
+            bool flag = true;
+            for (auto c: brokenLetters) {
+                if (std::find(text.begin() + index, text.end(), c) != text.end()) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
