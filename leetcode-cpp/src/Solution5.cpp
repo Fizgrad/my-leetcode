@@ -1120,6 +1120,29 @@ public:
         }
         return res;
     }
+
+    vector<int> replaceNonCoprimes(vector<int> &nums) {
+        auto gcd = [](int a, int b) {
+            while (b) {
+                int temp = a % b;
+                a = b;
+                b = temp;
+            }
+            return a;
+        };
+        auto lcm = [&](int a, int b) {
+            return a / gcd(a, b) * b;
+        };
+        vector<int> res;
+        for (auto num: nums) {
+            while (!res.empty() && gcd(res.back(), num) != 1) {
+                num = lcm(res.back(), num);
+                res.pop_back();
+            }
+            res.push_back(num);
+        }
+        return res;
+    }
 };
 
 int main() {
