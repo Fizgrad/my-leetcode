@@ -1143,6 +1143,22 @@ public:
         }
         return res;
     }
+
+    int maxFrequencyElements(vector<int> &nums) {
+        int max_freq = 1;
+        vector<int> times(101, 0);
+        int res = 0;
+        for (auto i: nums) {
+            ++times[i];
+            if (times[i] > max_freq) {
+                res = times[i];
+                max_freq = times[i];
+            } else if (times[i] == max_freq) {
+                res += times[i];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
