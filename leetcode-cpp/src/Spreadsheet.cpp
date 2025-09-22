@@ -53,3 +53,7 @@ public:
  * obj->resetCell(cell);
  * int param_3 = obj->getValue(formula);
  */
+
+int main() {
+    return 0;
+}

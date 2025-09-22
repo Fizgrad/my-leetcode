@@ -100,3 +100,7 @@ public:
  * obj->changeRating(food,newRating);
  * string param_2 = obj->highestRated(cuisine);
  */
+
+int main() {
+    return 0;
+}
