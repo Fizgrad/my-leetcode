@@ -1178,6 +1178,48 @@ public:
         }
         return 0;
     }
+
+    string fractionToDecimal(long long numerator, long long denominator) {
+        if (numerator == 0) return "0";
+        string res;
+        if ((numerator ^ denominator) < 0) {
+            res = "-";
+            numerator = std::abs(numerator);
+            denominator = std::abs(denominator);
+        }
+        long long gcd = [](long long a, long long b) {
+            if (a < b) {
+                std::swap(a, b);
+            }
+            while (b) {
+                int temp = a % b;
+                a = b;
+                b = temp;
+            }
+            return a;
+        }(numerator, denominator);
+        numerator /= gcd;
+        denominator /= gcd;
+        long long integerPart = numerator / denominator;
+        long long remain = numerator - integerPart * denominator;
+        unordered_map<long long, long long> remainSeen;
+        res = res + to_string(integerPart);
+        if (remain == 0) return res;
+        string decimalPart;
+        remainSeen[remain] = 0;
+        remain *= 10;
+        while (remain != 0) {
+            long long integerPart = remain / denominator;
+            remain = remain - integerPart * denominator;
+            decimalPart.push_back('0' + integerPart);
+            if (remainSeen.contains(remain)) {
+                return res + "." + decimalPart.substr(0, remainSeen[remain]) + "(" + decimalPart.substr(remainSeen[remain]) + ")";
+            }
+            remainSeen[remain] = decimalPart.size();
+            remain *= 10;
+        }
+        return res + "." + decimalPart;
+    }
 };
 
 int main() {
