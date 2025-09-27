@@ -1257,6 +1257,27 @@ public:
         }
         return res;
     }
+
+    double largestTriangleArea(vector<vector<int>> &points) {
+        int n = points.size();
+        double res = 0.0;
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                double x1 = points[i][0];
+                double y1 = points[i][1];
+                double x2 = points[j][0];
+                double y2 = points[j][1];
+                double len = std::sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+                for (int k = j + 1; k < n; ++k) {
+                    double x3 = points[k][0];
+                    double y3 = points[k][1];
+                    double dis = std::abs((y1 - y2) * x3 + (x2 - x1) * y3 + x1 * y2 - y1 * x2) / len;
+                    res = max(res, len * dis / 2);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
