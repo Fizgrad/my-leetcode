@@ -5386,6 +5386,74 @@ public:
         }
         return res;
     }
+
+    int triangularSum(vector<int> &nums) {
+        // 计算 C(n,k) mod 2：k & (n-k) == 0 则为 1，否则 0（前提：0<=k<=n）
+        auto C_mod2 = [&](unsigned long long n, unsigned long long k) {
+            if (k > n) return 0;
+            return ((k & (n - k)) == 0) ? 1 : 0;
+        };
+
+        // 预计算 0..4 的小组合数（整数），再取 mod 5。也可直接硬编码 Pascal 三角。
+        auto smallC_mod5 = [&](int n, int k) {
+            if (k < 0 || k > n) return 0;
+            // 直接小范围算精确值然后 %5
+            int num = 1;
+            for (int i = 1; i <= k; ++i) {
+                // 用整型安全地计算 C(n,k)，这里 n<=4 足够安全
+                num = num * (n - i + 1) / i;
+            }
+            return num % 5;
+        };
+
+        // Lucas 定理（底数 5）：C(n,k) mod 5
+        auto C_mod5 = [&](unsigned long long n, unsigned long long k) {
+            if (k > n) return 0;
+            int res = 1;
+            while (n > 0 || k > 0) {
+                int ni = static_cast<int>(n % 5);
+                int ki = static_cast<int>(k % 5);
+                int t = smallC_mod5(ni, ki);
+                if (t == 0) return 0;
+                res = (res * t) % 5;
+                n /= 5;
+                k /= 5;
+            }
+            return res;// 0..4
+        };
+
+        // 用 CRT 把 (mod 2, mod 5) 合并成 mod 10
+        auto crt_mod10 = [&](int a2, int a5) {
+            // x ≡ a2 (mod 2), x ≡ a5 (mod 5)
+            // 令 t ≡ a2 - a5 (mod 2)，则 x ≡ a5 + 5*t (mod 10)
+            int parity_b = (a5 & 1);
+            int t = (a2 ^ parity_b);// 等价于 (a2 - parity_b) & 1
+            int x = a5 + 5 * t;     // 结果本就落在 0..9
+            if (x >= 10) x -= 10;   // 保守起见
+            return x;
+        };
+
+        // 对外主函数：返回 C(n,k) mod 10
+        auto C_mod10 = [&](unsigned long long n, unsigned long long k) {
+            if (k > n) return 0;
+            // 对称性：C(n,k) == C(n,n-k)，可减少进位次数（可选）
+            if (k > n - k) k = n - k;
+
+            int a2 = C_mod2(n, k);
+            int a5 = C_mod5(n, k);
+            return crt_mod10(a2, a5);
+        };
+
+        int n = nums.size();
+        if (n == 1) return nums.front() % 10;
+
+        int res = 0;
+
+        for (int i = 0; i < n; ++i) {
+            res = (res + (C_mod10(n - 1, i) % 10) * nums[i]) % 10;
+        }
+        return res;
+    }
 };
 
 int main() {
