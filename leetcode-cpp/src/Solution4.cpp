@@ -5454,6 +5454,13 @@ public:
         }
         return res;
     }
+
+    int maxBottlesDrunk(int numBottles, int numExchange) {
+        if (numBottles < numExchange) {
+            return numBottles;
+        } else
+            return numExchange + maxBottlesDrunk(numBottles + 1 - numExchange, 1 + numExchange);
+    }
 };
 
 int main() {
