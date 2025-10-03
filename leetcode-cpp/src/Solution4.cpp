@@ -5461,6 +5461,51 @@ public:
         } else
             return numExchange + maxBottlesDrunk(numBottles + 1 - numExchange, 1 + numExchange);
     }
+
+    int trapRainWater(vector<vector<int>> &heightMap) {
+        int n = heightMap.size();
+        int m = heightMap.front().size();
+        using Coordinator = pair<int, int>;
+        using HeightCoordinator = pair<int, Coordinator>;
+        priority_queue<HeightCoordinator, vector<HeightCoordinator>, greater<>> pq;
+        vector<vector<bool>> isVisited(n, vector<bool>(m, false));
+        for (int i = 0; i < n; ++i) {
+            pq.emplace(heightMap[i][0], std::make_pair(i, 0));
+            pq.emplace(heightMap[i][m - 1], std::make_pair(i, m - 1));
+            isVisited[i][0] = true;
+            isVisited[i][m - 1] = true;
+        }
+        for (int i = 0; i < m; ++i) {
+            pq.emplace(heightMap[0][i], std::make_pair(0, i));
+            pq.emplace(heightMap[n - 1][i], std::make_pair(n - 1, i));
+            isVisited[n - 1][i] = true;
+            isVisited[0][i] = true;
+        }
+        int res = 0;
+        constexpr int d[5] = {0, 1, 0, -1, 0};
+        while (pq.size()) {
+            auto top = pq.top();
+            int x = top.second.first;
+            int y = top.second.second;
+            int curHeight = top.first;
+            pq.pop();
+            for (int k = 0; k < 4; ++k) {
+                int xx = d[k] + x;
+                int yy = d[k + 1] + y;
+                if (xx < 0 || yy < 0 || xx >= n || yy >= m) {
+                    continue;
+                }
+                // std::cout<< x << " " << y << " "<< curHeight << " " << xx << " " << yy <<" " <<  heightMap[xx][yy]<<std::endl;
+                if (isVisited[xx][yy]) {
+                    continue;
+                }
+                res += max(0, curHeight - heightMap[xx][yy]);
+                isVisited[xx][yy] = true;
+                pq.emplace(max(heightMap[xx][yy], curHeight), std::make_pair(xx, yy));
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
