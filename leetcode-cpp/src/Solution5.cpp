@@ -1305,6 +1305,25 @@ public:
         }
         return dp[0][n - 1];
     }
+
+    int maxArea(vector<int> &height) {
+        int n = height.size();
+        int res = 0;
+        int left = 0;
+        int right = n - 1;
+        int curHeight = min(height[left], height[right]);
+        res = max(res, curHeight * (right - left));
+        while (left < right) {
+            if (height[left] < height[right]) {
+                ++left;
+            } else {
+                --right;
+            }
+            int curHeight = min(height[left], height[right]);
+            res = max(res, curHeight * (right - left));
+        }
+        return res;
+    }
 };
 
 int main() {
