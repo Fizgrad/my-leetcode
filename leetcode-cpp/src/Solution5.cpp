@@ -1324,6 +1324,63 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> pacificAtlantic(vector<vector<int>> &heights) {
+        int n = heights.size();
+        int m = heights.front().size();
+        vector<vector<bool>> pacific(n, vector<bool>(m, false));
+        vector<vector<bool>> atlantic(n, vector<bool>(m, false));
+        vector<pair<int, int>> workSet;
+        workSet.reserve(m * n / 2);
+        for (int i = 0; i < m; ++i) {
+            pacific[0][i] = true;
+            atlantic[n - 1][i] = true;
+            workSet.emplace_back(0, i);
+        }
+        for (int i = 0; i < n; ++i) {
+            pacific[i][0] = true;
+            atlantic[i][m - 1] = true;
+            workSet.emplace_back(i, 0);
+        }
+        constexpr int d[5] = {0, 1, 0, -1, 0};
+        auto propagation = [&](auto &visiited) {
+            while (workSet.size()) {
+                auto [x, y] = workSet.back();
+                workSet.pop_back();
+                for (int i = 0; i < 4; ++i) {
+                    int xx = x + d[i];
+                    int yy = y + d[i + 1];
+                    if (xx < 0 || yy < 0 || xx >= n || yy >= m) {
+                        continue;
+                    }
+                    if (visiited[xx][yy]) continue;
+                    if (heights[xx][yy] >= heights[x][y]) {
+                        workSet.emplace_back(xx, yy);
+                        visiited[xx][yy] = true;
+                    }
+                }
+            }
+        };
+        propagation(pacific);
+        for (int i = 0; i < m; ++i) {
+            atlantic[n - 1][i] = true;
+            workSet.emplace_back(n - 1, i);
+        }
+        for (int i = 0; i < n; ++i) {
+            atlantic[i][m - 1] = true;
+            workSet.emplace_back(i, m - 1);
+        }
+        propagation(atlantic);
+        vector<vector<int>> res;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (atlantic[i][j] && pacific[i][j]) {
+                    res.push_back({i, j});
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
