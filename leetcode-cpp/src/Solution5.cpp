@@ -1381,6 +1381,42 @@ public:
         }
         return res;
     }
+
+    int swimInWater(vector<vector<int>> &grid) {
+        int n = grid.size();
+        vector<vector<int>> minReachTime(n, vector<int>(n, -1));
+        constexpr int d[5] = {0, 1, 0, -1, 0};
+        using Coordinate = pair<int, int>;
+        using Term = pair<int, Coordinate>;
+        priority_queue<Term, vector<Term>, greater<>> pq;
+        auto f = [&](int x, int y, int time) -> void {
+            for (int k = 0; k < 4; ++k) {
+                int xx = x + d[k];
+                int yy = y + d[k + 1];
+                if (xx < 0 || yy < 0 || xx >= n || yy >= n) {
+                    continue;
+                }
+                if (minReachTime[xx][yy] == -1) {
+                    minReachTime[xx][yy] = max(time, grid[xx][yy]);
+                    pq.emplace(minReachTime[xx][yy], std::make_pair(xx, yy));
+                } else {
+                    if (max(time, grid[xx][yy]) < minReachTime[xx][yy]) {
+                        minReachTime[xx][yy] = max(time, grid[xx][yy]);
+                        pq.emplace(minReachTime[xx][yy], std::make_pair(xx, yy));
+                    }
+                }
+            }
+        };
+        minReachTime[0][0] = grid[0][0];
+        pq.emplace(minReachTime[0][0], std::make_pair(0, 0));
+        while (pq.size()) {
+            auto [time, Coordinate] = pq.top();
+            pq.pop();
+            auto [x, y] = Coordinate;
+            f(x, y, time);
+        }
+        return minReachTime[n - 1][n - 1];
+    }
 };
 
 int main() {
