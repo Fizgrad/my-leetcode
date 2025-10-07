@@ -1417,6 +1417,34 @@ public:
         }
         return minReachTime[n - 1][n - 1];
     }
+
+    vector<int> avoidFlood(vector<int> &rains) {
+        int n = rains.size();
+        set<int> dryDays;
+        unordered_map<int, int> lakesToDry;
+        vector<int> res(n, -1);
+        for (int i = 0; i < n; ++i) {
+            if (rains[i] == 0) {
+                dryDays.emplace(i);
+            } else {
+                if (lakesToDry.contains(rains[i])) {
+                    if (dryDays.empty()) {
+                        return {};
+                    }
+                    auto it = dryDays.upper_bound(lakesToDry[rains[i]]);
+                    if (it == dryDays.end()) return {};
+                    auto choose = *it;
+                    res[choose] = rains[i];
+                    dryDays.erase(choose);
+                }
+                lakesToDry[rains[i]] = i;
+            }
+        }
+        for (auto i: dryDays) {
+            res[i] = 1;
+        }
+        return res;
+    }
 };
 
 int main() {
