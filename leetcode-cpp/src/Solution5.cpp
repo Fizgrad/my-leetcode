@@ -1445,6 +1445,18 @@ public:
         }
         return res;
     }
+
+    vector<int> successfulPairs(vector<int> &spells, vector<int> &potions, long long success) {
+        int n = spells.size();
+        int m = potions.size();
+        std::sort(potions.begin(), potions.end());
+        vector<int> res(n, 0);
+        for (int i = 0; i < n; ++i) {
+            auto it = std::lower_bound(potions.begin(), potions.end(), (success + spells[i] - 1) / spells[i]);
+            res[i] = std::distance(it, potions.end());
+        }
+        return res;
+    }
 };
 
 int main() {
