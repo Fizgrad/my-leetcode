@@ -1472,6 +1472,16 @@ public:
         }
         return done[n];
     }
+
+    int maximumEnergy(vector<int> &energy, int k) {
+        int n = energy.size();
+        vector<int> dp(k, 0);
+        int res = energy.back();
+        for (int i = n - 1; i >= 0; --i) {
+            res = max(res, dp[i % k] = dp[i % k] + energy[i]);
+        }
+        return res;
+    }
 };
 
 int main() {
