@@ -1482,6 +1482,32 @@ public:
         }
         return res;
     }
+
+    long long maximumTotalDamage(vector<int> &power) {
+        int n = power.size();
+        long long res = 0;
+        unordered_map<int, long long> time;
+        for (auto i: power) {
+            ++time[i];
+        }
+        std::ranges::sort(power);
+        auto iter = std::unique(power.begin(), power.end());
+        auto size = std::distance(power.begin(), iter);
+        power.resize(size);
+        vector<long long> dp(size + 1, 0);
+        for (auto i = power.begin(); i != iter; ++i) {
+            auto index = std::distance(power.begin(), i);
+            long long gain = power[index] * time[power[index]];
+            res = max(res, dp[index + 1] = max(dp[index], gain));
+            for (int k = index - 1; k >= 0; --k) {
+                if (power[index] - power[k] > 2) {
+                    res = max(res, dp[index + 1] = max(dp[index + 1], dp[k + 1] + gain));
+                    break;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
