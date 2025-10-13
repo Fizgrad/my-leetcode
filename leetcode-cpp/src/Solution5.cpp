@@ -1508,6 +1508,22 @@ public:
         }
         return res;
     }
+
+    vector<string> removeAnagrams(vector<string> &words) {
+        int n = words.size();
+        vector<string> res;
+        res.push_back(words[0]);
+        for (int i = 1; i < n; ++i) {
+            string sortedWord = words[i];
+            std::sort(sortedWord.begin(), sortedWord.end());
+            string sortedPrevWord = words[i - 1];
+            std::sort(sortedPrevWord.begin(), sortedPrevWord.end());
+            if (sortedWord != sortedPrevWord) {
+                res.push_back(words[i]);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
