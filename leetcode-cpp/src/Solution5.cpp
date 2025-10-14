@@ -1577,6 +1577,22 @@ public:
         Pascal();
         return dfs(dfs, m, k, 0, 0, nums);
     }
+
+    bool hasIncreasingSubarrays(vector<int> &nums, int k) {
+        int n = nums.size();
+        if (k == 1) return true;
+        int len = 1;
+        int prev = 0;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > nums[i - 1]) len++;
+            else {
+                if (max(len / 2, min(len, prev)) >= k) return true;
+                prev = len;
+                len = 1;
+            }
+        }
+        return max(len / 2, min(len, prev)) >= k;
+    }
 };
 
 int main() {
