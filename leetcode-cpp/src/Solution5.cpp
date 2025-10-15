@@ -1593,6 +1593,22 @@ public:
         }
         return max(len / 2, min(len, prev)) >= k;
     }
+
+    int maxIncreasingSubarrays(vector<int> &nums) {
+        int n = nums.size();
+        int res = 1;
+        int len = 1;
+        int prev = 0;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > nums[i - 1]) len++;
+            else {
+                res = max(res, max(len / 2, min(len, prev)));
+                prev = len;
+                len = 1;
+            }
+        }
+        return res = max(res, max(len / 2, min(len, prev)));
+    }
 };
 
 int main() {
