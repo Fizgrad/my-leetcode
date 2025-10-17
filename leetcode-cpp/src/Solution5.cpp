@@ -1609,6 +1609,19 @@ public:
         }
         return res = max(res, max(len / 2, min(len, prev)));
     }
+
+    int findSmallestInteger(vector<int> &nums, int value) {
+        vector<int> remains(value, 0);
+        for (auto i: nums) {
+            ++remains[i % value >= 0 ? i % value : i % value + value];
+        }
+        int res = std::numeric_limits<int>::max();
+        for (int i = 0; i < value; ++i) {
+            if (remains[i] > res) continue;
+            res = min(remains[i] * value + i, res);
+        }
+        return res;
+    }
 };
 
 int main() {
