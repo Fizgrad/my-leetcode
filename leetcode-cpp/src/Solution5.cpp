@@ -1622,6 +1622,42 @@ public:
         }
         return res;
     }
+
+    int maxPartitionsAfterOperations(const string &s, int k) {
+        unordered_map<long long, int> cache;
+        auto dp = [&](auto &&dp, long long index, long long currentSet, bool canChange) -> int {
+            long long key = (index << 27) | (currentSet << 1) | canChange;
+            if (cache.count(key)) {
+                return cache[key];
+            }
+            if (index == s.size()) {
+                return 0;
+            }
+            int characterIndex = s[index] - 'a';
+            int currentSetUpdated = currentSet | (1 << characterIndex);
+            int distinctCount = __builtin_popcount(currentSetUpdated);
+            int res;
+            if (distinctCount > k) {
+                res = 1 + dp(dp, index + 1, 1 << characterIndex, canChange);
+            } else {
+                res = dp(dp, index + 1, currentSetUpdated, canChange);
+            }
+            if (canChange) {
+                for (int newCharIndex = 0; newCharIndex < 26; ++newCharIndex) {
+                    int newSet = currentSet | (1 << newCharIndex);
+                    int newDistinctCount = __builtin_popcount(newSet);
+
+                    if (newDistinctCount > k) {
+                        res = max(res, 1 + dp(dp, index + 1, 1 << newCharIndex, false));
+                    } else {
+                        res = max(res, dp(dp, index + 1, newSet, false));
+                    }
+                }
+            }
+            return cache[key] = res;
+        };
+        return dp(dp, 0, 0, true) + 1;
+    }
 };
 
 int main() {
