@@ -1658,6 +1658,22 @@ public:
         };
         return dp(dp, 0, 0, true) + 1;
     }
+
+    int maxDistinctElements(vector<int> &nums, int k) {
+        std::sort(nums.begin(), nums.end());
+        int minNum = nums.front() - k;
+        int res = 1;
+        for (int i = 1; i < nums.size(); ++i) {
+            if (minNum < nums[i] - k) {
+                ++res;
+                minNum = nums[i] - k;
+            } else if (minNum < nums[i] + k) {
+                ++minNum;
+                ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
