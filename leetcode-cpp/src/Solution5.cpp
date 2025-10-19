@@ -1674,6 +1674,44 @@ public:
         }
         return res;
     }
+
+    string findLexSmallestString(const string &s, int a, int b) {
+        int n = s.size();
+        unordered_set<int> remainers;
+        unordered_set<int> rotations;
+        int tmp = b;
+        while (!rotations.contains(tmp)) {
+            rotations.insert(tmp);
+            tmp = (tmp + b) % n;
+        }
+        tmp = a;
+        while (!remainers.contains(tmp)) {
+            remainers.insert(tmp);
+            tmp = (tmp + a) % 10;
+        }
+        string res = s;
+        for (int i: rotations) {
+            string rotated = s.substr(i) + s.substr(0, i);
+            for (int r: remainers) {
+                string modified = rotated;
+                for (int j = 1; j < n; j += 2) {
+                    modified[j] = '0' + (modified[j] - '0' + r) % 10;
+                }
+                if (b % 2 == 0) {
+                    res = min(res, modified);
+                } else {
+                    for (int r2: remainers) {
+                        string modified2 = modified;
+                        for (int j = 0; j < n; j += 2) {
+                            modified2[j] = '0' + (modified2[j] - '0' + r2) % 10;
+                        }
+                        res = min(res, modified2);
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
