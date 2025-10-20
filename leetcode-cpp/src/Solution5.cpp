@@ -1712,6 +1712,18 @@ public:
         }
         return res;
     }
+
+    int finalValueAfterOperations(vector<string> &operations) {
+        int res = 0;
+        for (const auto &op: operations) {
+            if (op[1] == '+') {
+                ++res;
+            } else {
+                --res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
