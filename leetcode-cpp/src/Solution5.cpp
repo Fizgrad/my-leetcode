@@ -1724,6 +1724,46 @@ public:
         }
         return res;
     }
+
+    int maxFrequency(vector<int> &nums, int k, int numOperations) {
+        if (nums.empty() || nums.size() == 1) return nums.size();
+        vector<int> freq(100001, 0);
+        for (auto i: nums) {
+            ++freq[i];
+        }
+        if (numOperations == 0) {
+            int res = 0;
+            for (const auto &value: freq) {
+                res = max(res, value);
+            }
+            return res;
+        }
+
+        std::sort(nums.begin(), nums.end());
+        auto end = std::unique(nums.begin(), nums.end());
+        nums.resize(std::distance(nums.begin(), end));
+        int n = nums.size();
+        int left = 0;
+        int right = 0;
+        int requiredOperations = freq[nums[0]];
+        while (right + 1 < n && nums[right + 1] - nums[0] <= k) {
+            right++;
+            requiredOperations += freq[nums[right]];
+        }
+        int res = freq[nums[0]] + min(numOperations, requiredOperations - freq[nums[0]]);
+        for (int pivot = nums.front() + 1; pivot <= nums.back(); ++pivot) {
+            while (nums[left] < pivot && (pivot - nums[left]) > k) {
+                requiredOperations -= freq[nums[left]];
+                left++;
+            }
+            while (right + 1 < n && nums[right + 1] - pivot <= k) {
+                requiredOperations += freq[nums[right + 1]];
+                right++;
+            }
+            res = max(res, freq[pivot] + min(numOperations, requiredOperations - freq[pivot]));
+        }
+        return res;
+    }
 };
 
 int main() {
