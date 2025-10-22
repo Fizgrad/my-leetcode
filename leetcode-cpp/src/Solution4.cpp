@@ -5506,6 +5506,63 @@ public:
         }
         return res;
     }
+
+    int maxFrequency(vector<int> &nums, int k, int numOperations) {
+        if (nums.empty() || nums.size() == 1) return nums.size();
+        unordered_map<int, int> freq;
+        for (auto i: nums) {
+            ++freq[i];
+        }
+        if (numOperations == 0) {
+            int res = 0;
+            for (const auto &[key, value]: freq) {
+                res = max(res, value);
+            }
+            return res;
+        }
+
+        std::sort(nums.begin(), nums.end());
+        auto end = std::unique(nums.begin(), nums.end());
+        nums.resize(std::distance(nums.begin(), end));
+        int n = nums.size();
+        int left = 0;
+        int right = 0;
+        int requiredOperations = freq[nums[0]];
+        while (right + 1 < n && nums[right + 1] - nums[0] <= k) {
+            right++;
+            requiredOperations += freq[nums[right]];
+        }
+        int res = freq[nums[0]] + min(numOperations, requiredOperations - freq[nums[0]]);
+
+        // first case: make all numbers in [pivot - k, pivot + k], pivot is a number in nums
+        for (int i = 1; i < n; ++i) {
+            int pivot = nums[i];
+            while (nums[left] < pivot && (pivot - nums[left]) > k) {
+                requiredOperations -= freq[nums[left]];
+                left++;
+            }
+            while (right + 1 < n && nums[right + 1] - pivot <= k) {
+                requiredOperations += freq[nums[right + 1]];
+                right++;
+            }
+            res = max(res, freq[pivot] + min(numOperations, requiredOperations - freq[pivot]));
+        }
+
+        // second case: make all numbers in [pivot - 2k, pivot], pivot is a number in nums, which means the middle number is not in nums
+        left = 0;
+        right = 0;
+        requiredOperations = 0;
+        for (; right < n; ++right) {
+            requiredOperations += freq[nums[right]];
+            int pivot = nums[right];
+            while (left < right && (pivot - nums[left]) > 2 * k) {
+                requiredOperations -= freq[nums[left]];
+                left++;
+            }
+            res = max(res, min(numOperations, requiredOperations));
+        }
+        return res;
+    }
 };
 
 int main() {
