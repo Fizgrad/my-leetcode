@@ -1793,6 +1793,21 @@ public:
         total += (weekSum(1) + weekSum(fullWeeks)) * fullWeeks / 2 + partWeekSum(1 + fullWeeks, remainingDays);
         return total;
     }
+
+    int numberOfBeams(vector<string> &bank) {
+        int row = bank.size();
+        int col = bank.front().size();
+        int prevDevices = 0;
+        int res = 0;
+        for (int i = 0; i < row; ++i) {
+            int currentDevices = std::count(bank[i].begin(), bank[i].end(), '1');
+            if (currentDevices > 0) {
+                res += prevDevices * currentDevices;
+                prevDevices = currentDevices;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
