@@ -1808,6 +1808,25 @@ public:
         }
         return res;
     }
+
+    int countValidSelections(vector<int> &nums) {
+        int n = nums.size();
+        int prefix = 0;
+        int sum = std::accumulate(nums.begin(), nums.end(), 0);
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            prefix += nums[i];
+            if (nums[i] == 0) {
+                if (sum == prefix * 2) {
+                    res += 2;
+                }
+                if (sum == prefix * 2 + 1 || sum == prefix * 2 - 1) {
+                    res += 1;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
