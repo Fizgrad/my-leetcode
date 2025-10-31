@@ -1848,6 +1848,18 @@ public:
         }
         return res;
     }
+
+    vector<int> getSneakyNumbers(vector<int> &nums) {
+        vector<int> times(101, 0);
+        vector<int> res;
+        for (auto i: nums) {
+            ++times[i];
+            if (times[i] >= 2) {
+                res.push_back(i);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
