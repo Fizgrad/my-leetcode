@@ -4786,6 +4786,24 @@ public:
         }
         return res;
     }
+
+    ListNode *modifiedList(vector<int> &nums, ListNode *head) {
+        std::bitset<100001> numSet;
+        for (auto i: nums) {
+            numSet.set(i);
+        }
+        ListNode *dummy = new ListNode(-1);
+        ListNode *tail = dummy;
+        while (head) {
+            if (!numSet.test(head->val)) {
+                tail->next = head;
+                tail = tail->next;
+            }
+            head = head->next;
+            tail->next = nullptr;
+        }
+        return dummy->next;
+    }
 };
 
 int main() {
