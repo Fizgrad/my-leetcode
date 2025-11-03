@@ -1860,6 +1860,25 @@ public:
         }
         return res;
     }
+
+    int minCost(string colors, vector<int> &neededTime) {
+        int n = colors.size();
+        int res = 0;
+        int left = 0;
+        while (left < n) {
+            int right = left + 1;
+            int maxTime = neededTime[left];
+            int sumTime = neededTime[left];
+            while (right < n && colors[right] == colors[left]) {
+                sumTime += neededTime[right];
+                maxTime = max(maxTime, neededTime[right]);
+                ++right;
+            }
+            res += (sumTime - maxTime);
+            left = right;
+        }
+        return res;
+    }
 };
 
 int main() {
