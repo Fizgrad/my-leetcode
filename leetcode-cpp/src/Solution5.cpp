@@ -1879,6 +1879,41 @@ public:
         }
         return res;
     }
+
+    vector<int> findXSum(vector<int> &nums, int k, int x) {
+        int n = nums.size();
+        vector<int> res;
+        res.reserve(n - k + 1);
+        vector<int> numCount(51, 0);
+        auto cmp = [&](auto &&a, auto &&b) {
+            return numCount[a] > numCount[b] || (numCount[a] == numCount[b] && a > b);
+        };
+        priority_queue<int, vector<int>, decltype(cmp)> minHeap(cmp);
+        auto calculateTopX = [&]() -> int {
+            for (int i = 0; i <= 50; ++i) {
+                minHeap.emplace(i);
+                if (minHeap.size() > x) {
+                    minHeap.pop();
+                }
+            }
+            int ans = 0;
+            while (!minHeap.empty()) {
+                ans += minHeap.top() * numCount[minHeap.top()];
+                minHeap.pop();
+            }
+            return ans;
+        };
+        for (int i = 0; i < k; ++i) {
+            ++numCount[nums[i]];
+        }
+        res.push_back(calculateTopX());
+        for (int i = 0; i + k < n; ++i) {
+            numCount[nums[i]]--;
+            numCount[nums[i + k]]++;
+            res.push_back(calculateTopX());
+        }
+        return res;
+    }
 };
 
 int main() {
