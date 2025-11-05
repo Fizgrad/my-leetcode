@@ -4804,6 +4804,75 @@ public:
         }
         return dummy->next;
     }
+
+    vector<long long> findXSum(vector<int> &nums, int k, int x) {
+        int n = nums.size();
+        vector<long long> res;
+        res.reserve(n - k + 1);
+        unordered_map<int, long long> numCount;
+        set<pair<long long, int>> top, rest;
+        long long topSum = 0;
+        auto deleteNum = [&](int num) {
+            if (top.count({numCount[num], num})) {
+                top.erase({numCount[num], num});
+                topSum -= num * numCount[num];
+                numCount[num]--;
+                if (numCount[num] == 0) {
+                    return;
+                }
+                rest.emplace(numCount[num], num);
+            } else {
+                rest.erase({numCount[num], num});
+                numCount[num]--;
+                if (numCount[num] == 0) {
+                    return;
+                }
+                rest.emplace(numCount[num], num);
+            }
+        };
+        auto insertNum = [&](int num) {
+            if (top.count({numCount[num], num})) {
+                top.erase({numCount[num], num});
+                topSum -= num * numCount[num];
+                numCount[num]++;
+                top.emplace(numCount[num], num);
+                topSum += num * numCount[num];
+            } else {
+                if (rest.contains({numCount[num], num}))
+                    rest.erase({numCount[num], num});
+                numCount[num]++;
+                rest.emplace(numCount[num], num);
+            }
+            while (rest.size() && top.size() < x) {
+                auto it = rest.end();
+                it = std::prev(it);
+                top.emplace(*it);
+                topSum += it->second * it->first;
+                rest.erase(it);
+            }
+            while (rest.size() && (top.begin()->first < rest.rbegin()->first || top.begin()->first == rest.rbegin()->first && top.begin()->second < rest.rbegin()->second)) {
+                auto itTop = top.begin();
+                auto itRest = rest.end();
+                itRest = std::prev(itRest);
+                topSum -= itTop->second * itTop->first;
+                topSum += itRest->second * itRest->first;
+                top.emplace(*itRest);
+                rest.emplace(*itTop);
+                top.erase(itTop);
+                rest.erase(itRest);
+            }
+        };
+        for (int i = 0; i < k; ++i) {
+            insertNum(nums[i]);
+        }
+        res.push_back(topSum);
+        for (int i = 0; i + k < n; ++i) {
+            deleteNum(nums[i]);
+            insertNum(nums[i + k]);
+            res.push_back(topSum);
+        }
+        return res;
+    }
 };
 
 int main() {
