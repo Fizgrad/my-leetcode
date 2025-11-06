@@ -1914,6 +1914,66 @@ public:
         }
         return res;
     }
+
+    vector<int> processQueries(int c, vector<vector<int>> &connections, vector<vector<int>> &queries) {
+
+        vector<int> parent(c + 1, -1);
+        vector<int> size(c + 1, 1);
+        auto find = [&](auto &&find, int node) -> int {
+            if (parent[node] == -1) {
+                return node;
+            }
+            return parent[node] = find(find, parent[node]);
+        };
+        auto unionSet = [&](int u, int v) {
+            int pu = find(find, u);
+            int pv = find(find, v);
+            if (pu != pv) {
+                if (size[pu] < size[pv]) {
+                    std::swap(pu, pv);
+                }
+                parent[pv] = pu;
+                size[pu] += size[pv];
+            }
+        };
+        for (const auto &conn: connections) {
+            unionSet(conn[0], conn[1]);
+        }
+        unordered_map<int, set<int>> groups;
+        for (int i = 1; i <= c; ++i) {
+            groups[find(find, i)].insert(i);
+        }
+        size.clear();
+        vector<int> res;
+        res.reserve(queries.size());
+
+        std::bitset<100001> isOnline;
+        for (int i = 1; i <= c; ++i) {
+            isOnline.set(i);
+        }
+
+        for (const auto &query: queries) {
+            int type = query[0];
+            int node = query[1];
+            if (type == 1) {
+                if (isOnline.test(node)) {
+                    res.push_back(node);
+                } else {
+                    int pNode = find(find, node);
+                    if (groups[pNode].empty()) {
+                        res.push_back(-1);
+                    } else {
+                        res.push_back(*groups[pNode].begin());
+                    }
+                }
+            } else {
+                isOnline.reset(node);
+                int pNode = find(find, node);
+                groups[pNode].erase(node);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
