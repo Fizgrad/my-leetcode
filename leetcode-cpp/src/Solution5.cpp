@@ -1974,6 +1974,51 @@ public:
         }
         return res;
     }
+
+    long long maxPower(vector<int> &stations, int r, int k) {
+        int n = stations.size();
+        if (n == 0) return 0;
+        int R = min(r, n - 1);
+        long long mx = *max_element(stations.begin(), stations.end());
+        long long right = mx * (2LL * R + 1) + k;
+        long long left = 0, res = 0;
+        long long prefix = 0;
+        for (int j = 0; j < R; ++j) prefix += (long long) stations[j];
+        auto can = [&](long long mid) -> bool {
+            long long remain = (long long) k;
+            long long slidingWindow = prefix;
+            vector<long long> sanction(n, 0);
+            for (int i = 0; i < n; ++i) {
+                if (i - R - 1 >= 0) {
+                    slidingWindow -= (long long) stations[i - R - 1];
+                    slidingWindow -= sanction[i - R - 1];
+                }
+                if (i + R < n) {
+                    slidingWindow += (long long) stations[i + R];
+                    slidingWindow += sanction[i + R];
+                }
+                if (slidingWindow >= mid) continue;
+                long long diff = mid - slidingWindow;
+                if (remain < diff) return false;
+                remain -= diff;
+                int pos = min(n - 1, i + R);
+                sanction[pos] += diff;
+                slidingWindow += diff;
+            }
+            return true;
+        };
+
+        while (left <= right) {
+            long long mid = (left + right) >> 1;
+            if (can(mid)) {
+                res = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
