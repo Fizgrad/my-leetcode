@@ -2019,6 +2019,11 @@ public:
         }
         return res;
     }
+
+    int minimumOneBitOperations(unsigned int n) {
+        if (n == 0) return 0;
+        return ((1 << (32 - countl_zero(n))) - 1 - minimumOneBitOperations(n ^ bit_floor(n)));
+    }
 };
 
 int main() {
