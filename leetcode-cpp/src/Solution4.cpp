@@ -5563,6 +5563,32 @@ public:
         }
         return res;
     }
+
+    int minOperations(vector<int> &nums) {
+        vector<int> monotonicStack;
+        int res = 0;
+        for (auto &num: nums) {
+            while (!monotonicStack.empty() && monotonicStack.back() > num) {
+                res++;
+                monotonicStack.pop_back();
+            }
+            if (num && (monotonicStack.empty() || num != monotonicStack.back())) {
+                monotonicStack.emplace_back(num);
+            }
+        }
+        return res + monotonicStack.size();
+        // 这里和下面的写法等价,本质上都是计算有多少个数字被加入到单调栈中
+        // for (auto &num: nums) {
+        //     while (!monotonicStack.empty() && monotonicStack.back() > num) {
+        //         monotonicStack.pop_back();
+        //     }
+        //     if (num && (monotonicStack.empty() || num != monotonicStack.back())) {
+        //         ++res;
+        //         monotonicStack.emplace_back(num);
+        //     }
+        // }
+        // return res;
+    }
 };
 
 int main() {
