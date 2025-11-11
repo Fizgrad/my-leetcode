@@ -5589,6 +5589,20 @@ public:
         // }
         // return res;
     }
+
+    int findMaxForm(vector<string> &strs, int m, int n) {
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        for (auto &&str: strs) {
+            int oneNum = std::count(str.begin(), str.end(), '1');
+            int zeroNum = str.size() - oneNum;
+            for (int i = m; i >= zeroNum; i--) {
+                for (int j = n; j >= oneNum; j--) {
+                    dp[i][j] = max(dp[i][j], dp[i - zeroNum][j - oneNum] + 1);
+                }
+            }
+        }
+        return dp[m][n];
+    }
 };
 
 int main() {
