@@ -2035,7 +2035,41 @@ public:
             }
             ++res;
         }
-        return res;    
+        return res;
+    }
+
+    int minOperations(vector<int> &nums) {
+        auto gcd = [](int a, int b) {
+            while (b) {
+                int temp = a % b;
+                a = b;
+                b = temp;
+            }
+            return a;
+        };
+        int n = nums.size();
+        int overallGCD = nums[0];
+        for (int i = 1; i < n; ++i) {
+            overallGCD = gcd(overallGCD, nums[i]);
+        }
+        int minToOne = numeric_limits<int>::max();
+        if (overallGCD > 1) return -1;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] == 1) {
+                return n - std::count(nums.begin(), nums.end(), 1);
+            }
+            int localGCD = nums[i];
+            if (minToOne <= 1) break;
+            for (int j = i; j < n; ++j) {
+                int prev = localGCD;
+                localGCD = gcd(localGCD, nums[j]);
+                if (localGCD == 1) {
+                    minToOne = min(minToOne, j - i);
+                    break;
+                }
+            }
+        }
+        return minToOne + n - 1 - std::count(nums.begin(), nums.end(), 1);
     }
 };
 
