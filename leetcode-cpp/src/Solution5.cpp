@@ -2071,6 +2071,21 @@ public:
         }
         return minToOne + n - 1 - std::count(nums.begin(), nums.end(), 1);
     }
+
+    int maxOperations(const string &s) {
+        int prev = -1;
+        int prefix = 0;
+        int res = 0;
+        for (auto i: s) {
+            if (i == '0' && prev != '0') {
+                res += prefix;
+            } else if (i == '1') {
+                ++prefix;
+            }
+            prev = i;
+        }
+        return res;
+    }
 };
 
 int main() {
