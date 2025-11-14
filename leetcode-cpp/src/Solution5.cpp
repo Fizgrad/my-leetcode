@@ -2086,6 +2086,28 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> rangeAddQueries(int n, vector<vector<int>> &queries) {
+        vector<vector<int>> matrix(n, vector<int>(n, 0));
+        for (const auto &query: queries) {
+            auto [row1, col1, row2, col2] = std::tuple<int, int, int, int>{query[0], query[1], query[2], query[3]};
+            for (int i = row1; i <= row2; ++i) {
+                matrix[i][col1] += 1;
+                if (col2 + 1 < n) {
+                    matrix[i][col2 + 1] -= 1;
+                }
+            }
+        }
+        vector<vector<int>> res(n, vector<int>(n, 0));
+        for (int i = 0; i < n; ++i) {
+            int prefix = 0;
+            for (int j = 0; j < n; ++j) {
+                prefix += matrix[i][j];
+                res[i][j] = prefix;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
