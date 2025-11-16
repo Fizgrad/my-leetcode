@@ -2108,6 +2108,26 @@ public:
         }
         return res;
     }
+
+    int numSub(const string &s) {
+        int n = s.size();
+        int firstOne = -1;
+        const int MOD = 1e9 + 7;
+        long long res = 0;
+        for (int i = 0; i < n; ++i) {
+            if (s[i] == '1') {
+                if (firstOne == -1) {
+                    firstOne = i;
+                    res = (res + 1) % MOD;
+                } else {
+                    res = (res + (long long) (i - firstOne + 1)) % MOD;
+                }
+            } else {
+                firstOne = -1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
