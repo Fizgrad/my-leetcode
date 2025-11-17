@@ -2128,6 +2128,21 @@ public:
         }
         return res;
     }
+
+    bool kLengthApart(vector<int> &nums, int k) {
+        int distance = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (nums[i] == 1) {
+                if (distance > 0) {
+                    return false;
+                }
+                distance = k;
+            } else {
+                --distance;
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
