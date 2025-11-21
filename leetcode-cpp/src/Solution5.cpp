@@ -2162,6 +2162,37 @@ public:
         }
         return original;
     }
+
+    int countPalindromicSubsequence(const string &s) {
+        int n = s.size();
+        vector<vector<int>> prefix(26, vector<int>(n + 1, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int c = 0; c < 26; ++c) {
+                prefix[c][i + 1] = prefix[c][i];
+            }
+            ++prefix[s[i] - 'a'][i + 1];
+        }
+        int res = 0;
+        for (int c = 0; c < 26; ++c) {
+            if (prefix[c].back() >= 2) {
+                if (prefix[c].back() > 2)
+                    ++res;
+                auto firstPos = s.find_first_of('a' + c);
+                auto lastPos = s.find_last_of('a' + c);
+                for (int cc = 0; cc < 26; ++cc) {
+                    if (cc == c) {
+                        continue;
+                    }
+                    if (prefix[cc][lastPos + 1] - prefix[cc][firstPos] > 0) {
+                        ++res;
+                    }
+                }
+            } else if (prefix[c].back() < 2) {
+                continue;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
