@@ -2272,6 +2272,25 @@ public:
         }
         return res;
     }
+
+    int smallestRepunitDivByK(int k) {
+        if (k == 1) return 1;
+        if (k % 2 == 0) return -1;
+        if (k % 5 == 0) return -1;
+        int remain = 1 % k;
+        int res = 1;
+        std::bitset<100001> seen(0);
+        while (remain != 0) {
+            remain = (remain * 10 + 1) % k;
+            ++res;
+            if (seen.test(remain)) {
+                return -1;
+            } else {
+                seen.set(remain);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
