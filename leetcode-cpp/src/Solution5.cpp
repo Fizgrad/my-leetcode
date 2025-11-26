@@ -2291,6 +2291,36 @@ public:
         }
         return res;
     }
+
+    int numberOfPaths(vector<vector<int>> &grid, int k) {
+        int n = grid.size();
+        int m = grid[0].size();
+        constexpr int MOD = 1e9 + 7;
+        vector<vector<int>> dp(m, vector<int>(k, 0));
+        vector<int> oldDp(k, 0);
+        dp[0][grid[0][0] % k] = 1;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (i > 0) {
+                    for (int rem = 0; rem < k; ++rem) {
+                        oldDp[rem] = dp[j][rem];
+                        dp[j][rem] = 0;
+                    }
+                    for (int rem = 0; rem < k; ++rem) {
+                        int newRem = (rem + grid[i][j]) % k;
+                        dp[j][newRem] = (oldDp[rem]) % MOD;
+                    }
+                }
+                if (j > 0) {
+                    for (int rem = 0; rem < k; ++rem) {
+                        int newRem = (rem + grid[i][j]) % k;
+                        dp[j][newRem] = (dp[j][newRem] + dp[j - 1][rem]) % MOD;
+                    }
+                }
+            }
+        }
+        return dp[m - 1][0];
+    }
 };
 
 int main() {
