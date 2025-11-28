@@ -2361,6 +2361,39 @@ public:
         }
         return res;
     }
+
+    long long maxSubarraySum(vector<int> &nums, int k) {
+        if (k == 1) {
+            long long currentSum = 0;
+            long long res = std::numeric_limits<long long>::min();
+            for (int i = 0; i < nums.size(); ++i) {
+                currentSum += nums[i];
+                res = max(res, currentSum);
+                if (currentSum < 0) {
+                    currentSum = 0;
+                }
+            }
+            return res;
+        } else {
+            vector<long long> prefixSums(k, 0);
+            long long currentSum = 0;
+            long long res = std::numeric_limits<long long>::min();
+            for (int i = 0; i < k; ++i) {
+                currentSum += nums[i];
+                prefixSums[i] = currentSum;
+            }
+            res = max(res, currentSum);
+            for (int i = k; i < nums.size(); ++i) {
+                currentSum += nums[i];
+                if ((i + 1) % k == 0) {
+                    res = max(res, currentSum);
+                }
+                res = max(res, currentSum - prefixSums[i % k]);
+                prefixSums[i % k] = min(prefixSums[i % k], currentSum);
+            }
+            return res;
+        }
+    }
 };
 
 int main() {
