@@ -2321,6 +2321,46 @@ public:
         }
         return dp[m - 1][0];
     }
+
+    int maxKDivisibleComponents(int n, vector<vector<int>> &edges, vector<int> &values, int k) {
+        if (n == 1) {
+            return values[0] % k == 0 ? 1 : 0;
+        }
+        vector<vector<int>> graph(n);
+        vector<int> indegree(n, 0);
+        for (const auto &edge: edges) {
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
+            ++indegree[edge[0]];
+            ++indegree[edge[1]];
+        }
+        std::queue<int> q;
+        for (int i = 0; i < n; ++i) {
+            if (indegree[i] == 1) {
+                q.push(i);
+            }
+        }
+        int res = 0;
+        vector<bool> visited(n, false);
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            visited[node] = true;
+            for (const auto &neighbor: graph[node]) {
+                if (visited[neighbor]) continue;
+                values[neighbor] += values[node];
+                values[neighbor] %= k;
+                --indegree[neighbor];
+                if (indegree[neighbor] == 1) {
+                    q.push(neighbor);
+                }
+            }
+            if (values[node] % k == 0) {
+                ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
