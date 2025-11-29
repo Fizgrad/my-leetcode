@@ -2394,6 +2394,10 @@ public:
             return res;
         }
     }
+
+    int minOperations(vector<int> &nums, int k) {
+        return std::accumulate(nums.begin(), nums.end(), 0ll) % k;
+    }
 };
 
 int main() {
