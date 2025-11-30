@@ -2398,6 +2398,27 @@ public:
     int minOperations(vector<int> &nums, int k) {
         return std::accumulate(nums.begin(), nums.end(), 0ll) % k;
     }
+
+    int minSubarray(vector<int> &nums, int p) {
+        int n = nums.size();
+        int totalMod = 0;
+        for (int i = 0; i < n; ++i) {
+            totalMod = (totalMod + nums[i]) % p;
+        }
+        if (totalMod == 0) return 0;
+        unordered_map<int, int> modIndex;
+        int currentMod = 0;
+        int res = n;
+        for (int i = 0; i <= n; ++i) {
+            currentMod = (i >= 1 ? (currentMod + nums[i - 1]) % p : 0);
+            int needToFind = (currentMod - totalMod + p) % p;
+            if (modIndex.find(needToFind) != modIndex.end()) {
+                res = min(res, i - modIndex[needToFind]);
+            }
+            modIndex[currentMod] = i;
+        }
+        return res == n ? -1 : res;
+    }
 };
 
 int main() {
