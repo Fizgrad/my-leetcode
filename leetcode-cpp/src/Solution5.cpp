@@ -2419,6 +2419,26 @@ public:
         }
         return res == n ? -1 : res;
     }
+
+    long long maxRunTime(int n, vector<int> &batteries) {
+        long long res = 0;
+        if (batteries.size() < n) return 0;
+        long long left = 1, right = std::accumulate(batteries.begin(), batteries.end(), 0ll) / n;
+        while (left <= right) {
+            long long mid = left + (right - left) / 2;
+            long long total = 0;
+            for (const auto &battery: batteries) {
+                total += min((long long) battery, mid);
+            }
+            if (total >= mid * n) {
+                res = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
