@@ -2439,6 +2439,29 @@ public:
         }
         return res;
     }
+
+    int countTrapezoids(vector<vector<int>> &points) {
+        int n = points.size();
+        constexpr int MOD = 1e9 + 7;
+        long long res = 0;
+        std::sort(points.begin(), points.end(), [](const auto &a, const auto &b) {
+            return a[1] != b[1] ? a[1] < b[1] : a[0] < b[0];
+        });
+        int nowY = points[0][1];
+        int count = 0;
+        long long prefixSum = 0;
+        for (int i = 1; i < n; ++i) {
+            if (points[i][1] != nowY) {
+                nowY = points[i][1];
+                prefixSum += (long long) count * (count + 1) / 2 % MOD;
+                count = 0;
+            } else {
+                ++count;
+                res = (res + prefixSum * count % MOD) % MOD;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
