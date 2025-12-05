@@ -5603,6 +5603,15 @@ public:
         }
         return dp[m][n];
     }
+
+    int countPartitions(vector<int> &nums) {
+        int xorSum = 0;
+        for (auto i: nums) {
+            xorSum ^= i;
+        }
+        if (xorSum & 1) return 0;
+        return nums.size() - 1;
+    }
 };
 
 int main() {
