@@ -2481,6 +2481,42 @@ public:
         }
         return res;
     }
+
+    int countPartitions(vector<int> &nums, int k) {
+        const int MOD = 1e9 + 7;
+        int n = nums.size();
+        vector<int> dp(n + 1, 0);
+        priority_queue<pair<int, int>> maxHeap;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> minHeap;
+        int start = 0;
+        dp[0] = 1;
+        int prefix = 0;
+        for (int i = 0; i < n; ++i) {
+            maxHeap.emplace(nums[i], i);
+            minHeap.emplace(nums[i], i);
+            if (maxHeap.top().first - minHeap.top().first > k) {
+                while (maxHeap.top().first - minHeap.top().first > k) {
+                    while (maxHeap.top().second < start) {
+                        maxHeap.pop();
+                    }
+                    while (minHeap.top().second < start) {
+                        minHeap.pop();
+                    }
+                    prefix = (prefix - dp[start] + MOD) % MOD;
+                    ++start;
+                    while (maxHeap.top().second < start) {
+                        maxHeap.pop();
+                    }
+                    while (minHeap.top().second < start) {
+                        minHeap.pop();
+                    }
+                }
+            }
+            prefix = (prefix + dp[i]) % MOD;
+            dp[i + 1] = prefix;
+        }
+        return dp.back();
+    }
 };
 
 int main() {
