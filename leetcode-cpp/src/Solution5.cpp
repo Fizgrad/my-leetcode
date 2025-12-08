@@ -2521,6 +2521,20 @@ public:
     int countOdds(int low, int high) {
         return ((high + 1) / 2) - (low / 2);
     }
+
+    int countTriples(int n) {
+        int res = 0;
+        for (int a = 1; a <= n; ++a) {
+            for (int b = a + 1; b <= n; ++b) {
+                int cSquare = a * a + b * b;
+                int c = (int) std::sqrt(cSquare);
+                if (c <= n && c * c == cSquare) {
+                    ++res;
+                }
+            }
+        }
+        return res * 2;
+    }
 };
 
 int main() {
