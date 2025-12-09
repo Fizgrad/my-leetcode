@@ -2535,6 +2535,21 @@ public:
         }
         return res * 2;
     }
+
+    int specialTriplets(vector<int> &nums) {
+        constexpr int MOD = 1e9 + 7;
+        int n = nums.size();
+        long long int res = 0;
+        vector<int> freq(1e5 + 1, 0);
+        vector<int> freqPair(1e5 + 1, 0);
+        for (int i = 0; i < n; ++i) {
+            res = (res + freqPair[nums[i]]) % MOD;
+            if (nums[i] * 2 <= 1e5)
+                freqPair[nums[i] * 2] = (freqPair[nums[i] * 2] + freq[nums[i] * 2]) % MOD;
+            ++freq[nums[i]];
+        }
+        return res;
+    }
 };
 
 int main() {
