@@ -2550,6 +2550,26 @@ public:
         }
         return res;
     }
+
+    int countCoveredBuildings(int n, vector<vector<int>> &buildings) {
+        vector<pair<int, int>> rows(n + 1, std::make_pair(n + 1, -1));
+        vector<pair<int, int>> cols(n + 1, std::make_pair(n + 1, -1));
+        for (const auto &building: buildings) {
+            rows[building[0]].first = min(rows[building[0]].first, building[1]);
+            rows[building[0]].second = max(rows[building[0]].second, building[1]);
+            cols[building[1]].first = min(cols[building[1]].first, building[0]);
+            cols[building[1]].second = max(cols[building[1]].second, building[0]);
+        }
+        int res = 0;
+        for (auto &building: buildings) {
+            int r = building[0];
+            int c = building[1];
+            if (rows[r].first < c && rows[r].second > c && cols[c].first < r && cols[c].second > r) {
+                ++res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
