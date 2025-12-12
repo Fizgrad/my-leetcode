@@ -2584,6 +2584,51 @@ public:
         }
         return fact;
     }
+
+    vector<int> countMentions(int numberOfUsers, vector<vector<string>> &events) {
+        vector<int> res(numberOfUsers, 0);
+        vector<int> offlineTime(numberOfUsers, -1);
+        std::sort(events.begin(), events.end(), [](const auto &a, const auto &b) {
+            return stoi(a[1]) < stoi(b[1]) || (stoi(a[1]) == stoi(b[1]) && a[0] == "OFFLINE" && b[0] == "MESSAGE");
+        });
+        const string messageType = "MESSAGE";
+        const string offlineType = "OFFLINE";
+        const string hereType = "HERE";
+        const string allType = "ALL";
+        for (const auto &event: events) {
+            if (event[0] == messageType) {
+                if (event[2] == allType) {
+                    for (int userId = 0; userId < numberOfUsers; ++userId) {
+                        res[userId]++;
+                    }
+                } else if (event[2] == hereType) {
+                    int time = stoi(event[1]);
+                    for (int userId = 0; userId < numberOfUsers; ++userId) {
+                        if (offlineTime[userId] <= time) {
+                            res[userId]++;
+                        }
+                    }
+                } else {
+                    auto iter = event[2].begin();
+                    auto next_iter = std::find(iter, event[2].end(), ' ');
+                    while (iter != event[2].end()) {
+                        int userId = stoi(string(iter + 2, next_iter));
+                        res[userId]++;
+                        if (next_iter == event[2].end()) {
+                            break;
+                        }
+                        iter = next_iter + 1;
+                        next_iter = std::find(iter, event[2].end(), ' ');
+                    }
+                }
+            } else if (event[0] == offlineType) {
+                int userId = stoi(event[2]);
+                int time = stoi(event[1]);
+                offlineTime[userId] = time + 60;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
