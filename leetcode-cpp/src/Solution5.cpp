@@ -2629,6 +2629,43 @@ public:
         }
         return res;
     }
+
+    vector<string> validateCoupons(vector<string> &code, vector<string> &businessLine, vector<bool> &isActive) {
+        unordered_map<string, int> categories;
+        categories["electronics"] = 1;
+        categories["grocery"] = 2;
+        categories["pharmacy"] = 3;
+        categories["restaurant"] = 4;
+        int n = code.size();
+        for (int i = 0; i < n; ++i) {
+            if (code[i].empty() || !categories.contains(businessLine[i]) || std::any_of(code[i].begin(), code[i].end(), [](char c) {
+                    return !isalnum(c) && c != '_';
+                })) {
+                isActive[i] = false;
+            }
+        }
+        vector<int> ids(n, 0);
+        std::iota(ids.begin(), ids.end(), 0);
+        std::sort(ids.begin(), ids.end(), [&](int a, int b) {
+            return !isActive[a] && isActive[b];
+        });
+        auto end_iter = std::stable_partition(ids.begin(), ids.end(), [&](int a) {
+            return isActive[a];
+        });
+        ids.erase(end_iter, ids.end());
+        std::sort(ids.begin(), ids.end(), [&](int a, int b) {
+            if (businessLine[a] != businessLine[b]) {
+                return categories[businessLine[a]] < categories[businessLine[b]];
+            }
+            return code[a] < code[b];
+        });
+        vector<string> res;
+        res.reserve(ids.size());
+        for (const auto &id: ids) {
+            res.push_back(code[id]);
+        }
+        return res;
+    }
 };
 
 int main() {
