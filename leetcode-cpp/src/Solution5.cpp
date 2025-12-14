@@ -2666,6 +2666,43 @@ public:
         }
         return res;
     }
+
+    int numberOfWays(const string &corridor) {
+        int n = corridor.size();
+        const int MOD = 1e9 + 7;
+        int seatCount = 0;
+        for (const auto &c: corridor) {
+            if (c == 'S') {
+                ++seatCount;
+            }
+        }
+        if (seatCount == 0 || seatCount % 2 != 0) {
+            return 0;
+        }
+        long long res = 1;
+        int currentSeat = 0;
+        int emptyCount = 0;
+        int i = 0;
+        for (; i < n; ++i) {
+            char c = corridor[i];
+            if (c == 'S') break;
+        }
+        for (; i < n; ++i) {
+            char c = corridor[i];
+            if (c == 'S') {
+                ++currentSeat;
+                if (currentSeat % 2 == 1) {
+                    res = (res * (emptyCount + 1)) % MOD;
+                    emptyCount = 0;
+                }
+            } else {
+                if (currentSeat % 2 == 0) {
+                    ++emptyCount;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
