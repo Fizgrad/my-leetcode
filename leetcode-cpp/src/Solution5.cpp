@@ -2703,6 +2703,21 @@ public:
         }
         return res;
     }
+
+    long long getDescentPeriods(vector<int> &prices) {
+        long long res = 0;
+        int prev = prices[0];
+        int len = 0;
+        for (auto i: prices) {
+            if (i == prev - 1) {
+                res += (++len);
+            } else {
+                res += (len = 1);
+            }
+            prev = i;
+        }
+        return res;
+    }
 };
 
 int main() {
