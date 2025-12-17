@@ -2718,6 +2718,27 @@ public:
         }
         return res;
     }
+
+    long long maximumProfit(vector<int> &prices, int k) {
+        using Data = tuple<long long, long long, long long>;
+        const int n = prices.size();
+        vector<Data> dp(k + 1);
+        vector<Data> temp_dp(k + 1);
+        std::fill(dp.begin(), dp.begin() + (k + 1), Data(0, -prices[0], prices[0]));
+        for (int i = 1; i < n; i++) {
+            const int x = prices[i];
+            for (int t = 1; t <= k; t++) {
+                auto [p, b, s] = dp[t];
+                const long long prevP = std::get<0>(dp[t - 1]);
+                p = max(p, max(b + x, s - x));
+                b = max(b, prevP - x);
+                s = max(s, prevP + x);
+                temp_dp[t] = Data(p, b, s);
+            }
+            temp_dp.swap(dp);
+        }
+        return std::get<0>(dp[k]);
+    }
 };
 
 int main() {
