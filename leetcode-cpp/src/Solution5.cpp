@@ -2739,6 +2739,31 @@ public:
         }
         return std::get<0>(dp[k]);
     }
+
+    long long maxProfit(vector<int> &prices, vector<int> &strategy, int k) {
+        int n = prices.size();
+        long long totalProfit = 0;
+        for (int i = 0; i < n; ++i) {
+            totalProfit += static_cast<long long>(prices[i]) * strategy[i];
+        }
+        long long res = totalProfit;
+        long long modifiedProfit = 0;
+        for (int i = 0; i < k / 2; ++i) {
+            modifiedProfit += static_cast<long long>(prices[i]) * (0 - strategy[i]);
+        }
+        for (int i = k / 2; i < k; ++i) {
+            modifiedProfit += static_cast<long long>(prices[i]) * (1 - strategy[i]);
+        }
+        res = max(res, totalProfit + modifiedProfit);
+        for (int i = k; i < n; ++i) {
+            modifiedProfit += static_cast<long long>(prices[i]) * (1 - strategy[i]);
+            modifiedProfit -= static_cast<long long>(prices[i - k]) * (0 - strategy[i - k]);
+            modifiedProfit -= static_cast<long long>(prices[i - k + k / 2]) * (1 - strategy[i - k + k / 2]);
+            modifiedProfit += static_cast<long long>(prices[i - k + k / 2]) * (0 - strategy[i - k + k / 2]);
+            res = max(res, totalProfit + modifiedProfit);
+        }
+        return res;
+    }
 };
 
 int main() {
