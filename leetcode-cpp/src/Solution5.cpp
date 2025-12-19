@@ -2764,6 +2764,67 @@ public:
         }
         return res;
     }
+
+    vector<int> findAllPeople(int n, vector<vector<int>> &meetings,
+                              int firstPerson) {
+        std::sort(meetings.begin(), meetings.end(),
+                  [](const auto &l, const auto &r) { return l[2] < r[2]; });
+
+        vector<int> res;
+        vector<int> parents(n + 1, 0);
+        vector<int> sizes(n + 1, 1);
+        std::iota(parents.begin(), parents.end(), 0);
+
+        auto uf_find = [&](int i) {
+            int next = parents[i];
+            while (next != i) {
+                i = next;
+                next = parents[i];
+            }
+            return i;
+        };
+
+        auto uf_union = [&](int a, int b) {
+            int pa = uf_find(a);
+            int pb = uf_find(b);
+            if (pa == pb) return;
+            if (sizes[pa] < sizes[pb]) {
+                swap(pa, pb);
+            }
+            sizes[pa] += sizes[pb];
+            parents[pb] = pa;
+        };
+
+        uf_union(0, firstPerson);
+        int i = 0;
+        vector<int> temp(meetings.size() * 2, 0);
+        int lastPerson = 0;
+        while (i < meetings.size()) {
+            int currentTime = meetings[i][2];
+            lastPerson = 0;
+            while (i < meetings.size() && meetings[i][2] == currentTime) {
+                int g1 = uf_find(meetings[i][0]);
+                int g2 = uf_find(meetings[i][1]);
+                uf_union(g1, g2);
+                temp[lastPerson++] = meetings[i][0];
+                temp[lastPerson++] = meetings[i][1];
+                ++i;
+            }
+            for (int _ = 0; _ < lastPerson; ++_) {
+                const int person = temp[_];
+                if (uf_find(person) != uf_find(0)) {
+                    parents[person] = person;
+                    sizes[person] = 1;
+                }
+            }
+        }
+        for (int person = 0; person < n; ++person) {
+            if (uf_find(person) == uf_find(0)) {
+                res.push_back(person);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
