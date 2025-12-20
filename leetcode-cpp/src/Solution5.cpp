@@ -2825,6 +2825,21 @@ public:
         }
         return res;
     }
+
+    int minDeletionSize(vector<string> &strs) {
+        int rows = strs.size();
+        int cols = strs[0].size();
+        int res = 0;
+        for (int c = 0; c < cols; ++c) {
+            for (int r = 1; r < rows; ++r) {
+                if (strs[r][c] < strs[r - 1][c]) {
+                    ++res;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
