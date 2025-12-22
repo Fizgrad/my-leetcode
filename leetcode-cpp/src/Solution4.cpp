@@ -5612,6 +5612,20 @@ public:
         if (xorSum & 1) return 0;
         return nums.size() - 1;
     }
+
+    int minDeletionSize(vector<string> &strs) {
+        int n = strs.size();
+        int m = strs[0].size();
+        vector<int> dp(m, 1);
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (std::all_of(strs.begin(), strs.end(), [&](auto &&row) { return row[j] <= row[i]; })) {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        return m - *std::ranges::max_element(dp);
+    }
 };
 
 int main() {
