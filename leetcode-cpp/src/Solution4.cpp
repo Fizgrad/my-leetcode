@@ -5626,6 +5626,39 @@ public:
         }
         return m - *std::ranges::max_element(dp);
     }
+
+    int maxTwoEvents(vector<vector<int>> &events) {
+        std::sort(events.begin(), events.end(), [](auto &a, auto &b) {
+            return a[0] > b[0];
+        });
+        map<int, int> startTimeToMaxValue;
+
+        int maxValue = 0;
+        for (auto &event: events) {
+            maxValue = max(maxValue, event[2]);
+            startTimeToMaxValue[event[0]] = maxValue;
+        }
+        std::sort(events.begin(), events.end(), [](auto &a, auto &b) {
+            return a[1] < b[1];
+        });
+        maxValue = 0;
+        map<int, int> endTimeToMaxValue;
+        for (auto &event: events) {
+            maxValue = max(maxValue, event[2]);
+            endTimeToMaxValue[event[1]] = maxValue;
+        }
+        int res = 0;
+        for (auto it = endTimeToMaxValue.rbegin(); it != endTimeToMaxValue.rend(); ++it) {
+            int endTime = it->first;
+            int value = it->second;
+            auto nextEventIter = startTimeToMaxValue.lower_bound(endTime + 1);
+            res = max(res, value);
+            if (nextEventIter != startTimeToMaxValue.end()) {
+                res = max(res, value + nextEventIter->second);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
