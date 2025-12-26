@@ -2852,6 +2852,21 @@ public:
         }
         return res;
     }
+
+    long long maximumHappinessSum(vector<int> &happiness, int k) {
+        std::sort(happiness.begin(), happiness.end(), std::greater<>());
+        long long int res = 0;
+        int i = 0;
+        while (k-- && i < happiness.size()) {
+            if (happiness[i] > i) {
+                res += happiness[i] - i;
+                ++i;
+            } else {
+                return res;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
