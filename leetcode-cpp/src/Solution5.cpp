@@ -2840,6 +2840,18 @@ public:
         }
         return res;
     }
+
+    int minimumBoxes(vector<int> &apple, vector<int> &capacity) {
+        int n = apple.size();
+        int sum = std::accumulate(apple.begin(), apple.end(), 0);
+        std::sort(capacity.begin(), capacity.end(), std::greater<int>());
+        int res = 0;
+        for (int i = 0; i < capacity.size() && sum > 0; ++i) {
+            sum -= capacity[i];
+            ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
