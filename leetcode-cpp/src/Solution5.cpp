@@ -2867,6 +2867,27 @@ public:
         }
         return res;
     }
+
+    int bestClosingTime(const string &customers) {
+        int ySum = std::count(customers.begin(), customers.end(), 'Y');
+        int nSum = customers.size() - ySum;
+        int res = 0;
+        int minPenalty = ySum;
+        int penalty = 0;
+        for (int i = 0; i < customers.size(); ++i) {
+            if (customers[i] == 'N') {
+                ++penalty;
+            }
+            if (ySum - i - 1 + penalty + penalty < minPenalty) {
+                res = i + 1;
+                minPenalty = ySum - i - 1 + penalty + penalty;
+            }
+        }
+        if (minPenalty > nSum) {
+            res = customers.size();
+        }
+        return res;
+    }
 };
 
 int main() {
