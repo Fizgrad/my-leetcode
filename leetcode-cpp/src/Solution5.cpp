@@ -2940,6 +2940,36 @@ public:
         }
         return res;
     }
+
+    bool pyramidTransition(const string &bottom, vector<string> &allowed) {
+#define ENCODE(a, b) ((static_cast<int>(a) << 16) + b)
+        unordered_map<int, set<char>> dict;
+        unordered_map<string, bool> dp;
+        for (auto &s: allowed) {
+            dict[ENCODE(s[0], s[1])].emplace(s[2]);
+        }
+        auto dfs = [&](auto &&dfs, const string &current, string &next, int index) -> bool {
+            if (current.size() == 2) return dict[(ENCODE(current[0], current[1]))].size() > 0;
+            if (index == current.size()) {
+                if (dp.contains(next)) return dp[next];
+                string newNext;
+                return dp[next] = dfs(dfs, next, newNext, 1);
+            }
+            auto &nextChars = dict[ENCODE(current[index - 1], current[index])];
+            if (nextChars.empty()) return false;
+            for (auto c: nextChars) {
+                next.push_back(c);
+                if (dfs(dfs, current, next, index + 1)) {
+                    return true;
+                }
+                next.pop_back();
+            }
+            return false;
+        };
+        string work;
+        return dfs(dfs, bottom, work, 1);
+#undef ENCODE
+    }
 };
 
 int main() {
