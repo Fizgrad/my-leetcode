@@ -2970,6 +2970,46 @@ public:
         return dfs(dfs, bottom, work, 1);
 #undef ENCODE
     }
+
+    int numMagicSquaresInside(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int visited = 0;
+        auto isMagic = [&](int x, int y) {
+            if (x + 2 >= n || y + 2 >= m) {
+                return false;
+            }
+            if (grid[x + 1][y + 1] != 5) return false;
+            if (grid[x][y] + grid[x + 2][y + 2] != 10 ||
+                grid[x + 2][y] + grid[x][y + 2] != 10 ||
+                grid[x + 1][y] + grid[x + 1][y + 2] != 10 ||
+                grid[x][y + 1] + grid[x + 2][y + 1] != 10)
+                return false;
+            if (std::accumulate(grid[x].begin() + y, grid[x].begin() + y + 3, 0) != 15) {
+                return false;
+            }
+            if (grid[x][y] + grid[x + 1][y] + grid[x + 2][y] != 15) return false;
+            visited = 0;
+            for (int i = x; i < x + 3; ++i) {
+                for (int j = y; j < y + 3; ++j) {
+                    if (grid[i][j] > 9 || (visited & (1 << grid[i][j]))) {
+                        return false;
+                    }
+                    visited |= (1 << grid[i][j]);
+                }
+            }
+            return true;
+        };
+        int res = 0;
+        for (int i = 0; i < n - 2; ++i) {
+            for (int j = 0; j < m - 2; ++j) {
+                if ((grid[i][j] == 8 || grid[i][j] == 6 || grid[i][j] == 4 || grid[i][j] == 2) && isMagic(i, j)) {
+                    ++res;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
