@@ -3196,6 +3196,34 @@ public:
         }
         return res;
     }
+
+    vector<int> plusOne(vector<int> &digits) {
+        int n = digits.size();
+        bool carry = false;
+        if (digits.back() == 9) {
+            digits.back() = 0;
+            carry = true;
+        } else {
+            digits.back()++;
+            return digits;
+        }
+
+        for (int i = n - 2; carry && i >= 0; --i) {
+            if (digits[i] == 9) {
+                digits[i] = 0;
+            } else {
+                carry = false;
+                digits[i]++;
+                return digits;
+            }
+        }
+        digits.push_back(1);
+        for (int i = 1; i <= n; ++i) {
+            digits[i] = digits[i - 1];
+        }
+        digits[0] = 1;
+        return digits;
+    }
 };
 
 int main() {
