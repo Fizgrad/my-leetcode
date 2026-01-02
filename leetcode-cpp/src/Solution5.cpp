@@ -3224,6 +3224,16 @@ public:
         digits[0] = 1;
         return digits;
     }
+
+    int repeatedNTimes(vector<int> &nums) {
+        std::bitset<10000 + 1> visited;
+        for (auto i: nums) {
+            if (visited.test(i)) return i;
+            else
+                visited.set(i);
+        }
+        return nums.back();
+    }
 };
 
 int main() {
