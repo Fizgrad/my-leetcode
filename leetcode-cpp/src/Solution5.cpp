@@ -3234,6 +3234,44 @@ public:
         }
         return nums.back();
     }
+
+    // Special case of: 1931. Painting a Grid With Three Different Colors
+    int numOfWays(int n) {
+        constexpr int mod = 1e9 + 7;
+        using matrix = vector<vector<int>>;
+        const matrix I = {
+                {1, 0},
+                {0, 1}};
+        const matrix M = {
+                {3, 2},
+                {2, 2}};
+
+        auto mul = [](const matrix &A, const matrix &B) -> matrix {
+            const int m = A.size(), n = A[0].size(), p = B[0].size();
+            matrix C(m, vector<int>(p, 0));
+            for (int i = 0; i < m; i++) {
+                for (int k = 0; k < n; k++) {
+                    for (int j = 0; j < p; j++) {
+                        C[i][j] = (C[i][j] + 1LL * A[i][k] * B[k][j]) % mod;
+                    }
+                }
+            }
+            return C;
+        };
+        // Matrix exponentiation (LSBF)
+        auto pow = [&](const matrix &M, int n) -> matrix {
+            matrix ans = I, P = M;
+            for (; n > 0; n >>= 1) {
+                if (n & 1)
+                    ans = mul(ans, P);
+                P = mul(P, P);
+            }
+            return ans;
+        };
+        if (n == 1) return 12;
+        matrix A = pow(M, n - 1);
+        return 6LL * (1LL * A[0][0] + A[0][1] + A[1][0] + A[1][1]) % mod;
+    }
 };
 
 int main() {
