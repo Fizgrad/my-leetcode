@@ -3302,6 +3302,39 @@ public:
         }
         return res;
     }
+
+    long long maxMatrixSum(vector<vector<int>> &matrix) {
+        int numOfNegtive = 0;
+        int numOfZero = 0;
+        for (auto &i: matrix) {
+            for (auto j: i) {
+                if (j < 0) {
+                    ++numOfNegtive;
+                } else if (j == 0) {
+                    ++numOfZero;
+                }
+            }
+        }
+        if (numOfNegtive % 2 == 0 || numOfZero > 0) {
+            long long res = 0;
+            for (auto &i: matrix) {
+                for (auto j: i) {
+                    res += std::abs(j);
+                }
+            }
+            return res;
+        } else {
+            long long res = 0;
+            int minAbs = abs(matrix.front().front());
+            for (auto &i: matrix) {
+                for (auto j: i) {
+                    res += std::abs(j);
+                    minAbs = min(minAbs, abs(j));
+                }
+            }
+            return res - minAbs - minAbs;
+        }
+    }
 };
 
 int main() {
