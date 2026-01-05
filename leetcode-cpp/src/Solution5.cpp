@@ -3272,6 +3272,36 @@ public:
         matrix A = pow(M, n - 1);
         return 6LL * (1LL * A[0][0] + A[0][1] + A[1][0] + A[1][1]) % mod;
     }
+
+    int sumFourDivisors(vector<int> &nums) {
+        vector<int> dp(100000 + 1, -1);
+        int res = 0;
+        for (auto i: nums) {
+            if (dp[i] != -1) {
+                res += dp[i];
+                continue;
+            }
+            if (static_cast<int>(sqrt(i)) * static_cast<int>(sqrt(i)) == i) {
+                dp[i] = 0;
+                continue;
+            }
+            int num = 2;
+            int sum = 1 + i;
+            for (int k = 2; num <= 4 && k < sqrt(i); ++k) {
+                if (i % k == 0) {
+                    num += 2;
+                    sum += k + (i / k);
+                }
+            }
+            if (num > 4) {
+                dp[i] = 0;
+                continue;
+            } else if (num == 4) {
+                res += (dp[i] = sum);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
