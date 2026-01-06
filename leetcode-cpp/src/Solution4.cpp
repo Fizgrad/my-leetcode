@@ -5659,6 +5659,42 @@ public:
         }
         return res;
     }
+
+    int maxLevelSum(TreeNode *root) {
+        long long maxValue = root->val;
+        int res = 1;
+        int index = 1;
+        vector<TreeNode *> tmp;
+        vector<TreeNode *> next;
+        tmp.reserve(1000);
+        next.reserve(1000);
+        tmp.emplace_back(root);
+        while (tmp.size()) {
+            ++index;
+            next.clear();
+            long long sum = 0;
+            bool flag = false;
+            for (auto i: tmp) {
+                if (i->left) {
+                    flag = true;
+                    sum += i->left->val;
+                    next.emplace_back(i->left);
+                }
+                if (i->right) {
+                    flag = true;
+                    sum += i->right->val;
+                    next.emplace_back(i->right);
+                }
+            }
+            if (!flag) return res;
+            if (maxValue < sum) {
+                maxValue = sum;
+                res = index;
+            }
+            next.swap(tmp);
+        }
+        return res;
+    }
 };
 
 int main() {
