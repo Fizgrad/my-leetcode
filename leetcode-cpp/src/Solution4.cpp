@@ -5695,6 +5695,41 @@ public:
         }
         return res;
     }
+
+    int maxProduct(TreeNode *root) {
+        constexpr int MOD = 1e9 + 7;
+        auto dfs = [&](auto &&dfs, TreeNode *node) -> long long {
+            if (node == nullptr) return 0;
+            long long i = node->val;
+            if (node->left) {
+                i += dfs(dfs, node->left);
+            }
+            if (node->right) {
+                i += dfs(dfs, node->right);
+            }
+            return i;
+        };
+        long long sum = dfs(dfs, root);
+        long long res = 0;
+        auto dfs2 = [&](auto &&dfs2, TreeNode *node) -> long long {
+            if (node == nullptr) return 0;
+            long long i = 0;
+            if (node->left) {
+                i += dfs2(dfs2, node->left);
+                res = max(res, (sum - i) * i);
+            }
+            if (node->right) {
+                auto tmp = dfs2(dfs2, node->right);
+                res = max(res, (sum - tmp) * tmp);
+                i += tmp;
+            }
+            i += node->val;
+            res = max(res, (sum - i) * i);
+            return i;
+        };
+        dfs2(dfs2, root);
+        return res % MOD;
+    }
 };
 
 int main() {
