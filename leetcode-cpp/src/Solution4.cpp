@@ -5730,6 +5730,39 @@ public:
         dfs2(dfs2, root);
         return res % MOD;
     }
+
+    TreeNode *subtreeWithAllDeepest(TreeNode *root) {
+        int maxDepth = 0;
+        auto dfs = [&](auto &&dfs, TreeNode *node, int depth) {
+            if (node == nullptr) return;
+            maxDepth = max(maxDepth, depth);
+            dfs(dfs, node->left, depth + 1);
+            dfs(dfs, node->right, depth + 1);
+        };
+        TreeNode *res;
+        dfs(dfs, root, 0);
+        auto dfs2 = [&](auto &&dfs2, TreeNode *node, int depth) -> bool {
+            if (node == nullptr) return false;
+            if (depth == maxDepth) {
+                res = node;
+                return true;
+            }
+            auto left = false;
+            auto right = false;
+            if (node->left) {
+                left = dfs2(dfs2, node->left, depth + 1);
+            }
+            if (node->right) {
+                right = dfs2(dfs2, node->right, depth + 1);
+            }
+            if (left && right) {
+                res = node;
+            }
+            return left || right;
+        };
+        dfs2(dfs2, root, 0);
+        return res;
+    }
 };
 
 int main() {
