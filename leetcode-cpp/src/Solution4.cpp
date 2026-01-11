@@ -5763,6 +5763,34 @@ public:
         dfs2(dfs2, root, 0);
         return res;
     }
+
+    int maximalRectangle(vector<vector<char>> &matrix) {
+        int n = matrix.size();
+        int m = matrix.front().size();
+        vector<vector<int>> height(n, vector<int>(m, 0));
+        vector<vector<int>> width(n, vector<int>(m, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (matrix[i][j] == '1') {
+                    height[i][j] = (i == 0 ? 0 : height[i - 1][j]) + 1;
+                    width[i][j] = (j == 0 ? 0 : width[i][j - 1]) + 1;
+                }
+            }
+        }
+        int res = 0;
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = m - 1; j >= 0; --j) {
+                if (matrix[i][j] == '1') {
+                    int minWidth = width[i][j];
+                    for (int k = 0; k < height[i][j]; ++k) {
+                        minWidth = min(minWidth, width[i - k][j]);
+                        res = max(res, (k + 1) * minWidth);
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
