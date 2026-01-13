@@ -3379,6 +3379,42 @@ public:
         }
         return res;
     }
+
+    double separateSquares(vector<vector<int>> &squares) {
+        const double delta = 1e-5;
+        double left = INT_MAX;
+        double right = 0;
+        for (auto &square: squares) {
+            left = min(left, static_cast<double>(square[1]));
+            right = max(right, static_cast<double>(square[1] + square[2]));
+        }
+        while (right - left >= delta) {
+            double mid = (left + right) / 2.0;
+            double above = 0;
+            double below = 0;
+            for (int i = 0; i < squares.size(); ++i) {
+                double length = squares[i][2];
+                double top = squares[i][1] + length;
+                double bottom = squares[i][1];
+                if (top <= mid) {
+                    below += length * length;
+                } else if (bottom >= mid) {
+                    above += length * length;
+                } else {
+                    above += (top - mid) * length;
+                    below += (mid - bottom) * length;
+                }
+            }
+            if (above < below) {
+                right = mid;
+            } else if (std::abs(above - below) <= 1e-5) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+        return left;
+    }
 };
 
 int main() {
