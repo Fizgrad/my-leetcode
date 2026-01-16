@@ -3415,6 +3415,40 @@ public:
         }
         return left;
     }
+
+    int maximizeSquareArea(int m, int n, vector<int> &hFences, vector<int> &vFences) {
+        constexpr int MOD = 1e9 + 7;
+        unordered_set<int> height;
+        int res = -1;
+        height.insert(m - 1);
+        std::ranges::sort(hFences);
+        std::ranges::sort(vFences);
+        for (int i = 0; i < hFences.size(); ++i) {
+            height.insert(hFences[i] - 1);
+            height.insert(m - hFences[i]);
+            for (int j = 0; j < i; ++j) {
+                height.insert(hFences[i] - hFences[j]);
+            }
+        }
+        for (int i = 0; i < vFences.size(); ++i) {
+            if (height.contains(vFences[i] - 1)) {
+                res = max(res, vFences[i] - 1);
+            }
+            if (height.contains(n - vFences[i])) {
+                res = max(res, n - vFences[i]);
+            }
+
+            for (int j = 0; j < i; ++j) {
+                if (height.contains(vFences[i] - vFences[j])) {
+                    res = max(res, vFences[i] - vFences[j]);
+                }
+            }
+        }
+        if (height.contains(n - 1)) {
+            res = max(res, n - 1);
+        }
+        return res == -1 ? -1 : static_cast<long long>(res) * res % MOD;
+    }
 };
 
 int main() {
