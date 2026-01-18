@@ -3471,6 +3471,53 @@ public:
         }
         return static_cast<long long>(maxSideLength) * maxSideLength;
     }
+
+    int largestMagicSquare(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        vector<vector<int>> rowSum(n + 1, vector<int>(m + 1, 0));
+        vector<vector<int>> colSum(n + 1, vector<int>(m + 1, 0));
+        vector<vector<int>> rightSum(n + 1, vector<int>(m + 1, 0));
+        vector<vector<int>> leftSum(n + 1, vector<int>(m + 1, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                rowSum[i + 1][j + 1] = grid[i][j] + rowSum[i + 1][j];
+                colSum[i + 1][j + 1] = colSum[i][j + 1] + grid[i][j];
+                rightSum[i + 1][j + 1] = rightSum[i][j] + grid[i][j];
+                leftSum[i + 1][j] = leftSum[i][j + 1] + grid[i][j];
+            }
+        }
+        int res = 1;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                for (int k = min(i, j) + 1; k > res; --k) {
+                    int sum = rowSum[i + 1][j + 1] - rowSum[i + 1][j - k + 1];
+                    bool flag = true;
+                    for (int newI = i - k + 1; newI < i && flag; ++newI) {
+                        if (rowSum[newI + 1][j + 1] - rowSum[newI + 1][j - k + 1] != sum) {
+                            flag = false;
+                        }
+                    }
+                    for (int newJ = j - k + 1; newJ <= j && flag; ++newJ) {
+                        if (colSum[i + 1][newJ + 1] - colSum[i - k + 1][newJ + 1] != sum) {
+                            flag = false;
+                        }
+                    }
+                    if (rightSum[i + 1][j + 1] - rightSum[i - k + 1][j - k + 1] != sum) {
+                        flag = false;
+                    }
+                    if (leftSum[i + 1][j - k + 1] - leftSum[i - k + 1][j + 1] != sum) {
+                        flag = false;
+                    }
+                    if (flag) {
+                        res = max(res, k);
+                        break;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
