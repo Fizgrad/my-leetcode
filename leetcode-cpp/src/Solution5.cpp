@@ -3449,6 +3449,28 @@ public:
         }
         return res == -1 ? -1 : static_cast<long long>(res) * res % MOD;
     }
+
+    long long largestSquareArea(vector<vector<int>> &bottomLeft, vector<vector<int>> &topRight) {
+        int n = bottomLeft.size();
+        int maxSideLength = 0;
+        vector<int> indices(n, 0);
+        std::iota(indices.begin(), indices.end(), 0);
+        std::ranges::sort(indices, [&](auto a, auto b) {
+            return bottomLeft[a] < bottomLeft[b] || (bottomLeft[a] == bottomLeft[b] && topRight[a] < topRight[b]);
+        });
+        for (auto i = 0; i < n; ++i) {
+            for (auto j = i + 1; j < n; ++j) {
+                int indexOfI = indices[i];
+                int indexOfJ = indices[j];
+                if (topRight[indexOfI][0] <= bottomLeft[indexOfJ][0]) {
+                    break;
+                }
+                auto sideLength = min(min(topRight[indexOfI][0], topRight[indexOfJ][0]) - max(bottomLeft[indexOfJ][0], bottomLeft[indexOfI][0]), min(topRight[indexOfI][1], topRight[indexOfJ][1]) - max(bottomLeft[indexOfJ][1], bottomLeft[indexOfI][1]));
+                maxSideLength = max(maxSideLength, sideLength);
+            }
+        }
+        return static_cast<long long>(maxSideLength) * maxSideLength;
+    }
 };
 
 int main() {
