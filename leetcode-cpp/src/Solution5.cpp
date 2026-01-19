@@ -3518,6 +3518,42 @@ public:
         }
         return res;
     }
+
+    int maxSideLength(vector<vector<int>> &mat, int threshold) {
+        int n = mat.size();
+        int m = mat.front().size();
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                dp[i + 1][j + 1] += dp[i][j + 1] + dp[i + 1][j] - dp[i][j] + mat[i][j];
+            }
+        }
+        int lowLimit = 1;
+        int upperLimit = min(n, m);
+        int res = 0;
+        while (lowLimit <= upperLimit) {
+            int mid = (lowLimit + upperLimit) / 2;
+            if ([&](auto k) -> bool {
+                    for (int i = n - 1; i >= k - 1; --i) {
+                        for (int j = m - 1; j >= k - 1; --j) {
+                            int upperLeftI = i - k + 1;
+                            int upperLeftJ = j - k + 1;
+                            int sum = dp[i + 1][j + 1] - dp[upperLeftI][j + 1] - dp[i + 1][upperLeftJ] + dp[upperLeftI][upperLeftJ];
+                            if (sum <= threshold) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }(mid)) {
+                res = mid;
+                lowLimit = mid + 1;
+            } else {
+                upperLimit = mid - 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
