@@ -5791,6 +5791,18 @@ public:
         }
         return res;
     }
+
+    vector<int> minBitwiseArray(vector<int> &nums) {
+        auto n = nums.size();
+        vector<int> res(n, -1);
+        for (auto i = 0; i < n; ++i) {
+            auto num = nums[i];
+            if (num & 1) {
+                res[i] = num - (((num + 1) & (-num - 1)) >> 1);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
