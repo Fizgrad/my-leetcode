@@ -5867,6 +5867,19 @@ public:
         }
         return n;
     }
+
+    int minPairSum(vector<int> &nums) {
+        std::ranges::sort(nums);
+        int i = 0;
+        int j = nums.size() - 1;
+        int res = 0;
+        while (i < j) {
+            res = max(res, nums[i] + nums[j]);
+            ++i;
+            --j;
+        }
+        return res;
+    }
 };
 
 int main() {
