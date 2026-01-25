@@ -3595,6 +3595,15 @@ public:
             ops++;
         }
     }
+
+    int minimumDifference(vector<int> &nums, int k) {
+        std::ranges::sort(nums);
+        int res = 1e5;
+        for (int i = 0; i + k - 1 < nums.size(); ++i) {
+            res = min(res, nums[i + k - 1] - nums[i]);
+        }
+        return res;
+    }
 };
 
 int main() {
