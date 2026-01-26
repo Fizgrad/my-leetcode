@@ -3604,6 +3604,23 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> minimumAbsDifference(vector<int> &arr) {
+        std::ranges::sort(arr);
+        int difference = std::numeric_limits<int>::max();
+        vector<vector<int>> res;
+        res.reserve(arr.size());
+        for (int i = 0; i + 1 < arr.size(); ++i) {
+            if (difference > arr[i + 1] - arr[i]) {
+                difference = arr[i + 1] - arr[i];
+                res.clear();
+            }
+            if (difference == arr[i + 1] - arr[i]) {
+                res.emplace_back(vector<int>{arr[i], arr[i + 1]});
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
