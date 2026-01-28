@@ -3621,6 +3621,57 @@ public:
         }
         return res;
     }
+
+    int minCost(vector<vector<int>> &grid, int k) {
+        int n = grid.size();
+        int m = grid.front().size();
+        vector<pair<int, int>> coordinates;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                coordinates.emplace_back(std::make_pair(i, j));
+            }
+        }
+        std::ranges::sort(coordinates, [&](auto a, auto b) {
+            return grid[a.first][a.second] < grid[b.first][b.second];
+        });
+        vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(m + 1, vector<int>(k + 1, std::numeric_limits<int>::max())));
+        dp[n - 1][m - 1] = vector<int>(k + 1, 0);
+        for (int remainK = 0; remainK <= k; ++remainK) {
+            if (remainK > 0) {
+                int minCost = std::numeric_limits<int>::max();
+                int prevHeight = 0;
+                int prevStartIndex = 0;
+                for (int index = 0; index < coordinates.size(); ++index) {
+                    auto &[x, y] = coordinates[index];
+                    if (grid[x][y] > prevHeight) {
+                        for (int start = prevStartIndex; start < index; ++start) {
+                            dp[coordinates[start].first][coordinates[start].second][remainK] = minCost;
+                        }
+                        prevStartIndex = index;
+                        prevHeight = grid[x][y];
+                    }
+                    minCost = min(minCost, dp[x][y][remainK - 1]);
+                }
+                for (int start = prevStartIndex; start < coordinates.size(); ++start) {
+                    dp[coordinates[start].first][coordinates[start].second][remainK] = minCost;
+                }
+            }
+
+            for (int i = n - 1; i >= 0; --i) {
+                for (int j = m - 1; j >= 0; --j) {
+                    if (remainK > 0)
+                        dp[i][j][remainK] = min(dp[i][j][remainK], dp[i][j][remainK - 1]);
+                    if (i < n - 1) {
+                        dp[i][j][remainK] = min(dp[i][j][remainK], grid[i + 1][j] + dp[i + 1][j][remainK]);
+                    }
+                    if (j < m - 1) {
+                        dp[i][j][remainK] = min(dp[i][j][remainK], grid[i][j + 1] + dp[i][j + 1][remainK]);
+                    }
+                }
+            }
+        }
+        return *std::ranges::min_element(dp[0][0]);
+    }
 };
 
 int main() {
