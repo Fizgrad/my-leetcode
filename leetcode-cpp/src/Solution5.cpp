@@ -3672,6 +3672,42 @@ public:
         }
         return *std::ranges::min_element(dp[0][0]);
     }
+
+    int minCost(int n, vector<vector<int>> &edges) {
+        vector<int> visited(n, -1);
+        vector<unordered_map<int, int>> graph(n);
+        for (auto &edge: edges) {
+            int from = edge[0];
+            int to = edge[1];
+            int cost = edge[2];
+            if (graph[from].contains(to)) {
+                graph[from][to] = min(graph[from][to], cost);
+            } else {
+                graph[from][to] = cost;
+            }
+            if (graph[to].contains(from)) {
+                graph[to][from] = min(graph[to][from], 2 * cost);
+            } else {
+                graph[to][from] = 2 * cost;
+            }
+        }
+        priority_queue<pair<int, int>, vector<pair<int, int>>, std::greater<>> pq;
+        pq.emplace(0, 0);
+        while (!pq.empty()) {
+            auto [value, node] = pq.top();
+            pq.pop();
+            if (node == n - 1) return value;
+            if (visited[node] != -1) continue;
+            visited[node] = value;
+            for (auto [i, cost]: graph[node]) {
+                if (visited[i] != -1) continue;
+                if (graph[node][i] != std::numeric_limits<int>::max() / 2) {
+                    pq.emplace(value + cost, i);
+                }
+            }
+        }
+        return -1;
+    }
 };
 
 int main() {
