@@ -3708,6 +3708,43 @@ public:
         }
         return -1;
     }
+
+    long long minimumCost(const string &source, const string &target, vector<char> &original, vector<char> &changed, vector<int> &cost) {
+        const int SIZE = 'z' - 'a' + 1;
+        const long long INVALID = std::numeric_limits<long long>::max();
+        vector<vector<long long>> graph(SIZE, vector<long long>(SIZE, INVALID));
+        for (int j = 0; j < original.size(); ++j) {
+            graph[original[j] - 'a'][changed[j] - 'a'] = min(graph[original[j] - 'a'][changed[j] - 'a'], static_cast<long long>(cost[j]));
+        }
+        bool flag = true;
+        while (flag) {
+            flag = false;
+            for (int i = 0; i < SIZE; ++i) {
+                for (int j = 0; j < SIZE; ++j) {
+                    for (int k = 0; k < SIZE; ++k) {
+                        if (i == j || i == k || j == k) {
+                            continue;
+                        }
+                        if (graph[i][k] == INVALID || graph[k][j] == INVALID) {
+                            continue;
+                        }
+                        if (graph[i][k] + graph[k][j] < graph[i][j]) {
+                            flag = true;
+                            graph[i][j] = graph[i][k] + graph[k][j];
+                        }
+                    }
+                }
+            }
+        }
+        long long res = 0;
+        for (int i = 0; i < source.size(); ++i) {
+            if (source[i] != target[i]) {
+                if (graph[source[i] - 'a'][target[i] - 'a'] == INVALID) return -1;
+                res += graph[source[i] - 'a'][target[i] - 'a'];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
