@@ -3745,6 +3745,64 @@ public:
         }
         return res;
     }
+
+    long long minimumCost(const string &source, const string &target, vector<string> &original, vector<string> &changed, vector<int> &cost) {
+        unordered_map<string, int> stringToIndex;
+        unordered_set<int> lens;
+        int index = 0;
+        for (auto &s: original) {
+            if (stringToIndex.contains(s)) continue;
+            stringToIndex[s] = index++;
+            lens.emplace(s.size());
+        }
+        for (auto &s: changed) {
+            if (stringToIndex.contains(s)) continue;
+            stringToIndex[s] = index++;
+        }
+
+        const long long INVALID = std::numeric_limits<long long>::max();
+        vector<vector<long long>> dist(index, vector<long long>(index, INVALID));
+
+        for (int i = 0; i < original.size(); i++) {
+            int u = stringToIndex[original[i]];
+            int v = stringToIndex[changed[i]];
+            dist[u][v] = min(dist[u][v], static_cast<long long>(cost[i]));
+        }
+
+        for (int i = 0; i < index; i++) dist[i][i] = 0;
+
+        for (int k = 0; k < index; k++)
+            for (int i = 0; i < index; i++)
+                if (dist[i][k] != INVALID)
+                    for (int j = 0; j < index; j++)
+                        if (dist[k][j] != INVALID)
+                            dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+
+        vector<long long> dp(source.size() + 1, INVALID);
+        dp[0] = 0;
+
+        for (int i = 0; i < source.size(); i++) {
+            if (dp[i] == INVALID) continue;
+
+            if (source[i] == target[i])
+                dp[i + 1] = min(dp[i + 1], dp[i]);
+
+            for (int L: lens) {
+                if (i + L > source.size()) continue;
+
+                string s = source.substr(i, L);
+                string t = target.substr(i, L);
+
+                if (stringToIndex.count(s) && stringToIndex.count(t)) {
+                    long long d = dist[stringToIndex[s]][stringToIndex[t]];
+                    if (d != INVALID)
+                        dp[i + L] = min(dp[i + L], dp[i] + d);
+                }
+            }
+        }
+
+        return dp.back() == INVALID ? -1 : dp.back();
+    }
 };
 
 int main() {
