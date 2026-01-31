@@ -3803,6 +3803,15 @@ public:
 
         return dp.back() == INVALID ? -1 : dp.back();
     }
+
+    char nextGreatestLetter(vector<char> &letters, char target) {
+        for (auto c: letters) {
+            if (c > target) {
+                return c;
+            }
+        }
+        return letters.front();
+    }
 };
 
 int main() {
