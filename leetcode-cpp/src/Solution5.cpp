@@ -3812,6 +3812,22 @@ public:
         }
         return letters.front();
     }
+
+    int minimumCost(vector<int> &nums) {
+        if (nums.size() == 3) return std::accumulate(nums.begin(), nums.end(), 0);
+        int min1 = std::min(nums[1], nums[2]);
+        int min2 = std::max(nums[1], nums[2]);
+        for (int i = 3; i < nums.size(); ++i) {
+            if (nums[i] >= min2) continue;
+            if (nums[i] < min2 && nums[i] >= min1) {
+                min2 = nums[i];
+            } else if (nums[i] < min1) {
+                min2 = min1;
+                min1 = nums[i];
+            }
+        }
+        return nums.front() + min1 + min2;
+    }
 };
 
 int main() {
