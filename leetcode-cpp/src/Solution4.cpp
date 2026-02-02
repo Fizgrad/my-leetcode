@@ -5880,6 +5880,125 @@ public:
         }
         return res;
     }
+
+    long long minimumCost(vector<int> &nums, int k, int dist) {
+        struct MinSumOfMSmallestInWindow {
+            multiset<long long> S;// 存窗口内最小的 m 个数
+            multiset<long long> L;// 存剩下的
+            long long sumS = 0;
+            int m;
+
+            MinSumOfMSmallestInWindow(int m_) : m(m_) {}
+
+            int size() {
+                return S.size();
+            }
+
+            // 把 x 插入到结构里
+            void add(long long x) {
+                if ((int) S.size() < m) {
+                    S.insert(x);
+                    sumS += x;
+                } else {
+                    // S 已满，先跟 S 的最大值比较
+                    auto itMaxS = prev(S.end());
+                    if (m > 0 && x < *itMaxS) {
+                        // x 应该进 S，把 S 最大的挪到 L
+                        long long y = *itMaxS;
+                        S.erase(itMaxS);
+                        sumS -= y;
+
+                        S.insert(x);
+                        sumS += x;
+
+                        L.insert(y);
+                    } else {
+                        L.insert(x);
+                    }
+                }
+                rebalance();
+            }
+
+            // 从结构里删除一个 x（保证 x 一定存在于 S 或 L 之一）
+            void remove(long long x) {
+                auto itS = S.find(x);
+                if (itS != S.end()) {
+                    S.erase(itS);
+                    sumS -= x;
+                } else {
+                    auto itL = L.find(x);
+                    if (itL == L.end()) {
+                        // 理论上不该发生
+                        throw runtime_error("remove: element not found");
+                    }
+                    L.erase(itL);
+                }
+                rebalance();
+            }
+
+            // 保证 |S| = m 且 S 中都 <= L 中
+            void rebalance() {
+                // 先把数量调到位
+                while ((int) S.size() > m) {
+                    auto it = prev(S.end());
+                    long long x = *it;
+                    S.erase(it);
+                    sumS -= x;
+                    L.insert(x);
+                }
+                while ((int) S.size() < m && !L.empty()) {
+                    auto it = L.begin();
+                    long long x = *it;
+                    L.erase(it);
+                    S.insert(x);
+                    sumS += x;
+                }
+
+                // 再保证有序分割：max(S) <= min(L)
+                while (!S.empty() && !L.empty()) {
+                    auto itMaxS = prev(S.end());
+                    auto itMinL = L.begin();
+                    if (*itMaxS <= *itMinL) break;
+
+                    long long a = *itMaxS;// 应该去 L
+                    long long b = *itMinL;// 应该来 S
+
+                    S.erase(itMaxS);
+                    L.erase(itMinL);
+
+                    S.insert(b);
+                    sumS += b;
+                    L.insert(a);
+                    sumS -= a;
+                }
+
+                // 若 m==0，则 S 应为空
+                if (m == 0 && !S.empty()) {
+                    // 把 S 全丢到 L
+                    for (auto x: S) L.insert(x);
+                    S.clear();
+                    sumS = 0;
+                }
+            }
+
+            long long querySum() const {
+                // 当前窗口最小 m 个数的和
+                return sumS;
+            }
+        };
+        MinSumOfMSmallestInWindow solver(k - 1);
+        long long res = std::numeric_limits<long long>::max();
+        for (int i = 1; i < nums.size(); ++i) {
+            solver.add(nums[i]);
+            if (i - dist > 1) {
+                solver.remove(nums[i - dist - 1]);
+            }
+            if (solver.size() == k - 1) {
+                res = min(res, nums.front() + solver.querySum());
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
