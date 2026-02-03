@@ -3828,6 +3828,32 @@ public:
         }
         return nums.front() + min1 + min2;
     }
+
+    bool isTrionic(vector<int> &nums) {
+        if (nums[1] < nums[0]) return false;
+        int state = 0;
+        for (int i = 0; i < nums.size() - 1; ++i) {
+            if (nums[i + 1] == nums[i]) {
+                return false;
+            }
+            if (state == 0) {
+                if (nums[i + 1] < nums[i]) {
+                    state = 1;
+                }
+            }
+            if (state == 1) {
+                if (nums[i + 1] > nums[i]) {
+                    state = 2;
+                }
+            }
+            if (state == 2) {
+                if (nums[i + 1] < nums[i]) {
+                    return false;
+                }
+            }
+        }
+        return state == 2;
+    }
 };
 
 int main() {
