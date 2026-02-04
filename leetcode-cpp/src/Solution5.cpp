@@ -3854,6 +3854,113 @@ public:
         }
         return state == 2;
     }
+
+    long long maxSumTrionic(vector<int> &nums) {
+        int n = nums.size();
+        if (n < 4) return -1;
+
+        // 1. 前缀和 (使用 long long 防止溢出)
+        vector<long long> prefix(n, 0);
+        long long curr = 0;
+        for (int i = 0; i < n; ++i) {
+            curr += nums[i];
+            prefix[i] = curr;
+        }
+
+        // 2. 修正后的左递增和 (Left Inc)
+        // left_inc[i]: 以 i 结尾，len >= 2 的最大递增子数组和
+        vector<long long> left_inc(n, 0);
+        vector<bool> valid_left(n, false);
+
+        // max_len1: 以 i 结尾，len >= 1 的最大递增子数组和
+        // 初始状态: max_len1 对应 nums[0]
+        long long max_len1 = nums[0];
+
+        for (int i = 1; i < n; ++i) {
+            if (nums[i] > nums[i - 1]) {
+                // 计算 len >= 2 的情况：必须包含 nums[i] 和 max_len1 (即上一位置的 len>=1)
+                left_inc[i] = (long long) nums[i] + max_len1;
+                valid_left[i] = true;
+
+                // 更新 len >= 1 的情况供下一步使用
+                // Kadane 思想：如果前面的和 max_len1 > 0，则加上，否则只取 nums[i]
+                max_len1 = (long long) nums[i] + max(0LL, max_len1);
+            } else {
+                // 递增断了，重置
+                max_len1 = nums[i];
+                valid_left[i] = false;
+            }
+        }
+
+        // 3. 修正后的右递增和 (Right Inc)
+        // right_inc[i]: 以 i 开始，len >= 2 的最大递增子数组和
+        vector<long long> right_inc(n, 0);
+        vector<bool> valid_right(n, false);
+
+        long long max_len1_right = nums[n - 1];
+
+        for (int i = n - 2; i >= 0; --i) {
+            if (nums[i] < nums[i + 1]) {
+                right_inc[i] = (long long) nums[i] + max_len1_right;
+                valid_right[i] = true;
+
+                max_len1_right = (long long) nums[i] + max(0LL, max_len1_right);
+            } else {
+                max_len1_right = nums[i];
+                valid_right[i] = false;
+            }
+        }
+
+        long long ans = LLONG_MIN;
+        bool found = false;
+
+        // 4. 寻找递减区间并计算
+        int i = 0;
+        while (i < n - 1) {
+            if (nums[i] > nums[i + 1]) {// 发现递减趋势
+                int start = i;
+                int end = i;
+                // 找到递减区间的终点
+                while (end + 1 < n && nums[end] > nums[end + 1]) {
+                    end++;
+                }
+
+                // 当前递减区间: nums[start...end]
+                // 维护 max_p_term: 记录当前 k 之前的所有 p 中，(left_inc[p] - prefix[p]) 的最大值
+                long long max_p_term = LLONG_MIN;
+
+                for (int k = start; k <= end; ++k) {
+                    // 1. 尝试将当前 k 作为 q (右拐点)
+                    // 条件：k 必须能作为合法的 q (右边有递增)，且之前存在合法的 p (即 max_p_term 已更新)
+                    if (valid_right[k]) {
+                        if (max_p_term != LLONG_MIN) {
+                            // 公式: Total = (left[p] - P[p]) + (right[q] + P[q-1])
+                            long long term_q = right_inc[k] + prefix[k - 1];
+                            long long total = max_p_term + term_q;
+                            if (!found || total > ans) {
+                                ans = total;
+                                found = true;
+                            }
+                        }
+                    }
+
+                    // 2. 尝试将当前 k 作为 p (左拐点)，供后面的 q 使用
+                    // 条件：k 必须能作为合法的 p (左边有递增)
+                    if (valid_left[k]) {
+                        long long term_p = left_inc[k] - prefix[k];
+                        if (max_p_term == LLONG_MIN || term_p > max_p_term) {
+                            max_p_term = term_p;
+                        }
+                    }
+                }
+
+                i = end;
+            } else {
+                i++;
+            }
+        }
+        return found ? ans : -1;
+    }
 };
 
 int main() {
