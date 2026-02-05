@@ -3961,6 +3961,15 @@ public:
         }
         return found ? ans : -1;
     }
+
+    vector<int> constructTransformedArray(vector<int> &nums) {
+        int n = nums.size();
+        vector<int> result(nums);
+        for (auto i = 0; i < n; ++i) {
+            result[i] = nums[(i + nums[i] % n + n) % n];
+        }
+        return result;
+    }
 };
 
 int main() {
