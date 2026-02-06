@@ -3970,6 +3970,23 @@ public:
         }
         return result;
     }
+
+    int minRemoval(vector<int> &nums, int k) {
+        int n = nums.size();
+        std::sort(nums.begin(), nums.end());
+        int left = 0;
+        int right = 0;
+        int res = n - 1;
+        while (right < n) {
+            if (left == right || static_cast<long long>(nums[right]) <= static_cast<long long>(k) * nums[left]) {
+                res = min(res, n - (right - left + 1));
+                ++right;
+            } else {
+                ++left;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
