@@ -3987,6 +3987,23 @@ public:
         }
         return res;
     }
+
+    int minimumDeletions(const string &s) {
+        int a_sum = 0;
+        int n = s.size();
+        for (auto c: s) {
+            if (c == 'a') ++a_sum;
+        }
+        int res = min(a_sum, n - a_sum);
+        int a = 0;
+        for (int i = 0; i < n; ++i) {
+            if (s[i] == 'a') {
+                ++a;
+            }
+            res = min(res, (i + 1 - a) + (a_sum - a));
+        }
+        return res;
+    }
 };
 
 int main() {
