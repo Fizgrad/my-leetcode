@@ -5999,6 +5999,24 @@ public:
         }
         return res;
     }
+
+    bool isBalanced(TreeNode *root) {
+        auto dfs = [&](auto &&dfs, TreeNode *node, bool &flag) -> int {
+            if (node == nullptr) return 0;
+            if (flag) {
+                int leftHeight = dfs(dfs, node->left, flag);
+                int rightHeight = dfs(dfs, node->right, flag);
+                if (std::abs(leftHeight - rightHeight) > 1) {
+                    flag = false;
+                }
+                return max(leftHeight, rightHeight) + 1;
+            } else
+                return -1;
+        };
+        bool res = true;
+        dfs(dfs, root, res);
+        return res;
+    }
 };
 
 int main() {
