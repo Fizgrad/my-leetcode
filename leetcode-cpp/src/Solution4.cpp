@@ -6017,6 +6017,32 @@ public:
         dfs(dfs, root, res);
         return res;
     }
+
+    TreeNode *balanceBST(TreeNode *root) {
+        vector<TreeNode *> nodes;
+        nodes.reserve(1e4);
+        auto dfs = [&](auto &&dfs, TreeNode *node) -> void {
+            if (node) {
+                dfs(dfs, node->left);
+                nodes.emplace_back(node);
+                dfs(dfs, node->right);
+            }
+        };
+        dfs(dfs, root);
+        auto transform = [&](auto &&transform, int left, int right) -> TreeNode * {
+            if (left > right) return nullptr;
+            if (left == right) {
+                nodes[left]->left = nullptr;
+                nodes[left]->right = nullptr;
+                return nodes[left];
+            }
+            int mid = (left + right) >> 1;
+            nodes[mid]->left = transform(transform, left, mid - 1);
+            nodes[mid]->right = transform(transform, mid + 1, right);
+            return nodes[mid];
+        };
+        return transform(transform, 0, nodes.size() - 1);
+    }
 };
 
 int main() {
