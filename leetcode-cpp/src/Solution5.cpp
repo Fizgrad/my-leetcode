@@ -4004,6 +4004,31 @@ public:
         }
         return res;
     }
+
+    int longestBalanced(vector<int> &nums) {
+        int n = nums.size();
+        constexpr int MAX = 1e5 + 1;
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            std::bitset<MAX> visited;
+            int odd = 0;
+            int even = 0;
+            for (int j = i; j >= 0; --j) {
+                if (!visited.test(nums[j])) {
+                    if (nums[j] % 2 == 0) {
+                        ++even;
+                    } else {
+                        ++odd;
+                    }
+                    visited.set(nums[j]);
+                }
+                if (odd == even) {
+                    res = max(res, i - j + 1);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
