@@ -6043,6 +6043,37 @@ public:
         };
         return transform(transform, 0, nodes.size() - 1);
     }
+
+    int longestBalanced(const string &s) {
+        int n = s.size();
+        int res = min(n, 2);
+        auto isBalanced = [&](vector<int> &count) {
+            int prev = 0;
+            for (auto i: count) {
+                if (i != 0) {
+                    if (prev == 0) {
+                        prev = i;
+                    } else if (prev != i) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        vector<int> count(26, 0);
+        for (int i = 0; i < n; ++i) {
+            std::ranges::fill(count, 0);
+            for (int j = i; j >= 0; --j) {
+                count[s[j] - 'a']++;
+                if (i - j + 1 > 2) {
+                    if (isBalanced(count)) {
+                        res = max(res, i - j + 1);
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
