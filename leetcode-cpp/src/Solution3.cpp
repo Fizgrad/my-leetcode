@@ -4873,6 +4873,75 @@ public:
         }
         return res;
     }
+
+    int longestBalanced(const string &s) {
+        int n = s.size();
+        int res = min(2, n);
+        char c = s.front();
+        int len = 1;
+        for (int i = 1; i < n; ++i) {
+            if (c == s[i]) {
+                res = max(res, ++len);
+            } else {
+                len = 1;
+                c = s[i];
+            }
+        }
+        auto twoChars = [&](char a, char b) {
+            int prefix = 0;
+            unordered_map<int, int> prefixIndex;
+            prefixIndex[0] = -1;
+            for (int i = 0; i < n; ++i) {
+                if (s[i] == a) {
+                    prefix += 1;
+                    if (prefixIndex.contains(prefix)) {
+                        res = max(res, i - prefixIndex[prefix]);
+                    } else {
+                        prefixIndex[prefix] = i;
+                    }
+                } else if (s[i] == b) {
+                    prefix -= 1;
+                    if (prefixIndex.contains(prefix)) {
+                        res = max(res, i - prefixIndex[prefix]);
+                    } else {
+                        prefixIndex[prefix] = i;
+                    }
+                } else {
+                    prefix = 0;
+                    prefixIndex.clear();
+                    prefixIndex[0] = i;
+                }
+            }
+        };
+        twoChars('a', 'b');
+        twoChars('c', 'b');
+        twoChars('a', 'c');
+
+        int diff1 = 0;// a - b
+        int diff2 = 0;// a - c
+        unordered_map<long long, int> prefixIndex;
+        for (int i = 0; i < n; ++i) {
+            if (s[i] == 'a') {
+                diff1++;
+                diff2++;
+            } else if (s[i] == 'b') {
+                diff1--;
+            } else {
+                diff2--;
+            }
+            if (diff2 == diff1 && diff1 == 0) {
+                res = max(res, i + 1);
+            } else {
+                long long encode = (static_cast<long long>(diff1) << 32) + diff2;
+                if (prefixIndex.contains(encode)) {
+                    res = max(res, i - prefixIndex[encode]);
+                } else {
+                    prefixIndex[encode] = i;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
