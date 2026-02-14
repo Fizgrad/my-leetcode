@@ -4029,6 +4029,29 @@ public:
         }
         return res;
     }
+
+    double champagneTower(int poured, int query_row, int query_glass) {
+        int n = query_row + 2;
+        vector<vector<double>> champagne(n, vector<double>(n, 0.0));
+        champagne[0][0] = poured;
+        bool flag = true;
+        while (flag) {
+            flag = false;
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j <= i; ++j) {
+                    if (champagne[i][j] > 1) {
+                        if (i + 1 < n) {
+                            champagne[i + 1][j] += (champagne[i][j] - 1) / 2;
+                            champagne[i + 1][j + 1] += (champagne[i][j] - 1) / 2;
+                        }
+                        champagne[i][j] = 1;
+                        flag = true;
+                    }
+                }
+            }
+        }
+        return champagne[query_row][query_glass];
+    }
 };
 
 int main() {
