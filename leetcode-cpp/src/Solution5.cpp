@@ -4052,6 +4052,77 @@ public:
         }
         return champagne[query_row][query_glass];
     }
+
+    string addBinary(const string &a, const string &b) {
+        string res;
+        res.reserve(max(a.size(), b.size()) + 1);
+        bool carry = false;
+        auto i = a.rbegin();
+        auto j = b.rbegin();
+        for (; i != a.rend() && j != b.rend(); ++i, ++j) {
+            if (*i == '1' && *j == '1') {
+                if (carry) {
+                    res.push_back('1');
+                } else {
+                    carry = true;
+                    res.push_back('0');
+                }
+            } else if (*i == '1' || *j == '1') {
+                if (carry) {
+                    res.push_back('0');
+                } else {
+                    res.push_back('1');
+                }
+            } else {
+                if (carry) {
+                    res.push_back('1');
+                    carry = false;
+                } else {
+                    res.push_back('0');
+                }
+            }
+        }
+        while (i != a.rend()) {
+            if (*i == '1') {
+                if (carry) {
+                    res.push_back('0');
+                } else {
+                    res.push_back('1');
+                    carry = false;
+                }
+            } else {
+                if (carry) {
+                    res.push_back('1');
+                } else {
+                    res.push_back('0');
+                }
+                carry = false;
+            }
+            ++i;
+        }
+        while (j != b.rend()) {
+            if (*j == '1') {
+                if (carry) {
+                    res.push_back('0');
+                } else {
+                    res.push_back('1');
+                    carry = false;
+                }
+            } else {
+                if (carry) {
+                    res.push_back('1');
+                } else {
+                    res.push_back('0');
+                }
+                carry = false;
+            }
+            ++j;
+        }
+        if (carry) {
+            res.push_back('1');
+        }
+        return {res.rbegin(), res.rend()};
+    }
 };
 
 int main() {
