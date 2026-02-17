@@ -4131,6 +4131,33 @@ public:
         }
         return res;
     }
+
+    vector<string> readBinaryWatch(int turnedOn) {
+        if (turnedOn > 8) return {};
+        vector<string> res;
+        vector<vector<string>> hours(4);
+        vector<vector<string>> minutes(6);
+        for (int i = 0; i <= 11; ++i) {
+            hours[__builtin_popcount(i)].emplace_back(to_string(i));
+        }
+        for (int i = 0; i <= 9; ++i) {
+            minutes[__builtin_popcount(i)].emplace_back("0" + to_string(i));
+        }
+        for (int i = 10; i <= 59; ++i) {
+            minutes[__builtin_popcount(i)].emplace_back(to_string(i));
+        }
+        for (int i = 0; i <= 3; ++i) {
+            if (turnedOn - i > 5 || turnedOn - i < 0) {
+                continue;
+            }
+            for (auto &hour: hours[i]) {
+                for (auto &minute: minutes[turnedOn - i]) {
+                    res.emplace_back(hour + ":" + minute);
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
