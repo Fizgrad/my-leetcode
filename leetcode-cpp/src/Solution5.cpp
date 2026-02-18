@@ -4158,6 +4158,19 @@ public:
         }
         return res;
     }
+
+    bool hasAlternatingBits(int n) {
+        bool flag = (n & 1);
+        n >>= 1;
+        while (n >= 1) {
+            if ((n & 1) == flag) {
+                return false;
+            }
+            flag = (n & 1);
+            n >>= 1;
+        }
+        return true;
+    }
 };
 
 int main() {
