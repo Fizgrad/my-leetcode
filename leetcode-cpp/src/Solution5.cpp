@@ -4171,6 +4171,25 @@ public:
         }
         return true;
     }
+
+    int countBinarySubstrings(const string &s) {
+        int prev = 0;
+        int now = 0;
+        int character = s[0];
+        int res = 0;
+        for (auto c: s) {
+            if (c == character) {
+                ++now;
+            } else {
+                res += min(prev, now);
+                prev = now;
+                now = 1;
+                character = c;
+            }
+        }
+        res += min(prev, now);
+        return res;
+    }
 };
 
 int main() {
