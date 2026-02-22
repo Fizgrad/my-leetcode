@@ -4220,6 +4220,22 @@ public:
         }
         return res;
     }
+
+    int binaryGap(int n) {
+        int prevPos = -1;
+        int res = 0;
+        for (int pos = 0; pos < 32; ++pos) {
+            if (n & (1 << pos)) {
+                if (prevPos == -1) {
+                    prevPos = pos;
+                } else {
+                    res = max(res, pos - prevPos);
+                    prevPos = pos;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
