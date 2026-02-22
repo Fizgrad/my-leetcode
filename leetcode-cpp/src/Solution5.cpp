@@ -4211,6 +4211,15 @@ public:
         for (const string &str: res) ans += str;
         return ans;
     }
+
+    int countPrimeSetBits(int left, int right) {
+        constexpr bool isPrime[33] = {0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0};
+        int res = 0;
+        for (int i = left; i <= right; ++i) {
+            if (isPrime[__builtin_popcount(i)]) ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
