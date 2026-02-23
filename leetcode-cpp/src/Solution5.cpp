@@ -4236,6 +4236,19 @@ public:
         }
         return res;
     }
+
+    bool hasAllCodes(const string &s, int k) {
+        vector<bool> seen(1 << k, false);
+        int num = stoi(s.substr(0, k), 0, 2);
+        seen[num] = true;
+        for (int i = 0; i + k < s.size(); ++i) {
+            num -= ((s[i] - '0') << (k - 1));
+            num <<= 1;
+            num += (s[i + k] - '0');
+            seen[num] = true;
+        }
+        return std::all_of(seen.begin(), seen.end(), [](auto i) { return i; });
+    }
 };
 
 int main() {
