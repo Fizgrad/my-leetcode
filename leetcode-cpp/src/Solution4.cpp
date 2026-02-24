@@ -6074,6 +6074,23 @@ public:
         }
         return res;
     }
+
+    int sumRootToLeaf(TreeNode *root) {
+        int res = 0;
+        auto dfs = [&](auto &&dfs, int num, TreeNode *node) {
+            if (node == nullptr) return;
+            num <<= 1;
+            num += node->val;
+            if (node->left || node->right) {
+                dfs(dfs, num, node->left);
+                dfs(dfs, num, node->right);
+            } else {
+                res += num;
+            }
+        };
+        dfs(dfs, 0, root);
+        return res;
+    }
 };
 
 int main() {
