@@ -4249,6 +4249,13 @@ public:
         }
         return std::all_of(seen.begin(), seen.end(), [](auto i) { return i; });
     }
+
+    vector<int> sortByBits(vector<int> &arr) {
+        std::sort(arr.begin(), arr.end(), [](auto a, auto b) {
+            return __builtin_popcount(a) < __builtin_popcount(b) || (__builtin_popcount(a) == __builtin_popcount(b) && a < b);
+        });
+        return arr;
+    }
 };
 
 int main() {
