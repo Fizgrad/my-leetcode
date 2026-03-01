@@ -4274,6 +4274,36 @@ public:
     int minPartitions(const string &n) {
         return *max_element(n.begin(), n.end()) - '0';
     }
+
+    int numSteps(const string &s) {
+        int res = s.size();
+        bool hasOne = false;
+        for (auto i = s.rbegin(); i + 1 != s.rend(); ++i) {
+            if (!hasOne) {
+                if (*i == '1') {
+                    hasOne = true;
+                }
+            }
+        }
+        if (!hasOne) {
+            --res;
+        } else {
+            bool flag = false;
+            for (auto i = s.rbegin(); i + 1 != s.rend(); ++i) {
+                if (flag) {
+                    if (*i == '0') {
+                        ++res;
+                    }
+                } else {
+                    if (*i == '1') {
+                        ++res;
+                        flag = true;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
