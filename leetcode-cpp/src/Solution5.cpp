@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 #include <deque>
@@ -4299,6 +4300,40 @@ public:
                         ++res;
                         flag = true;
                     }
+                }
+            }
+        }
+        return res;
+    }
+
+    int numSpecial(vector<vector<int>> &mat) {
+        int n = mat.size();
+        int m = mat.front().size();
+        int res = 0;
+        vector<bool> rows(n, 0);
+        vector<bool> cols(m, 0);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (mat[i][j] == 1) {
+                    if (rows[i] || cols[j]) {
+                        rows[i] = cols[j] = true;
+                        continue;
+                    }
+                    bool special = true;
+                    for (int x = i + 1; x < n; ++x) {
+                        if (mat[x][j] == 1) {
+                            special = false;
+                        }
+                    }
+                    for (int x = j + 1; x < m; ++x) {
+                        if (mat[i][x] == 1) {
+                            special = false;
+                        }
+                    }
+                    if (special) {
+                        ++res;
+                    }
+                    rows[i] = cols[j] = true;
                 }
             }
         }
