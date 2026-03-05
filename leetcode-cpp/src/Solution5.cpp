@@ -4339,6 +4339,27 @@ public:
         }
         return res;
     }
+
+    int minOperations(const string &s) {
+        int ones = 0;
+        int zeros = 0;
+        for (int i = 0; i < s.size(); ++i) {
+            if (i & 1) {
+                if (s[i] == '1') {
+                    ++zeros;
+                } else {
+                    ++ones;
+                }
+            } else {
+                if (s[i] == '0') {
+                    ++zeros;
+                } else {
+                    ++ones;
+                }
+            }
+        }
+        return min(ones, zeros);
+    }
 };
 
 int main() {
