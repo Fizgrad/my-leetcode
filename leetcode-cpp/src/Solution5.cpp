@@ -4374,6 +4374,43 @@ public:
         }
         return true;
     }
+
+    int minSwaps(vector<vector<int>> &grid) {
+        int n = grid.size();
+        vector<int> length(n, 0);
+        for (int i = 0; i < n; ++i) {
+            int zeros = 0;
+            for (int k = n - 1; k >= 0; --k) {
+                if (grid[i][k] == 1) {
+                    break;
+                }
+                ++zeros;
+            }
+            length[i] = zeros;
+        }
+        vector<int> sortedLength = length;
+        std::ranges::sort(sortedLength);
+        for (int i = 0; i < n; ++i) {
+            if (sortedLength[i] < i) {
+                return -1;
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            int target_zeros = n - 1 - i;
+            int j = i;
+            while (j < n && length[j] < target_zeros) {
+                j++;
+            }
+            res += (j - i);
+            int val = length[j];
+            for (int k = j; k > i; --k) {
+                length[k] = length[k - 1];
+            }
+            length[i] = val;
+        }
+        return res;
+    }
 };
 
 int main() {
