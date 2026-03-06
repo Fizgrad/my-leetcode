@@ -4360,6 +4360,20 @@ public:
         }
         return min(ones, zeros);
     }
+
+    bool checkOnesSegment(const string &s) {
+        bool flag = true;
+        for (auto c: s) {
+            if (c != '1') {
+                flag = false;
+            } else {
+                if (!flag) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
