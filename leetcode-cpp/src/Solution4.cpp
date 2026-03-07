@@ -6091,6 +6091,45 @@ public:
         dfs(dfs, 0, root);
         return res;
     }
+
+    int minFlips(const string &s) {
+        int n = s.size();
+        if (n == 1) return 0;
+        if (n == 2) return s[0] == s[1] ? 1 : 0;
+        vector<long long> costs(n + 1);
+        for (int i = n - 1; i >= 0; --i) {
+            if (s[i] == '0') {
+                costs[i] |= (costs[i + 1] >> 32);
+                costs[i] |= ((1 + (costs[i + 1] & 0xFFFFFFFF)) << 32);
+            } else {
+                costs[i] |= (1 + (costs[i + 1] >> 32));
+                costs[i] |= ((costs[i + 1] & 0xFFFFFFFF) << 32);
+            }
+        }
+        int res = min(costs.front() & 0xFFFFFFFF, (costs.front() >> 32));
+        for (int pivot = 1; pivot < n; ++pivot) {
+            if (n % 2 == 0 && pivot % 2 == 0) continue;
+            int cost = (costs[pivot] >> 32);
+            if ((n - pivot) & 1) {
+                cost += (costs[0] & 0xFFFFFFFF);
+                if (pivot % 2) {
+                    cost -= (costs[pivot] >> 32);
+                } else {
+                    cost -= (costs[pivot] & 0xFFFFFFFF);
+                }
+            } else {
+                cost += (costs[0] >> 32);
+                if ((pivot % 2)) {
+                    cost -= (costs[pivot] & 0xFFFFFFFF);
+                } else {
+                    cost -= (costs[pivot] >> 32);
+                }
+            }
+            res = min(res, cost);
+            res = min(res, (n - cost));
+        }
+        return res;
+    }
 };
 
 int main() {
