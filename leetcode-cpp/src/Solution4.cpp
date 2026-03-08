@@ -6130,6 +6130,15 @@ public:
         }
         return res;
     }
+
+    string findDifferentBinaryString(vector<string> &nums) {
+        int n = nums.size();
+        string res(n, '0');
+        for (int i = 0; i < n; ++i) {
+            res[i] = '1' - nums[i][i] + '0';
+        }
+        return res;
+    }
 };
 
 int main() {
