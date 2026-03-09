@@ -6139,6 +6139,62 @@ public:
         }
         return res;
     }
+
+    int numberOfStableArrays(int zero, int one, int limit) {
+        const long long MOD = 1e9 + 7;
+        if ((zero + 1) * limit < one || (one + 1) * limit < zero) return 0;
+        auto nCr = [&](int n, int k) {
+            if (k < 0 || k > n) return 0LL;
+            if (k == 0 || k == n) return 1LL;
+            if (k > n / 2) k = n - k;
+
+            auto power = [&](long long base, long long exp) {
+                long long res = 1;
+                base %= MOD;
+                while (exp > 0) {
+                    if (exp % 2 == 1) res = (res * base) % MOD;
+                    base = (base * base) % MOD;
+                    exp /= 2;
+                }
+                return res;
+            };
+
+            long long num = 1, den = 1;
+            for (int i = 0; i < k; ++i) {
+                num = (num * (n - i)) % MOD;
+                den = (den * (i + 1)) % MOD;
+            }
+            return (num * power(den, MOD - 2)) % MOD;
+        };
+        vector<vector<vector<int>>> dp(2, vector<vector<int>>(one + 1, vector<int>(zero + 1, -1)));
+        auto f = [&](auto &&f, int start, int remainOne, int remainZero) {
+            if (remainOne < 0 || remainZero < 0) return 0;
+            if (remainOne == 0 && remainZero > limit) {
+                return 0;
+            }
+            if (remainZero == 0 && remainOne > limit) {
+                return 0;
+            }
+            if (dp[start][remainOne][remainZero] != -1) {
+                return dp[start][remainOne][remainZero];
+            }
+            if (start) {
+                if (remainOne <= limit && remainZero <= limit) {
+                    return dp[start][remainOne][remainZero] = nCr(remainOne + remainZero - 1, remainZero);
+                }
+            } else {
+                if (remainOne <= limit && remainZero <= limit) {
+                    return dp[start][remainOne][remainZero] = nCr(remainOne + remainZero - 1, remainOne);
+                }
+            }
+            int res = 0;
+            for (int i = 1; i <= limit; ++i) {
+                res = (res + f(f, 1 - start, start ? remainOne - i : remainOne, start ? remainZero : remainZero - i)) % MOD;
+            }
+            return dp[start][remainOne][remainZero] = res;
+        };
+        return (f(f, 0, one, zero) + f(f, 1, one, zero)) % MOD;
+    }
 };
 
 int main() {
