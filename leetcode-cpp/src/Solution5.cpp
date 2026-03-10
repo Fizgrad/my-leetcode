@@ -4411,6 +4411,38 @@ public:
         }
         return res;
     }
+
+    int numberOfStableArrays(int zero, int one, int limit) {
+        const int MOD = 1e9 + 7;
+
+        // dp[i][j][0] 以 0 结尾
+        // dp[i][j][1] 以 1 结尾
+        vector<vector<vector<long long>>> dp(zero + 1, vector<vector<long long>>(one + 1, vector<long long>(2, 0)));
+
+        // 边界条件初始化：全是 0 或全是 1 且不超 limit 的情况
+        for (int i = 1; i <= min(zero, limit); ++i) dp[i][0][0] = 1;
+        for (int j = 1; j <= min(one, limit); ++j) dp[0][j][1] = 1;
+
+        for (int i = 1; i <= zero; ++i) {
+            for (int j = 1; j <= one; ++j) {
+                // 1. 计算以 0 结尾的情况
+                dp[i][j][0] = (dp[i - 1][j][0] + dp[i - 1][j][1]) % MOD;
+                // 如果 0 的数量超过了 limit，减去恰好产生 limit + 1 个连续 0 的非法情况
+                if (i > limit) {
+                    dp[i][j][0] = (dp[i][j][0] - dp[i - limit - 1][j][1] + MOD) % MOD;
+                }
+
+                // 2. 计算以 1 结尾的情况
+                dp[i][j][1] = (dp[i][j - 1][0] + dp[i][j - 1][1]) % MOD;
+                // 如果 1 的数量超过了 limit，减去恰好产生 limit + 1 个连续 1 的非法情况
+                if (j > limit) {
+                    dp[i][j][1] = (dp[i][j][1] - dp[i][j - limit - 1][0] + MOD) % MOD;
+                }
+            }
+        }
+
+        return (dp[zero][one][0] + dp[zero][one][1]) % MOD;
+    }
 };
 
 int main() {
