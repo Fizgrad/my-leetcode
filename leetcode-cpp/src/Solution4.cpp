@@ -6195,6 +6195,21 @@ public:
         };
         return (f(f, 0, one, zero) + f(f, 1, one, zero)) % MOD;
     }
+
+    int bitwiseComplement(int n) {
+        if (n == 0) return 1;
+        auto high_bit = [&](int x) {
+            x = x | (x >> 1);
+            x = x | (x >> 2);
+            x = x | (x >> 4);
+            x = x | (x >> 8);
+            x = x | (x >> 16);
+            return (x + 1) >> 1;
+        };
+        int high = high_bit(n);
+        int mask = ((~high) + 1) - high;
+        return ~n - mask;
+    }
 };
 
 int main() {
