@@ -4443,6 +4443,32 @@ public:
 
         return (dp[zero][one][0] + dp[zero][one][1]) % MOD;
     }
+
+    long long minNumberOfSeconds(int mountainHeight, vector<int> &workerTimes) {
+        long long high = std::numeric_limits<long long>::max();
+        long long low = 0;
+        long long res = -1;
+        while (low <= high) {
+            long long mid = ((high + low) >> 1);
+            if ([&](long long time) {
+                    long long m = 0;
+                    for (auto workerTime: workerTimes) {
+                        auto nnplus1 = 2.0 * time / workerTime;
+                        m += floor((-1 + sqrt(1.0 + 4.0 * nnplus1)) / 2);
+                        if (m >= mountainHeight) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }(mid)) {
+                res = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
