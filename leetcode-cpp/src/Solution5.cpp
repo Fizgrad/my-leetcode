@@ -4469,6 +4469,37 @@ public:
         }
         return res;
     }
+
+    vector<int> getBiggestThree(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        set<int> res;
+        auto push = [&](int num) {
+            if (res.contains(num)) return;
+            if (res.size() == 3 && num > *res.begin()) {
+                res.erase(res.begin());
+                res.emplace(num);
+            } else if (res.size() < 3) {
+                res.emplace(num);
+            }
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                push(grid[i][j]);
+                for (int k = 1; k <= min(n - i - 1, min(i, min(j, m - j - 1))); ++k) {
+                    int sum = grid[i - k][j] + grid[i][j - k] + grid[i][j + k] + grid[i + k][j];
+                    for (int step = 1; step < k; ++step) {
+                        sum += grid[i - k + step][j + step];
+                        sum += grid[i - k + step][j - step];
+                        sum += grid[i + k - step][j + step];
+                        sum += grid[i + k - step][j - step];
+                    }
+                    push(sum);
+                }
+            }
+        }
+        return {res.rbegin(), res.rend()};
+    }
 };
 
 int main() {
