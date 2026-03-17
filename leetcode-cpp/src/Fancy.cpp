@@ -56,3 +56,7 @@ public:
         return idx >= a.size() ? -1 : mod_add(mod_mult(a[idx], mult, mod), add, mod);
     }
 };
+
+int main() {
+    return 0;
+}
