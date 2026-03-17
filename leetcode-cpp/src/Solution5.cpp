@@ -4500,6 +4500,36 @@ public:
         }
         return {res.rbegin(), res.rend()};
     }
+
+    int largestSubmatrix(vector<vector<int>> &matrix) {
+        int n = matrix.size();
+        int m = matrix.front().size();
+        int res = 0;
+        vector<int> aboveOneSliceLen(m, 0);
+        aboveOneSliceLen = matrix[0];
+        vector<int> tmp = aboveOneSliceLen;
+        std::sort(tmp.rbegin(), tmp.rend());
+        for (int j = 0; j < m; ++j) {
+            res = max(res, (j + 1) * tmp[j]);
+            if (tmp[j] * m <= res) break;
+        }
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (matrix[i][j] == 1) {
+                    aboveOneSliceLen[j] += 1;
+                } else {
+                    aboveOneSliceLen[j] = 0;
+                }
+            }
+            tmp = aboveOneSliceLen;
+            std::sort(tmp.rbegin(), tmp.rend());
+            for (int j = 0; j < m; ++j) {
+                res = max(res, (j + 1) * tmp[j]);
+                if (tmp[j] * m <= res) break;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
