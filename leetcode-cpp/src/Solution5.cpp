@@ -4530,6 +4530,41 @@ public:
         }
         return res;
     }
+
+    int countSubmatrices(vector<vector<int>> &grid, int k) {
+        if (grid[0][0] > k) return 0;
+        int n = grid.size();
+        int m = grid.front().size();
+        vector<vector<int>> &sum = grid;
+        int res = 1;
+        for (int i = 1; i < m; ++i) {
+            sum[0][i] += sum[0][i - 1];
+            if (sum[0][i] <= k) {
+                ++res;
+            } else {
+                m = i;
+            }
+        }
+        for (int i = 1; i < n; ++i) {
+            sum[i][0] += sum[i - 1][0];
+            if (sum[i][0] <= k) {
+                ++res;
+            } else {
+                n = i;
+            }
+        }
+        for (int i = 1; i < n; ++i) {
+            for (int j = 1; j < m; ++j) {
+                sum[i][j] += sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1];
+                if (sum[i][j] <= k) {
+                    ++res;
+                } else {
+                    m = j;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
