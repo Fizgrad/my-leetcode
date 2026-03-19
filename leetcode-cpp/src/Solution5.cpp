@@ -4565,6 +4565,30 @@ public:
         }
         return res;
     }
+
+    int numberOfSubmatrices(vector<vector<char>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        int res = 0;
+        vector<vector<int>> X(n + 1, vector<int>(m + 1, 0));
+        vector<vector<int>> Y(n + 1, vector<int>(m + 1, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                X[i + 1][j + 1] = X[i + 1][j] + X[i][j + 1] - X[i][j];
+                Y[i + 1][j + 1] = Y[i + 1][j] + Y[i][j + 1] - Y[i][j];
+                if (grid[i][j] == 'X') {
+                    ++X[i + 1][j + 1];
+
+                } else if (grid[i][j] == 'Y') {
+                    ++Y[i + 1][j + 1];
+                }
+                if (X[i + 1][j + 1] && X[i + 1][j + 1] == Y[i + 1][j + 1]) {
+                    ++res;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
