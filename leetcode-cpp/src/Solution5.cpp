@@ -4589,6 +4589,17 @@ public:
         }
         return res;
     }
+
+    vector<vector<int>> reverseSubmatrix(vector<vector<int>> &grid, int x, int y, int k) {
+        int n = grid.size();
+        int m = grid.front().size();
+        for (int i = 0; i + i < k; ++i) {
+            for (int j = 0; j < k; ++j) {
+                std::swap(grid[x + i][y + j], grid[x + k - i - 1][y + j]);
+            }
+        }
+        return grid;
+    }
 };
 
 int main() {
