@@ -4637,6 +4637,30 @@ public:
         }
         return ans;
     }
+
+    bool findRotation(vector<vector<int>> &mat, vector<vector<int>> &target) {
+        int n = mat.size();
+        if (n != target.size()) return false;
+        bitset<4> can(0b1111);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (target[i][j] != mat[i][j]) {
+                    can.reset(0);
+                }
+                if (target[j][n - i - 1] != mat[i][j]) {
+                    can.reset(1);
+                }
+                if (target[n - i - 1][n - j - 1] != mat[i][j]) {
+                    can.reset(2);
+                }
+                if (target[n - j - 1][i] != mat[i][j]) {
+                    can.reset(3);
+                }
+            }
+            if (can.none()) return false;
+        }
+        return can.any();
+    }
 };
 
 int main() {
