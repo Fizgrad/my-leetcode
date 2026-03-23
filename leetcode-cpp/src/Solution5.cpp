@@ -4661,6 +4661,33 @@ public:
         }
         return can.any();
     }
+
+    int maxProductPath(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        constexpr int MOD = 1e9 + 7;
+        vector<vector<long long>> maxPositive(n, vector<long long>(m, std::numeric_limits<long long>::min()));
+        vector<vector<long long>> minPositive(n, vector<long long>(m, std::numeric_limits<long long>::max()));
+        maxPositive[0][0] = grid[0][0];
+        minPositive[0][0] = grid[0][0];
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (j != 0) {
+                    maxPositive[i][j] = max(maxPositive[i][j], maxPositive[i][j - 1] * grid[i][j]);
+                    minPositive[i][j] = min(minPositive[i][j], minPositive[i][j - 1] * grid[i][j]);
+                    maxPositive[i][j] = max(maxPositive[i][j], minPositive[i][j - 1] * grid[i][j]);
+                    minPositive[i][j] = min(minPositive[i][j], maxPositive[i][j - 1] * grid[i][j]);
+                }
+                if (i != 0) {
+                    maxPositive[i][j] = max(maxPositive[i][j], maxPositive[i - 1][j] * grid[i][j]);
+                    minPositive[i][j] = min(minPositive[i][j], minPositive[i - 1][j] * grid[i][j]);
+                    maxPositive[i][j] = max(maxPositive[i][j], minPositive[i - 1][j] * grid[i][j]);
+                    minPositive[i][j] = min(minPositive[i][j], maxPositive[i - 1][j] * grid[i][j]);
+                }
+            }
+        }
+        return maxPositive[n - 1][m - 1] < 0 ? -1 : maxPositive[n - 1][m - 1] % MOD;
+    }
 };
 
 int main() {
