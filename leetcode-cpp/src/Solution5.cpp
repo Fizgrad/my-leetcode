@@ -4688,6 +4688,33 @@ public:
         }
         return maxPositive[n - 1][m - 1] < 0 ? -1 : maxPositive[n - 1][m - 1] % MOD;
     }
+
+    vector<vector<int>> constructProductMatrix(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        const int MOD = 12345;
+        vector<vector<int>> p(n, vector<int>(m));
+
+        long long curr = 1;
+        // 第一遍：计算前缀积
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                p[i][j] = curr;
+                curr = (curr * grid[i][j]) % MOD;
+            }
+        }
+
+        curr = 1;
+        // 第二遍：从后往前乘以后缀积
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = m - 1; j >= 0; --j) {
+                p[i][j] = (p[i][j] * curr) % MOD;
+                curr = (curr * grid[i][j]) % MOD;
+            }
+        }
+
+        return p;
+    }
 };
 
 int main() {
