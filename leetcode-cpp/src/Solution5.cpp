@@ -4715,6 +4715,39 @@ public:
 
         return p;
     }
+
+    bool canPartitionGrid(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        vector<long long> line(max(n, m), 0);
+        for (auto i = 0; i < n; ++i) {
+            for (auto j = 0; j < m; ++j) {
+                line[i] += grid[i][j];
+            }
+        }
+        long long sum = std::accumulate(line.begin(), line.end(), 0ll);
+        if (sum & 1) return false;
+        long long target = sum >> 1;
+        sum = 0;
+        for (int i = 0; i < n; ++i) {
+            sum += line[i];
+            if (sum == target) return true;
+            if (sum > target) break;
+        }
+        std::ranges::fill(line, 0);
+        for (auto i = 0; i < n; ++i) {
+            for (auto j = 0; j < m; ++j) {
+                line[j] += grid[i][j];
+            }
+        }
+        sum = 0;
+        for (int j = 0; j < m; ++j) {
+            sum += line[j];
+            if (sum == target) return true;
+            if (sum > target) break;
+        }
+        return false;
+    }
 };
 
 int main() {
