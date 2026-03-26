@@ -6210,6 +6210,85 @@ public:
         int mask = ((~high) + 1) - high;
         return ~n - mask;
     }
+
+    bool canPartitionGrid(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+
+        // 1. 预计算总和与全局频次（数值范围 1 到 10^5，用数组比 map 快得多）
+        long long totalSum = 0;
+        vector<int> totalFreq(100001, 0);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                totalSum += grid[i][j];
+                if (grid[i][j] <= 100000) totalFreq[grid[i][j]]++;
+            }
+        }
+
+        // 核心逻辑：只负责水平切分检查 (Horizontal Cuts)
+        auto checkHorizontal = [&](const vector<vector<int>> &g) -> bool {
+            int R = g.size();
+            int C = g[0].size();
+            long long topSum = 0;
+            vector<int> topFreq(100001, 0);
+
+            // 遍历每一条可能的水平切分线
+            for (int i = 0; i < R - 1; ++i) {
+                for (int j = 0; j < C; ++j) {
+                    int val = g[i][j];
+                    topSum += val;
+                    if (val <= 100000) topFreq[val]++;
+                }
+                long long botSum = totalSum - topSum;
+
+                // 情况 A: 无需移除，两部分直接相等
+                if (topSum == botSum) return true;
+
+                // 情况 B: 从较大的区域尝试移除一个单元格 x
+                if (topSum > botSum) {
+                    long long x = topSum - botSum;
+                    // x 必须在 top 区域内，且移除后 top 保持连通
+                    if (x <= 100000 && topFreq[x] > 0) {
+                        int rCount = i + 1;// 当前 top 区域的行数
+                        // 连通性判定：
+                        // 1. 如果是 2D 矩形 (r>1 且 c>1)，移除任何单元格都保持连通
+                        // 2. 如果是 1D 区域，只有移除四个角（端点）才连通
+                        if ((rCount > 1 && C > 1) ||
+                            (x == g[0][0] || x == g[0][C - 1] || x == g[i][0] || x == g[i][C - 1])) {
+                            return true;
+                        }
+                    }
+                } else {
+                    long long x = botSum - topSum;
+                    // x 必须在 bot 区域内 (总频次 - top 频次 > 0)
+                    if (x <= 100000 && (totalFreq[x] - topFreq[x] > 0)) {
+                        int rCount = R - 1 - i;// 当前 bot 区域的行数
+                        if ((rCount > 1 && C > 1) ||
+                            (x == g[i + 1][0] || x == g[i + 1][C - 1] || x == g[R - 1][0] || x == g[R - 1][C - 1])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        };
+
+        // --- 执行 ---
+
+        // 1. 检查水平切分
+        if (checkHorizontal(grid)) return true;
+
+        // 2. 转置矩阵 (Rows <-> Cols)
+        vector<vector<int>> transposed(m, vector<int>(n));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                transposed[j][i] = grid[i][j];
+            }
+        }
+
+        // 3. 再次检查水平（相当于原矩阵的垂直切分）
+        return checkHorizontal(transposed);
+    }
 };
 
 int main() {
