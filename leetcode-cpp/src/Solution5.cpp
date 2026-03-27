@@ -4748,6 +4748,28 @@ public:
         }
         return false;
     }
+
+    bool areSimilar(vector<vector<int>> &mat, int k) {
+        int n = mat.size();
+        int m = mat.front().size();
+        k = k % m;
+        for (int i = 0; i < n; ++i) {
+            if (n & 1) {
+                for (int j = 0; j < m; ++j) {
+                    if (mat[i][j] != mat[i][(m - k + j) % m]) {
+                        return false;
+                    }
+                }
+            } else {
+                for (int j = 0; j < m; ++j) {
+                    if (mat[i][j] != mat[i][(m + k + j) % m]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
