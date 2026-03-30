@@ -4777,6 +4777,35 @@ public:
                ((s1[1] == s2[1] && s1[3] == s2[3]) ||
                 (s1[1] == s2[3] && s1[3] == s2[1]));
     }
+
+    bool checkStrings(const string &s1, const string &s2) {
+        constexpr int SIZE = 'z' - 'a' + 1;
+        vector<int> count_s1_even(SIZE, 0);
+        for (int i = 0; i < s1.size(); i += 2) {
+            ++count_s1_even[s1[i] - 'a'];
+        }
+        vector<int> count_s2_even(SIZE, 0);
+        for (int i = 0; i < s2.size(); i += 2) {
+            ++count_s2_even[s2[i] - 'a'];
+        }
+        for (int i = 0; i < SIZE; ++i) {
+            if (count_s1_even[i] != count_s2_even[i]) {
+                return false;
+            }
+        }
+        for (int i = 1; i < s1.size(); i += 2) {
+            ++count_s1_even[s1[i] - 'a'];
+        }
+        for (int i = 1; i < s2.size(); i += 2) {
+            ++count_s2_even[s2[i] - 'a'];
+        }
+        for (int i = 0; i < SIZE; ++i) {
+            if (count_s1_even[i] != count_s2_even[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
