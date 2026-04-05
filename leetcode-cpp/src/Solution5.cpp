@@ -4936,6 +4936,59 @@ public:
         }
         return original;
     }
+
+    int maxWalls(vector<int> &robots, vector<int> &distance, vector<int> &walls) {
+        vector<pair<int, int>> robotsDistance(robots.size());
+        for (int i = 0; i < robots.size(); ++i) {
+            robotsDistance[i] = std::make_pair(robots[i], distance[i]);
+        }
+        std::sort(robotsDistance.begin(), robotsDistance.end());
+        std::ranges::sort(walls);
+
+        auto countWalls = [&](long long a, long long b) {
+            if (a > b) return 0;
+            auto it1 = lower_bound(walls.begin(), walls.end(), a);
+            auto it2 = upper_bound(walls.begin(), walls.end(), b);
+            return (int) (it2 - it1);
+        };
+
+        int n = robots.size();
+        vector<vector<int>> dp(n, vector<int>(2, 0));
+
+        dp[0][0] = countWalls((long long) robotsDistance[0].first - robotsDistance[0].second, robotsDistance[0].first);
+        int limit0 = (n > 1) ? robotsDistance[1].first - 1 : 2e9;
+        dp[0][1] = countWalls(robotsDistance[0].first, min((long long) robotsDistance[0].first + robotsDistance[0].second, (long long) limit0));
+
+        for (int i = 1; i < n; i++) {
+            long long curr_p = robotsDistance[i].first;
+            long long curr_d = robotsDistance[i].second;
+            long long prev_p = robotsDistance[i - 1].first;
+            long long prev_d = robotsDistance[i - 1].second;
+
+            // Scenario 1: Current robot fires LEFT
+            long long left_reach = max(prev_p + 1, curr_p - curr_d);
+            int walls_i_left = countWalls(left_reach, curr_p);
+
+            // If prev fired LEFT, no overlap possible
+            int from_prev_left = dp[i - 1][0] + walls_i_left;
+
+            // If prev fired RIGHT, subtract overlapping walls to avoid double counting
+            long long prev_right_reach = min(curr_p - 1, prev_p + prev_d);
+            int overlap = countWalls(left_reach, prev_right_reach);
+            int from_prev_right = dp[i - 1][1] + (walls_i_left - overlap);
+
+            dp[i][0] = max(from_prev_left, from_prev_right);
+
+            // Scenario 2: Current robot fires RIGHT
+            long long right_lim = (i == n - 1) ? 2e9 : robotsDistance[i + 1].first - 1;
+            int walls_i_right = countWalls(curr_p, min(curr_p + curr_d, right_lim));
+
+            // Firing right doesn't conflict with any choice of the previous robot
+            dp[i][1] = max(dp[i - 1][0], dp[i - 1][1]) + walls_i_right;
+        }
+
+        return max(dp[n - 1][0], dp[n - 1][1]);
+    }
 };
 
 int main() {
