@@ -4912,6 +4912,30 @@ public:
         }
         return !U && !L;
     }
+
+    string decodeCiphertext(const string &encodedText, int rows) {
+        if (rows == 1) return encodedText;
+        if (encodedText.empty()) return "";
+        int cols = encodedText.size() / rows;
+        vector<vector<char>> matrix(rows, vector<char>(cols, ' '));
+        for (int i = 0; i < encodedText.size(); ++i) {
+            matrix[i / cols][i % cols] = encodedText[i];
+        }
+        string original;
+        for (int i = 0; i < cols; ++i) {
+            for (int j = 0; j < rows; ++j) {
+                if (i + j >= cols) {
+                    continue;
+                } else {
+                    original.push_back(matrix[j][i + j]);
+                }
+            }
+        }
+        while (original.back() == ' ') {
+            original.pop_back();
+        }
+        return original;
+    }
 };
 
 int main() {
