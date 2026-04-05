@@ -4847,6 +4847,47 @@ public:
         }
         return s;
     }
+
+    int maximumAmount(vector<vector<int>> &coins) {
+        int n = coins.size();
+        int m = coins.front().size();
+        vector<vector<int>> dp(m, vector<int>(3, -1e9));
+        vector<vector<int>> next(m, vector<int>(3, -1e9));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (i == 0) {
+                    if (j == 0) {
+                        next[0][2] = coins.front().front();
+                        next[0][1] = 0;
+                    } else {
+                        next[j][2] = next[j - 1][2] + coins[i][j];
+                        next[j][1] = next[j - 1][1] + coins[i][j];
+                        next[j][0] = next[j - 1][0] + coins[i][j];
+                        if (coins[i][j] < 0) {
+                            next[j][0] = max(next[j][0], next[j][1] - coins[i][j]);
+                            next[j][1] = max(next[j][1], next[j][2] - coins[i][j]);
+                        }
+                    }
+                } else {
+                    if (j > 0) {
+                        next[j][2] = max(next[j - 1][2], dp[j][2]) + coins[i][j];
+                        next[j][1] = max(next[j - 1][1], dp[j][1]) + coins[i][j];
+                        next[j][0] = max(next[j - 1][0], dp[j][0]) + coins[i][j];
+                    } else {
+                        next[j][2] = dp[j][2] + coins[i][j];
+                        next[j][1] = dp[j][1] + coins[i][j];
+                        next[j][0] = dp[j][0] + coins[i][j];
+                    }
+                    if (coins[i][j] < 0) {
+                        next[j][0] = max(next[j][0], next[j][1] - coins[i][j]);
+                        next[j][1] = max(next[j][1], next[j][2] - coins[i][j]);
+                    }
+                }
+            }
+            dp.swap(next);
+        }
+        return *std::ranges::max_element(dp[m - 1]);
+    }
 };
 
 int main() {
