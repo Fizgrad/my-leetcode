@@ -4888,6 +4888,30 @@ public:
         }
         return *std::ranges::max_element(dp[m - 1]);
     }
+
+    bool judgeCircle(const string &moves) {
+        int U = 0;
+        int L = 0;
+        for (auto c: moves) {
+            switch (c) {
+                case 'L':
+                    ++L;
+                    break;
+                case 'R':
+                    --L;
+                    break;
+                case 'U':
+                    ++U;
+                    break;
+                case 'D':
+                    --U;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return !U && !L;
+    }
 };
 
 int main() {
