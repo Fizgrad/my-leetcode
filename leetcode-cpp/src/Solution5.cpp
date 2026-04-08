@@ -4989,6 +4989,24 @@ public:
 
         return max(dp[n - 1][0], dp[n - 1][1]);
     }
+
+    int xorAfterQueries(vector<int> &nums, vector<vector<int>> &queries) {
+        constexpr int MOD = (1e9 + 7);
+        for (auto &i: queries) {
+            int l = i[0];
+            int r = i[1];
+            int k = i[2];
+            int v = i[3];
+            for (int j = l; j <= r; j += k) {
+                nums[j] = static_cast<long long>(nums[j]) * v % MOD;
+            }
+        }
+        int xor_sum = 0;
+        for (auto i: nums) {
+            xor_sum = xor_sum ^ i;
+        }
+        return xor_sum;
+    }
 };
 
 int main() {
