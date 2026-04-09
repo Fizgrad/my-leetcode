@@ -6289,6 +6289,66 @@ public:
         // 3. 再次检查水平（相当于原矩阵的垂直切分）
         return checkHorizontal(transposed);
     }
+
+    int xorAfterQueries(vector<int> &nums, vector<vector<int>> &queries) {
+        const int MOD = 1e9 + 7;
+        int n = nums.size();
+        int sqrt_n = std::max(1, (int) std::sqrt(n));
+
+        // 1. 离线化：按步长 k 分组
+        vector<vector<int>> buckets(sqrt_n);
+        for (int i = 0; i < queries.size(); ++i) {
+            if (queries[i][2] < sqrt_n) {
+                buckets[queries[i][2]].push_back(i);
+            } else {
+                // 大步长直接处理
+                int l = queries[i][0], r = queries[i][1], k = queries[i][2];
+                long long v = queries[i][3];
+                for (int j = l; j <= r; j += k) {
+                    nums[j] = (1LL * nums[j] * v) % MOD;
+                }
+            }
+        }
+
+        // 2. 逐个步长处理，复用一维数组，节省内存并提高缓存命中率
+        vector<long long> pref(n + sqrt_n + 1);
+        auto get_inv = [&](long long a) {
+            long long b = MOD, x0 = 1, x1 = 0;
+            while (b > 0) {
+                long long q = a / b;
+                a %= b;
+                std::swap(a, b);
+                x0 -= q * x1;
+                std::swap(x0, x1);
+            }
+            return (x0 < 0) ? x0 + MOD : x0;
+        };
+
+        for (int k = 1; k < sqrt_n; ++k) {
+            if (buckets[k].empty()) continue;
+
+            std::fill(pref.begin(), pref.end(), 1);
+            for (int idx: buckets[k]) {
+                int l = queries[idx][0], r = queries[idx][1];
+                long long v = queries[idx][3];
+                pref[l] = (pref[l] * v) % MOD;
+                int next_pos = r + (k - (r - l) % k);
+                pref[next_pos] = (pref[next_pos] * get_inv(v)) % MOD;
+            }
+
+            // 跳跃前缀积还原并原地更新
+            for (int i = 0; i < n; ++i) {
+                if (i >= k) pref[i] = (pref[i] * pref[i - k]) % MOD;
+                if (pref[i] != 1) {
+                    nums[i] = (1LL * nums[i] * pref[i]) % MOD;
+                }
+            }
+        }
+
+        int xor_sum = 0;
+        for (int x: nums) xor_sum ^= x;
+        return xor_sum;
+    }
 };
 
 int main() {
