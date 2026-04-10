@@ -5007,6 +5007,26 @@ public:
         }
         return xor_sum;
     }
+
+    int minimumDistance(vector<int> &nums) {
+        int n = nums.size();
+        vector<vector<int>> times(n + 1);
+        bool flag = false;
+        for (int i = 0; i < n; ++i) {
+            times[nums[i]].emplace_back(i);
+            if (times[nums[i]].size() >= 3) {
+                flag = true;
+            }
+        }
+        if (!flag) return -1;
+        int res = 1e9;
+        for (auto &i: times) {
+            for (int j = 0; j + 2 < i.size(); ++j) {
+                res = min(res, 2 * (i[j + 2] - i[j]));
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
