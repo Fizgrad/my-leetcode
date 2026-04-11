@@ -6349,6 +6349,22 @@ public:
         for (int x: nums) xor_sum ^= x;
         return xor_sum;
     }
+
+    int minimumDistance(vector<int> &nums) {
+        int n = nums.size();
+        vector<int> cache((n + 1) * 2, -1);
+        constexpr int INITIAL = std::numeric_limits<int>::max();
+        bool flag = false;
+        int res = INITIAL;
+        for (int i = 0; i < n; ++i) {
+            auto num = nums[i];
+            if (cache[2 * num] != -1) res = min(res, 2 * (i - cache[2 * num]));
+            cache[2 * num] = cache[2 * num + 1];
+            cache[2 * num + 1] = i;
+        }
+        if (res == INITIAL) return -1;
+        return res;
+    }
 };
 
 int main() {
