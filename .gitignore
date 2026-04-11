@@ -2,10 +2,11 @@
 cmake-build-debug
 .idea
 build/*
-build
+luogu/build/*
 .vscode
 .vscode/*
 .idea/*
 .cache/*
+luogu/.cache
 leetcode-rust/target
 leetcode-rust/target/** 
