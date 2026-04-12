@@ -5027,6 +5027,45 @@ public:
         }
         return res;
     }
+
+    int minimumDistance(const string &word) {
+        int n = word.size();
+        constexpr int CHAR_COUNT = 'Z' - 'A' + 1;
+        auto dis = [](char a, char b) {
+            a -= 'A';
+            b -= 'A';
+            return std::abs(a / 6 - b / 6) + std::abs(a % 6 - b % 6);
+        };
+
+        vector<vector<vector<int>>> dp(CHAR_COUNT, vector<vector<int>>(CHAR_COUNT, vector<int>(n, -1)));
+        auto dfs = [&](auto &&dfs, char finger1, char finger2, int index) {
+            if (index >= n) return 0;
+            int res = 1e9;
+            char c = word[index];
+            if (finger1 == ' ') {
+                res = min(res, dfs(dfs, c, finger2, index + 1));
+                if (finger2 != ' ') {
+                    res = min(res, dis(finger2, c) + dfs(dfs, finger1, c, index + 1));
+                }
+            }
+            if (finger2 == ' ') {
+                res = min(res, dfs(dfs, finger1, c, index + 1));
+                if (finger1 != ' ') {
+                    res = min(res, dis(finger1, c) + dfs(dfs, c, finger2, index + 1));
+                }
+            }
+            if (finger1 != ' ' && finger2 != ' ') {
+                if (dp[finger1 - 'A'][finger2 - 'A'][index] != -1) {
+                    return dp[finger1 - 'A'][finger2 - 'A'][index];
+                }
+                dp[finger1 - 'A'][finger2 - 'A'][index] = min(dis(finger1, c) + dfs(dfs, c, finger2, index + 1), dis(finger2, c) + dfs(dfs, finger1, c, index + 1));
+                return dp[finger1 - 'A'][finger2 - 'A'][index];
+            }
+            return res;
+        };
+
+        return dfs(dfs, ' ', ' ', 0);
+    }
 };
 
 int main() {
