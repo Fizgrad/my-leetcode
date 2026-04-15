@@ -5066,6 +5066,23 @@ public:
 
         return dfs(dfs, ' ', ' ', 0);
     }
+
+    int closestTarget(vector<string> &words, const string &target, int startIndex) {
+        int n = words.size();
+        int res = n;
+        for (int i = 0; i < n; ++i) {
+            auto &s = words[i];
+            if (s == target) {
+                res = min(res, abs(i - startIndex));
+                if (i > startIndex) {
+                    res = min(res, abs(startIndex + n - i) % n);
+                } else {
+                    res = min(res, abs(i + n - startIndex) % n);
+                }
+            }
+        }
+        return res == n ? -1 : res;
+    }
 };
 
 int main() {
