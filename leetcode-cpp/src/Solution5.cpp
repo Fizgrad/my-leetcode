@@ -5083,6 +5083,25 @@ public:
         }
         return res == n ? -1 : res;
     }
+
+    int minMirrorPairDistance(vector<int> &nums) {
+        auto reverse = [](int x) {
+            int res = 0;
+            while (x >= 1) {
+                res = res * 10 + (x % 10);
+                x /= 10;
+            }
+            return res;
+        };
+        int res = nums.size() + 1;
+        unordered_map<int, int> prev;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (prev.contains(nums[i]))
+                res = min(res, i - prev[nums[i]]);
+            prev[reverse(nums[i])] = i;
+        }
+        return res == nums.size() + 1 ? -1 : res;
+    }
 };
 
 int main() {
