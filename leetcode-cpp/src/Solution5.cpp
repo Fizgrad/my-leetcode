@@ -5102,6 +5102,18 @@ public:
         }
         return res == nums.size() + 1 ? -1 : res;
     }
+
+    int mirrorDistance(int n) {
+        auto reverse = [&](int x) {
+            int res = 0;
+            while (x >= 1) {
+                res = res * 10 + (x % 10);
+                x /= 10;
+            }
+            return res;
+        };
+        return abs(n - reverse(n));
+    }
 };
 
 int main() {
