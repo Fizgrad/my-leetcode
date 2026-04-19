@@ -5114,6 +5114,25 @@ public:
         };
         return abs(n - reverse(n));
     }
+
+    int maxDistance(vector<int> &nums1, vector<int> &nums2) {
+        int index1 = 0;
+        int index2 = 0;
+        int res = 0;
+        while (index1 < nums1.size()) {
+            index2 = max(index2, index1);
+            if (index2 >= nums2.size())
+                return res;
+            while (index1 < nums1.size() && nums1[index1] <= nums2[index2]) {
+                res = max(res, index2 - index1);
+                ++index2;
+                if (index2 >= nums2.size())
+                    return res;
+            }
+            ++index1;
+        }
+        return res;
+    }
 };
 
 int main() {
