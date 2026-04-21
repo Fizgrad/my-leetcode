@@ -5145,6 +5145,51 @@ public:
         }
         return res;
     }
+
+    int minimumHammingDistance(vector<int> &source, vector<int> &target, vector<vector<int>> &allowedSwaps) {
+        int n = source.size();
+        vector<int> parents(n, 0);
+        std::iota(parents.begin(), parents.end(), 0);
+        vector<int> sizes(n, 1);
+
+        auto uf_find = [&](int a) {
+            int pa = parents[a];
+            while (pa != a) {
+                a = pa;
+                pa = parents[pa];
+            }
+            return pa;
+        };
+
+        auto uf_union = [&](int a, int b) {
+            int pa = uf_find(a);
+            int pb = uf_find(b);
+            if (pa == pb) return;
+            if (sizes[pa] > sizes[pb]) {
+                sizes[pa] += sizes[pb];
+                parents[pb] = pa;
+            } else {
+                sizes[pb] += sizes[pa];
+                parents[pa] = pb;
+            }
+        };
+        int res = 0;
+        for (auto &i: allowedSwaps) {
+            uf_union(i[0], i[1]);
+        };
+        unordered_map<int, unordered_map<int, int>> groupsNum;
+        for (int i = 0; i < n; ++i) {
+            groupsNum[uf_find(i)][source[i]]++;
+        }
+        for (int i = 0; i < n; ++i) {
+            if (groupsNum[uf_find(i)][target[i]] <= 0) {
+                ++res;
+            } else {
+                --groupsNum[uf_find(i)][target[i]];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
