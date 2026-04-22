@@ -5190,6 +5190,56 @@ public:
         }
         return res;
     }
+
+    vector<string> twoEditWords(vector<string> &queries, vector<string> &dictionary) {
+        vector<string> res;
+        struct Node {
+            Node *next['z' - 'a' + 1] = {nullptr};
+            bool flag;
+        };
+        Node *root = new Node();
+        auto push = [&](const string &s) {
+            Node *ptr = root;
+            for (auto c: s) {
+                if (ptr->next[c - 'a'] == nullptr) {
+                    ptr->next[c - 'a'] = new Node();
+                }
+                ptr = ptr->next[c - 'a'];
+            }
+            ptr->flag = true;
+        };
+
+        auto dfs = [&](auto &&dfs, int index, const string &s, Node *node, int remain) {
+            if (index == s.size()) {
+                return node != nullptr && node->flag;
+            }
+            if (node->next[s[index] - 'a']) {
+                if (dfs(dfs, index + 1, s, node->next[s[index] - 'a'], remain)) {
+                    return true;
+                }
+            }
+            if (remain > 0) {
+                for (auto i: node->next) {
+                    if (i) {
+                        if (dfs(dfs, index + 1, s, i, remain - 1)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        };
+        auto contains = [&](auto &s) {
+            return dfs(dfs, 0, s, root, 2);
+        };
+        for (auto &i: dictionary) {
+            push(i);
+        }
+        for (auto &i: queries) {
+            if (contains(i)) res.push_back(i);
+        }
+        return res;
+    }
 };
 
 int main() {
