@@ -5240,6 +5240,40 @@ public:
         }
         return res;
     }
+
+    vector<long long> distance(vector<int> &nums) {
+        int n = nums.size();
+        vector<long long> front(n, 0);
+        unordered_map<int, int> lastIndex;
+        unordered_map<int, int> time;
+        for (int i = 0; i < n; ++i) {
+            auto num = nums[i];
+            if (!lastIndex.contains(num)) {
+                time[num]++;
+            } else {
+                front[i] = front[lastIndex[num]] + (i - lastIndex[num]) * time[num];
+                time[num]++;
+            }
+            lastIndex[num] = i;
+        }
+        vector<long long> back(n, 0);
+        time.clear();
+        lastIndex.clear();
+        for (int i = n - 1; i >= 0; --i) {
+            auto num = nums[i];
+            if (!lastIndex.contains(num)) {
+                time[num]++;
+            } else {
+                back[i] = back[lastIndex[num]] + (lastIndex[num] - i) * time[num];
+                time[num]++;
+            }
+            lastIndex[num] = i;
+        }
+        for (int i = 0; i < n; ++i) {
+            front[i] += back[i];
+        }
+        return front;
+    }
 };
 
 int main() {
