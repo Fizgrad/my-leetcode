@@ -5274,6 +5274,21 @@ public:
         }
         return front;
     }
+
+    int furthestDistanceFromOrigin(const string &moves) {
+        int LR_diff = 0;
+        int LR_count = 0;
+        for (auto i: moves) {
+            if (i == 'L') {
+                ++LR_count;
+                ++LR_diff;
+            } else if (i == 'R') {
+                --LR_diff;
+                ++LR_count;
+            }
+        }
+        return moves.size() - LR_count + std::abs(LR_diff);
+    }
 };
 
 int main() {
