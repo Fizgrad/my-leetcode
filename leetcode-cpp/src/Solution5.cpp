@@ -5289,6 +5289,42 @@ public:
         }
         return moves.size() - LR_count + std::abs(LR_diff);
     }
+
+    bool containsCycle(vector<vector<char>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+        constexpr int d[5] = {0, 1, 0, -1, 0};
+        vector<vector<int>> visiited(n, vector<int>(m, 0));
+        auto dfs = [&](auto &&dfs, int from_x, int from_y, int x, int y) {
+            visiited[x][y] = true;
+            for (int i = 0; i < 4; ++i) {
+                int xx = x + d[i];
+                int yy = y + d[i + 1];
+                if (xx == from_x && yy == from_y) {
+                    continue;
+                }
+                if (xx >= n || xx < 0 || yy >= m || yy < 0) {
+                    continue;
+                }
+                if (grid[xx][yy] != grid[from_x][from_y]) {
+                    continue;
+                }
+                if (visiited[xx][yy]) return true;
+                if (dfs(dfs, x, y, xx, yy)) return true;
+            }
+            return false;
+        };
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (!visiited[i][j]) {
+                    if (dfs(dfs, -1, -1, i, j)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 };
 
 int main() {
