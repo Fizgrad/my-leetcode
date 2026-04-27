@@ -5325,6 +5325,121 @@ public:
         }
         return false;
     }
+
+    bool hasValidPath(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid.front().size();
+
+        if (n == 1 && m == 1) return true;
+
+        vector<pair<int, int>> virtual_prevs;
+        int start_type = grid[0][0];
+        if (start_type == 1) virtual_prevs.push_back({0, -1});
+        else if (start_type == 2)
+            virtual_prevs.push_back({-1, 0});
+        else if (start_type == 3)
+            virtual_prevs.push_back({0, -1});
+        else if (start_type == 4) {
+            virtual_prevs.push_back({0, 1});
+            virtual_prevs.push_back({1, 0});
+        } else if (start_type == 6)
+            virtual_prevs.push_back({-1, 0});
+
+        for (auto &vp: virtual_prevs) {
+            int prev_x = vp.first;
+            int prev_y = vp.second;
+            int x = 0;
+            int y = 0;
+
+            // 新增：防超时！记录当前这条路径访问过的节点
+            vector<vector<bool>> visited(n, vector<bool>(m, false));
+
+            while (true) {
+                // 越界检查
+                if (x < 0 || x >= n || y < 0 || y >= m) {
+                    break;
+                }
+
+                // 新增：环检测！如果走到了已经走过的格子，说明陷入死循环，直接跳出
+                if (visited[x][y]) {
+                    break;
+                }
+                visited[x][y] = true;// 标记当前格子已访问
+
+                int xx = -1;
+                int yy = -1;
+                auto type = grid[x][y];
+
+                if (type == 1) {
+                    if (prev_x == x && prev_y == y - 1) {
+                        xx = x;
+                        yy = y + 1;
+                    } else if (prev_x == x && prev_y == y + 1) {
+                        xx = x;
+                        yy = y - 1;
+                    }
+                } else if (type == 2) {
+                    if (prev_y == y && prev_x == x - 1) {
+                        yy = y;
+                        xx = x + 1;
+                    } else if (prev_y == y && prev_x == x + 1) {
+                        yy = y;
+                        xx = x - 1;
+                    }
+                } else if (type == 3) {
+                    if (prev_x == x && prev_y == y - 1) {
+                        xx = x + 1;
+                        yy = y;
+                    } else if (prev_x == x + 1 && prev_y == y) {
+                        xx = x;
+                        yy = y - 1;
+                    }
+                } else if (type == 4) {
+                    if (prev_x == x && prev_y == y + 1) {
+                        xx = x + 1;
+                        yy = y;
+                    } else if (prev_x == x + 1 && prev_y == y) {
+                        xx = x;
+                        yy = y + 1;
+                    }
+                } else if (type == 5) {
+                    if (prev_x == x && prev_y == y - 1) {
+                        xx = x - 1;
+                        yy = y;
+                    } else if (prev_x == x - 1 && prev_y == y) {
+                        xx = x;
+                        yy = y - 1;
+                    }
+                } else if (type == 6) {
+                    if (prev_x == x && prev_y == y + 1) {
+                        xx = x - 1;
+                        yy = y;
+                    } else if (prev_x == x - 1 && prev_y == y) {
+                        xx = x;
+                        yy = y + 1;
+                    }
+                }
+
+                // 接口不对接
+                if (xx == -1 && yy == -1) {
+                    break;
+                }
+
+                // 成功到达终点
+                if (x == n - 1 && y == m - 1) {
+                    return true;
+                }
+
+                // 向前推进
+                prev_x = x;
+                prev_y = y;
+                x = xx;
+                y = yy;
+            }
+        }
+
+        return false;
+    }
 };
 
 int main() {
