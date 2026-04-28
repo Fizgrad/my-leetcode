@@ -5440,6 +5440,28 @@ public:
 
         return false;
     }
+
+    int minOperations(vector<vector<int>> &grid, int x) {
+        vector<int> nums;
+        nums.reserve(grid.size() * grid.front().size());
+        int remain = grid.front().front() % x;
+        for (auto &i: grid) {
+            for (auto j: i) {
+                if (j % x != remain) {
+                    return -1;
+                }
+                j = (j - remain) / x;
+                nums.emplace_back(j);
+            }
+        }
+        std::ranges::sort(nums);
+        int pivot = (nums.size() & 1) ? nums[(nums.size() / 2)] : (nums[(nums.size()) / 2] + nums[(nums.size()) / 2 - 1]) / 2;
+        int res = 0;
+        std::ranges::for_each(nums, [&](auto i) {
+            res += abs(i - pivot);
+        });
+        return res;
+    }
 };
 
 int main() {
