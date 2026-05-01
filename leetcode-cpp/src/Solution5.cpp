@@ -5462,6 +5462,35 @@ public:
         });
         return res;
     }
+
+    int maxPathScore(vector<vector<int>> &grid, int k) {
+        int m = grid.size();
+        int n = grid.front().size();
+        vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(k + 1, -1)));
+        dp[0][0] = vector<int>(k + 1, 0);
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 0) {
+                    for (int x = k; x >= 0; --x) {
+                        if (i > 0)
+                            dp[i][j][x] = max(dp[i - 1][j][x], dp[i][j][x]);
+
+                        if (j > 0)
+                            dp[i][j][x] = max(dp[i][j - 1][x], dp[i][j][x]);
+                    }
+                } else {
+                    for (int x = k; x >= 1; --x) {
+                        if (i > 0 && dp[i - 1][j][x] != -1)
+                            dp[i][j][x - 1] = max(grid[i][j] + dp[i - 1][j][x], dp[i][j][x - 1]);
+
+                        if (j > 0 && dp[i][j - 1][x] != -1)
+                            dp[i][j][x - 1] = max(grid[i][j] + dp[i][j - 1][x], dp[i][j][x - 1]);
+                    }
+                }
+            }
+        }
+        return *std::ranges::max_element(dp.back().back());
+    }
 };
 
 int main() {
