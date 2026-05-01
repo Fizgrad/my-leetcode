@@ -5491,6 +5491,21 @@ public:
         }
         return *std::ranges::max_element(dp.back().back());
     }
+
+    int maxRotateFunction(vector<int> &nums) {
+        int n = nums.size();
+        int sum = std::accumulate(nums.begin(), nums.end(), 0);
+        int F = 0;
+        for (int i = 0; i < n; ++i) {
+            F += i * nums[i];
+        }
+        int res = F;
+        for (int i = 0; i < n; ++i) {
+            F += sum - n * (nums[n - i - 1]);
+            res = max(res, F);
+        }
+        return res;
+    }
 };
 
 int main() {
