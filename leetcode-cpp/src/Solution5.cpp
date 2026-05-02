@@ -5506,6 +5506,27 @@ public:
         }
         return res;
     }
+
+    int rotatedDigits(int n) {
+        auto f = [](int x) {
+            bool diff = false;
+            while (x >= 1) {
+                if (x % 10 == 3 || x % 10 == 4 || x % 10 == 7) {
+                    return false;
+                }
+                if (x % 10 == 2 || x % 10 == 5 || x % 10 == 6 || x % 10 == 9) {
+                    diff = true;
+                }
+                x /= 10;
+            }
+            return diff;
+        };
+        int res = 0;
+        for (int i = 1; i <= n; ++i) {
+            if (f(i)) ++res;
+        }
+        return res;
+    }
 };
 
 int main() {
