@@ -5527,6 +5527,12 @@ public:
         }
         return res;
     }
+
+    bool rotateString(const string &s, const string &goal) {
+        if (s.size() != goal.size()) return false;
+        string ss = s + s;
+        return ss.find(goal) != std::string::npos;
+    }
 };
 
 int main() {
