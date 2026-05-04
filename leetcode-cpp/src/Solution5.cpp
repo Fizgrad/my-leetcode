@@ -5533,6 +5533,19 @@ public:
         string ss = s + s;
         return ss.find(goal) != std::string::npos;
     }
+
+    void rotate(vector<vector<int>> &matrix) {
+        int n = matrix.size();
+        for (int k = 0; k < n / 2; ++k) {
+            for (int i = k; i < n - k - 1; ++i) {
+                int temp = matrix[k][i];
+                matrix[k][i] = matrix[n - 1 - i][k];
+                matrix[n - i - 1][k] = matrix[n - k - 1][n - i - 1];
+                matrix[n - 1 - k][n - 1 - i] = matrix[i][n - 1 - k];
+                matrix[i][n - 1 - k] = temp;
+            }
+        }
+    }
 };
 
 int main() {
