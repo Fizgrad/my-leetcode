@@ -6365,6 +6365,33 @@ public:
         if (res == INITIAL) return -1;
         return res;
     }
+
+    ListNode *rotateRight(ListNode *head, int k) {
+        if (head == nullptr) return head;
+        int size = 0;
+        auto pt = head;
+        while (pt != nullptr) {
+            size++;
+            if (pt->next == nullptr) {
+                pt->next = head;
+                break;
+            }
+            pt = pt->next;
+        }
+        k %= size;
+        pt = head;
+        auto start = head;
+        while (pt != nullptr) {
+            --size;
+            if (size == k) {
+                start = pt->next;
+                pt->next = nullptr;
+                return start;
+            }
+            pt = pt->next;
+        }
+        return start;
+    }
 };
 
 int main() {
