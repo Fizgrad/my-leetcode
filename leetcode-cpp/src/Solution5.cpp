@@ -5568,6 +5568,33 @@ public:
         }
         return res;
     }
+
+    vector<vector<char>> rotateTheBox(vector<vector<char>> &boxGrid) {
+        int n = boxGrid.size();
+        int m = boxGrid.front().size();
+        vector<vector<char>> res(m, vector<char>(n, '.'));
+        int stones = 0;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (boxGrid[i][j] == '*') {
+                    res[j][n - 1 - i] = '*';
+                    for (int k = 0; k < stones; ++k) {
+                        res[j - k - 1][n - 1 - i] = '#';
+                    }
+                    stones = 0;
+                } else if (boxGrid[i][j] == '#') {
+                    ++stones;
+                }
+            }
+            if (stones != 0) {
+                for (int k = 0; k < stones; ++k) {
+                    res[m - k - 1][n - 1 - i] = '#';
+                }
+                stones = 0;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
