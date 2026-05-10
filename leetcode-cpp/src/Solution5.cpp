@@ -5595,6 +5595,21 @@ public:
         }
         return res;
     }
+
+    int maximumJumps(vector<int> &nums, int target) {
+        int n = nums.size();
+        vector<int> res(n, -1);
+        res[0] = 0;
+        for (int i = 0; i < n; ++i) {
+            if (res[i] == -1) continue;
+            for (int j = i + 1; j < n; ++j) {
+                if (abs(nums[j] - nums[i]) <= target) {
+                    res[j] = max(res[j], res[i] + 1);
+                }
+            }
+        }
+        return res.back();
+    }
 };
 
 int main() {
