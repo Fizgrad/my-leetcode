@@ -5610,6 +5610,20 @@ public:
         }
         return res.back();
     }
+
+    vector<int> separateDigits(vector<int> &nums) {
+        vector<int> res;
+        res.reserve(nums.size());
+        for (int i = nums.size() - 1; i >= 0; --i) {
+            int num = nums[i];
+            while (num >= 1) {
+                res.emplace_back(num % 10);
+                num /= 10;
+            }
+        }
+        std::reverse(res.begin(), res.end());
+        return res;
+    }
 };
 
 int main() {
