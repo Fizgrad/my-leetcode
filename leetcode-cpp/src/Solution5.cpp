@@ -5624,6 +5624,26 @@ public:
         std::reverse(res.begin(), res.end());
         return res;
     }
+
+    bool isGood(vector<int> &nums) {
+        int n = nums.size() - 1;
+        int n_count = 0;
+        std::bitset<100> bits;
+        for (auto i: nums) {
+            if (i < n && i >= 0) {
+                if (bits.test(i)) return false;
+                bits.set(i);
+            } else if (i == n) {
+                ++n_count;
+                if (n_count > 2) return false;
+            }
+        }
+        for (int i = 1; i < n; ++i) {
+            if (!bits.test(i)) return false;
+        }
+        if (n_count == 2) return true;
+        return false;
+    }
 };
 
 int main() {
