@@ -5644,6 +5644,29 @@ public:
         if (n_count == 2) return true;
         return false;
     }
+
+    int minMoves(vector<int> &nums, int limit) {
+        vector<int> delta(limit * 2 + 2, 0);
+        int n = nums.size();
+        int pairs = n / 2;
+
+        for (int i = 0; i < pairs; ++i) {
+            int right = max(nums[i], nums[n - 1 - i]);
+            int left = min(nums[i], nums[n - 1 - i]);
+            delta[2] += 2;
+            delta[left + 1]--;
+            delta[left + right]--;
+            delta[left + right + 1]++;
+            delta[right + limit + 1]++;
+        }
+        int now = 0;
+        int res = std::numeric_limits<int>::max();
+        for (int i = 2; i < delta.size(); ++i) {
+            now += delta[i];
+            res = min(res, now);
+        }
+        return res;
+    }
 };
 
 int main() {
