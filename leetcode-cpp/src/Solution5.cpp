@@ -5667,6 +5667,31 @@ public:
         }
         return res;
     }
+
+    int findMin(vector<int> &nums) {
+        int l = 0;
+        int r = nums.size() - 1;
+        if (l == r) return nums.front();
+        int res = 0;
+        if (nums[l] < nums[r]) {
+            return nums.front();
+        }
+        int mid = (l + r) >> 1;
+        while (l <= r) {
+            mid = (l + r) >> 1;
+            if (l == r - 1) {
+                return min(nums[r], nums[l]);
+            }
+            if (nums[mid] > nums[l]) {
+                l = mid;
+                res = mid;
+            } else {
+                r = mid;
+                res = mid;
+            }
+        }
+        return nums[res];
+    }
 };
 
 int main() {
