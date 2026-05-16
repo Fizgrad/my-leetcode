@@ -6392,6 +6392,49 @@ public:
         }
         return start;
     }
+
+    int findMin(vector<int> &nums) {
+        if (all_of(nums.begin(), nums.end(), [&](int i) {
+                return i == nums.front();
+            })) {
+            return nums.front();
+        }
+        int index = 1;
+        for (int i = 1; i < nums.size(); ++i) {
+            if (nums[i] == nums[index - 1]) {
+                continue;
+            } else {
+                nums[index++] = nums[i];
+            }
+        }
+
+        nums.resize(index);
+        while (nums.back() == nums.front()) {
+            nums.pop_back();
+        }
+        int l = 0;
+        int r = nums.size() - 1;
+        if (l == r) return nums.front();
+        int res = 0;
+        if (nums[l] < nums[r]) {
+            return nums.front();
+        }
+        int mid = (l + r) >> 1;
+        while (l <= r) {
+            mid = (l + r) >> 1;
+            if (l == r - 1) {
+                return min(nums[r], nums[l]);
+            }
+            if (nums[mid] > nums[l]) {
+                l = mid;
+                res = mid;
+            } else {
+                r = mid;
+                res = mid;
+            }
+        }
+        return nums[res];
+    }
 };
 
 int main() {
