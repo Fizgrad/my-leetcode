@@ -5692,6 +5692,30 @@ public:
         }
         return nums[res];
     }
+
+    bool canReach(vector<int> &arr, int start) {
+        int n = arr.size();
+        vector<bool> visited(n, false);
+        vector<int> indices;
+        indices.emplace_back(start);
+        while (indices.size()) {
+            int x = indices.back();
+            indices.pop_back();
+            int x1 = x + arr[x];
+            if (x1 >= 0 && x1 < n && !visited[x1]) {
+                if (arr[x1] == 0) return true;
+                visited[x1] = true;
+                indices.emplace_back(x1);
+            }
+            x1 = x - arr[x];
+            if (x1 >= 0 && x1 < n && !visited[x1]) {
+                if (arr[x1] == 0) return true;
+                visited[x1] = true;
+                indices.emplace_back(x1);
+            }
+        }
+        return false;
+    }
 };
 
 int main() {
