@@ -5716,6 +5716,54 @@ public:
         }
         return false;
     }
+
+    int minJumps(vector<int> &arr) {
+        unordered_map<int, int> groupsID;
+        int n = arr.size();
+        vector<int> group(n);
+        for (int i = 0; i < n; ++i) {
+            if (!groupsID.contains(arr[i])) {
+                groupsID[arr[i]] = groupsID.size();
+            }
+            group[i] = groupsID[arr[i]];
+        }
+        vector<vector<int>> groups(groupsID.size());
+        for (int i = 0; i < n; ++i) {
+            groups[groupsID[arr[i]]].emplace_back(i);
+        }
+        vector<int> now;
+        vector<int> next;
+        vector<int> dis(n, -1);
+        now.emplace_back(0);
+        dis[0] = 0;
+        while (now.size()) {
+            for (auto x: now) {
+                if (x - 1 >= 0) {
+                    if (dis[x - 1] == -1) {
+                        dis[x - 1] = dis[x] + 1;
+                        next.emplace_back(x - 1);
+                    }
+                }
+                if (x + 1 < n) {
+                    if (dis[x + 1] == -1) {
+                        dis[x + 1] = dis[x] + 1;
+                        next.emplace_back(x + 1);
+                    }
+                }
+                for (auto i: groups[groupsID[arr[x]]]) {
+                    if (i == x) continue;
+                    if (dis[i] == -1) {
+                        dis[i] = dis[x] + 1;
+                        next.emplace_back(i);
+                    }
+                }
+                groups[groupsID[arr[x]]].clear();
+            }
+            now.swap(next);
+            next.clear();
+        }
+        return dis.back();
+    }
 };
 
 int main() {
