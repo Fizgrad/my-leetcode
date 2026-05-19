@@ -5764,6 +5764,25 @@ public:
         }
         return dis.back();
     }
+
+    int getCommon(vector<int> &nums1, vector<int> &nums2) {
+        int i1 = 0;
+        int i2 = 0;
+        while (i1 < nums1.size() || i2 < nums2.size()) {
+            if (nums1[i1] < nums2[i2]) {
+                if (i1 + 1 == nums1.size()) return -1;
+                ++i1;
+                continue;
+            } else if (nums1[i1] > nums2[i2]) {
+                if (i2 + 1 == nums2.size()) return -1;
+                ++i2;
+                continue;
+            } else {
+                return nums1[i1];
+            }
+        }
+        return -1;
+    }
 };
 
 int main() {
