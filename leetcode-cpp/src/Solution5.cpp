@@ -5783,6 +5783,18 @@ public:
         }
         return -1;
     }
+
+    vector<int> findThePrefixCommonArray(vector<int> &A, vector<int> &B) {
+        std::bitset<64> Anums, Bnums;
+        int n = A.size();
+        vector<int> res(n, 0);
+        for (int i = 0; i < n; ++i) {
+            Anums.set(A[i]);
+            Bnums.set(B[i]);
+            res[i] = popcount(Anums.to_ullong() & Bnums.to_ullong());
+        }
+        return res;
+    }
 };
 
 int main() {
