@@ -5795,6 +5795,44 @@ public:
         }
         return res;
     }
+
+    int longestCommonPrefix(vector<int> &arr1, vector<int> &arr2) {
+        struct Node {
+            array<Node *, 10> next = {nullptr};
+        };
+        Node arr1_root;
+        auto push = [&](int x) {
+            string s = to_string(x);
+            auto node = &arr1_root;
+            for (auto c: s) {
+                int num = c - '0';
+                if (node->next[num] == nullptr) {
+                    node->next[num] = new Node();
+                }
+                node = node->next[num];
+            }
+        };
+
+        int res = 0;
+        for (auto i: arr1) {
+            push(i);
+        }
+        for (auto i: arr2) {
+            int depth = 0;
+            string s = to_string(i);
+            auto node = &arr1_root;
+            for (auto c: s) {
+                int num = c - '0';
+                if (node->next[num] == nullptr) {
+                    break;
+                }
+                node = node->next[num];
+                ++depth;
+            }
+            res = max(res, depth);
+        }
+        return res;
+    }
 };
 
 int main() {
