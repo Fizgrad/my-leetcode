@@ -5878,6 +5878,26 @@ public:
         }
         return -1;
     }
+
+    bool check(vector<int> &nums) {
+        int n = nums.size();
+        bool cut = false;
+        for (int i = 1; i < n; ++i) {
+            if (cut) {
+                if (nums[i] >= nums[i - 1]) {
+                    if (nums[i] > nums[0]) return false;
+                } else {
+                    return false;
+                }
+            } else {
+                if (nums[i] < nums[i - 1]) {
+                    cut = true;
+                    if (nums[i] > nums[0]) return false;
+                }
+            }
+        }
+        return true;
+    }
 };
 
 int main() {
