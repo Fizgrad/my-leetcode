@@ -5898,6 +5898,22 @@ public:
         }
         return true;
     }
+
+    bool canReach(string s, int minJump, int maxJump) {
+        int can_num = 0;
+        for (int i = 1; i < s.size(); ++i) {
+            if (i >= minJump) {
+                can_num += (s[i - minJump] == '0');
+            }
+            if (i > maxJump) {
+                can_num -= (s[i - maxJump - 1] == '0');
+            }
+            if (can_num == 0) {
+                s[i] = '1';
+            }
+        }
+        return s.back() == '0';
+    }
 };
 
 int main() {
