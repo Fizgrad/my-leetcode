@@ -5914,6 +5914,19 @@ public:
         }
         return s.back() == '0';
     }
+
+    int numberOfSpecialChars(const string &word) {
+        unsigned int lower = 0;
+        unsigned int upper = 0;
+        for (auto c: word) {
+            if (isupper(c)) {
+                upper |= (1 << (c - 'A'));
+            } else {
+                lower |= (1 << (c - 'a'));
+            }
+        }
+        return popcount((lower & upper));
+    }
 };
 
 int main() {
