@@ -6435,6 +6435,24 @@ public:
         }
         return nums[res];
     }
+
+    int numberOfSpecialChars(const string &word) {
+        unsigned int lower = 0;
+        unsigned int upper = 0;
+        unsigned int mask = 0xFFFFFFFF;
+        for (auto c: word) {
+            if (isupper(c)) {
+                upper |= (1 << (c - 'A'));
+            } else {
+                if (upper & (1 << (c - 'a'))) {
+                    mask &= ~(1 << (c - 'a'));
+                } else {
+                    lower |= (1 << (c - 'a'));
+                }
+            }
+        }
+        return popcount((lower & upper & mask));
+    }
 };
 
 int main() {
