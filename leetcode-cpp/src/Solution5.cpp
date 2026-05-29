@@ -5927,6 +5927,22 @@ public:
         }
         return popcount((lower & upper));
     }
+
+    int minElement(vector<int> &nums) {
+        auto sum_of_digits = [](int n) {
+            int res = 0;
+            while (n >= 1) {
+                res += (n % 10);
+                n /= 10;
+            }
+            return res;
+        };
+        int res = sum_of_digits(nums[0]);
+        for (auto i: nums) {
+            res = min(res, sum_of_digits(i));
+        }
+        return res;
+    }
 };
 
 int main() {
