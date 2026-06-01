@@ -6453,6 +6453,20 @@ public:
         }
         return popcount((lower & upper & mask));
     }
+
+    int minimumCost(vector<int> &cost) {
+        std::ranges::sort(cost);
+        int res = 0;
+        for (int i = cost.size() - 1; i >= 0; --i) {
+            if (i >= 0) {
+                res += cost[i--];
+            }
+            if (i >= 0) {
+                res += cost[i--];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
