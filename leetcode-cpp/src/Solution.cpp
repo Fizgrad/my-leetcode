@@ -6,9 +6,11 @@
 #include <cctype>
 #include <climits>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <deque>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <numeric>
 #include <queue>
@@ -5270,6 +5272,75 @@ public:
             }
             return res;
         }
+    }
+
+    template<typename T>
+    struct reverse_wrapper {
+        T &iterable;
+        auto begin() { return std::rbegin(iterable); }
+        auto end() { return std::rend(iterable); }
+    };
+
+    template<typename T>
+    reverse_wrapper<T> reversed(T &iterable) {
+        return {iterable};
+    }
+
+    vector<int> stringIndices(vector<string> &wordsContainer, vector<string> &wordsQuery) {
+        struct TrieNode {
+            int next[26] = {0};
+            int best_index = -1;
+        };
+        vector<TrieNode> trie(1);
+        auto isBetter = [&](int new_idx, int old_idx) {
+            if (old_idx == -1) return true;
+            int len_new = wordsContainer[new_idx].length();
+            int len_old = wordsContainer[old_idx].length();
+            if (len_new != len_old) {
+                return len_new < len_old;
+            }
+            return new_idx < old_idx;
+        };
+
+        for (int i = 0; i < wordsContainer.size(); ++i) {
+            const string &s = wordsContainer[i];
+            int curr = 0;
+            if (isBetter(i, trie[curr].best_index)) {
+                trie[curr].best_index = i;
+            }
+
+            for (auto c: reversed(s)) {
+                int char_idx = c - 'a';
+                if (trie[curr].next[char_idx] == 0) {
+                    trie[curr].next[char_idx] = trie.size();
+                    trie.push_back(TrieNode());
+                }
+                curr = trie[curr].next[char_idx];
+
+
+                if (isBetter(i, trie[curr].best_index)) {
+                    trie[curr].best_index = i;
+                }
+            }
+        }
+
+        vector<int> res(wordsQuery.size());
+        for (int i = 0; i < wordsQuery.size(); ++i) {
+            const string &s = wordsQuery[i];
+            int curr = 0;
+
+            for (auto c: reversed(s)) {
+                int char_idx = c - 'a';
+                if (trie[curr].next[char_idx] == 0) {
+                    break;
+                }
+                curr = trie[curr].next[char_idx];
+            }
+
+            res[i] = trie[curr].best_index;
+        }
+
+        return res;
     }
 };
 
