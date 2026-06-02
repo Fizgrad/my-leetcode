@@ -5943,6 +5943,25 @@ public:
         }
         return res;
     }
+
+    int earliestFinishTime(vector<int> &landStartTime, vector<int> &landDuration, vector<int> &waterStartTime, vector<int> &waterDuration) {
+        int minLandEnd = std::numeric_limits<int>::max();
+        int minWaterEnd = std::numeric_limits<int>::max();
+        for (int i = 0; i < landStartTime.size(); ++i) {
+            minLandEnd = min(minLandEnd, landStartTime[i] + landDuration[i]);
+        }
+        for (int i = 0; i < waterStartTime.size(); ++i) {
+            minWaterEnd = min(minWaterEnd, waterStartTime[i] + waterDuration[i]);
+        }
+        int res = std::numeric_limits<int>::max();
+        for (int i = 0; i < landStartTime.size(); ++i) {
+            res = min(res, max(landStartTime[i], minWaterEnd) + landDuration[i]);
+        }
+        for (int i = 0; i < waterStartTime.size(); ++i) {
+            res = min(res, max(waterStartTime[i], minLandEnd) + waterDuration[i]);
+        }
+        return res;
+    }
 };
 
 int main() {
