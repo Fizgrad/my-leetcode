@@ -5962,6 +5962,24 @@ public:
         }
         return res;
     }
+
+    int totalWaviness(int num1, int num2) {
+        int res = 0;
+        for (int i = num1; i <= num2; ++i) {
+            int num = i;
+            while (num >= 100) {
+                int temp = num % 1000;
+                int left = temp / 100;
+                int right = temp % 10;
+                int mid = (temp / 10) % 10;
+                if (mid < left && mid < right || mid > left && mid > right) {
+                    res += 1;
+                }
+                num /= 10;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
