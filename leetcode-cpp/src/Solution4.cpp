@@ -6467,6 +6467,32 @@ public:
         }
         return res;
     }
+
+    vector<int> pivotArray(vector<int> &nums, int pivot) {
+        int smaller_count = 0;
+        int pivot_count = 0;
+        for (auto i: nums) {
+            if (i < pivot) {
+                ++smaller_count;
+            } else if (i == pivot) {
+                ++pivot_count;
+            }
+        }
+        vector<int> res(nums.size());
+        int left_index = 0;
+        int right_index = smaller_count + pivot_count;
+        for (auto i: nums) {
+            if (i < pivot) {
+                res[left_index++] = i;
+            } else if (i > pivot) {
+                res[right_index++] = i;
+            }
+        }
+        for (; left_index < smaller_count + pivot_count; ++left_index) {
+            res[left_index] = pivot;
+        }
+        return res;
+    }
 };
 
 int main() {
