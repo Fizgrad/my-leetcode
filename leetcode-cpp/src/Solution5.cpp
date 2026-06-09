@@ -5980,6 +5980,13 @@ public:
         }
         return res;
     }
+
+    long long maxTotalValue(vector<int> &nums, int k) {
+        long long n = nums.size();
+        long long max_num = *(std::ranges::max_element(nums));
+        long long min_num = *(std::ranges::min_element(nums));
+        return (max_num - min_num) * k;
+    }
 };
 
 int main() {
