@@ -6493,6 +6493,72 @@ public:
         }
         return res;
     }
+
+    long long maxTotalValue(vector<int> &nums, int k) {
+        int n = nums.size();
+        if (n == 0 || k <= 0) return 0;
+
+        // 1. 预处理 Log 数组，用于 ST 表的 O(1) 查询
+        vector<int> lg(n + 1, 0);
+        for (int i = 2; i <= n; i++) {
+            lg[i] = lg[i / 2] + 1;
+        }
+
+        int LOG = lg[n] + 1;
+        vector<vector<int>> stMax(LOG, vector<int>(n));
+        vector<vector<int>> stMin(LOG, vector<int>(n));
+
+        // 2. 初始化 ST 表的第 0 层（全量数组）
+        for (int i = 0; i < n; i++) {
+            stMax[0][i] = nums[i];
+            stMin[0][i] = nums[i];
+        }
+
+        // 3. 构建 ST 表
+        for (int j = 1; j < LOG; j++) {
+            for (int i = 0; i + (1 << j) <= n; i++) {
+                stMax[j][i] = max(stMax[j - 1][i], stMax[j - 1][i + (1 << (j - 1))]);
+                stMin[j][i] = min(stMin[j - 1][i], stMin[j - 1][i + (1 << (j - 1))]);
+            }
+        }
+
+        // RMQ 查询 Lambda
+        auto getValue = [&](int l, int r) -> long long {
+            if (l > r) return 0;
+            int len = r - l + 1;
+            int p = lg[len];
+            int mx = max(stMax[p][l], stMax[p][r - (1 << p) + 1]);
+            int mn = min(stMin[p][l], stMin[p][r - (1 << p) + 1]);
+            return 1LL * mx - mn;
+        };
+
+        using T = tuple<long long, int, int>;
+        priority_queue<T> pq;
+
+        // 4. 初始化 Priority Queue
+        // 核心单调性：对于固定的左端点 l，随着右端点 r 的增加，max 单调不减，min 单调不增。
+        // 因此 getValue(l, r) 随 r 单调递增。最大值必然在 r = n - 1 处取得。
+        for (int l = 0; l < n; l++) {
+            pq.push({getValue(l, n - 1), l, n - 1});
+        }
+
+        long long ans = 0;
+
+        // 5. 提取 Top K
+        while (k-- > 0 && !pq.empty()) {
+            auto [val, l, r] = pq.top();
+            pq.pop();
+
+            ans += val;
+
+            // 当前 (l, r) 被消费后，该左端点 l 的次大候选区间为 (l, r - 1)
+            if (r > l) {
+                pq.push({getValue(l, r - 1), l, r - 1});
+            }
+        }
+
+        return ans;
+    }
 };
 
 int main() {
