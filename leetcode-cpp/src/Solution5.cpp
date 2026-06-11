@@ -5987,6 +5987,45 @@ public:
         long long min_num = *(std::ranges::min_element(nums));
         return (max_num - min_num) * k;
     }
+
+    int assignEdgeWeights(vector<vector<int>> &edges) {
+        int height = 0;
+        int n = edges.size() + 1;
+        vector<vector<int>> next(n);
+        for (auto &i: edges) {
+            next[i[0] - 1].emplace_back(i[1] - 1);
+            next[i[1] - 1].emplace_back(i[0] - 1);
+        }
+        vector<int> depth(n, -1);
+        depth[0] = 0;
+        auto dfs = [&](auto &&dfs, int node) -> void {
+            height = max(height, depth[node]);
+            for (auto i: next[node]) {
+                if (depth[i] == -1) {
+                    depth[i] = depth[node] + 1;
+                    dfs(dfs, i);
+                }
+            }
+        };
+        dfs(dfs, 0);
+        constexpr int mod = 1e9 + 7;
+        // 极特殊情况：如果整棵树只有一个节点，没有边，高度为0
+        if (height == 0) return 0;
+        auto qpow = [](long long base, int exp, int mod) -> long long {
+            long long res = 1;
+            base %= mod;
+            while (exp > 0) {
+                if (exp & 1) res = (res * base) % mod;
+                base = (base * base) % mod;
+                exp >>= 1;
+            }
+            return res;
+        };
+
+        // 原式：2^height - (偶数项组合数之和)
+        // 数学等价于：2^height - 2^(height-1) = 2^(height-1)
+        return qpow(2, height - 1, mod);
+    }
 };
 
 int main() {
