@@ -6026,6 +6026,91 @@ public:
         // 数学等价于：2^height - 2^(height-1) = 2^(height-1)
         return qpow(2, height - 1, mod);
     }
+
+    vector<int> assignEdgeWeights(vector<vector<int>> &edges, vector<vector<int>> &queries) {
+        int n = edges.size() + 1;
+        vector<vector<int>> next(n);
+        vector<vector<int>> children(n);
+        vector<int> parents(n);
+        for (auto &i: edges) {
+            next[i[0] - 1].emplace_back(i[1] - 1);
+            next[i[1] - 1].emplace_back(i[0] - 1);
+        }
+        vector<int> depth(n, -1);
+        depth[0] = 0;
+        auto dfs = [&](auto &&dfs, int node, int parent) -> void {
+            parents[node] = parent;
+            for (auto i: next[node]) {
+                if (depth[i] == -1) {
+                    depth[i] = depth[node] + 1;
+                    children[node].emplace_back(i);
+                    dfs(dfs, i, node);
+                }
+            }
+        };
+        dfs(dfs, 0, 0);
+        constexpr int mod = 1e9 + 7;
+        auto qpow = [](long long base, int exp, int mod) -> long long {
+            long long res = 1;
+            base %= mod;
+            while (exp > 0) {
+                if (exp & 1) res = (res * base) % mod;
+                base = (base * base) % mod;
+                exp >>= 1;
+            }
+            return res;
+        };
+
+        vector<int> tops(n);
+        vector<int> sizes(n);
+        auto size_dfs = [&](auto &&size_dfs, int node) -> int {
+            int res = 1;
+            if (children[node].empty()) return 1;
+            for (auto i: children[node]) {
+                res += size_dfs(size_dfs, i);
+            }
+            return sizes[node] = res;
+        };
+        size_dfs(size_dfs, 0);
+        auto construct_dfs = [&](auto &&construct_dfs, int node, int top) {
+            tops[node] = top;
+            if (children[node].empty()) return;
+            int max_child = *std::ranges::max_element(children[node], [&](auto a, auto b) {
+                return sizes[a] < sizes[b];
+            });
+            for (auto i: children[node]) {
+                if (i == max_child) {
+                    construct_dfs(construct_dfs, i, top);
+                } else {
+                    construct_dfs(construct_dfs, i, i);
+                }
+            }
+        };
+        construct_dfs(construct_dfs, 0, 0);
+        vector<int> res;
+        res.reserve(queries.size());
+
+        auto lca_func = [&](int a, int b) {
+            while (tops[a] != tops[b]) {
+                if (depth[tops[a]] > depth[tops[b]]) {
+                    a = parents[tops[a]];
+                } else {
+                    b = parents[tops[b]];
+                }
+            }
+            if (depth[a] > depth[b]) return b;
+            else {
+                return a;
+            }
+        };
+        for (auto &i: queries) {
+            int lca = lca_func(i[0] - 1, i[1] - 1);
+            if (i[0] == i[1]) res.emplace_back(0);
+            else
+                res.emplace_back(qpow(2, depth[i[0] - 1] + depth[i[1] - 1] - 2 * depth[lca] - 1, mod));
+        }
+        return res;
+    }
 };
 
 int main() {
