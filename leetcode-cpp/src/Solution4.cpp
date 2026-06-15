@@ -6559,6 +6559,40 @@ public:
 
         return ans;
     }
+
+    int pairSum(ListNode *head) {
+        auto pt = head;
+        if (head == nullptr) return 0;
+        if (head->next == nullptr) return head->val;
+        auto two_pt = pt->next;
+        while (two_pt->next) {
+            pt = pt->next;
+            two_pt = two_pt->next->next;
+        }
+        auto back_head = pt->next;
+        pt->next = nullptr;
+        auto prev = back_head;
+
+        pt = back_head->next;
+        back_head->next = nullptr;
+        auto tail = back_head;
+        while (pt) {
+            tail = pt;
+            auto next_pt = pt->next;
+            pt->next = prev;
+            prev = pt;
+            pt = next_pt;
+        }
+        int res = INT_MIN;
+        auto pt_front = head;
+        pt = tail;
+        while (pt) {
+            res = max(res, pt_front->val + pt->val);
+            pt = pt->next;
+            pt_front = pt_front->next;
+        }
+        return res;
+    }
 };
 
 int main() {
