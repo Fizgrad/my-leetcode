@@ -6593,6 +6593,25 @@ public:
         }
         return res;
     }
+
+    ListNode *deleteMiddle(ListNode *head) {
+        auto pt = head;
+        if (head == nullptr) return nullptr;
+        if (head->next == nullptr) return nullptr;
+        auto two_pt = pt->next;
+        auto pt_prev = head;
+        while (two_pt) {
+            pt_prev = pt;
+            pt = pt->next;
+            if (two_pt->next == nullptr) {
+                break;
+            }
+            two_pt = two_pt->next->next;
+        }
+        pt_prev->next = pt->next;
+        delete pt;
+        return head;
+    }
 };
 
 int main() {
