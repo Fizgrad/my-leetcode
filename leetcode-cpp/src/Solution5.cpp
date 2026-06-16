@@ -6111,6 +6111,23 @@ public:
         }
         return res;
     }
+
+    string processStr(const string &s) {
+        string result;
+        for (auto c: s) {
+            if (c == '*') {
+                if (result.size())
+                    result.pop_back();
+            } else if (c == '#') {
+                result = result + result;
+            } else if (c == '%') {
+                std::reverse(result.begin(), result.end());
+            } else if (islower(c)) {
+                result.push_back(c);
+            }
+        }
+        return result;
+    }
 };
 
 int main() {
