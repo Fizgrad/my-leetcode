@@ -6128,6 +6128,41 @@ public:
         }
         return result;
     }
+
+    char processStr(const string &s, long long k) {
+        vector<long long> lens(s.size());
+        if (islower(s[0])) {
+            lens[0] = 1;
+        } else {
+            lens[0] = 0;
+        }
+        for (int i = 1; i < s.size(); ++i) {
+            if (islower(s[i])) {
+                lens[i] = lens[i - 1] + 1;
+            } else if (s[i] == '*') {
+                lens[i] = max((lens[i - 1] - 1), 0ll);
+            } else if (s[i] == '#') {
+                lens[i] = lens[i - 1] * 2;
+            } else if (s[i] == '%') {
+                lens[i] = lens[i - 1];
+            }
+        }
+        if (k >= lens.back()) return '.';
+        for (int i = s.size() - 1; i >= 0; --i) {
+            if (islower(s[i])) {
+                if (lens[i] == k + 1) return s[i];
+            } else if (s[i] == '*') {
+            } else if (s[i] == '#') {
+                if (lens[i] != 0)
+                    k %= lens[i] / 2;
+                else
+                    return '.';
+            } else if (s[i] == '%') {
+                k = lens[i] - 1 - k;
+            }
+        }
+        return '.';
+    }
 };
 
 int main() {
