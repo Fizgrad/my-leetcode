@@ -6612,6 +6612,12 @@ public:
         delete pt;
         return head;
     }
+
+    double angleClock(int hour, int minutes) {
+        double shorter = 360.0 * (hour + minutes / 60.0) / 12.0;
+        double longer = 360.0 * minutes / 60.0;
+        return min(abs(shorter - longer), 360 - abs(shorter - longer));
+    }
 };
 
 int main() {
