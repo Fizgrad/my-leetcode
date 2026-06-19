@@ -6618,6 +6618,15 @@ public:
         double longer = 360.0 * minutes / 60.0;
         return min(abs(shorter - longer), 360 - abs(shorter - longer));
     }
+
+    int largestAltitude(vector<int> &gain) {
+        int prefix = 0;
+        int res = 0;
+        for (auto i: gain) {
+            res = max(res, prefix = prefix + i);
+        }
+        return res;
+    }
 };
 
 int main() {
