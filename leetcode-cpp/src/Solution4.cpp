@@ -6627,6 +6627,20 @@ public:
         }
         return res;
     }
+
+    int maxNumberOfBalloons(const string &text) {
+        vector<int> count('z' - 'a' + 1, 0);
+        for (auto c: text) {
+            ++count[c - 'a'];
+        }
+        // balloon
+        int res = count['b' - 'a'];
+        res = min(res, count['a' - 'a']);
+        res = min(res, count['l' - 'a'] / 2);
+        res = min(res, count['o' - 'a'] / 2);
+        res = min(res, count['n' - 'a']);
+        return res;
+    }
 };
 
 int main() {
