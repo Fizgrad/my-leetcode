@@ -6641,6 +6641,15 @@ public:
         res = min(res, count['n' - 'a']);
         return res;
     }
+
+    int maxIceCream(vector<int> &costs, int coins) {
+        std::sort(costs.begin(), costs.end());
+        int index = 0;
+        while (index < costs.size() && coins >= costs[index]) {
+            coins -= costs[index++];
+        }
+        return index;
+    }
 };
 
 int main() {
