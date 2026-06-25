@@ -6163,6 +6163,28 @@ public:
         }
         return '.';
     }
+
+    int countMajoritySubarrays(vector<int> &nums, int target) {
+        int n = nums.size();
+        vector<int> prefix(n + 1, 0);
+        for (auto i = 0; i < n; ++i) {
+            if (nums[i] == target) {
+                prefix[i + 1] = prefix[i] + 1;
+            } else {
+                prefix[i + 1] = prefix[i];
+            }
+        }
+        int res = 0;
+        for (int left = 0; left < n; ++left) {
+            for (int right = left; right < n; ++right) {
+                int count = prefix[right + 1] - prefix[left];
+                if (2 * count > right - left + 1) {
+                    ++res;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
