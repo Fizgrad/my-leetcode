@@ -6650,6 +6650,52 @@ public:
         }
         return index;
     }
+
+    long long countMajoritySubarrays(vector<int> &nums, int target) {
+        int n = nums.size();
+        int offset = n + 2;
+        int size = 2 * n + 5;
+
+        vector<long long> tree(size + 1, 0);
+
+        auto add = [&](int index, long long delta) {
+            while (index <= size) {
+                tree[index] += delta;
+                index += index & -index;
+            }
+        };
+
+        auto query = [&](int index) {
+            long long ans = 0;
+            while (index > 0) {
+                ans += tree[index];
+                index -= index & -index;
+            }
+            return ans;
+        };
+
+        long long res = 0;
+        int prefix = 0;
+
+        // 加入 prefix[0] = 0
+        add(prefix + offset, 1);
+
+        for (int x: nums) {
+            if (x == target) {
+                prefix += 1;
+            } else {
+                prefix -= 1;
+            }
+
+            // 统计之前有多少 prefix 小于当前 prefix
+            res += query(prefix - 1 + offset);
+
+            // 当前 prefix 加入历史集合
+            add(prefix + offset, 1);
+        }
+
+        return res;
+    }
 };
 
 int main() {
