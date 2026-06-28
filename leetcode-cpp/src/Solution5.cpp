@@ -6213,6 +6213,15 @@ public:
         }
         return max(count[1] - (1 - count[1] & 1), 2 * max_len - 1);
     }
+
+    int maximumElementAfterDecrementingAndRearranging(vector<int> &arr) {
+        std::ranges::sort(arr);
+        int res = arr.size();
+        for (int i = 1; i < arr.size(); ++i) {
+            res = min(res, -i - 1 + arr[i] + static_cast<int>(arr.size()));
+        }
+        return res;
+    }
 };
 
 int main() {
