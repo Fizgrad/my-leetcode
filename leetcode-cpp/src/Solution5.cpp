@@ -6185,6 +6185,34 @@ public:
         }
         return res;
     }
+
+    int maximumLength(vector<int> &nums) {
+        std::ranges::sort(nums);
+        unordered_map<int, int> count;
+        unordered_map<int, int> len;
+        int max_len = 0;
+        for (auto i: nums) {
+            if (i == 1) {
+                count[i] += 1;
+                continue;
+            } else {
+                int square_root = sqrt(i);
+                if (square_root * square_root != i) {
+                    count[i] += 1;
+                    len[i] = 1;
+                } else {
+                    count[i] += 1;
+                    if (count[square_root] >= 2) {
+                        len[i] = len[square_root] + 1;
+                    } else {
+                        len[i] = 1;
+                    }
+                }
+            }
+            max_len = max(max_len, len[i]);
+        }
+        return max(count[1] - (1 - count[1] & 1), 2 * max_len - 1);
+    }
 };
 
 int main() {
