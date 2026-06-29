@@ -6222,6 +6222,14 @@ public:
         }
         return res;
     }
+
+    int numOfStrings(vector<string> &patterns, const string &word) {
+        int sum = 0;
+        for (auto &i: patterns) {
+            sum += (word.find(i) != word.npos);
+        }
+        return sum;
+    }
 };
 
 int main() {
