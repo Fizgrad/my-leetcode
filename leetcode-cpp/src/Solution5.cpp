@@ -6230,6 +6230,48 @@ public:
         }
         return sum;
     }
+
+    int numberOfSubstrings(const string &s) {
+        int n = s.size();
+        auto contains = [](long long x) {
+            return (0xFFFFFll & x) && (0xFFFFFll & (x >> 20)) && (0xFFFFFll & (x >> 40));
+        };
+        auto increment = [](long long x, char c) {
+            if (c == 'a') {
+                x += (1ll << 40);
+            } else if (c == 'b') {
+                x += (1ll << 20);
+            } else {
+                x += (1ll);
+            }
+            return x;
+        };
+
+        auto decrement = [](long long x, char c) {
+            if (c == 'a') {
+                x -= (1ll << 40);
+            } else if (c == 'b') {
+                x -= (1ll << 20);
+            } else {
+                x -= (1ll);
+            }
+            return x;
+        };
+        int left = 0;
+        int right = 1;
+        int res = 0;
+        long long count = increment(0ll, s.front());
+        while (right < s.size()) {
+            count = increment(count, s[right]);
+            while (contains(count)) {
+                count = decrement(count, s[left]);
+                ++left;
+            }
+            res += left;
+            ++right;
+        }
+        return res;
+    }
 };
 
 int main() {
