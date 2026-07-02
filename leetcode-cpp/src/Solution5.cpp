@@ -6272,6 +6272,149 @@ public:
         }
         return res;
     }
+
+    int maximumSafenessFactor(vector<vector<int>> &grid) {
+        int m = grid.size();
+        int n = grid.front().size();
+
+        vector<vector<int>> dis(m, vector<int>(n, INT_MAX));
+        vector<int> now;
+        vector<int> next;
+
+        // 1. 多源 BFS：所有小偷位置作为起点
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j]) {
+                    dis[i][j] = 0;
+                    now.emplace_back((i << 10) | j);
+                }
+            }
+        }
+
+        constexpr int dx[4] = {0, 1, 0, -1};
+        constexpr int dy[4] = {1, 0, -1, 0};
+
+        int distance = 1;
+
+        while (!now.empty()) {
+            for (int code: now) {
+                int x = code >> 10;
+                int y = code & 0x3FF;
+
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + dx[k];
+                    int yy = y + dy[k];
+
+                    if (xx < 0 || xx >= m || yy < 0 || yy >= n) {
+                        continue;
+                    }
+
+                    if (dis[xx][yy] != INT_MAX) {
+                        continue;
+                    }
+
+                    dis[xx][yy] = distance;
+                    next.emplace_back((xx << 10) | yy);
+                }
+            }
+
+            now.swap(next);
+            next.clear();
+            ++distance;
+        }
+
+        // 2. 把所有坐标按照 dis 从大到小分桶
+        int maxDis = 0;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                maxDis = max(maxDis, dis[i][j]);
+            }
+        }
+
+        vector<vector<int>> buckets(maxDis + 1);
+
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                buckets[dis[i][j]].emplace_back((i << 10) | j);
+            }
+        }
+
+        // 3. Union-Find 初始化
+        int total = m * n;
+        vector<int> parent(total);
+        vector<int> size(total, 1);
+
+        for (int i = 0; i < total; ++i) {
+            parent[i] = i;
+        }
+
+        auto id = [&](int x, int y) {
+            return x * n + y;
+        };
+
+        auto find = [&](int x) {
+            while (x != parent[x]) {
+                parent[x] = parent[parent[x]];
+                x = parent[x];
+            }
+            return x;
+        };
+
+        auto unite = [&](int a, int b) {
+            int ra = find(a);
+            int rb = find(b);
+
+            if (ra == rb) {
+                return;
+            }
+
+            if (size[ra] < size[rb]) {
+                swap(ra, rb);
+            }
+
+            parent[rb] = ra;
+            size[ra] += size[rb];
+        };
+
+        vector<vector<bool>> active(m, vector<bool>(n, false));
+
+        int start = id(0, 0);
+        int target = id(m - 1, n - 1);
+
+        // 4. 从最高安全距离开始激活格子
+        for (int d = maxDis; d >= 0; --d) {
+            for (int code: buckets[d]) {
+                int x = code >> 10;
+                int y = code & 0x3FF;
+
+                active[x][y] = true;
+
+                int cur = id(x, y);
+
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + dx[k];
+                    int yy = y + dy[k];
+
+                    if (xx < 0 || xx >= m || yy < 0 || yy >= n) {
+                        continue;
+                    }
+
+                    if (!active[xx][yy]) {
+                        continue;
+                    }
+
+                    unite(cur, id(xx, yy));
+                }
+            }
+
+            // 一旦起点和终点连通，当前 d 就是最大安全系数
+            if (active[0][0] && active[m - 1][n - 1] && find(start) == find(target)) {
+                return d;
+            }
+        }
+
+        return 0;
+    }
 };
 
 int main() {
