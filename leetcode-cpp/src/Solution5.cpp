@@ -6415,6 +6415,34 @@ public:
 
         return 0;
     }
+
+    bool findSafeWalk(vector<vector<int>> &grid, int health) {
+        priority_queue<pair<int, int>> pq;
+        pq.emplace(make_pair(health, 0));
+
+        constexpr int dx[4] = {0, 1, 0, -1};
+        constexpr int dy[4] = {1, 0, -1, 0};
+        while (pq.top().first > 0) {
+            auto coordinate = pq.top().second;
+            int health = pq.top().first;
+            if (health == 0) return false;
+            pq.pop();
+            int x = (coordinate >> 10);
+            int y = (coordinate & 0x3FF);
+            int remain = health - grid[x][y];
+            if (x == grid.size() - 1 && y == grid.front().size() - 1) return remain;
+            if (grid[x][y] != -1) {
+                grid[x][y] = -1;
+                for (int k = 0; k < 4; ++k) {
+                    int xx = x + dx[k];
+                    int yy = y + dy[k];
+                    if (yy < grid.front().size() && xx < grid.size() && xx >= 0 && yy >= 0 && grid[xx][yy] != -1)
+                        pq.emplace(remain, ((xx << 10) | yy));
+                }
+            }
+        }
+        return false;
+    }
 };
 
 int main() {
