@@ -6443,6 +6443,25 @@ public:
         }
         return false;
     }
+
+    int removeCoveredIntervals(vector<vector<int>> &intervals) {
+        std::sort(intervals.begin(), intervals.end(), [&](auto &a, auto &b) {
+            return a[1] > b[1] || (a[1] == b[1] && a[0] < b[0]);
+        });
+        int start = intervals.front().front();
+        int end = intervals.back().back();
+        int res = 1;
+        for (int i = 1; i < intervals.size(); ++i) {
+            if (intervals[i][0] >= start) {
+                continue;
+            } else {
+                ++res;
+                start = intervals[i][0];
+                end = intervals[i][1];
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
