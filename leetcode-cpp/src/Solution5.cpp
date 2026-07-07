@@ -6462,6 +6462,19 @@ public:
         }
         return res;
     }
+
+    long long sumAndMultiply(int n) {
+        if (n == 0) return 0;
+        auto s = to_string(n);
+        string num;
+        long long sum = 0;
+        for (auto c: s) {
+            if (c == '0') continue;
+            sum += c - '0';
+            num.push_back(c);
+        }
+        return stoll(num) * sum;
+    }
 };
 
 int main() {
