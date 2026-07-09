@@ -6521,6 +6521,44 @@ public:
         }
         return ans;
     }
+
+    vector<bool> pathExistenceQueries(int n, vector<int> &nums, int maxDiff, vector<vector<int>> &queries) {
+        vector<int> parents(n + 1, 0);
+        std::iota(parents.begin(), parents.end(), 0);
+        vector<int> sizes(n + 1, 1);
+        auto uf_find = [&](int a) {
+            int pa = parents[a];
+            while (pa != a) {
+                a = pa;
+                pa = parents[a];
+            }
+            return a;
+        };
+
+        auto uf_union = [&](int a, int b) {
+            int pa = uf_find(a);
+            int pb = uf_find(b);
+            if (pa == pb) return;
+            if (sizes[pa] > sizes[pb]) {
+                std::swap(pa, pb);
+            }
+            parents[pa] = pb;
+            sizes[pb] += sizes[pa];
+        };
+
+        for (int i = 0; i + 1 < nums.size(); ++i) {
+            if (nums[i + 1] - nums[i] <= maxDiff) {
+                uf_union(i + 2, i + 1);
+            }
+        }
+
+        vector<bool> res(queries.size(), false);
+        for (int i = 0; i < queries.size(); ++i) {
+            if (uf_find(queries[i][0] + 1) == uf_find(queries[i][1] + 1))
+                res[i] = true;
+        }
+        return res;
+    }
 };
 
 int main() {
