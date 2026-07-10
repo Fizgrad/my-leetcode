@@ -6696,6 +6696,104 @@ public:
 
         return res;
     }
+
+    vector<int> pathExistenceQueries(int n, vector<int> &nums, int maxDiff, vector<vector<int>> &queries) {
+        // 排序后的值和原下标映射
+        vector<int> id(n);
+        iota(id.begin(), id.end(), 0);
+        sort(id.begin(), id.end(), [&](int a, int b) {
+            return nums[a] < nums[b];
+        });
+
+        vector<int> sortedNums(n);
+        vector<int> pos(n);// 原下标 -> 排序位置
+
+        for (int i = 0; i < n; i++) {
+            sortedNums[i] = nums[id[i]];
+            pos[id[i]] = i;
+        }
+
+        /*
+            next[i]:
+            排序后位置 i，一步最多能到达的位置
+        */
+        vector<int> nxt(n);
+        int r = 0;
+        for (int i = 0; i < n; i++) {
+            if (r < i)
+                r = i;
+            while (r + 1 < n &&
+                   sortedNums[r + 1] - sortedNums[i] <= maxDiff) {
+                r++;
+            }
+            nxt[i] = r;
+        }
+        /*
+            判断连通块
+            如果 i 到不了 i+1
+            那么后面一定也不能跨过去
+        */
+        vector<int> comp(n);
+        int c = 0;
+        comp[0] = 0;
+        for (int i = 1; i < n; i++) {
+            if (sortedNums[i] - sortedNums[i - 1] > maxDiff)
+                c++;
+            comp[i] = c;
+        }
+        /*
+            binary lifting
+            up[k][i]:
+            从 i 出发跳 2^k 次后能到达的位置
+        */
+        int LOG = 17;// 2^17 > 1e5
+        vector<vector<int>> up(LOG, vector<int>(n));
+        for (int i = 0; i < n; i++) {
+            up[0][i] = nxt[i];
+        }
+        for (int k = 1; k < LOG; k++) {
+            for (int i = 0; i < n; i++) {
+                up[k][i] = up[k - 1][up[k - 1][i]];
+            }
+        }
+        auto getDistance = [&](int a, int b) {
+            // 排序位置
+            int l = pos[a];
+            int r = pos[b];
+            if (l > r)
+                swap(l, r);
+            if (l == r)
+                return 0;
+            int ans = 0;
+            /*
+                贪心跳跃
+                每次尝试最大跳
+            */
+            for (int k = LOG - 1; k >= 0; k--) {
+                if (up[k][l] < r) {
+                    l = up[k][l];
+                    ans += (1 << k);
+                }
+            }
+            // 最后一跳
+            if (l < r)
+                ans++;
+            return ans;
+        };
+        vector<int> res;
+        res.reserve(queries.size());
+        for (auto &q: queries) {
+            int a = q[0];
+            int b = q[1];
+            // 不在同一个连通块
+            if (comp[pos[a]] != comp[pos[b]]) {
+                res.push_back(-1);
+            } else {
+                res.push_back(getDistance(a, b));
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
