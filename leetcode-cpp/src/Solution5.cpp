@@ -6559,6 +6559,25 @@ public:
         }
         return res;
     }
+
+    vector<int> arrayRankTransform(vector<int> &arr) {
+        vector<int> sortedIndices(arr.size(), 0);
+        vector<int> res(arr.size(), 0);
+        iota(sortedIndices.begin(), sortedIndices.end(), 0);
+        std::sort(sortedIndices.begin(), sortedIndices.end(), [&](auto a, auto b) {
+            return arr[a] < arr[b];
+        });
+        int rank = 1;
+        for (int i = 0; i < arr.size(); ++i) {
+            if (i == 0 ||
+                i > 0 && arr[sortedIndices[i]] == arr[sortedIndices[i - 1]]) {
+                res[sortedIndices[i]] = rank;
+            } else {
+                res[sortedIndices[i]] = ++rank;
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
