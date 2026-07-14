@@ -6623,6 +6623,40 @@ public:
         }
         return res;
     }
+
+    int subsequencePairCount(vector<int> &nums) {
+        static constexpr int MOD = 1e9 + 7;
+        int maxValue = *max_element(nums.begin(), nums.end());
+        // dp[g1][g2]:
+        // seq1 的 GCD 为 g1，seq2 的 GCD 为 g2 的方案数
+        vector<vector<int>> dp(maxValue + 1, vector<int>(maxValue + 1, 0));
+        dp[0][0] = 1;
+        vector<vector<int>> nextDp(maxValue + 1, vector<int>(maxValue + 1, 0));
+        for (int x: nums) {
+            std::fill(nextDp.begin(), nextDp.end(), vector<int>(maxValue + 1, 0));
+            for (int g1 = 0; g1 <= maxValue; ++g1) {
+                for (int g2 = 0; g2 <= maxValue; ++g2) {
+                    int ways = dp[g1][g2];
+                    if (ways == 0) continue;
+                    // 1. 不选择 x
+                    nextDp[g1][g2] = (nextDp[g1][g2] + ways) % MOD;
+                    // 2. 把 x 放入 seq1
+                    int newG1 = std::gcd(g1, x);
+                    nextDp[newG1][g2] = (nextDp[newG1][g2] + ways) % MOD;
+                    // 3. 把 x 放入 seq2
+                    int newG2 = std::gcd(g2, x);
+                    nextDp[g1][newG2] = (nextDp[g1][newG2] + ways) % MOD;
+                }
+            }
+            dp.swap(nextDp);
+        }
+        int answer = 0;
+        // g >= 1，同时保证两个子序列都非空
+        for (int g = 1; g <= maxValue; ++g) {
+            answer = (answer + dp[g][g]) % MOD;
+        }
+        return answer;
+    }
 };
 
 int main() {
