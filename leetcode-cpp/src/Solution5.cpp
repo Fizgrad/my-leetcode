@@ -6657,6 +6657,20 @@ public:
         }
         return answer;
     }
+
+    int gcdOfOddEvenSums(int n) {
+        int sumOdd = n * n;
+        int sumEven = (1 + n) * n;
+        int a = sumEven;
+        int b = sumOdd;
+        while (b != 0) {
+            a %= b;
+            if (a < b) {
+                swap(a, b);
+            }
+        }
+        return a;
+    }
 };
 
 int main() {
