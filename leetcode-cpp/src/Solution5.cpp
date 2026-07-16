@@ -6671,6 +6671,22 @@ public:
         }
         return a;
     }
+
+    long long gcdSum(vector<int> &nums) {
+        int n = nums.size();
+        int mx = nums[0];
+        vector<int> gcds(n);
+        for (int i = 0; i < n; ++i) {
+            mx = max(mx, nums[i]);
+            gcds[i] = std::gcd(mx, nums[i]);
+        }
+        std::ranges::sort(gcds);
+        long long res = 0;
+        for (int i = 0; i < n - 1 - i; ++i) {
+            res += std::gcd(gcds[i], gcds[n - 1 - i]);
+        }
+        return res;
+    }
 };
 
 int main() {
