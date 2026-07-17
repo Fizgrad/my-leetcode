@@ -4,8 +4,6 @@
 #include <algorithm>
 #include <array>
 #include <bit>
-#include <bits/iterator_concepts.h>
-#include <bits/ranges_algo.h>
 #include <bitset>
 #include <cassert>
 #include <cctype>
@@ -5464,7 +5462,7 @@ public:
     }
 
     char kthCharacter(int k) {
-        return 'a' + __popcount(k - 1);
+        return 'a' + __popcount(static_cast<unsigned>(k - 1));
     }
 
     char kthCharacter(long long k, vector<int> &operations) {
