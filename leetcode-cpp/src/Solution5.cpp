@@ -6688,33 +6688,41 @@ public:
         return res;
     }
 
-    vector<int> gcdValues(vector<int>& A, vector<long long>& queries) {
+    vector<int> gcdValues(vector<int> &A, vector<long long> &queries) {
         int mx = std::ranges::max(A);
         vector<int> freq(mx + 1, 0);
         vector<long long> GCD(mx + 1, 0);
-        
-        for (auto& a : A) freq[a]++;
-        
+        for (auto &a: A) freq[a]++;
         for (int i = mx; i > 0; i--) {
             long long sm = 0, extra = 0;
             for (int j = i; j <= mx; j += i)
                 sm += freq[j], extra += GCD[j];
             GCD[i] = sm * (sm - 1) / 2 - extra;
         }
-        
         partial_sum(GCD.begin(), GCD.end(), GCD.begin());
-        
         vector<int> res(queries.size());
         for (int i = 0; i < queries.size(); i++)
             res[i] = ranges::upper_bound(GCD, queries[i]) - GCD.begin();
-            
         return res;
     }
 
-    int findGCD(vector<int>& nums) {
+    int findGCD(vector<int> &nums) {
         int minVal = *std::min_element(nums.begin(), nums.end());
         int maxVal = *std::max_element(nums.begin(), nums.end());
         return std::gcd(minVal, maxVal);
+    }
+
+    vector<vector<int>> shiftGrid(vector<vector<int>> &grid, int k) {
+        int n = grid.size();
+        int m = grid.front().size();
+        vector<vector<int>> res(n, vector<int>(m, 0));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                int newPos = (i * m + j + k) % (n * m);
+                res[newPos / m][newPos % m] = grid[i][j];
+            }
+        }
+        return res;
     }
 };
 
