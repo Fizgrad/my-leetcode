@@ -6724,6 +6724,37 @@ public:
         }
         return res;
     }
+
+    int maxActiveSectionsAfterTrade(const string &s) {
+        vector<int> len;
+        len.reserve(s.size());
+        char prev = '1';
+        int one_count = 0;
+        int count = 1;
+        for (auto c: s) {
+            if (c == prev) {
+                count++;
+            } else {
+                len.push_back(count);
+                if (prev == '1') one_count += count;
+                prev = c;
+                count = 1;
+            }
+        }
+        if (count > 0) {
+            if (prev == '1') one_count += count;
+            len.push_back(count);
+            count = 0;
+        }
+        int res = one_count - 1;
+        if (len.size() < 4) return one_count - 1;
+        for (int i = 0; i < len.size(); i += 2) {
+            if (i + 3 < len.size()) {
+                res = max(res, one_count + len[i + 1] + len[i + 3] - 1);
+            }
+        }
+        return res;
+    }
 };
 
 int main() {
