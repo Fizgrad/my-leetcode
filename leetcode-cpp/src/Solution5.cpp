@@ -6772,6 +6772,29 @@ public:
         }
         return longestStreak;
     }
+
+    int uniqueXorTriplets(vector<int> &nums) {
+        std::bitset<2048> s;
+        for (auto i: nums) {
+            s.set(i);
+        }
+        std::bitset<2048> tmp;
+        for (int j = 0; j <= 2047; ++j) {
+            if (s.test(j)) {
+                for (auto i: nums) {
+                    tmp.set(i ^ j);
+                }
+            }
+        }
+        for (int i = 0; i <= 2047; ++i) {
+            if (tmp.test(i)) {
+                for (auto j: nums) {
+                    s.set(j ^ i);
+                }
+            }
+        }
+        return s.count();
+    }
 };
 
 int main() {
