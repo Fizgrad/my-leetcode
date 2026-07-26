@@ -6795,6 +6795,31 @@ public:
         }
         return s.count();
     }
+
+    int maximumProduct(vector<int> &nums) {
+        int n = nums.size();
+        if (n == 3) return nums[0] * nums[1] * nums[2];
+        priority_queue<int, vector<int>, greater<>> max3;
+        int min1 = INT_MAX;
+        int min2 = INT_MAX;
+        for (auto i: nums) {
+            max3.push(i);
+            while (max3.size() > 3) max3.pop();
+            if (i < min1) {
+                min2 = min1;
+                min1 = i;
+            } else if (i < min2) {
+                min2 = i;
+            }
+        }
+        int candidate1 = 1;
+        int candidate2 = 1;
+        candidate1 *= max3.top();
+        max3.pop();
+        candidate1 *= max3.top();
+        max3.pop();
+        return max(candidate1 * max3.top(), min1 * min2 * max3.top());
+    }
 };
 
 int main() {
