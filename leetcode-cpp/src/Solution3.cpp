@@ -4942,6 +4942,34 @@ public:
         }
         return res;
     }
+
+    vector<int> maxSlidingWindow(vector<int> &nums, int k) {
+        // Sparse Table is not the most efficient solution, but it is a good exercise to implement it.
+        // It has O(n log n) preprocessing time and O(1) query time.
+        // For this problem, a deque-based solution would be more efficient with O(n) time complexity.
+        int n = nums.size();
+        if (n == k) return {*std::ranges::max_element(nums)};
+        int logn = std::ceil(std::log(n) / std::log(2)) + 1;
+        vector<vector<int>> dp(n, vector<int>(logn, INT_MIN));
+        for (int i = 0; i < n; ++i) {
+            dp[i][0] = nums[i];
+        }
+        for (int j = 1; j < logn; ++j) {
+            for (int i = 0; i < n; ++i) {
+                if (i + (1 << j) <= n)
+                    dp[i][j] = max(dp[i][j - 1], dp[i + (1 << (j - 1))][j - 1]);
+            }
+        }
+        auto max_range = [&](auto &&max_range, int left, int right) {
+            int scale = std::floor(std::log(right - left) / std::log(2));
+            return max(dp[left][scale], dp[right - (1 << scale)][scale]);
+        };
+        vector<int> res(n - k + 1, 0);
+        for (int i = 0; i + k - 1 < n; ++i) {
+            res[i] = max_range(max_range, i, i + k);
+        }
+        return res;
+    }
 };
 
 int main() {
