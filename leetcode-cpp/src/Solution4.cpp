@@ -6813,6 +6813,29 @@ public:
         }
         return (max1 - 1) * (max2 - 1);
     }
+
+    string smallestPalindrome(const string &s) {
+        int n = s.size();
+        vector<int> count(26, 0);
+        for (auto c: s) {
+            count[c - 'a']++;
+        }
+        string res;
+        for (int i = 0; i < 26; ++i) {
+            res += string(count[i] / 2, 'a' + i);
+            count[i] %= 2;
+        }
+        string mid;
+        for (int i = 0; i < 26; ++i) {
+            if (count[i] > 0) {
+                mid = string(1, 'a' + i);
+                count[i]--;
+            }
+        }
+        string left = res;
+        std::reverse(res.begin(), res.end());
+        return left + mid + res;
+    }
 };
 
 int main() {
