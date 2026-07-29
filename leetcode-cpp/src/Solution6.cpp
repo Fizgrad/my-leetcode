@@ -125,9 +125,87 @@ public:
                     start = left;
                 }
             }
-            pop(s[left]); // Note: here is not pop(left) but pop(s[left])
+            pop(s[left]);// Note: here is not pop(left) but pop(s[left])
         }
         return start == INT_MAX ? "" : s.substr(start, len);
+    }
+
+    string smallestPalindrome(const string &s, int k) {
+        int n = s.size();
+        vector<int> count(26, 0);
+        char mid_char = 0;
+        for (char c: s) {
+            count[c - 'a']++;
+        }
+        for (auto i = 0; i < 26; ++i) {
+            if (count[i] % 2 == 1) {
+                mid_char = 'a' + i;
+            }
+            count[i] = count[i] / 2;
+        }
+        auto nCr = [](long long n, long long r) -> long long {
+            if (r < 0 || r > n) return 0;
+            if (r == 0 || r == n) return 1;
+            r = min(r, n - r);
+            long long res = 1;
+            for (long long i = 1; i <= r; ++i) {
+                res *= n - r + i;
+                res /= i;
+                if (res > 1e9) return 1e9;
+            }
+            return res;
+        };
+
+        auto getPermutation = [&](vector<int> &remainCount) -> long long {
+            long long res = 1;
+            long long len = 0;
+            for (int i = 0; i < 26; ++i) {
+                len += remainCount[i];
+                res *= nCr(len, remainCount[i]);
+                if (res > 1e9) return 1e9;
+            }
+            return res;
+        };
+        // Initial check: are there enough permutations?
+        if (getPermutation(count) < k) {
+            return "";
+        }
+        // Iteratively build the first half
+        string half = "";
+        int target_len = n / 2;
+
+        for (int step = 0; step < target_len; ++step) {
+            for (int i = 0; i < 26; ++i) {
+                if (count[i] > 0) {
+                    // Temporarily pick this character
+                    count[i]--;
+
+                    long long perms = getPermutation(count);
+
+                    if (perms < k) {
+                        // Not enough permutations in this branch, skip it
+                        k -= perms;
+                        count[i]++;// Restore and try next character
+                    } else {
+                        // The k-th permutation is in this branch. Lock it in!
+                        half.push_back('a' + i);
+                        break;// Move to the next index in the string
+                    }
+                }
+            }
+        }
+
+        // Construct final string
+        string result = half;
+        if (n % 2 != 0) {
+            result.push_back(mid_char);
+        }
+
+        // Reverse the first half and append
+        reverse(half.begin(), half.end());
+        result += half;
+
+        return result;
     }
 };
 
