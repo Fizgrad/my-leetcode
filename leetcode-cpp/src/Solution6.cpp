@@ -228,4 +228,15 @@ int main() {
     Solution solution;
     string result = solution.minWindow(s, t);
     cout << "Result: " << result << endl;
+    {
+        int x = -1;
+        unsigned int y = 1;
+        cout << x << " " << (x < y ? "<" : ">") << " " << y << endl;// Output: -1 > 1
+        cout << "x:" << sizeof(x) << " y: " << sizeof(y) << endl;
+        long a = -1;
+        unsigned int b = 1;
+        cout << a << " " << (a < b ? "<" : ">") << " " << b << endl;// Output: -1 < 1
+        cout << "a:" << sizeof(a) << " b: " << sizeof(b) << endl;
+    }
+    return 0;
 }
