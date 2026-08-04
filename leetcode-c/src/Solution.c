@@ -2,6 +2,12 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+struct ListNode {
+    int val;
+    struct ListNode *next;
+};
 
 bool predictTheWinner(int *nums, int numsSize) {
     int dp[20][20] = {0};
@@ -31,7 +37,7 @@ bool stoneGame(int *piles, int pilesSize) {
     return dp[0][pilesSize - 1] > 0;
 }
 
-char* stoneGameIII(int* stoneValue, int stoneValueSize) {
+char *stoneGameIII(int *stoneValue, int stoneValueSize) {
     int dp[50005] = {0};
     for (int i = stoneValueSize - 1; i >= 0; --i) {
         dp[i] = INT_MIN;
@@ -47,7 +53,43 @@ char* stoneGameIII(int* stoneValue, int stoneValueSize) {
         return "Bob";
     } else {
         return "Tie";
-    }   
+    }
+}
+
+struct ListNode *reverseList(struct ListNode *dummy, struct ListNode *end) {
+    struct ListNode *prev = end;// 关键修正：不是 dummy
+    struct ListNode *cur = dummy->next;
+    while (cur != end) {
+        struct ListNode *next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    dummy->next = prev;// 让哨兵指向新头
+    return prev;
+}
+
+struct ListNode *reverseKGroup(struct ListNode *head, int k) {
+    if (k == 1) return head;
+    if (!head) return head;
+    struct ListNode *dummy = (struct ListNode *) malloc(sizeof(struct ListNode));
+    dummy->next = head;
+    struct ListNode *res = head;
+    while (true) {
+        struct ListNode *fast = dummy->next;
+        struct ListNode *left = dummy->next;
+        for (int i = 0; i < k; ++i) {
+            if (fast == NULL) return res;
+            fast = fast->next;
+        }
+        dummy = reverseList(dummy, fast);
+        if (res == head) {
+            res = dummy;
+        }
+        for (int i = 0; i < k - 1; ++i) {
+            dummy = dummy->next;
+        }
+    }
 }
 
 int main() {
