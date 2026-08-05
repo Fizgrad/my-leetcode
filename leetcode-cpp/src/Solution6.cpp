@@ -220,6 +220,71 @@ public:
         }
         return pushes;
     }
+
+    vector<int> remainingMethods(int n, int k, vector<vector<int>> &invocations) {
+        vector<int> parents(n + 1, 0);
+        iota(parents.begin(), parents.end(), 0);
+        vector<int> sizes(n + 1, 1);
+        auto uf_find = [&](auto &&uf_find, int x) {
+            int parent = parents[x + 1];
+            int tmp = x + 1;
+            while (parent != tmp) {
+                tmp = parent;
+                parent = parents[parent];
+            }
+            return parent - 1;
+        };
+        auto uf_union = [&](int x, int y) {
+            int rootX = uf_find(uf_find, x) + 1;
+            int rootY = uf_find(uf_find, y) + 1;
+            if (rootX != rootY) {
+                if (sizes[rootX] < sizes[rootY]) {
+                    swap(rootX, rootY);
+                }
+                parents[rootY] = rootX;
+                sizes[rootX] += sizes[rootY];
+            }
+        };
+        vector<vector<int>> graph(n);
+        for (auto &inv: invocations) {
+            graph[inv[0]].push_back(inv[1]);
+            uf_union(inv[0], inv[1]);
+        }
+        unordered_set<int> suspicious;
+        vector<bool> visited(n, false);
+        auto dfs = [&](auto &&dfs, int node) {
+            if (visited[node]) return;
+            visited[node] = true;
+            suspicious.emplace(node);
+            for (int neighbor: graph[node]) {
+                dfs(dfs, neighbor);
+            }
+        };
+        dfs(dfs, k);
+        bool removed = true;
+        int rootK = uf_find(uf_find, k);
+        for (int i = 0; i < n; ++i) {
+            if (uf_find(uf_find, i) == rootK && suspicious.find(i) == suspicious.end()) {
+                removed = false;
+                break;
+            }
+        }
+        vector<int> result;
+        if (removed) {
+            for (int i = 0; i < n; ++i) {
+                if (uf_find(uf_find, i) == rootK) {
+                    continue;
+                } else {
+                    result.push_back(i);
+                }
+            }
+        } else {
+            for (int i = 0; i < n; ++i) {
+                result.push_back(i);
+            }
+        }
+        return result;
+    }
 };
 
 int main() {
